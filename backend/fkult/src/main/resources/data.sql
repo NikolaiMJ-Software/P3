@@ -1,0 +1,1 @@
+INSERT INTO messages (content) VALUES ('Hello from the database!');
