@@ -28,8 +28,16 @@ public class ThemeRepository {
                     rs.getObject("vote_count", Integer.class)
             );
 
+    //database operations
     public List<Theme> findAll(){
         return jdbcTemplate.query("SELECT * FROM theme", rowMapper);
     }
 
+    public Theme save(Theme theme) {
+        jdbcTemplate.update("INSERT INTO themes (name, userid) VALUES (?)", theme.getName(), theme.getUserid());
+        // Get the last inserted ID
+        Long id = jdbcTemplate.queryForObject("SELECT last_insert_rowid()", Long.class);
+        theme.setId(id);
+        return theme;
+    }
 }
