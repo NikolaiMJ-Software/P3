@@ -11,9 +11,6 @@ public class Theme {
     private LocalDateTime timestamp;
     private Integer votecount;
 
-    List<Movie> movies;
-    List<DrinkingRule> drinkingRules;
-
     public Theme (long id, String name, Long userid, LocalDateTime timestamp, Integer votecount){
         this.id = id;
         this.name = name;

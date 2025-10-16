@@ -34,7 +34,7 @@ public class ThemeRepository {
     }
 
     public Theme save(Theme theme) {
-        jdbcTemplate.update("INSERT INTO themes (name, userid) VALUES (?)", theme.getName(), theme.getUserid());
+        jdbcTemplate.update("INSERT INTO theme (name, user_id) VALUES (?,?)", theme.getName(), theme.getUserid());
         // Get the last inserted ID
         Long id = jdbcTemplate.queryForObject("SELECT last_insert_rowid()", Long.class);
         theme.setId(id);

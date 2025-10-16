@@ -4,6 +4,7 @@ import com.p3.fkult.business.services.ExampleMessageService;
 import com.p3.fkult.business.services.ThemeService;
 import com.p3.fkult.persistence.entities.ExampleMessage;
 import com.p3.fkult.persistence.entities.Theme;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,8 @@ public class ThemeController {
     }
 
     @PostMapping
-    public Theme addTheme(@RequestBody String name, @RequestBody long userid){
-        return themeService.saveTheme(name,userid);
+    public ResponseEntity<String> createTheme(@RequestBody ThemeRequest themeRequest) {
+        themeService.createTheme(themeRequest);
+        return ResponseEntity.ok("Theme created successfully");
     }
 }
