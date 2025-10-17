@@ -18,3 +18,5 @@ Thumbs.db
 
 # Databases
 backend/database/*.db
+backend/database/*.tsv.gz
+database/title.basics.tsv.gz

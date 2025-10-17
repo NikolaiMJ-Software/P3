@@ -5,6 +5,7 @@ public class ExampleMessage {
     private Long id;
     private String content;
 
+    //constructors
     public ExampleMessage() {}
 
     public ExampleMessage(Long id, String content) {
@@ -16,18 +17,18 @@ public class ExampleMessage {
         this.content = content;
     }
 
+    //getters
     public Long getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getContent() {
         return content;
     }
 
+    //setters
+    public void setId(Long id) {
+        this.id = id;
+    }
     public void setContent(String content) {
         this.content = content;
     }

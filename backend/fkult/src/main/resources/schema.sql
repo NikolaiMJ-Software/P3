@@ -17,10 +17,10 @@ CREATE TABLE IF NOT EXISTS user (
 -- Movies
 CREATE TABLE IF NOT EXISTS movie (
   id                  INTEGER PRIMARY KEY AUTOINCREMENT,
-  tconst              TEXT NOT NULL UNIQUE,
+  tconst              TEXT UNIQUE,
   movie_name          TEXT NOT NULL,
   original_movie_name TEXT,
-  year                INTEGER CHECK (year BETWEEN 1888 AND CAST(strftime('%Y','now') AS INTEGER)),
+  year                INTEGER,
   runtime_minutes     INTEGER CHECK (runtime_minutes IS NULL OR runtime_minutes > 0),
   is_active           INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0,1))
 );
