@@ -1,18 +1,17 @@
 package com.p3.fkult.business.services;
 
-import com.p3.fkult.persistence.entities.DrinkingRule;
 import com.p3.fkult.persistence.entities.Movie;
-import com.p3.fkult.persistence.entities.Theme;
-import com.p3.fkult.persistence.entities.ThemeMovie;
-import com.p3.fkult.persistence.repository.*;
+import com.p3.fkult.persistence.repository.MovieRepository;
 import com.p3.fkult.presentation.controllers.MovieRequest;
-import com.p3.fkult.presentation.controllers.ThemeRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public MovieService(MovieRepository movieRepository){
+    public MovieService(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
     }
 
@@ -32,7 +31,7 @@ public class MovieService {
 
         for (Long movieId : movieIds) {
             Movie movie = movieRepository.findById(movieId);
-            if (movie == null){
+            if (movie == null) {
                 throw new RuntimeException("Movie not found with id: " + movieId);
             }
             String posterURL = getPosterURL(movie);
@@ -41,32 +40,58 @@ public class MovieService {
                     movie.getMovieName(),
                     posterURL,
                     movie.getRuntimeMinutes(),
-                    movie.getYear());
+                    movie.getYear()
+            );
             movieRequests.add(movieRequest);
         }
         return movieRequests;
     }
 
-    public String getPosterURL(Movie movie){
+    //ChatGPT said this is maybe illegal... but... it works though
+    public String getPosterURL(Movie movie) {
+        if (movie.getTconst() == null) {
+            System.out.println("Movie " + movie.getId() + " has no tconst");
+            return null;
+        }
+
         String tConst = movie.getTconst() + "/";
         String movieURL = IMDB_URL + tConst;
+        System.out.println("Fetching poster from: " + movieURL);
 
-        try{
-            String html = fetchHTML(movieURL);
-            Document doc = Jsoup.parse(html);
-            Element ogImage = doc.selectFirst("meta[property=og:image]");
-            if (ogImage != null){
-                return ogImage.attr("content");
-            } else {
+        try {
+            // Use browser-like headers to avoid IMDb giving a 403 forbidden
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+                    "AppleWebKit/537.36 (KHTML, like Gecko) " +
+                    "Chrome/119.0.0.0 Safari/537.36");
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    movieURL,
+                    HttpMethod.GET,
+                    entity,
+                    String.class
+            );
+
+            String html = response.getBody();
+            if (html == null || html.isEmpty()) {
+                System.out.println("Failed to fetch HTML for movie " + movie.getId());
                 return null;
             }
-        }catch (Exception e){
+
+            Document doc = Jsoup.parse(html);
+            Element ogImage = doc.selectFirst("meta[property=og:image]");
+            if (ogImage != null) {
+                String poster = ogImage.attr("content");
+                System.out.println("Found poster URL: " + poster);
+                return poster;
+            } else {
+                System.out.println("No og:image meta tag found for " + movieURL);
+                return null;
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public String fetchHTML(String imdbURL){
-        return restTemplate.getForObject(imdbURL, String.class);
     }
 }
