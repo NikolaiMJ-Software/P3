@@ -15,7 +15,7 @@ export default function ThemeBrowser() {
                 key={theme.id}
                 title={theme.name}
                 name={"Martin"}// should find a user's name instead, replaced for testing purpose
-                drinkingRules={theme.drinkingRules}
+                drinkingRules={theme.drinkingRules ?? []}
                 movieIds={theme.movieIds}
             ></ThemeCard>
         })}
