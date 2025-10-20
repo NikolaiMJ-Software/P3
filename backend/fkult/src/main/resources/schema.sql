@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS user (
 CREATE TABLE IF NOT EXISTS movie (
   id                  INTEGER PRIMARY KEY AUTOINCREMENT,
   tconst              TEXT UNIQUE,
-  movie_name          TEXT NOT NULL,
+  movie_name          TEXT NOT NULL CHECK (length(trim(movie_name)) > 0),
   original_movie_name TEXT,
   year                INTEGER,
   runtime_minutes     INTEGER CHECK (runtime_minutes IS NULL OR runtime_minutes > 0),
@@ -28,10 +28,10 @@ CREATE TABLE IF NOT EXISTS movie (
 -- Themes
 CREATE TABLE IF NOT EXISTS theme (
   id           INTEGER PRIMARY KEY AUTOINCREMENT,
-  name         TEXT NOT NULL,
+  name         TEXT NOT NULL CHECK (length(trim(name)) > 0),
   user_id      INTEGER,
   timestamp    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  vote_count   INTEGER,
+  vote_count   INTEGER NOT NULL DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
@@ -48,8 +48,22 @@ CREATE TABLE IF NOT EXISTS theme_movie (
 CREATE TABLE IF NOT EXISTS drinking_rule (
   id        INTEGER PRIMARY KEY AUTOINCREMENT,
   theme_id  INTEGER NOT NULL,
-  rule_text TEXT NOT NULL,
+  rule_text TEXT NOT NULL CHECK (length(trim(rule_text)) > 0),
   FOREIGN KEY (theme_id) REFERENCES theme(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Soundsamples
+CREATE TABLE IF NOT EXISTS sound_samples (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  link TEXT,
+  file_path TEXT,
+  user_id INTEGER,
+  CHECK (
+    (link IS NOT NULL AND file_path IS NULL)
+    OR
+    (link IS NULL AND file_path IS NOT NULL)
+  ),
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Helpful indexes
@@ -59,6 +73,5 @@ CREATE INDEX IF NOT EXISTS idx_theme_name_nocase     ON theme(name COLLATE NOCAS
 CREATE INDEX IF NOT EXISTS idx_theme_user_id         ON theme(user_id);
 CREATE INDEX IF NOT EXISTS idx_rule_theme_id         ON drinking_rule(theme_id);
 CREATE INDEX IF NOT EXISTS idx_theme_movie_movie_id  ON theme_movie(movie_id);
-CREATE UNIQUE INDEX IF NOT EXISTS idx_movie_tconst   ON movie(tconst);
 
 

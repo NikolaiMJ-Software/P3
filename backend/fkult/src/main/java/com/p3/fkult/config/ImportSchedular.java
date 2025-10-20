@@ -19,9 +19,9 @@ public class ImportSchedular {
     //"0 */10 * * * *" (every 10 minutes)
     // Runs the download script every Monday at 04:00 am
     @Scheduled(cron = "0 0 4 ? * MON", zone = "Europe/Copenhagen")
-    public void weekly_imdb_update() {
+    public void weeklyImdbUpdate() {
         try {
-            int n = svc.weekly_refresh();
+            int n = svc.weeklyRefresh();
             System.out.println("IMDb weekly refresh complete. rows_processed = " + n);
         } catch (Exception e) {
             e.printStackTrace();
