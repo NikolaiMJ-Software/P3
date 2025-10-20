@@ -45,6 +45,10 @@ public class MovieRepository {
         return jdbcTemplate.query("SELECT * FROM movie", rowMapper);
     }
 
+    public Movie findById(long id){
+        String sql = "SELECT * FROM movie WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql,rowMapper, id);
+    }
 
     //upsert function
     public int upsertFromImdbFile(File tsvGz, boolean onlyMovies, boolean markInactiveMissing) throws IOException {
