@@ -9,11 +9,12 @@ export default function ThemeBrowser() {
     },[])
 
     return (<>
+        <h1>Themes</h1>
         {themes.map((theme) => {
             return <ThemeCard
                 key={theme.id}
-                title={theme.title}
-                name={theme.name}
+                title={theme.name}
+                name={"Martin"}// should find a user's name instead, replaced for testing purpose
                 drinkingRules={theme.drinkingRules}
                 movieIds={theme.movieIds}
             ></ThemeCard>
