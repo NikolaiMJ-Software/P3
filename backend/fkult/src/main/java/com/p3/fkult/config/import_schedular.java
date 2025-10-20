@@ -15,7 +15,8 @@ public class import_schedular {
         this.svc = svc;
     }
 
-    
+    //"0 0 4 ? * MON", zone = "Europe/Copenhagen" (every monday at 4)
+    //"0 */10 * * * *" (every 10 minutes)
     // Runs the download script every Monday at 04:00 am
     @Scheduled(cron = "0 0 4 ? * MON", zone = "Europe/Copenhagen")
     public void weekly_imdb_update() {
