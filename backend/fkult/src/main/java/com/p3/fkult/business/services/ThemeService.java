@@ -8,7 +8,10 @@ import com.p3.fkult.presentation.controllers.ThemeRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ThemeService {
@@ -23,8 +26,26 @@ public class ThemeService {
         this.drinkingRuleRepository = drinkingRuleRepository;
         this.themeMovieRepository = themeMovieRepository;
     }
-    public List<Theme> getAllThemes() {
-        return themeRepository.findAll();
+    public List<ThemeRequest> getAllThemes() {
+        List<ThemeRequest> themeRequests = new ArrayList<>();
+        List<Theme> themes =  themeRepository.findAll();
+        for(Theme theme : themes) {
+            //constructing a themeRequest one by one
+            String name = theme.getName();
+            Long userId = theme.getUserid();
+            List<Long> movieIds = themeMovieRepository.findByThemeId(theme.getId())
+                    .stream()
+                    .map(ThemeMovie::getMovieid)
+                    .toList();
+            List<String> drinkingRules = drinkingRuleRepository.findByThemeId(theme.getId())
+                    .stream()
+                    .map(DrinkingRule::getRuleText)
+                    .toList();
+            ThemeRequest themeRequest = new ThemeRequest(theme.getId(),  name, userId, movieIds, drinkingRules);
+            themeRequests.add(themeRequest);
+        };
+        System.out.println("Found themes: " + themes.size());
+        return themeRequests;
     }
 
     @Transactional
@@ -36,7 +57,7 @@ public class ThemeService {
                         .map(movieId -> new ThemeMovie(themeId, movieId)).toList();
         themeMovies.forEach(themeMovie -> themeMovieRepository.save(themeMovie));
 
-        themeRequest.getRules().forEach(ruleText ->
+        themeRequest.getDrinkingRules().forEach(ruleText ->
                 drinkingRuleRepository.save(new DrinkingRule(themeId, ruleText)));
     }
 }

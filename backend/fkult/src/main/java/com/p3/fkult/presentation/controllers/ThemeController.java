@@ -20,7 +20,7 @@ public class ThemeController {
     }
 
     @GetMapping
-    public List<Theme> getThemes(){
+    public List<ThemeRequest> getThemes(){
         return themeService.getAllThemes();
     }
 
