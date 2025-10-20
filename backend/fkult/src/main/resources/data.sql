@@ -1,3 +1,4 @@
+INSERT OR REPLACE INTO messages(id, content) VALUES (1, 'Hello');
 -- Insert dummy user
 INSERT OR REPLACE INTO user (id, name, username, is_banned, is_admin)
 VALUES (4900, 'Martin', 'Kabuum', 0, 0);
