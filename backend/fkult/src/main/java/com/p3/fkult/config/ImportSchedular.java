@@ -1,17 +1,17 @@
 package com.p3.fkult.config;
 
-import com.p3.fkult.business.services.imdb_movie_import_service;
+import com.p3.fkult.business.services.ImdbMovieImportService;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @EnableScheduling
 @Component
-public class import_schedular {
+public class ImportSchedular {
 
-    private final imdb_movie_import_service svc;
+    private final ImdbMovieImportService svc;
 
-    public import_schedular(imdb_movie_import_service svc) {
+    public ImportSchedular(ImdbMovieImportService svc) {
         this.svc = svc;
     }
 

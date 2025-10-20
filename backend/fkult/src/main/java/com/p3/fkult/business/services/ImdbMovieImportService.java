@@ -14,7 +14,7 @@ import java.util.zip.GZIPInputStream;
 
 
 @Service
-public class imdb_movie_import_service {
+public class ImdbMovieImportService {
 
     private static final String IMDB_URL = "https://datasets.imdbws.com/title.basics.tsv.gz";
     private static final Path DATA_DIR   = Paths.get("database");
@@ -22,7 +22,7 @@ public class imdb_movie_import_service {
 
     private final JdbcTemplate jdbc;
 
-    public imdb_movie_import_service(JdbcTemplate jdbc) { this.jdbc = jdbc; }
+    public ImdbMovieImportService(JdbcTemplate jdbc) { this.jdbc = jdbc; }
 
     //Function that runs the weekly download script, inserts all new data in db, and removes old data in db
     @Transactional
