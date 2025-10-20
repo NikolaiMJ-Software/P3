@@ -13,8 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.p3.fkult.testTemplate.GreetingController;
-import com.p3.fkult.testTemplate.calculator;
+import com.p3.fkult.testTemplate.*;
+
 
 @WebMvcTest(GreetingController.class)
 class GreetingControllerTest {
