@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 public class MovieService {
-    private String IMDB_URL = "https://www.imdb.com/title/";
+    private final String IMDB_URL = "https://www.imdb.com/title/";
     private final MovieRepository movieRepository;
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -27,17 +27,24 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<MovieRequest> getMoviesByIds(List<Long> movieIds){
-        List<Movie> movies = movieIds
-                .stream()
-                .map(movieId -> movieRepository.findById(movieId))
-                .toList();
-        List<String> posterURLs = movies
-                .stream()
-                .map(movie -> getPosterURL(movie))
-                .toList();
-        //WIP
-        return new ArrayList<>();
+    public List<MovieRequest> getMoviesByIds(List<Long> movieIds) {
+        List<MovieRequest> movieRequests = new ArrayList<>();
+
+        for (Long movieId : movieIds) {
+            Movie movie = movieRepository.findById(movieId);
+            if (movie == null){
+                throw new RuntimeException("Movie not found with id: " + movieId);
+            }
+            String posterURL = getPosterURL(movie);
+            MovieRequest movieRequest = new MovieRequest(
+                    movie.getId(),
+                    movie.getMovieName(),
+                    posterURL,
+                    movie.getRuntimeMinutes(),
+                    movie.getYear());
+            movieRequests.add(movieRequest);
+        }
+        return movieRequests;
     }
 
     public String getPosterURL(Movie movie){
