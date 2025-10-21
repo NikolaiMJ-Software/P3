@@ -19,3 +19,5 @@ Thumbs.db
 # Databases
 backend/database/*.db
 backend/database/*.tsv.gz
+/backend/fkult/database/F-Kult.db
+/backend/fkult/database/title.basics.tsv.gz

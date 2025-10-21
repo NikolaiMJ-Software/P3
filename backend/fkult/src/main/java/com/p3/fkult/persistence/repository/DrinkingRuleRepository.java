@@ -27,6 +27,11 @@ public class DrinkingRuleRepository {
         return jdbcTemplate.query("SELECT * FROM drinking_rule", rowMapper);
     }
 
+    public List<DrinkingRule> findByThemeId(long themeId){
+        String sql = "SELECT * FROM drinking_rule WHERE theme_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, themeId);
+    }
+
     public DrinkingRule save(DrinkingRule drinkingRule) {
         jdbcTemplate.update("INSERT INTO drinking_rule (theme_id, rule_text) VALUES (?,?)", drinkingRule.getThemeId(), drinkingRule.getRuleText());
         // Get the last inserted ID
