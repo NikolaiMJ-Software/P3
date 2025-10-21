@@ -9,7 +9,7 @@ export default function Header(){
     return (
         <header className="Header">
             {/* F-Kult logo to go to homepage */}
-            <LogoButton onClick={()=>navigate("/")}/>
+            <HomeButton onClick={()=>navigate("/")}/>
 
             {/*  F-Kult */}
             <h1>F-Kult</h1>
@@ -17,29 +17,29 @@ export default function Header(){
             {/*  Pizza, Discord, User widgets */}
             <NavButton
                 label="Pizza"
-                icon={<img src={pizzaPNG}/>}
+                icon={<img src={pizzaPNG} alt="pizza"/>}
                 onClick={() => {window.location.href = "https://f-kult-pizza-bestiller.vercel.app/"}}
             />
 
             <NavButton
                 label="Discord"
-                icon={<img src={discordWEBP}/>}
+                icon={<img src={discordWEBP} alt="discord"/>}
                 onClick={() => {console.log("discord!")}}
             />
 
             <NavButton
                 label="User"
-                icon={<img src={discordWEBP}/>}
+                icon={<img src={discordWEBP} alt="user"/>}
                 onClick={() => {console.log("User!")}}
             />
         </header>
     )
 }
 
-function LogoButton({ onClick }) {
+function HomeButton({ onClick }) {
     return (
         <button onClick={onClick}>
-            <img src={logoPNG} />
+            <img src={logoPNG} alt="Home"/>
         </button>
     );
 }
