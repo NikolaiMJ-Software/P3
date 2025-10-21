@@ -1,6 +1,7 @@
 package com.p3.fkult.persistence.repository;
 
 import com.p3.fkult.persistence.entities.Theme;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.p3.fkult.persistence.entities.Movie;
@@ -47,7 +48,11 @@ public class MovieRepository {
 
     public Movie findById(long id){
         String sql = "SELECT * FROM movie WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql,rowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            return null; // or throw new RuntimeException("Movie not found with id: " + id);
+        }
     }
 
     //upsert function

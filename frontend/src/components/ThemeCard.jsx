@@ -15,10 +15,10 @@ export default function ThemeCard({title, name, movieIds, drinkingRules}){
             <h2>{name}</h2>
             {movies.map((movie) =>{
                 return <MovieCard
-                    key={movie.id}
+                    key={movie.movieId}
                     title={movie.title}
                     moviePosterURL={movie.moviePosterURL}
-                    runtime={movie.runtime}
+                    runtimeMinutes={movie.runtimeMinutes}
                     year={movie.year}
                 ></MovieCard>
             })}
