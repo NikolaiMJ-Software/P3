@@ -7,7 +7,7 @@ export default function Header(){
     const navigate = useNavigate();
 
     return (
-        <header className="Header">
+        <header className="Header flex">
             {/* F-Kult logo to go to homepage */}
             <HomeButton onClick={()=>navigate("/")}/>
 
