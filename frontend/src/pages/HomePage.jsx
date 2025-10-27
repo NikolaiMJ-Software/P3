@@ -1,12 +1,20 @@
-import {useNavigate} from "react-router-dom";
-
+import {useNavigate, useParams} from "react-router-dom";
+import { useEffect } from "react";
 export default function HomePage() {
     const navigate = useNavigate();
+    const {username} = useParams();
+
+    useEffect(()=>{
+        if(!username){
+            navigate("/login")
+        }
+    }, [username, navigate])
+
     const goToMessages = () => {
-        navigate("/messages");
+        navigate(`/messages/${username}`);
     };
     const goToThemes = () => {
-        navigate("/themes");
+        navigate(`/themes/${username}`);
     }
 
     return <>

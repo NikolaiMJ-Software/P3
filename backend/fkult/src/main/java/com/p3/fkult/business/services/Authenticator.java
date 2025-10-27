@@ -1,9 +1,7 @@
 package com.p3.fkult.business.services;
 
 import com.p3.fkult.persistence.repository.AuthRepository;
-import com.p3.fkult.persistence.repository.AuthRepository.MemberInfo;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class Authenticator {
@@ -15,43 +13,26 @@ public class Authenticator {
     }
 
     //return true if user is found or inserted, otherwise return false
-    @Transactional
     public boolean receiveUsername(String username) {
         System.out.println("Authenticator got username: " + username);
 
-        if (authRepo.userExistsLocally(username)) {
-            System.out.println("User exists: true (local DB)");
-            return true;
-        }
+        if (authRepo.userExistsLocally(username)) return true;
 
         Integer memberId = authRepo.fetchMemberId(username);
-        if (memberId == null) {
-            System.out.println("User exists: false");
-            return false;
-        }
+        if (memberId == null) return false;
 
-        MemberInfo memberInfo = authRepo.fetchMemberInfo(memberId);
-        if (memberInfo == null) {
-            System.out.println("User exists (remote ID), but failed to fetch member info → insert failure");
-            return false;
-        }
+        AuthRepository.MemberInfo info = authRepo.fetchMemberInfo(memberId);
+        if (info == null) return false;
 
-        String storeUsername = (memberInfo.username != null && !memberInfo.username.isBlank()) ? memberInfo.username : username;
-        String storeName     = memberInfo.name;
+        return upsertLocalUser(info, username);
+    }
 
-        try {
-            int rows = authRepo.insertUser(storeName, storeUsername);
-            if (rows == 1) {
-                System.out.println("Insert success: user={" + storeUsername + ", name=" + storeName + "}");
-                return true;
-            } else {
-                System.out.println("Insert failure: no rows inserted");
-                return false;
-            }
-        } catch (Exception e) {
-            System.out.println("Insert failure: " + e.getMessage());
-            return false;
-        }
+    @org.springframework.transaction.annotation.Transactional
+    protected boolean upsertLocalUser(AuthRepository.MemberInfo memberInfo, String fallback) {
+        String user = (memberInfo.username != null && !memberInfo.username.isBlank()) ? memberInfo.username : fallback;
+        String name = memberInfo.name;
+        int rows = authRepo.upsertUser(name, user);
+        return rows == 1; // insert or update counts as 1 with JdbcTemplate
     }
 }
 
