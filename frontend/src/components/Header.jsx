@@ -56,7 +56,7 @@ function NavButton({ icon, label, onClick }) {
             <button className="flex hover:bg-gray-300 cursor-pointer rounded-4xl border size-12 items-center justify-center" onClick={onClick} title={label}>
                 <img className="w-9 h-9" src={icon} alt={label}/>
             </button>
-            <p className="text-center align-top">{label}</p>
+            <p className="text-center align-top text-sm">{label}</p>
         </div>
 
     );
