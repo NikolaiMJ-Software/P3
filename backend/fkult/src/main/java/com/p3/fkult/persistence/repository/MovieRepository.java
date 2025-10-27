@@ -57,7 +57,7 @@ public class MovieRepository {
 
     public List<Movie> searchMovies(String keyword) {
         //case insenstive + partial matches
-        String sql = "SELECT * FROM movie WHERE LOWER(movie_name) LIKE LOWER(?) AND is_active = 1";
+        String sql = "SELECT * FROM movie WHERE LOWER(movie_name) LIKE LOWER(?) AND is_active = 1 AND year > 0 AND runtime_minutes > 0 lIMIT 5";
         String likePattern = "%" + keyword + "%";
         return jdbcTemplate.query(sql, rowMapper, likePattern);
     } 
