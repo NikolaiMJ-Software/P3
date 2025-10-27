@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {BrowserRouter, Routes, Route, Outlet} from "react-router-dom";
 import HomePage from "./pages/HomePage.jsx";
 import MessagesPage from "./pages/MessagesPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -11,9 +11,7 @@ function Layout() {
     return(
         <>
             <Header />
-            <main className="pt-32">
-                <Outlet/>
-            </main>
+            <Outlet/>
         </>
     );
 }
@@ -26,14 +24,15 @@ export default function Router() {
                 <Route element={<Layout/>}>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/messages/:username" element={<MessagesPage />} />
-                    <Route path="/login" element={<LoginPage />} />
                     <Route path="/header" element={<HeaderTestPage />} />
                     <Route path="/themes/:username" element={<ThemeBrowser />} />
+                    {/* User logged in paths */}
+                    <Route path="/:username" element={<HomePage />} />
                 </Route>
 
                 {/* Routes that don't have the header */}
-                {/* User logged in paths */}
-                <Route path="/:username" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+
             </Routes>
         </BrowserRouter>
     );
