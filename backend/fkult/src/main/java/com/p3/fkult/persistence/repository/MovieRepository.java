@@ -55,6 +55,13 @@ public class MovieRepository {
         }
     }
 
+    public List<Movie> searchMovies(String keyword) {
+        //case insenstive + partial matches
+        String sql = "SELECT * FROM movie WHERE LOWER(movie_name) LIKE LOWER(?) AND is_active = 1";
+        String likePattern = "%" + keyword + "%";
+        return jdbcTemplate.query(sql, rowMapper, likePattern);
+    } 
+
     //upsert function
     public int upsertFromImdbFile(File tsvGz, boolean onlyMovies, boolean markInactiveMissing) throws IOException {
     jdbcTemplate.execute("PRAGMA foreign_keys = ON");

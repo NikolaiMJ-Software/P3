@@ -26,6 +26,11 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
+    public List<Movie> searchMovies(String query) {
+        //partial matches (case-insensitive)
+        return movieRepository.searchMovies(query);
+    }
+
     public List<MovieRequest> getMoviesByIds(List<Long> movieIds) {
         List<MovieRequest> movieRequests = new ArrayList<>();
 
