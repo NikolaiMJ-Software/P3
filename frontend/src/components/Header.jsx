@@ -1,56 +1,62 @@
 import logoPNG from '../assets/logo.png';
-import pizzaPNG from '../assets/pizza.png'
+import pizzaWEBP from '../assets/pizza.webp'
 import discordWEBP from '../assets/discord.webp'
+import userPNG from "../assets/User.png"
 import {useNavigate} from "react-router-dom";
-
 export default function Header(){
     const navigate = useNavigate();
 
     return (
-        <header className="Header flex">
-            {/* F-Kult logo to go to homepage */}
-            <HomeButton onClick={()=>navigate("/")}/>
+        <header className="pb-10">
+            <div className="flex justify-between top-0 inset-x-0">
+                <NavButton
+                    icon={logoPNG}
+                    onClick={() => {navigate("/changeThisLaterWhenLoginIsStored")}}
+                />
+                <div className="flex">
+                    <NavButton
+                        label="Pizza"
+                        icon={pizzaWEBP}
+                        onClick={() => {window.location.href = "https://f-kult-pizza-bestiller.vercel.app/"}}
+                    />
 
-            {/*  F-Kult */}
-            <h1>F-Kult</h1>
+                    <NavButton
+                        label="Discord"
+                        icon={discordWEBP}
+                        onClick={() => {console.log("discord!")}}
+                    />
 
-            {/*  Pizza, Discord, User widgets */}
-            <NavButton
-                label="Pizza"
-                icon={<img src={pizzaPNG} alt="pizza"/>}
-                onClick={() => {window.location.href = "https://f-kult-pizza-bestiller.vercel.app/"}}
-            />
-
-            <NavButton
-                label="Discord"
-                icon={<img src={discordWEBP} alt="discord"/>}
-                onClick={() => {console.log("discord!")}}
-            />
-
-            <NavButton
-                label="User"
-                icon={<img src={discordWEBP} alt="user"/>}
-                onClick={() => {console.log("User!")}}
-            />
+                    <NavButton
+                        label="User"
+                        icon={userPNG}
+                        onClick={() => {console.log("User!")}}
+                    />
+                </div>
+            </div>
+            <h1 className="top-0 left-0 right-0 text-center text-3xl bold">F-Kult</h1>
         </header>
     )
 }
 
-function HomeButton({ onClick }) {
-    return (
-        <button onClick={onClick}>
-            <img src={logoPNG} alt="Home"/>
-        </button>
-    );
-}
-
 function NavButton({ icon, label, onClick }) {
+    if (icon === logoPNG){
+        return (
+            <div className="flex-col pr-1">
+                <button className="flex hover:bg-gray-300 cursor-pointer rounded-4xl size-16 items-center justify-center" onClick={onClick} title={label}>
+                    <img src={icon} alt={label}/>
+                </button>
+                <p className="text-center align-top">{label}</p>
+            </div>
+
+        );
+    }
+
     return (
-        <div>
-            <button onClick={onClick} title={label}>
-                {icon}
+        <div className="flex-col pr-1">
+            <button className="flex hover:bg-gray-300 cursor-pointer rounded-4xl border size-12 items-center justify-center" onClick={onClick} title={label}>
+                <img className="w-9 h-9" src={icon} alt={label}/>
             </button>
-            {label}
+            <p className="text-center align-top">{label}</p>
         </div>
 
     );
