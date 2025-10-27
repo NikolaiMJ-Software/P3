@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage.jsx";
 import MessagesPage from "./pages/MessagesPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import HeaderTestPage from "./pages/HeaderTestPage.jsx"
-import ThemeBrowser from "./pages/ThemeBrowser.jsx";
+import ThemeBrowser from "./components/ThemeBrowser.jsx";
 import SubmitSSTestPage from "./pages/SubmitSSTestPage.jsx";
 
 export default function Router() {
