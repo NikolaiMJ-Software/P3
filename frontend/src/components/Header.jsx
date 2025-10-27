@@ -2,15 +2,17 @@ import logoPNG from '../assets/logo.png';
 import pizzaWEBP from '../assets/pizza.webp'
 import discordWEBP from '../assets/discord.webp'
 import userPNG from "../assets/User.png"
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
+
 export default function Header(){
     const navigate = useNavigate();
+    const {username} = useParams();
 
     return (
         <header className="pb-10 flex justify-between top-0 inset-x-0">
             <NavButton
                 icon={logoPNG}
-                onClick={() => {navigate("/changeThisLaterWhenLoginIsStored")}}
+                onClick={() => {navigate(`/${username}`)}}
             />
 
             <h1 className="relative top-2 left-0 right-0 text-center text-3xl bold">F-Kult</h1>
@@ -31,7 +33,7 @@ export default function Header(){
                 <NavButton
                     label="User"
                     icon={userPNG}
-                    onClick={() => {console.log("User!")}}
+                    onClick={() => {navigate(`/user/${username}`)}}
                 />
             </div>
 
@@ -42,12 +44,9 @@ export default function Header(){
 function NavButton({ icon, label, onClick }) {
     if (icon === logoPNG){
         return (
-            <div className="flex-col">
-                <button className="flex transition-colors hover:bg-gray-300 cursor-pointer rounded-4xl size-20 items-center justify-center" onClick={onClick} title={label}>
-                    <img src={icon} alt={label}/>
-                </button>
-                <p className="text-center align-top">{label}</p>
-            </div>
+            <button className="flex transition-colors hover:bg-gray-300 cursor-pointer rounded-4xl size-20 items-center justify-center" onClick={onClick} title={label}>
+                <img src={icon} alt={label}/>
+            </button>
 
         );
     }
@@ -57,7 +56,7 @@ function NavButton({ icon, label, onClick }) {
             <button className="flex transition-colors hover:bg-gray-300 cursor-pointer rounded-4xl border size-12 items-center justify-center" onClick={onClick} title={label}>
                 <img className="w-9 h-9" src={icon} alt={label}/>
             </button>
-            <p className="text-center align-top text-sm">{label}</p>
+            <p className="text-center align-top text-sm ">{label}</p>
         </div>
 
     );
