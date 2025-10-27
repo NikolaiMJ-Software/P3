@@ -43,7 +43,7 @@ function NavButton({ icon, label, onClick }) {
     if (icon === logoPNG){
         return (
             <div className="flex-col">
-                <button className="flex hover:bg-gray-300 cursor-pointer rounded-4xl size-20 items-center justify-center" onClick={onClick} title={label}>
+                <button className="flex transition-colors hover:bg-gray-300 cursor-pointer rounded-4xl size-20 items-center justify-center" onClick={onClick} title={label}>
                     <img src={icon} alt={label}/>
                 </button>
                 <p className="text-center align-top">{label}</p>
@@ -54,7 +54,7 @@ function NavButton({ icon, label, onClick }) {
 
     return (
         <div className="flex-col pr-1">
-            <button className="flex hover:bg-gray-300 cursor-pointer rounded-4xl border size-12 items-center justify-center" onClick={onClick} title={label}>
+            <button className="flex transition-colors hover:bg-gray-300 cursor-pointer rounded-4xl border size-12 items-center justify-center" onClick={onClick} title={label}>
                 <img className="w-9 h-9" src={icon} alt={label}/>
             </button>
             <p className="text-center align-top text-sm">{label}</p>
