@@ -7,33 +7,34 @@ export default function Header(){
     const navigate = useNavigate();
 
     return (
-        <header className="pb-10">
-            <div className="flex justify-between top-0 inset-x-0">
+        <header className="pb-10 flex justify-between top-0 inset-x-0">
+            <NavButton
+                icon={logoPNG}
+                onClick={() => {navigate("/changeThisLaterWhenLoginIsStored")}}
+            />
+
+            <h1 className="relative top-2 left-0 right-0 text-center text-3xl bold">F-Kult</h1>
+
+            <div className="flex">
                 <NavButton
-                    icon={logoPNG}
-                    onClick={() => {navigate("/changeThisLaterWhenLoginIsStored")}}
+                    label="Pizza"
+                    icon={pizzaWEBP}
+                    onClick={() => {window.location.href = "https://f-kult-pizza-bestiller.vercel.app/"}}
                 />
-                <div className="flex">
-                    <NavButton
-                        label="Pizza"
-                        icon={pizzaWEBP}
-                        onClick={() => {window.location.href = "https://f-kult-pizza-bestiller.vercel.app/"}}
-                    />
 
-                    <NavButton
-                        label="Discord"
-                        icon={discordWEBP}
-                        onClick={() => {console.log("discord!")}}
-                    />
+                <NavButton
+                    label="Discord"
+                    icon={discordWEBP}
+                    onClick={() => {window.location.href = "https://discord.gg/zV3GEZyY6z"}}
+                />
 
-                    <NavButton
-                        label="User"
-                        icon={userPNG}
-                        onClick={() => {console.log("User!")}}
-                    />
-                </div>
+                <NavButton
+                    label="User"
+                    icon={userPNG}
+                    onClick={() => {console.log("User!")}}
+                />
             </div>
-            <h1 className="top-0 left-0 right-0 text-center text-3xl bold">F-Kult</h1>
+
         </header>
     )
 }
@@ -41,8 +42,8 @@ export default function Header(){
 function NavButton({ icon, label, onClick }) {
     if (icon === logoPNG){
         return (
-            <div className="flex-col pr-1">
-                <button className="flex hover:bg-gray-300 cursor-pointer rounded-4xl size-16 items-center justify-center" onClick={onClick} title={label}>
+            <div className="flex-col">
+                <button className="flex hover:bg-gray-300 cursor-pointer rounded-4xl size-20 items-center justify-center" onClick={onClick} title={label}>
                     <img src={icon} alt={label}/>
                 </button>
                 <p className="text-center align-top">{label}</p>
