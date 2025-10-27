@@ -1,6 +1,8 @@
 import {useNavigate, useParams} from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
+import ThemeBrowser from "../components/ThemeBrowser.jsx";
+import SoundSampleBrowser from "../components/SoundSampleBrowser.jsx";
 export default function HomePage() {
     const navigate = useNavigate();
     const {username} = useParams();

@@ -2,7 +2,7 @@ import {BrowserRouter, Routes, Route, Outlet} from "react-router-dom";
 import HomePage from "./pages/HomePage.jsx";
 import MessagesPage from "./pages/MessagesPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
-import ThemeBrowser from "./pages/ThemeBrowser.jsx";
+import ThemeBrowser from "./components/ThemeBrowser.jsx";
 import SubmitSSTestPage from "./pages/SubmitSSTestPage.jsx";
 
 import Header from "./components/Header.jsx";
