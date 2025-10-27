@@ -10,10 +10,12 @@ export default function Router() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="/messages" element={<MessagesPage />} />
+                <Route path="/messages/:username" element={<MessagesPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/header" element={<HeaderTestPage />} />
-                <Route path="/themes" element={<ThemeBrowser />} />
+                <Route path="/themes/:username" element={<ThemeBrowser />} />
+                {/* User logged in paths */}
+                <Route path="/:username" element={<HomePage />} />
             </Routes>
         </BrowserRouter>
     );

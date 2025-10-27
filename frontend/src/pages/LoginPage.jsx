@@ -18,7 +18,7 @@ export default function LoginPage() {
 
     if (res.ok) {
       console.log("Login successful");
-      navigate("/");
+      navigate(`/${username}`);
     } else {
       const text = await res.text();
       setError(text || "Unknown error");

@@ -89,6 +89,16 @@ public class AuthRepository {
         return jdbc.update("INSERT INTO user (name, username) VALUES (?, ?)", name, username);
     }
 
+    public int upsertUser(String name, String username) {
+    return jdbc.update(
+      """
+      INSERT INTO user (name, username) VALUES (?, ?)
+      ON CONFLICT(username) DO UPDATE SET name = excluded.name
+      """,
+      name, username
+    );
+  }
+
     // Data transfer objects defined
     public static class MemberIdResponse {
         public Integer member_id;
