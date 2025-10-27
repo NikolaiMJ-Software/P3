@@ -25,7 +25,7 @@ export default function Header(){
                 <NavButton
                     label="Discord"
                     icon={discordWEBP}
-                    onClick={() => {console.log("discord!")}}
+                    onClick={() => {window.location.href = "https://discord.gg/zV3GEZyY6z"}}
                 />
 
                 <NavButton
