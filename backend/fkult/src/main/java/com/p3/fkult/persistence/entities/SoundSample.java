@@ -5,6 +5,9 @@ public class SoundSample {
     private String filePath;
     private String userId;
 
+
+    public SoundSample() {}
+
     public SoundSample(String link, String filePath, String userId){
         this.link = link;
         this.filePath = filePath;

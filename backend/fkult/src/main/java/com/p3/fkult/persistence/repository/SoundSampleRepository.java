@@ -32,7 +32,14 @@ public class SoundSampleRepository {
 
     // Save a SoundSample to the database
     public void save(SoundSample soundSample){
-        String sql = "INSERT INTO sound_sample (link, file_path, user_id) VALUES (?,?,?)";
+        if(soundSample.getLink() != null && soundSample.getLink().isEmpty()){
+            soundSample.setLink(null);
+        }
+        if(soundSample.getFilePath() != null && soundSample.getFilePath().isEmpty()){
+            soundSample.setFilePath(null);
+        }
+        
+        String sql = "INSERT INTO sound_samples (link, file_path, user_id) VALUES (?,?,?)";
         jdbcTemplate.update(sql, soundSample.getLink(), soundSample.getFilePath(), soundSample.getUserId());
     }
 

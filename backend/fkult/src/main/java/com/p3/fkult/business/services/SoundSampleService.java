@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
-import java.io.IOException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.p3.fkult.persistence.entities.SoundSample;
 import com.p3.fkult.persistence.repository.SoundSampleRepository;
@@ -31,14 +30,13 @@ public class SoundSampleService {
     public String upload(
     @RequestPart(value = "file", required = false) MultipartFile file,
     @RequestPart(value = "soundSample", required = true) String soundSampleJson
-    ) throws IOException {
-
+    ) { try{
         // If it is a file, add it to the soundSampleUploads folder
         String path = null;
         if (file != null) {
-            File uploadDir = new File("../../soundSampleUploads");
+            File uploadDir = new File("soundSampleUploads");
             if (!uploadDir.exists()) uploadDir.mkdirs();
-            path = "../../soundSampleUploads/" + file.getOriginalFilename();
+            path = uploadDir.getAbsolutePath() + File.separator + file.getOriginalFilename();
             file.transferTo(new File(path));
         }
 
@@ -49,6 +47,12 @@ public class SoundSampleService {
         repository.save(sample);
 
         return "Upload complete!";
+    } catch (Exception e) {
+        e.printStackTrace();
+        return "Upload failed: " + e.getMessage();
+    }
+
+    
     }
 
     @GetMapping("/download")
