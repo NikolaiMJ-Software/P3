@@ -1,6 +1,5 @@
 package com.p3.fkult.business.services;
 
-import com.p3.fkult.persistence.entities.ExampleMessage;
 import com.p3.fkult.persistence.entities.User;
 import com.p3.fkult.persistence.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ public class UserService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-    };
+    }
 
     public List<User> getAllUsers(){
         return userRepository.findAll();
