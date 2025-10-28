@@ -10,7 +10,6 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final RestTemplate restTemplate = new RestTemplate();
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
