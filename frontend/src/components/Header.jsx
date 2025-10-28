@@ -33,7 +33,7 @@ export default function Header(){
                 <NavButton
                     label="User"
                     icon={userPNG}
-                    onClick={() => {navigate(`/user/${username}`)}}
+                    onClick={() => {navigate(`/admin/${username}`)}}
                 />
             </div>
 

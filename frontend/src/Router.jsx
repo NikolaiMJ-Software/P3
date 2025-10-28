@@ -4,7 +4,7 @@ import MessagesPage from "./pages/MessagesPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import ThemeBrowser from "./components/ThemeBrowser.jsx";
 import SubmitSSTestPage from "./pages/SubmitSSTestPage.jsx";
-import UserPage from "./pages/UserPage.jsx"
+import AdminPage from "./pages/AdminPage.jsx"
 
 import Header from "./components/Header.jsx";
 
@@ -29,7 +29,7 @@ export default function Router() {
                     <Route path="/submit" element={<SubmitSSTestPage />}/>
                     {/* User logged in paths */}
                     <Route path="/:username" element={<HomePage />} />
-                    <Route path="/user/:username" element={<UserPage/>} />
+                    <Route path="/admin/:username" element={<AdminPage/>} />
                 </Route>
 
                 {/* Routes that don't have the header */}
