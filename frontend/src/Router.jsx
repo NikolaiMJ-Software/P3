@@ -7,6 +7,7 @@ import SubmitSSTestPage from "./pages/SubmitSSTestPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx"
 
 import Header from "./components/Header.jsx";
+import WheelOfFortunePage from "./pages/WheelOfFortunePage.jsx";
 
 function Layout() {
     return(
@@ -30,6 +31,7 @@ export default function Router() {
                     {/* User logged in paths */}
                     <Route path="/:username" element={<HomePage />} />
                     <Route path="/admin/:username" element={<AdminPage/>} />
+                    <Route path="/wheel/:username" element={<WheelOfFortunePage/>} />
                 </Route>
 
                 {/* Routes that don't have the header */}
