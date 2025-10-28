@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+  const savedUser = sessionStorage.getItem("username");
+  if (savedUser) {
+    navigate(`/${savedUser}`);
+  }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,6 +26,8 @@ export default function LoginPage() {
 
     if (res.ok) {
       console.log("Login successful");
+      //Save username to sessionStorage
+      sessionStorage.setItem("username", username);
       navigate(`/${username}`);
     } else {
       const text = await res.text();

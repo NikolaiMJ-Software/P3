@@ -3,21 +3,32 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ThemeBrowser from "../components/ThemeBrowser.jsx";
 import SoundSampleBrowser from "../components/SoundSampleBrowser.jsx";
+
+
 export default function HomePage() {
     const navigate = useNavigate();
-    const {username} = useParams();
+    const {username: routeUsername} = useParams();
     const [selected, setSelected] = useState("themes")
-    useEffect(()=>{
-        if(!username){
-            navigate("/login")
+
+    const user = routeUsername || sessionStorage.getItem("username")
+
+    useEffect(() => {
+        if (!user) {
+        navigate("/login");
+        return;
         }
-    }, [username, navigate])
+        if (!routeUsername && user) {
+        navigate(`/${user}`, { replace: true });
+        }
+    }, [user, routeUsername, navigate]);
+
+     if (!user) return null;
 
     const goToMessages = () => {
-        navigate(`/messages/${username}`);
+        navigate(`/messages/${user}`);
     };
     const goToThemes = () => {
-        navigate(`/themes/${username}`);
+        navigate(`/themes/${user}`);
     }
 
     return <>
