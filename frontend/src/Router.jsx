@@ -27,7 +27,7 @@ export default function Router() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/messages/:username" element={<MessagesPage />} />
                     <Route path="/themes/:username" element={<ThemeBrowser />} />
-                    <Route path="/submit" element={<SubmitSSTestPage />}/>
+                    <Route path="/submit/:username" element={<SubmitSSTestPage />}/>
                     {/* User logged in paths */}
                     <Route path="/:username" element={<HomePage />} />
                     <Route path="/admin/:username" element={<AdminPage/>} />
