@@ -51,3 +51,25 @@ export function ThemeCardSmall({title, name, tConsts}){
         </div>
     )
 }
+export function ThemeCreationCard({onClick}){
+
+    return(
+        <div onClick={onClick} className={"relative w-60 h-80 border-2 border-black rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
+            "text-lg font-medium shadow-sm hover:bg-green-100 transition shrink-0"}>
+            <p className={"mb-4 text-center"}>Create Theme</p>
+            <div className={"bg-green-200 flex justify-center items-center w-16 h-16 border-5 border-green-500 rounded-full"}>
+                <span className="text-5xl font-bold text-green-500 mb-2.5">+</span>
+            </div>
+        </div>
+    )
+}
+
+export function StartupCard({date}){
+    return(
+        <div onClick={onClick} className={"relative w-60 h-80 border-2 border-black rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
+            "text-lg font-medium shadow-sm hover:bg-green-100 transition shrink-0"}>
+            <p className={"mb-4 text-center"}>Startup Day</p>
+            <p className={"mb-4 text-center"}>{date}</p>
+        </div>
+    )
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {getThemes} from "../services/themeService.jsx";
-import ThemeCard, {ThemeCardSmall} from "./ThemeCard.jsx";
+import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
 import SoundSampleBrowser from "./SoundSampleBrowser.jsx";
 
 export default function ThemeBrowser() {
@@ -17,8 +17,7 @@ export default function ThemeBrowser() {
                 <p className={"m-4 font-bold"}>Upcoming themes</p>
                 <div className={"flex gap-5 p-4 overflow-x-auto"}>
                     {/* individual cards */}
-                    <div className={"w-60 h-80 border-2 border-black" +
-                        "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>Create theme</div>
+                    <ThemeCreationCard></ThemeCreationCard>
                     <ThemeCard drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]}></ThemeCard>
                 </div>
                 <div className={"border-1 m-8"}></div>
@@ -50,15 +49,6 @@ export default function ThemeBrowser() {
                     </div>
                 </div>
             </div>
-            {themes.map((theme) => {
-                return <ThemeCard
-                    key={theme.id}
-                    title={theme.name}
-                    name={"Martin"}// should find a user's name instead, replaced for testing purpose
-                    drinkingRules={theme.drinkingRules ?? []}
-                    movieIds={theme.movieIds}
-                ></ThemeCard>
-            })}
         </div>
     )
 }
