@@ -72,7 +72,7 @@ public class SoundSampleServiceTest {
 
         // Arrange
         String userId = "1";
-        String json = String.format("{\"link\":null,\"filePath\":null,\"userId\":\"1\"}", userId);
+        String json = String.format("{\"link\":null,\"filePath\":null,\"userId\":\"%s\"}", userId);
 
         // Act
         String response = service.upload(null, json);
