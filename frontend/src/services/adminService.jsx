@@ -6,7 +6,7 @@ export async function getUsers(){
 }
 
 export async function isAdmin(username){
-    const response = await fetch(`http://localhost:8080/api/user/admin/root`);
+    const response = await fetch(`${API_URL}/admin/${username}`);
     return response.json();
 }
 
