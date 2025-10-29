@@ -31,8 +31,14 @@ public class UserRepository {
         return jdbcTemplate.query("SELECT * FROM user", rowMapper);
     }
 
+    public User findUser(String username){
+        return jdbcTemplate.queryForObject("SELECT * FROM user WHERE username = ?", rowMapper, username);
+    }
+
     // Find ID by username
     public long findIdByUsername(String username){
         return jdbcTemplate.queryForObject("SELECT id FROM user WHERE username = ?", Long.class, username);
     }
+
+
 }
