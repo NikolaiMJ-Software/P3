@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 // This is a page to showcase the functionality of submitting a sound sample via file upload or URL input.
 export default function SubmitSSTestPage() {
@@ -7,16 +8,31 @@ export default function SubmitSSTestPage() {
     const [link, setUrl] = useState("");
     const [file, setFile] = useState(null)
     const [message, setMessage] = useState("");
+    const { username } = useParams();
 
     // Handles sound sample submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // First if all, get the user ID from the backend
+        let userId = null;
+        try {
+            const response = await fetch(`http://localhost:8080/users/id/${username}`);
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+            userId = await response.text();
+        } catch (error) {
+            console.error("Failed to fetch user ID:", error);
+            setMessage("Failed to fetch user ID: " + error.message);
+            return;
+        }
+
         // Setup sound sample object and convert to JSON
         const soundSample = {
             link: link,
             filePath: null,
-            userId: 1
+            userId: userId
         };
         const soundSampleJson = JSON.stringify(soundSample);
 
