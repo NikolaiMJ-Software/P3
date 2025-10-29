@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {getThemes} from "../services/themeService.jsx";
-import ThemeCard from "./ThemeCard.jsx";
+import ThemeCard, {ThemeCardSmall} from "./ThemeCard.jsx";
 import SoundSampleBrowser from "./SoundSampleBrowser.jsx";
 
 export default function ThemeBrowser() {
@@ -19,20 +19,7 @@ export default function ThemeBrowser() {
                     {/* individual cards */}
                     <div className={"w-60 h-80 border-2 border-black" +
                         "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>Create theme</div>
-                    <div className={"w-60 h-80 border-2 border-black" +
-                        "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
-                    <div className={"w-60 h-80 border-2 border-black" +
-                        "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
-                    <div className={"w-60 h-80 border-2 border-black" +
-                        "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
-                    <div className={"w-60 h-80 border-2 border-black" +
-                        "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
-                    <div className={"w-60 h-80 border-2 border-black" +
-                        "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
-                    <div className={"w-60 h-80 border-2 border-black" +
-                        "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
-                    <div className={"w-60 h-80 border-2 border-black" +
-                        "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
+                    <ThemeCardSmall title={"Pirates Night"} name={"Kabuum"} movieIds={[10005, 10503]}></ThemeCardSmall>
                 </div>
                 <div className={"border-1 m-8"}></div>
                 {/* Top toggle buttons */}
@@ -58,18 +45,6 @@ export default function ThemeBrowser() {
                         {/* individual cards */}
                         <div className={"w-60 h-80 border-2 border-black" +
                             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>Create theme</div>
-                        <div className={"w-60 h-80 border-2 border-black" +
-                            "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
-                        <div className={"w-60 h-80 border-2 border-black" +
-                            "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
-                        <div className={"w-60 h-80 border-2 border-black" +
-                            "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
-                        <div className={"w-60 h-80 border-2 border-black" +
-                            "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
-                        <div className={"w-60 h-80 border-2 border-black" +
-                            "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
-                        <div className={"w-60 h-80 border-2 border-black" +
-                            "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
                         <div className={"w-60 h-80 border-2 border-black" +
                             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>theme</div>
                     </div>

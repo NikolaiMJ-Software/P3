@@ -9,3 +9,10 @@ export default function MovieCard({moviePosterURL, title, year, runtimeMinutes})
         </div>
     )
 }
+export function MovieCardSmall({moviePosterUrl, title, runtimeMinutes}){
+    return(<div>
+        <h1>{title}</h1>
+        <p>{runtimeMinutes}</p>
+        <img src={moviePosterUrl} width={50} height={70}/>
+    </div>)
+}
