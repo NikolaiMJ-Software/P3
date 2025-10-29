@@ -52,11 +52,36 @@ public class MovieService {
         return movieRequests;
     }
 
+    public List<MovieRequest> getMoviesByTconsts(List<String> tConsts){
+        List<MovieRequest> movieRequests = new ArrayList<>();
+
+        for (String tConst : tConsts) {
+            Movie movie = movieRepository.findByTconst(tConst);
+            if (movie == null) {
+                throw new RuntimeException("Movie not found with tconst: " + tConst);
+            }
+            String posterURL = getPosterURL(movie);
+            MovieRequest movieRequest = new MovieRequest(
+                    movie.getId(),
+                    movie.getMovieName(),
+                    posterURL,
+                    movie.getRuntimeMinutes(),
+                    movie.getYear()
+            );
+            movieRequests.add(movieRequest);
+        }
+        return movieRequests;
+    }
+
     //ChatGPT said this is maybe illegal... but... it works though
     public String getPosterURL(Movie movie) {
         if (movie.getTconst() == null) {
             System.out.println("Movie " + movie.getId() + " has no tconst");
             return null;
+        }
+        if(movie.getPosterURL() != null && !movie.getPosterURL().isBlank()){
+            System.out.println("Found cached poster" + movie.getPosterURL());
+            return movie.getPosterURL();
         }
 
         String tConst = movie.getTconst() + "/";
@@ -88,7 +113,9 @@ public class MovieService {
             Element ogImage = doc.selectFirst("meta[property=og:image]");
             if (ogImage != null) {
                 String poster = ogImage.attr("content");
-                System.out.println("Found poster URL: " + poster);
+                movieRepository.updatePosterURL(movie.getId(), poster);
+                movie.setPosterURL(poster);
+                System.out.println("Found poster URL: " + poster +" caching URL...");
                 return poster;
             } else {
                 System.out.println("No og:image meta tag found for " + movieURL);

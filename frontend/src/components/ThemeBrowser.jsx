@@ -19,7 +19,7 @@ export default function ThemeBrowser() {
                     {/* individual cards */}
                     <div className={"w-60 h-80 border-2 border-black" +
                         "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>Create theme</div>
-                    <ThemeCardSmall title={"Pirates Night"} name={"Kabuum"} movieIds={[10005, 10503]}></ThemeCardSmall>
+                    <ThemeCard drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]}></ThemeCard>
                 </div>
                 <div className={"border-1 m-8"}></div>
                 {/* Top toggle buttons */}

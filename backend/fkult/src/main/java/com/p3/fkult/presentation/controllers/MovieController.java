@@ -24,7 +24,7 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @PostMapping("/batch")
+    @PostMapping("/batchById")
     public ResponseEntity<?> getMovieIds(@RequestBody List<Long> movieIds) {
         try {
             List<MovieRequest> movies = movieService.getMoviesByIds(movieIds);
@@ -36,6 +36,19 @@ public class MovieController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
         }
     }
+
+    @PostMapping("/batchByTconst")
+        public ResponseEntity<?> getMoviesByTconst(@RequestBody List<String> tconsts) {
+            try {
+                List<MovieRequest> movies = movieService.getMoviesByTconsts(tconsts);
+                return ResponseEntity.ok(movies);
+            } catch (RuntimeException e) {
+                // Return 404 with a JSON error message
+                Map<String, String> errorBody = new HashMap<>();
+                errorBody.put("error", e.getMessage());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
+            }
+        }
 
 
     //Search by movie name

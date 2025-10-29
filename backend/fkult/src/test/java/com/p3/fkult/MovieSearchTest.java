@@ -31,7 +31,16 @@ public class MovieSearchTest {
     @Test
     void testSearchMovies() {
         // arrange
-        Movie testMovie = new Movie(1, "tt1234567", "Test Movie", "Original", 2020, 120, true);
+        Movie testMovie = new Movie(
+        1,
+        "tt1234567",
+        "Test Movie",
+        "Original",
+        2020,
+        120,
+        true,
+        null
+        );
         when(movieRepository.searchMovies("test")).thenReturn(List.of(testMovie));
 
         // act

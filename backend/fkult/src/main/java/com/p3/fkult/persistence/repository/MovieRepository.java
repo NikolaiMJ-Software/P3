@@ -38,7 +38,8 @@ public class MovieRepository {
                     rs.getString("original_movie_name"),
                     rs.getInt("year"),
                     rs.getInt("runtime_minutes"),
-                    rs.getBoolean("is_active")
+                    rs.getBoolean("is_active"),
+                    rs.getString("poster_url")
             );
 
     //database operations
@@ -55,9 +56,22 @@ public class MovieRepository {
         }
     }
 
+    public Movie findByTconst(String tConst){
+        String sql = "SELECT * FROM movie WHERE tconst = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, rowMapper, tConst);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public void updatePosterURL(Long movieId, String posterURL){
+        String sql = "UPDATE movie SET poster_url = ? WHERE id = ?";
+        jdbcTemplate.update(sql, posterURL, movieId);
+    }
     public List<Movie> searchMovies(String keyword) {
         //case insenstive + partial matches
-        String sql = "SELECT * FROM movie WHERE LOWER(movie_name) LIKE LOWER(?) AND is_active = 1 AND year > 0 AND runtime_minutes > 0 lIMIT 5";
+        String sql = "SELECT * FROM movie WHERE LOWER(movie_name) LIKE LOWER(?) AND is_active = 1 AND year > 0 AND runtime_minutes > 0 LIMIT 5";
         String likePattern = "%" + keyword + "%";
         return jdbcTemplate.query(sql, rowMapper, likePattern);
     } 
