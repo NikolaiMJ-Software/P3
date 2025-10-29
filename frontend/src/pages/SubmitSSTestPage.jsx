@@ -15,7 +15,10 @@ export default function SubmitSSTestPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // First if all, get the user ID from the backend
+        // Sanitize input
+        const trimmedLink = link?.trim();
+
+        // Get the user ID from the backend
         let userId = null;
         try {
             const response = await fetch(`http://localhost:8080/users/id/${username}`);
@@ -31,7 +34,7 @@ export default function SubmitSSTestPage() {
 
         // Setup sound sample object and convert to JSON
         const soundSample = {
-            link: link,
+            link: trimmedLink,
             filePath: null,
             userId: userId
         };

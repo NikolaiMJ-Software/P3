@@ -32,6 +32,15 @@ public class SoundSampleService {
     @RequestPart(value = "file", required = false) MultipartFile file,
     @RequestPart(value = "soundSample", required = true) String soundSampleJson) { 
         try{
+            // Convert JSON string to SoundSample object
+            ObjectMapper mapper = new ObjectMapper();
+            SoundSample soundSample = mapper.readValue(soundSampleJson, SoundSample.class);
+
+            // Validate input
+            if (file == null && (soundSample.getLink() == null || soundSample.getLink().isEmpty())) {
+                return "Upload failed: either link or file must be provided for upload";
+            }
+
             // If it is a file, add it to the soundSampleUploads folder
             String path = null;
             if (file != null) {
@@ -42,8 +51,6 @@ public class SoundSampleService {
             }
 
             // Add the soundsample object to the database
-            ObjectMapper mapper = new ObjectMapper();
-            SoundSample soundSample = mapper.readValue(soundSampleJson, SoundSample.class);
             soundSample.setFilePath(path);
             repository.save(soundSample);
 
