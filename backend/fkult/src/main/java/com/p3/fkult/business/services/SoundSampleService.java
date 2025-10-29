@@ -54,11 +54,13 @@ public class SoundSampleService {
         }
     }
 
-
+    // Fetch function to delete a soundsample either link or file name
     @DeleteMapping("/delete")
     public String delete(
     @RequestPart(value = "link", required = false) String link,
     @RequestPart(value = "fileName", required = false) String fileName){
+
+        // Validate input
         if (link == null && fileName == null) {
             return "No link or file path provided for deletion.";
         }
@@ -66,6 +68,7 @@ public class SoundSampleService {
             return "Please provide either link or file path for deletion, not both.";
         }
 
+        // If deleting by file name, delete the file from the filesystem first
         String filePath = null;
         if (fileName != null) {
             filePath = new File("soundSampleUploads" + File.separator + fileName).getAbsolutePath();
@@ -80,6 +83,8 @@ public class SoundSampleService {
                 return "File not found at" + file.getPath() + ". Aborting database deletion.";
             }
         }
+
+        // Call repository delete function
         return repository.delete(link, filePath);
     }
 

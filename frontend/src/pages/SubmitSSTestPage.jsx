@@ -60,15 +60,20 @@ export default function SubmitSSTestPage() {
         }
     }
 
+    // Handles sound sample deletion
     const handleDelete = async () => {
+
+        // Remove whitespace from inputs
         const trimmedLink = link?.trim();
         const trimmedFileName = fileName?.trim();
 
+        // Validate input
         if (!trimmedLink && !trimmedFileName) {
             setMessage("Please provide a link or file name for deletion.");
             return;
         }
 
+        // Create data form for sound sample deletion (with either link or file name)
         const formData = new FormData();
         if (trimmedLink) {
             formData.append("link", trimmedLink);
@@ -76,11 +81,13 @@ export default function SubmitSSTestPage() {
             formData.append("fileName", trimmedFileName);
         }
 
+        // Send DELETE request to backend
         try{
             const response = await fetch("http://localhost:8080/api/delete", {
                 method: "DELETE",
                 body: formData,
             });
+
             if (!response.ok) {
                 throw new Error(`Server error: ${response.status}`);
             }
@@ -95,7 +102,7 @@ export default function SubmitSSTestPage() {
 
     // HTML of the page
     return (
-        <form onSubmit={handleSubmit}>
+        <form>
             <div>
                 <label>
                     File input:
@@ -114,7 +121,7 @@ export default function SubmitSSTestPage() {
                     <input type="String" onChange={(e) => setFileName(e.target.value)}/>
                 </label>
             </div>
-            <button type="submit">Submit</button>
+            <button type="button" onClick={handleSubmit}>Submit</button>
             <button type="button" onClick={handleDelete}>Delete</button>
             {message && <p>{message}</p>}
         </form>
