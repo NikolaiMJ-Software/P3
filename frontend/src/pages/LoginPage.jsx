@@ -1,3 +1,4 @@
+import React from "react"; //allows testing to progress
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
