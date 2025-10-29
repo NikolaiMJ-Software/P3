@@ -38,31 +38,25 @@ public class SoundSampleRepository {
         if(soundSample.getFilePath() != null && soundSample.getFilePath().isEmpty()){
             soundSample.setFilePath(null);
         }
-        
         String sql = "INSERT INTO sound_samples (link, file_path, user_id) VALUES (?,?,?)";
         jdbcTemplate.update(sql, soundSample.getLink(), soundSample.getFilePath(), soundSample.getUserId());
     }
 
     // Delete a SoundSample from the database
     public String delete(String link, String filePath){
+        if(link != null && link.isEmpty()) link = null;
+        if(filePath != null && filePath.isEmpty()) filePath = null;
         if(link == null && filePath == null){
             return "No link or file path provided for deletion.";
         } else if(link != null && filePath != null){
             return "Please provide either link or file path for deletion, not both.";
         } else if(link != null){
-            String sql = "DELETE FROM sound_sample WHERE link = ?";
+            String sql = "DELETE FROM sound_samples WHERE link = ?";
             jdbcTemplate.update(sql, link);
             return "SoundSample with link " + link + " deleted.";
-        } else {
-            String sql = "DELETE FROM sound_sample WHERE file_path = ?";
-            jdbcTemplate.update(sql, filePath);
-            return "SoundSample with file path " + filePath + " deleted.";
         }
-    }
-
-    // Delete all SoundSamples for a specific user
-    public void deleteAllFromUserId(String userId){
-        String sql = "DELETE FROM sound_sample WHERE user_id = ?";
-        jdbcTemplate.update(sql, userId);
+        String sql = "DELETE FROM sound_samples WHERE file_path = ?";
+        jdbcTemplate.update(sql, filePath);
+        return "SoundSample with file path " + filePath + " deleted.";
     }
 }
