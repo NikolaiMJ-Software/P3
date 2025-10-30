@@ -21,9 +21,9 @@ export default function ThemeCard({title, name, tConsts, drinkingRules}){
             </div>
 
             <div className={"flex justify-between gap-2 mt-3"}>
-                {/*movies.slice(0,2).map((movie) => (
+                {movies.slice(0,2).map((movie) => (
                     <MovieCardSmall key={movie.id} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes}/>
-                ))*/}
+                ))}
             </div>
         </div>
     )
