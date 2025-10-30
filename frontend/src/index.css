@@ -4,42 +4,79 @@
 @tailwind utilities;
 
 
+/*Login*/
 #root:has(.login-page) {
   @apply p-0;
 }
 
 .login-container {
-  @apply min-h-screen flex items-center justify-center;
+  @apply 
+  min-h-screen flex 
+  items-center 
+  justify-center;
   background-color: #ede6b9;
 }
 
 .login-logo {
-  @apply absolute top-6 left-6 w-30 h-auto hover:opacity-80 transition-opacity;
+  @apply 
+  absolute 
+  top-6 
+  left-6 
+  w-30 
+  h-auto 
+  hover:opacity-80 
+  transition-opacity;
 }
 
 .login-form {
-  @apply bg-white border rounded-lg px-12 py-10 w-full max-w-md flex flex-col gap-6;
+  @apply 
+  bg-white 
+  border rounded-2xl px-12 py-10 w-full max-w-md 
+  flex flex-col gap-6;
   border-color: #cfd3d7; 
 }
 
 .login-title {
-  @apply text-2xl font-serif font-bold text-center text-gray-900;
+  @apply 
+  text-2xl 
+  font-serif 
+  font-bold 
+  text-center 
+  text-gray-900;
 }
 
 .login-input {
-  @apply border rounded-md px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300;
+  @apply 
+  border rounded-md px-4 py-2.5 
+  text-gray-800 
+  focus:outline-none 
+  focus:ring-2 
+  focus:ring-blue-300;
   border-color: #cfd3d7;
 }
 
 .login-button {
-  @apply border rounded-full bg-gray-100 text-gray-800 font-medium py-2.5 hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300;
+  @apply 
+  border rounded-full 
+  bg-blue-100 
+  text-gray-800 
+  font-medium py-2.5 
+  hover:bg-blue-200 
+  transition-colors 
+  focus:outline-none 
+  focus:ring-2 
+  focus:ring-blue-300;
   border-color: #cfd3d7;
 }
 
 .login-button:active {
-  @apply bg-gray-300;
+  @apply 
+  bg-blue-300;
 }
 
 .login-error {
-  @apply text-red-600 text-sm text-center mt-1;
+  @apply 
+  text-red-600 
+  text-sm 
+  text-center mt-1;
 }
