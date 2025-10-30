@@ -66,7 +66,7 @@ export default function AdminPage(){
     </div>
 }
 
-function AdminButton({ username, label, admin }){
+function AdminButton({ username, label }){
     return (
         <button onClick={() => {async function buttonclick(){
             const response = await postAdmin(username);
