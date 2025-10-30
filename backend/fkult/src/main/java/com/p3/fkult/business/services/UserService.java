@@ -2,18 +2,11 @@ package com.p3.fkult.business.services;
 
 import com.p3.fkult.persistence.entities.User;
 import com.p3.fkult.persistence.repository.UserRepository;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
-@RestController
-
-@RequestMapping("/users")
+@Service
 public class UserService {
     private final UserRepository userRepository;
 
@@ -25,8 +18,14 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    @GetMapping("/id/{username}")
-    public long getUserIdByUsername(@PathVariable String username){
+    public User getUser(String username){
+        return userRepository.findUser(username);
+    }
+    public void postAdminUser(String username){
+        userRepository.updateAdminStatus(username);
+    }
+
+    public long getUserIdByUsername(String username){
         return userRepository.findIdByUsername(username);
     }
 }

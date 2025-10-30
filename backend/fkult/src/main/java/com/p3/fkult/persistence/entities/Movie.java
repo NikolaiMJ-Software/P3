@@ -8,8 +8,9 @@ public class Movie {
     private Integer year;
     private Integer runtimeMinutes;
     private Boolean isActive;
+    private String posterURL;
 
-    public Movie(long id, String tconst, String movieName, String originalMovieName, Integer year, Integer runtimeMinutes, Boolean isActive){
+    public Movie(long id, String tconst, String movieName, String originalMovieName, Integer year, Integer runtimeMinutes, Boolean isActive, String posterURL){
         this.id = id;
         this.tconst = tconst;
         this.movieName = movieName;
@@ -17,7 +18,13 @@ public class Movie {
         this.year = year;
         this.runtimeMinutes = runtimeMinutes;
         this.isActive = isActive;
+        this.posterURL = posterURL;
     }
+    public Movie(int id, String tconst, String movieName, String originalMovieName, int year, int runtimeMinutes, boolean isActive, String posterURL) {
+        //overloaded constructor that accepts primitives for year runtimeMinutes and isActive
+        this((long)id, tconst, movieName, originalMovieName, Integer.valueOf(year), Integer.valueOf(runtimeMinutes), Boolean.valueOf(isActive), posterURL);
+    }
+
 
     //getters
     public long getId(){
@@ -41,6 +48,9 @@ public class Movie {
     public Boolean getIsActive(){
         return this.isActive;
     }
+    public String getPosterURL(){
+        return this.posterURL;
+    }
 
     //setters
     public void setId(long id){
@@ -63,5 +73,8 @@ public class Movie {
     }
     public void setIsActive(Boolean isActive){
         this.isActive = isActive;
+    }
+    public void setPosterURL(String posterURL){
+        this.posterURL = posterURL;
     }
 }

@@ -21,3 +21,5 @@ backend/database/*.db
 backend/database/*.tsv.gz
 /backend/fkult/database/F-Kult.db
 /backend/fkult/database/title.basics.tsv.gz
+/backend/fkult/database/F-Kult.db-journal
+/backend/fkult/database/title.basics-1470140994653455941.tsv.gz.tmp

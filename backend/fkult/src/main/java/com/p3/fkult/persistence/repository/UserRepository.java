@@ -31,8 +31,21 @@ public class UserRepository {
         return jdbcTemplate.query("SELECT * FROM user", rowMapper);
     }
 
+    public User findUser(String username){
+        return jdbcTemplate.queryForObject("SELECT * FROM user WHERE username = ?", rowMapper, username);
+    }
+
+    public void updateAdminStatus(String username){
+        //check if user is or is not admin
+        Boolean isAdmin = jdbcTemplate.queryForObject("SELECT is_admin FROM user WHERE username = ?", Boolean.class, username);
+        jdbcTemplate.update("UPDATE user SET is_admin = ? WHERE username = ?", Boolean.FALSE.equals(isAdmin), username);
+
+    }
+
     // Find ID by username
     public long findIdByUsername(String username){
         return jdbcTemplate.queryForObject("SELECT id FROM user WHERE username = ?", Long.class, username);
     }
+
+
 }
