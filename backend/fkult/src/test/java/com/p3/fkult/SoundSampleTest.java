@@ -105,17 +105,18 @@ public class SoundSampleTest {
     }
 
     @Test
-    @DisplayName("Delete a valid sound sample from link")
+    @DisplayName("Try to delete a sound sample from link")
     void testDeleteValidSoundSampleFromLink() throws Exception {
 
         // Arrange
         String link = "http://example.com/test-sample.mp3";
+        when(repository.delete(eq(link), isNull())).thenReturn("Reached database succesfully");
 
         // Act
         String response = service.delete(link, null);
 
         // Assert
-        assertNull(response, "Service should return null since repository mock returns null");
+        assertEquals("Reached database succesfully", response);
         verify(repository, times(1)).delete(eq(link), isNull());
     }
 
@@ -132,21 +133,5 @@ public class SoundSampleTest {
         // Assert
         assertTrue(response.contains(invalidFileName + ". Aborting database deletion.")); // Checks last part of string
         verify(repository, times(0)).delete(isNull(), eq(invalidFileName));
-    }
-
-    @Test
-    @DisplayName("Delete an invalid sound sample from link")
-    void testDeleteInvalidSoundSampleFromLink() throws Exception {
-        
-        // Arrange
-        String invalidLink = "http://example.com/nonexistent.mp3";
-        when(repository.delete(eq(invalidLink), isNull())).thenReturn("No such link found");
-
-        // Act
-        String response = service.delete(invalidLink, null);
-
-        // Assert
-        assertEquals("No such link found", response);
-        verify(repository, times(1)).delete(eq(invalidLink), isNull());
     }
 }
