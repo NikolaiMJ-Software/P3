@@ -4,6 +4,9 @@ import React from "react"; //allows testing to progress
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { API } from '../services/api.jsx'
+const API_URL = `${API}/auth`; //backend address
+
 export default function LoginPage() {
   const [showTopholt, setShowTopholt] = useState(false);
   const [username, setUsername] = useState("");
@@ -27,7 +30,7 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    const res = await fetch("http://localhost:8080/api/auth/username", {
+    const res = await fetch(`${API_URL}/username`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username }),
