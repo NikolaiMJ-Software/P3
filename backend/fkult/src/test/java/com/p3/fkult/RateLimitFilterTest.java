@@ -32,7 +32,7 @@ public class RateLimitFilterTest {
         request.setRemoteAddr("127.0.0.1");
         request.setRequestURI("/default");
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 100; i++) {
             response = new MockHttpServletResponse();
             filter.doFilter(request, response, chain);
             assertEquals(200, response.getStatus());
@@ -48,7 +48,7 @@ public class RateLimitFilterTest {
         request.setRemoteAddr("127.0.0.1");
         request.setRequestURI("/default");
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 101; i++) {
             response = new MockHttpServletResponse();
             filter.doFilter(request, response, chain);
         }
@@ -82,7 +82,7 @@ public class RateLimitFilterTest {
         request.setRemoteAddr("127.0.0.1");
         request.setRequestURI("/api/themes");
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 102; i++) {
             response = new MockHttpServletResponse();
             filter.doFilter(request, response, chain);
         }
