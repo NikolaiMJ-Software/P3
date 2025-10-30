@@ -21,18 +21,7 @@ export default function AdminPage(){
 
     console.log(isAdminUser)
 
-    if(!isAdminUser){
-        return (
-            <div>
-                <p>GET OUT!</p>
-                <AdminButton
-                    username={username}
-                    label={`Become Admin`}
-                />
-            </div>
-        )
-    }
-    else if (isAdminUser){
+    if(isAdminUser === 1){
         return (
             <div>
                 <p>Hello {username}</p>
@@ -43,9 +32,23 @@ export default function AdminPage(){
             </div>
         )
     }
+    else if (isAdminUser === 0){
+        return (
+            <div>
+                <p>GET OUT!</p>
+                <AdminButton
+                    username={username}
+                    label={`Become Admin`}
+                />
+            </div>
+        )
+    }
 
-    return `what the helly. This ain't supposed to happen\n\n 
-        isAdminUser:${isAdminUser}`
+    return <div>
+        <p>What the helly. This ain't supposed to happen</p>
+        <br/>
+        <p>isAdminUser: ${JSON.stringify(isAdminUser)}</p>
+    </div>
 }
 
 function AdminButton({ username, label, admin }){
