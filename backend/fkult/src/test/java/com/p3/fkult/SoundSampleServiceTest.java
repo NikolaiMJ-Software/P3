@@ -78,7 +78,7 @@ public class SoundSampleServiceTest {
         String response = service.upload(null, json);
 
         // Assert
-        assertEquals("Upload failed: either link or file must be provided for upload", response);
-        verify(repository, times(1)).save(any(SoundSample.class));
+        assertEquals("Upload failed: either link or file must be provided for upload.", response);
+        verify(repository, times(0)).save(any(SoundSample.class));
     }
 }
