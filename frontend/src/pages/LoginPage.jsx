@@ -4,7 +4,7 @@ import React from "react"; //allows testing to progress
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { API } from './api.jsx'
+import { API } from '../services/api.jsx'
 const API_URL = `${API}/auth`; //backend address
 
 export default function LoginPage() {
