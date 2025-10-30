@@ -20,7 +20,7 @@ public class SoundSampleRepository {
         new SoundSample(
             rs.getString("link"),
             rs.getString("file_path"),
-            rs.getString("user_id")
+            rs.getLong("user_id")
         )
     );
 

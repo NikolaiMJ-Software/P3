@@ -1,7 +1,4 @@
 
-INSERT OR REPLACE INTO messages(id, content) VALUES (1, 'Hello');
-
-INSERT OR REPLACE INTO messages(id, content) VALUES (1, 'Hello');
 -- Insert dummy user
 INSERT OR REPLACE INTO user (id, name, username, is_banned, is_admin)
 VALUES 
@@ -26,9 +23,9 @@ WHERE EXISTS (SELECT 1 FROM movie WHERE id = 2);
 
 -- Add drinking rules
 INSERT OR REPLACE INTO drinking_rule (theme_id, rule_text)
-VALUES (1, 'Drink when someone says "pirate"');
-INSERT OR REPLACE INTO drinking_rule (theme_id, rule_text)
-VALUES (1, 'Take a sip whenever a ship appears on screen');
+VALUES
+(1, 'Drink when someone says "pirate"'),
+(1, 'Take a sip whenever a ship appears on screen');
 
 -- Dummy sound samples
 INSERT OR REPLACE INTO sound_samples (link, file_path, user_id)

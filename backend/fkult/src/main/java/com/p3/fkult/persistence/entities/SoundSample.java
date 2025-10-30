@@ -3,12 +3,12 @@ package com.p3.fkult.persistence.entities;
 public class SoundSample {
     private String link;
     private String filePath;
-    private String userId;
+    private Long userId;
 
 
     public SoundSample() {}
 
-    public SoundSample(String link, String filePath, String userId){
+    public SoundSample(String link, String filePath, Long userId){
         this.link = link;
         this.filePath = filePath;
         this.userId = userId;
@@ -21,7 +21,7 @@ public class SoundSample {
     public String getFilePath(){
         return this.filePath;
     }
-    public String getUserId(){
+    public Long getUserId(){
         return this.userId;
     }
 
@@ -32,7 +32,7 @@ public class SoundSample {
     public void setFilePath(String filePath){
         this.filePath = filePath;
     }
-    public void setUserId(String userId){
+    public void setUserId(Long userId){
         this.userId = userId;
     }
 }
