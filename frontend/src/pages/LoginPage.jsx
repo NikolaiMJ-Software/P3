@@ -81,10 +81,10 @@ export default function LoginPage() {
         aria-modal="true"
       >
         <div
-          className="bg-white rounded-xl shadow-xl p-3 max-w-3xl w-[90%]"
+          className="bg-white rounded-xl shadow-xl p-2 max-w-xl w-auto"
           onClick={(e) => e.stopPropagation()}
         >
-          <img src={Topholt} alt="Topholt" className="w-full h-auto rounded-lg" />
+          <img src={Topholt} alt="Topholt" className="max-h-[90vw] w-auto mx-auto rounded-lg object-contain" />
         </div>
       </div>
     )}
