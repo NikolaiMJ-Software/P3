@@ -1,47 +1,34 @@
 package com.p3.fkult.business.services;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.p3.fkult.persistence.entities.SoundSample;
 import com.p3.fkult.persistence.repository.SoundSampleRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin(origins = "http://localhost:5173")
-@RestController
+import java.io.File;
 
-// Fetch function that gets called by domain/api
-@RequestMapping("/api")
+@Service
 public class SoundSampleService {
 
-    // Downloads a copy of SoundSampleRepository to gets its functions
+    // Download copy of repository to run its code
     private final SoundSampleRepository repository;
     public SoundSampleService(SoundSampleRepository repository) {
         this.repository = repository;
     }
-    
-    // Soundsample uploading function accepts a soundsample object and optionally a file
-    @PostMapping("/upload")
-    public String upload(
-    @RequestPart(value = "file", required = false) MultipartFile file,
-    @RequestPart(value = "soundSample", required = true) String soundSampleJson) { 
-        try{
-            // Convert JSON string to SoundSample object
+
+    // Handles sound sample uploads with either link or file
+    public String upload(MultipartFile file, String soundSampleJson) {
+        try {
             ObjectMapper mapper = new ObjectMapper();
             SoundSample soundSample = mapper.readValue(soundSampleJson, SoundSample.class);
 
             // Validate input
             if (file == null && (soundSample.getLink() == null || soundSample.getLink().isEmpty())) {
-                return "Upload failed: either link or file must be provided for upload";
+                return "Upload failed: either link or file must be provided for upload.";
             }
 
-            // If it is a file, add it to the soundSampleUploads folder
+            // If there is a file, upload it to the server
             String path = null;
             if (file != null) {
                 File uploadDir = new File("soundSampleUploads");
@@ -50,24 +37,22 @@ public class SoundSampleService {
                 file.transferTo(new File(path));
             }
 
-            // Add the soundsample object to the database
+            // Save to the sound sample to the database
             soundSample.setFilePath(path);
             repository.save(soundSample);
-
             return "Upload complete!";
+
         } catch (Exception e) {
+
             e.printStackTrace();
             return "Upload failed: " + e.getMessage();
         }
     }
 
-    // Fetch function to delete a soundsample either link or file name
-    @DeleteMapping("/delete")
-    public String delete(
-    @RequestPart(value = "link", required = false) String link,
-    @RequestPart(value = "fileName", required = false) String fileName){
+    // Handles deletion of existing sound sample from given link or file name
+    public String delete(String link, String fileName) {
 
-        // Validate input
+        // Input validation
         if (link == null && fileName == null) {
             return "No link or file path provided for deletion.";
         }
@@ -75,7 +60,7 @@ public class SoundSampleService {
             return "Please provide either link or file path for deletion, not both.";
         }
 
-        // If deleting by file name, delete the file from the filesystem first
+        // If deletion is based on file name, find and delete file
         String filePath = null;
         if (fileName != null) {
             filePath = new File("soundSampleUploads" + File.separator + fileName).getAbsolutePath();
@@ -87,17 +72,11 @@ public class SoundSampleService {
                     return "Failed to delete file at: " + file.getPath() + ". Aborting database deletion.";
                 }
             } else {
-                return "File not found at" + file.getPath() + ". Aborting database deletion.";
+                return "File not found at " + file.getPath() + ". Aborting database deletion.";
             }
         }
 
-        // Call repository delete function
+        // Delete sound sample object in the database
         return repository.delete(link, filePath);
-    }
-
-    @GetMapping("/download")
-    private String download(){
-        repository.getAll();
-        return "69";
     }
 }
