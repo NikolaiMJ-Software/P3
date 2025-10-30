@@ -2,6 +2,7 @@ package com.p3.fkult.presentation.controllers;
 
 import com.p3.fkult.business.services.UserService;
 import com.p3.fkult.persistence.entities.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,12 @@ public class UserController {
     public int checkForAdminUser(@PathVariable String username) {
         User user = userService.getUser(username);
         return user.getAdmin() ? 1 : 0;
+    }
+
+    @PostMapping("/admin/{username}")
+    public ResponseEntity<String> changeAdminValueOfUser(@PathVariable String username) {
+        userService.postAdminUser(username);
+        return ResponseEntity.ok("Theme created successfully");
     }
 
     @GetMapping("/id/{username}")

@@ -10,3 +10,18 @@ export async function isAdmin(username){
     return response.json();
 }
 
+export async function postAdmin(username, admin){
+
+
+    const response = await fetch(`${API_URL}/admin/${username}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok){
+        throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    return response.text();
+}
+

@@ -21,6 +21,9 @@ public class UserService {
     public User getUser(String username){
         return userRepository.findUser(username);
     }
+    public void postAdminUser(String username){
+        userRepository.updateAdminStatus(username);
+    }
 
     public long getUserIdByUsername(String username){
         return userRepository.findIdByUsername(username);

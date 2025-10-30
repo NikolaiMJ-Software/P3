@@ -36,7 +36,6 @@ export default function Header(){
                     onClick={() => {navigate(`/admin/${username}`)}}
                 />
             </div>
-
         </header>
     )
 }
