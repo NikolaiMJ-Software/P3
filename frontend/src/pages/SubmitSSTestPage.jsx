@@ -21,7 +21,7 @@ export default function SubmitSSTestPage() {
         // Get the user ID from the backend
         let userId = null;
         try {
-            const response = await fetch(`http://localhost:8080/user/id/${username}`);
+            const response = await fetch(`http://localhost:8080/api/user/id/${username}`);
             if (!response.ok) {
                 throw new Error(`Server error: ${response.status}`);
             }
@@ -47,7 +47,7 @@ export default function SubmitSSTestPage() {
 
         // Send POST request to backend
         try {
-            const response = await fetch("http://localhost:8080/api/upload", {
+            const response = await fetch("http://localhost:8080/api/ss/upload", {
                 method: "POST",
                 body: formData,
             });
