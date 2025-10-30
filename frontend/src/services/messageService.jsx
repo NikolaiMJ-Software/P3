@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:8080/api/messages"; // backend address
+import { API } from './api.jsx'
+const API_URL = `${API}/messages`; //backend address
 
 export async function getMessages() {
     const response = await fetch(API_URL);

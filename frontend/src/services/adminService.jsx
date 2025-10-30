@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:8080/api/user"; //backend address
+import { API } from './api.jsx'
+const API_URL = `${API}/user`; //backend address
 
 export async function getUsers(){
     const response = await fetch(API_URL);

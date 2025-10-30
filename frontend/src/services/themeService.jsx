@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:8080/api/themes"; // backend address
+import { API } from './api.jsx'
+const API_URL = `${API}/themes`; //backend address
 
 export async function getThemes() {
     const response = await fetch(API_URL);
