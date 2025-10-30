@@ -33,7 +33,7 @@ public class UserController {
     @PostMapping("/admin/{username}")
     public ResponseEntity<String> changeAdminValueOfUser(@PathVariable String username) {
         userService.postAdminUser(username);
-        return ResponseEntity.ok("Theme created successfully");
+        return ResponseEntity.ok("Admin Successfully created");
     }
 
     @GetMapping("/id/{username}")
