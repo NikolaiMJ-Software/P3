@@ -1,12 +1,10 @@
-
-
 export default function UserManager(){
     return (
-        <div className="p-5 flex flex-col">
+        <div className="p-5 flex flex-col mr-20 ml-20">
             <div className={"border text-center"}>
                 User Management
             </div>
-            <div className={"p-5 border flex flex-row justify-between content-center"}>
+            <div className={"p-5 border border-t-0 flex flex-row justify-between content-center"}>
                 <div className={"flex flex-col justify-center"}>
                     Username:
                     <input className={"border"}/>

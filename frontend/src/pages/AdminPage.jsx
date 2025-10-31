@@ -2,6 +2,7 @@ import {useParams} from "react-router-dom";
 import {isAdmin, postAdmin} from "../services/adminService.jsx"
 import {useEffect, useState} from "react";
 import UserManager from "../components/UserManager.jsx";
+import EventManager from "../components/EventManager.jsx";
 
 
 export default function AdminPage(){
@@ -27,12 +28,10 @@ export default function AdminPage(){
                     label={`Unbecome Admin`}
                 />
                 <div className="flex flex-col">
-                    <div className="flex flex-row justify-between ">
-                        <div className="flex-grow-1 border">
-                            hello!
-                        </div>
-                        <div className="flex flex-col">
-                            <div className="text-center text-xl">
+                    <div className=" flex flex-row justify-between ">
+                        <EventManager/>
+                        <div className="grow-1 flex flex-col justify-between">
+                            <div className="grow-3 mt-20 text-center text-xl">
                                 <h1>Welcome Admin!</h1>
                                 <br/>
                                 <h1>What actions shall we do today my lord?</h1>
