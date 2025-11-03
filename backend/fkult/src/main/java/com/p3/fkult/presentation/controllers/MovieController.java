@@ -53,8 +53,8 @@ public class MovieController {
 
     //Search by movie name
     @GetMapping("/search")
-    public ResponseEntity<List<Movie>> searchMovies(@RequestParam String q) {
-        List<Movie> results = movieService.searchMovies(q);
+    public ResponseEntity<List<MovieRequest>> searchMovies(@RequestParam String q) {
+        List<MovieRequest> results = movieService.searchMovies(q);
         return ResponseEntity.ok(results);
     } // to test the search: http://localhost:8080/api/movies/search?q=moviename
 

@@ -4,6 +4,7 @@ import com.p3.fkult.business.services.MovieService;
 import com.p3.fkult.persistence.entities.Movie;
 import com.p3.fkult.persistence.repository.MovieRepository;
 
+import com.p3.fkult.presentation.controllers.MovieRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -44,11 +45,11 @@ public class MovieSearchTest {
         when(movieRepository.searchMovies("test")).thenReturn(List.of(testMovie));
 
         // act
-        List<Movie> result = movieService.searchMovies("test");
+        List<MovieRequest> result = movieService.searchMovies("test");
 
         // assert
         assertEquals(1, result.size());
-        assertEquals("Test Movie", result.get(0).getMovieName());
+        assertEquals("Test Movie", result.get(0).getTitle());
         verify(movieRepository, times(1)).searchMovies("test");
     }
 }
