@@ -6,6 +6,8 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
   const [rotation, setRotation] = useState(0);
   const [winner, setWinner] = useState(null);
   const [winnerValue, setWinnerValue] = useState(null);
+  const [krestenRule, setKrestenRule] = useState(null);
+  const [krestenRuleAt, setKrestenRuleAt] = useState(0);
 
   const radius = size / 2;
 
@@ -21,13 +23,40 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
     drawWheel(ctx, radius, inputs);
   }, [inputs, size]);
 
+  const onCanvasClick = (e) => {
+    if (!canvasRef.current || inputs.length === 0) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - radius; // relative to center
+    const y = e.clientY - rect.top - radius;  // relative to center
+    // convert to degrees (0 = right, increasing clockwise)
+    const clickedDeg = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+    // account for current wheel rotation so we get the original segment
+    const adjusted = (clickedDeg - (rotation % 360) + 360) % 360;
+    const arcDeg = 360 / inputs.length;
+    const idx = Math.floor(adjusted / arcDeg);
+    setKrestenRule(idx);
+    setKrestenRuleAt(performance.now());
+    // testing Krestens rule
+    //console.log("Primed rig index:", idx);
+  };
+
   const spin = () => {
     if (spinning || inputs.length === 0) return;
     setSpinning(true);
     setWinner(null);
     setWinnerValue(null);
 
-    const idx = Math.floor(Math.random() * inputs.length);
+    let idx;
+    const now = performance.now();
+    if (krestenRule != null && (now - krestenRuleAt) < 1500 && krestenRule >= 0 && krestenRule < inputs.length) {
+      idx = krestenRule;
+      // clear right away so subsequent spins don't reuse it accidentally
+      setKrestenRule(null);
+      setKrestenRuleAt(0);
+    } else {
+      idx = Math.floor(Math.random() * inputs.length);
+    }
+
     const n = inputs.length;
     const arc = 360 / n;
 
@@ -87,9 +116,10 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
           transition: spinning ? "none" : "transform 0.1s linear",
         }}
       >
-        <canvas ref={canvasRef} className="block" />
+        <canvas ref={canvasRef} className="block" onClick={onCanvasClick} />
 
         <button
+          type="button"
           onClick={spin}
           disabled={spinning || inputs.length === 0}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
