@@ -1,15 +1,17 @@
 package com.p3.fkult.persistence.entities;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import com.p3.fkult.business.services.shuffleFilter.HasUserId;
 
-public class Theme {
+public class Theme implements HasUserId {
 
     private long id;
     private String name;
     private long userid;
     private LocalDateTime timestamp;
     private Integer votecount;
+    private Integer userCount;
+    private double userWeight;
 
     public Theme (long id, String name, Long userid, LocalDateTime timestamp, Integer votecount){
         this.id = id;
@@ -39,8 +41,31 @@ public class Theme {
     public Integer getVotecount(){
         return this.votecount;
     }
+
+    @Override
+    public Long getUsersId(){
+        return userid;
+    }
+    @Override
+    public Integer getUserCount(){
+        return userCount;
+    }
+    @Override
+    public double getUserWeight(){
+        return userWeight;
+    }
+
     //setters
     public void setId(long id){
         this.id = id;
+    }
+
+    @Override
+    public void setUserCount(Integer count){
+        this.userCount = count;
+    }
+    @Override
+    public void setUserWeight(double weight){
+        this.userWeight = weight;
     }
 }
