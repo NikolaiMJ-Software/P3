@@ -31,7 +31,7 @@ export default function Header(){
                 />
 
                 <NavButton
-                    label="Admin"
+                    label={`${username}`}
                     icon={userPNG}
                     onClick={() => {navigate(`/admin/${username}`)}}
                 />
