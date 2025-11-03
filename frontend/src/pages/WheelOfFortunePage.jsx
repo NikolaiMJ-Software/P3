@@ -3,7 +3,7 @@ import WheelOfFortune from "../components/WheelOfFortune.jsx";
 
 export default function WheelOfFortunePage() {
   const [entriesText, setEntriesText] = useState(
-    "Pirates\nThe Squad\n9/11 the movie\nGruppe 6"
+    "Pirates\nThe Squad\nGruppe 6"
   );
 
   const inputs = entriesText
@@ -12,14 +12,20 @@ export default function WheelOfFortunePage() {
     .filter(Boolean);
 
   const handleResult = (value, index) => {
-    // do anything you want (toast/log/api)
-    // console.log("Winner:", value, "index:", index);
+    
+  };
+  const handleRemove = (index) => {
+   setEntriesText(prev => {
+     const current = prev.split("\n").map(s => s.trim()).filter(Boolean);
+     const next = current.filter((_, i) => i !== index);
+     return next.join("\n");
+   });
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 flex items-center justify-center">
       <div className="flex gap-8 items-start">
-        <WheelOfFortune inputs={inputs} size={380} onResult={handleResult} />
+        <WheelOfFortune inputs={inputs} size={516} onResult={handleResult} onRemove={handleRemove} />
 
         <div className="w-72">
           <div className="mb-2 text-sm text-gray-600">One entry per line</div>

@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
+export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRemove }) {
   const canvasRef = useRef(null);
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [winner, setWinner] = useState(null);
+  const [winnerValue, setWinnerValue] = useState(null);
 
   const radius = size / 2;
 
@@ -24,6 +25,7 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
     if (spinning || inputs.length === 0) return;
     setSpinning(true);
     setWinner(null);
+    setWinnerValue(null);
 
     const idx = Math.floor(Math.random() * inputs.length);
     const n = inputs.length;
@@ -49,10 +51,19 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
         setSpinning(false);
         setWinner(inputs[idx]);
         onResult?.(inputs[idx], idx);
+        setWinnerValue(idx);
       }
     };
     requestAnimationFrame(animate);
   };
+
+  const handleRemove = () => {
+    if (winnerValue == null) return;
+    onRemove?.(winnerValue, winner);       // <— tell parent to remove
+    setWinner(null);
+    setWinnerValue(null);
+  };
+
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
@@ -93,6 +104,9 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
       {/* local winner readout (optional; page can also handle via onResult) */}
       <div className="text-center mt-4 min-h-6">
         {winner && <>Result: <span className="font-semibold">{winner}</span></>}
+      </div>
+      <div className = "text-center">
+        {winnerValue != null &&(<button onClick={handleRemove} className="px-3 py-1 rounded border mt-2 hover:bg-gray-100">Remove</button>)}
       </div>
     </div>
   );
@@ -247,3 +261,4 @@ function ellipsizeToWidth(ctx, text, maxWidth) {
   }
   return text.slice(0, lo) + ellipsis;
 }
+
