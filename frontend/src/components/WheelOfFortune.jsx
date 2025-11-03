@@ -102,11 +102,11 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
       </div>
 
       {/* local winner readout (optional; page can also handle via onResult) */}
-      <div className="text-center mt-4 min-h-6">
+      <div className="text-center mt-4 min-h-6 z-50 relative">
         {winner && <>Result: <span className="font-semibold">{winner}</span></>}
       </div>
       <div className = "text-center">
-        {winnerValue != null &&(<button onClick={handleRemove} className="px-3 py-1 rounded border mt-2 hover:bg-gray-100">Remove</button>)}
+        {winnerValue != null &&(<button onClick={handleRemove} className="px-3 py-1 rounded border mt-2 hover:bg-gray-100 z-50 relative">Remove</button>)}
       </div>
     </div>
   );

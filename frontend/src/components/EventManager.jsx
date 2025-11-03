@@ -1,8 +1,10 @@
 import settingsPNG from "../assets/settings.png"
+import {useParams, useNavigate} from "react-router-dom";
 
 export default function EventManager() {
     //get all the events
-
+    const navigate = useNavigate();
+    const {username} = useParams();
 
     const currentEvents = [
         <Event eventName={"First Event"} date={"30/10"}/>
@@ -24,7 +26,7 @@ export default function EventManager() {
                 <div className={"flex flex-row justify-evenly p-3"}>
                     <EventButton label={"Start Theme Vote"}/>
                     <EventButton label={"Play Sound Sample"}/>
-                    <EventButton label={"Wheel of Fortune"}/>
+                    <EventButton label={"Wheel of Fortune"} onClick={() => {navigate(`/wheel/${username}`)}}/>
                 </div>
                 <div>
                     Event Calender
