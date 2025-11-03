@@ -67,6 +67,16 @@ CREATE TABLE IF NOT EXISTS sound_samples (
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS event (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  event_date TEXT,
+  event_date TEXT CHECK (
+  event_date IS NULL OR event_date GLOB '____-__-__'  -- YYYY-MM-DD
+  ),
+  theme_id INTEGER,
+  FOREIGN KEY (theme_id) REFERENCES theme(id) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
 -- Helpful indexes
 CREATE INDEX IF NOT EXISTS idx_movie_year            ON movie(year);
 CREATE INDEX IF NOT EXISTS idx_movie_name_nocase     ON movie(movie_name COLLATE NOCASE);
@@ -74,5 +84,6 @@ CREATE INDEX IF NOT EXISTS idx_theme_name_nocase     ON theme(name COLLATE NOCAS
 CREATE INDEX IF NOT EXISTS idx_theme_user_id         ON theme(user_id);
 CREATE INDEX IF NOT EXISTS idx_rule_theme_id         ON drinking_rule(theme_id);
 CREATE INDEX IF NOT EXISTS idx_theme_movie_movie_id  ON theme_movie(movie_id);
+CREATE INDEX IF NOT EXISTS idx_event_theme_id ON event(theme_id);
 
 
