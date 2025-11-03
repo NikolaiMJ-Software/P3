@@ -1,6 +1,8 @@
 import {useParams} from "react-router-dom";
 import {isAdmin, postAdmin} from "../services/adminService.jsx"
 import {useEffect, useState} from "react";
+import UserManager from "../components/UserManager.jsx";
+import EventManager from "../components/EventManager.jsx";
 
 
 export default function AdminPage(){
@@ -9,12 +11,8 @@ export default function AdminPage(){
     //check if {username} is admin
     useEffect(() => {
         async function checkAdmin() {
-            try{
-                const result = await isAdmin(username);
-                setIsAdminUser(result);
-            } catch (e) {
-                console.error("Error checking admin:", err);
-            }
+            const result = await isAdmin(username);
+            setIsAdminUser(result);
         }
         checkAdmin();
     }, [username]);
@@ -29,6 +27,22 @@ export default function AdminPage(){
                     username={username}
                     label={`Unbecome Admin`}
                 />
+                <div className="flex flex-col">
+                    <div className=" flex flex-row justify-between ">
+                        <EventManager/>
+                        <div className="grow-1 flex flex-col justify-between">
+                            <div className="grow-3 mt-20 text-center text-xl">
+                                <h1>Welcome Admin!</h1>
+                                <br/>
+                                <h1>What actions shall we do today my lord?</h1>
+                            </div>
+                            <UserManager/>
+                        </div>
+                    </div>
+                    <div>
+                        hello!
+                    </div>
+                </div>
             </div>
         )
     }
@@ -51,7 +65,7 @@ export default function AdminPage(){
     </div>
 }
 
-function AdminButton({ username, label, admin }){
+function AdminButton({ username, label }){
     return (
         <button onClick={() => {async function buttonclick(){
             const response = await postAdmin(username);
@@ -61,7 +75,7 @@ function AdminButton({ username, label, admin }){
         }
         buttonclick();
         }}
-        className="border hover:bg-gray-300 transition-colors">{label}</button>
+        className="border hover:bg-gray-300 transition-colors rounded p-0.5">{label}</button>
     )
 }
 

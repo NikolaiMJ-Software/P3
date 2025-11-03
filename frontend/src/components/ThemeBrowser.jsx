@@ -2,22 +2,34 @@ import { useEffect, useState } from "react";
 import {getThemes} from "../services/themeService.jsx";
 import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
 import SoundSampleBrowser from "./SoundSampleBrowser.jsx";
+import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
 
 export default function ThemeBrowser() {
     const [themes, setThemes] = useState([]);
     const [selected, setSelected] = useState("your")
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+
     useEffect(() => {
         getThemes().then(setThemes)
     },[])
 
+    const handleCreateTheme = (newTheme) => {
+        setIsPopupOpen(false);
+    }
+
     return (
         <div className={"m-10"}>
+            <ThemeCreationPopup
+                isOpen={isPopupOpen}
+                onClose={() => setIsPopupOpen(false)}
+                onSubmit={handleCreateTheme}
+            />
             <div className={"w-300 h-fit border-2 border-black rounded-3xl p-8"}>
                 {/* Upcoming themes card container */}
                 <p className={"m-4 font-bold"}>Upcoming themes</p>
                 <div className={"flex gap-5 p-4 overflow-x-auto"}>
                     {/* individual cards */}
-                    <ThemeCreationCard></ThemeCreationCard>
+                    <ThemeCreationCard onClick={() => setIsPopupOpen(true)}></ThemeCreationCard>
                     <ThemeCard drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]}></ThemeCard>
                 </div>
                 <div className={"border-1 m-8"}></div>

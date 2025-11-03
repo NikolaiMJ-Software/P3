@@ -10,12 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mock.web.MockMultipartFile;
+import java.io.File;
+import java.nio.file.Files;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SoundSampleServiceTest {
+public class SoundSampleTest {
 
     @Mock
     private SoundSampleRepository repository;
@@ -33,7 +35,7 @@ public class SoundSampleServiceTest {
 
         // Arrange
         String link = "http://example.com/sample";
-        String userId = "1";
+        Long userId = 1l;
         String json = String.format("{\"link\":\"%s\",\"filePath\":null,\"userId\":\"%s\"}", link, userId);
 
         // Act
@@ -49,7 +51,7 @@ public class SoundSampleServiceTest {
     void testUploadSoundSampleWithFile() throws Exception {
 
         // Arrange
-        String userId = "1";
+        Long userId = 1l;
         String json = String.format("{\"link\":\"null\",\"filePath\":null,\"userId\":\"%s\"}", userId);
         MockMultipartFile file = new MockMultipartFile(
             "file", // Data type
@@ -71,7 +73,7 @@ public class SoundSampleServiceTest {
     void testUploadSoundSampleWithNoData() throws Exception {
 
         // Arrange
-        String userId = "1";
+        Long userId = 1l;
         String json = String.format("{\"link\":null,\"filePath\":null,\"userId\":\"%s\"}", userId);
 
         // Act
@@ -80,5 +82,56 @@ public class SoundSampleServiceTest {
         // Assert
         assertEquals("Upload failed: either link or file must be provided for upload.", response);
         verify(repository, times(0)).save(any(SoundSample.class));
+    }
+
+    @Test
+    @DisplayName("Delete a valid soundsample from file name")
+    void testDeleteValidSoundSampleFromFileName() throws Exception {
+        
+        // Arrange
+        String fileName = "testfile.wav";
+        File uploadDir = new File("soundSampleUploads");
+        if (!uploadDir.exists()) uploadDir.mkdirs();
+        File testFile = new File(uploadDir, fileName);
+        Files.writeString(testFile.toPath(), "dummy data");
+
+        // Act
+        String response = service.delete(null, fileName);
+
+        // Assert
+        assertNull(response, "Service should return null since repository mock returns null");
+        assertFalse(testFile.exists(), "File should have been deleted");
+        verify(repository, times(1)).delete(isNull(), contains(fileName));
+    }
+
+    @Test
+    @DisplayName("Try to delete a sound sample from link")
+    void testDeleteValidSoundSampleFromLink() throws Exception {
+
+        // Arrange
+        String link = "http://example.com/test-sample.mp3";
+        when(repository.delete(eq(link), isNull())).thenReturn("Reached database succesfully");
+
+        // Act
+        String response = service.delete(link, null);
+
+        // Assert
+        assertEquals("Reached database succesfully", response);
+        verify(repository, times(1)).delete(eq(link), isNull());
+    }
+
+    @Test
+    @DisplayName("Delete an invalid sound sample from file name")
+    void testDeleteInvalidSoundSampleFromFileName() throws Exception {
+
+        // Arrange
+        String invalidFileName = "nonexistent.wav";
+
+        // Act
+        String response = service.delete(null, invalidFileName);
+
+        // Assert
+        assertTrue(response.contains(invalidFileName + ". Aborting database deletion.")); // Checks last part of string
+        verify(repository, times(0)).delete(isNull(), eq(invalidFileName));
     }
 }
