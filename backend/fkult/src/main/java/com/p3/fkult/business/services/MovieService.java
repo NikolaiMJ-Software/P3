@@ -30,7 +30,12 @@ public class MovieService {
         //partial matches (case-insensitive)
         List<MovieRequest> movieRequests = new ArrayList<MovieRequest>();
         movieRepository.searchMovies(query).forEach(movie -> {
-            MovieRequest movieRequest = new MovieRequest(movie.getTconst(), movie.getMovieName(), movie.getRuntimeMinutes(), movie.getYear());
+            MovieRequest movieRequest = new MovieRequest(
+                    movie.getTconst(),
+                    movie.getMovieName(),
+                    movie.getRuntimeMinutes(),
+                    movie.getYear(),
+                    movie.getPosterURL());
             movieRequests.add(movieRequest);
         });
         return movieRequests;
@@ -76,6 +81,11 @@ public class MovieService {
             movieRequests.add(movieRequest);
         }
         return movieRequests;
+    }
+
+    public String getPosterByTconst(String tConst){
+        Movie movie = movieRepository.findByTconst(tConst);
+        return getPosterURL(movie);
     }
 
     //ChatGPT said this is maybe illegal... but... it works though
