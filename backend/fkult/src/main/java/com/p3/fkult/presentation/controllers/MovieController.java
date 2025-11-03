@@ -58,6 +58,12 @@ public class MovieController {
         return ResponseEntity.ok(results);
     } // to test the search: http://localhost:8080/api/movies/search?q=moviename
 
+    @GetMapping("/poster/{tconst}")
+    public ResponseEntity<String> getPoster(@PathVariable String tconst){
+        String posterURL = movieService.getPosterByTconst(tconst);
+        return ResponseEntity.ok(posterURL);
+    }
+
     //IMDb preview (scraping http to json)
     @GetMapping("/preview/{tconst}")
     public ResponseEntity<Map<String, String>> getPreview(@PathVariable String tconst) {

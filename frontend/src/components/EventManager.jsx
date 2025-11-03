@@ -1,3 +1,5 @@
+import settingsPNG from "../assets/settings.png"
+
 export default function EventManager() {
     //get all the events
 
@@ -57,8 +59,8 @@ function Event ({ eventName, date }){
             <div className={"p-1 m-1 border w-17 text-center"}>
                 {date}
             </div>
-            <div className={"m-2"}>
-                <p>ST</p>
+            <div className={"m-1 content-center"}>
+                <img onClick={() => console.log("hi")} className={"h-6 w-6 cursor-pointer"} src={settingsPNG} alt={"settings"}/>
             </div>
         </div>
     )

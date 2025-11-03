@@ -15,11 +15,12 @@ public class MovieRequest {
         this.runtimeMinutes = runtimeMinutes;
         this.year = year;
     }
-    public MovieRequest(String tConst, String title, int runtimeMinutes, int year){
+    public MovieRequest(String tConst, String title, int runtimeMinutes, int year, String moviePosterURL){
         this.tConst = tConst;
         this.title = title;
         this.runtimeMinutes = runtimeMinutes;
         this.year = year;
+        this.moviePosterURL = moviePosterURL;
     }
 
     //setters

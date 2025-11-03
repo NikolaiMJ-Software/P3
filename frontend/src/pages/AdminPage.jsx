@@ -3,11 +3,13 @@ import {isAdmin, postAdmin} from "../services/adminService.jsx"
 import {useEffect, useState} from "react";
 import UserManager from "../components/UserManager.jsx";
 import EventManager from "../components/EventManager.jsx";
+import SubmissionManager from "../components/SubmissionManager.jsx";
 
 
 export default function AdminPage(){
     const {username} = useParams();
-    const [isAdminUser, setIsAdminUser] = useState(false);
+    const [isAdminUser, setIsAdminUser] = useState(undefined);
+
     //check if {username} is admin
     useEffect(() => {
         async function checkAdmin() {
@@ -28,20 +30,24 @@ export default function AdminPage(){
                     label={`Unbecome Admin`}
                 />
                 <div className="flex flex-col">
+                    {/* Top Half */}
                     <div className=" flex flex-row justify-between ">
+                        {/* Event Manager */}
                         <EventManager/>
+                        {/* Upper Right */}
                         <div className="grow-1 flex flex-col justify-between">
+                            {/* Intro Text */}
                             <div className="grow-3 mt-20 text-center text-xl">
                                 <h1>Welcome Admin!</h1>
                                 <br/>
                                 <h1>What actions shall we do today my lord?</h1>
                             </div>
+                            {/* User Manager */}
                             <UserManager/>
                         </div>
                     </div>
-                    <div>
-                        hello!
-                    </div>
+                    {/* Bottom Half */}
+                    <SubmissionManager/>
                 </div>
             </div>
         )
@@ -78,6 +84,4 @@ function AdminButton({ username, label }){
         className="border hover:bg-gray-300 transition-colors rounded p-0.5">{label}</button>
     )
 }
-
-
 
