@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS sound_samples (
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+--event
 CREATE TABLE IF NOT EXISTS event (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  event_date TEXT,
   event_date TEXT CHECK (
   event_date IS NULL OR event_date GLOB '____-__-__'  -- YYYY-MM-DD
   ),
