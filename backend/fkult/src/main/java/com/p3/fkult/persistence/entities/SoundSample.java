@@ -1,10 +1,13 @@
 package com.p3.fkult.persistence.entities;
 
-public class SoundSample {
+import com.p3.fkult.business.services.shuffleFilter.HasUserId;
+
+public class SoundSample implements HasUserId{
     private String link;
     private String filePath;
     private Long userId;
-
+    private Integer userCount;
+    private double userWeight;
 
     public SoundSample() {}
 
@@ -25,6 +28,19 @@ public class SoundSample {
         return this.userId;
     }
 
+    @Override
+    public Long getUsersId() {
+        return userId;
+    }
+    @Override
+    public Integer getUserCount() {
+        return userCount;
+    }
+    @Override
+    public double getUserWeight(){
+        return userWeight;
+    }
+
     // Set functions
     public void setLink(String link){
         this.link = link;
@@ -34,5 +50,14 @@ public class SoundSample {
     }
     public void setUserId(Long userId){
         this.userId = userId;
+    }
+
+    @Override
+    public void setUserCount(Integer count){
+        this.userCount = count;
+    }
+    @Override
+    public void setUserWeight(double weight){
+        this.userWeight = weight;
     }
 }
