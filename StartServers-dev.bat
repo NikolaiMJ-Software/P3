@@ -36,7 +36,7 @@ if exist mvnw (
 )
 
 :: Start Spring Boot
-start "Backend" cmd /k "%MVNCMD% spring-boot:run -e"
+start "Backend" cmd /k "%MVNCMD% spring-boot:run -X"
 
 cd ..\..
 

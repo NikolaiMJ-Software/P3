@@ -26,9 +26,19 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<Movie> searchMovies(String query) {
+    public List<MovieRequest> searchMovies(String query) {
         //partial matches (case-insensitive)
-        return movieRepository.searchMovies(query);
+        List<MovieRequest> movieRequests = new ArrayList<MovieRequest>();
+        movieRepository.searchMovies(query).forEach(movie -> {
+            MovieRequest movieRequest = new MovieRequest(
+                    movie.getTconst(),
+                    movie.getMovieName(),
+                    movie.getRuntimeMinutes(),
+                    movie.getYear(),
+                    movie.getPosterURL());
+            movieRequests.add(movieRequest);
+        });
+        return movieRequests;
     }
 
     public List<MovieRequest> getMoviesByIds(List<Long> movieIds) {
@@ -71,6 +81,11 @@ public class MovieService {
             movieRequests.add(movieRequest);
         }
         return movieRequests;
+    }
+
+    public String getPosterByTconst(String tConst){
+        Movie movie = movieRepository.findByTconst(tConst);
+        return getPosterURL(movie);
     }
 
     //ChatGPT said this is maybe illegal... but... it works though

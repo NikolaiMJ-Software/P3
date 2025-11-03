@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
+export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRemove }) {
   const canvasRef = useRef(null);
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [winner, setWinner] = useState(null);
+  const [winnerValue, setWinnerValue] = useState(null);
 
   const radius = size / 2;
 
@@ -24,9 +25,11 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
     if (spinning || inputs.length === 0) return;
     setSpinning(true);
     setWinner(null);
+    setWinnerValue(null);
 
     const idx = Math.floor(Math.random() * inputs.length);
-    const arc = 360 / inputs.length;
+    const n = inputs.length;
+    const arc = 360 / n;
 
     // pointer is on the RIGHT (0deg) → align chosen center to 0deg
     const targetCenter = idx * arc + arc / 2;
@@ -48,10 +51,19 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
         setSpinning(false);
         setWinner(inputs[idx]);
         onResult?.(inputs[idx], idx);
+        setWinnerValue(idx);
       }
     };
     requestAnimationFrame(animate);
   };
+
+  const handleRemove = () => {
+    if (winnerValue == null) return;
+    onRemove?.(winnerValue, winner);       // <— tell parent to remove
+    setWinner(null);
+    setWinnerValue(null);
+  };
+
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
@@ -90,8 +102,11 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
       </div>
 
       {/* local winner readout (optional; page can also handle via onResult) */}
-      <div className="text-center mt-4 min-h-6">
+      <div className="text-center mt-4 min-h-6 z-50 relative">
         {winner && <>Result: <span className="font-semibold">{winner}</span></>}
+      </div>
+      <div className = "text-center">
+        {winnerValue != null &&(<button onClick={handleRemove} className="px-3 py-1 rounded border mt-2 hover:bg-gray-100 z-50 relative">Remove</button>)}
       </div>
     </div>
   );
@@ -100,6 +115,7 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
 function drawWheel(ctx, r, inputs) {
   ctx.clearRect(0, 0, r * 2, r * 2);
 
+  // base circle
   ctx.beginPath();
   ctx.arc(r, r, r, 0, Math.PI * 2);
   ctx.fillStyle = "#fff";
@@ -110,37 +126,139 @@ function drawWheel(ctx, r, inputs) {
 
   if (!inputs.length) return;
 
-  const arc = (Math.PI * 2) / inputs.length;
+  const n = inputs.length;
+  const arc = (Math.PI * 2) / n;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(r, r, r - 1.5, 0, Math.PI * 2); // -1.5 to stay inside stroke
+  ctx.clip();
 
   // separators
-  ctx.save();
-  ctx.translate(r, r);
-  for (let i = 0; i < inputs.length; i++) {
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(r, 0);
-    ctx.strokeStyle = "#cbd5e1";
-    ctx.stroke();
-    ctx.rotate(arc);
+  if (n>1){
+      ctx.save();
+      ctx.translate(r, r);
+      for (let i = 0; i < n; i++) {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(r, 0);
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.stroke();
+        ctx.rotate(arc);
+      }
+      ctx.restore();
   }
-  ctx.restore();
 
   // labels
   ctx.save();
   ctx.translate(r, r);
-  for (let i = 0; i < inputs.length; i++) {
-    const angle = i * arc + arc / 2;
-    const x = Math.cos(angle) * (r * 0.72);
-    const y = Math.sin(angle) * (r * 0.72);
+
+  for (let i = 0; i < n; i++) {
+    const angle = n === 1 ? 0 : i * arc + arc / 2;
+    const labelRadius = r * 0.57;
+    const maxWidth = n === 1 ? labelRadius * 1.6 : Math.sin(arc / 2) * labelRadius * 2 * 0.86;
+
+    // how much space we have OUTWARD along the radius
+    const rimPad = 6;// padding to wheel edge
+    const radialMax = Math.max(0, r - labelRadius - rimPad);
+
+    const { fontSize, lines } = fitTextMultiline(ctx, inputs[i], radialMax, {
+      maxLines: 2,
+      startSize: 16,
+      minSize: 7,
+      fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial",
+      fontWeight: 600,
+    });
+
     ctx.save();
-    ctx.translate(x, y);
+    ctx.translate(Math.cos(angle) * labelRadius, Math.sin(angle) * labelRadius);
     ctx.rotate(angle);
+
     ctx.fillStyle = "#111827";
-    ctx.font = "600 14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(inputs[i], 0, 0);
+    const xPad = 2;
+    const lineHeight = fontSize * 1.1;
+    const totalH = lineHeight * (lines.length - 1);
+    for (let li = 0; li < lines.length; li++) {
+      const y = -totalH / 2 + li * lineHeight;
+      ctx.fillText(lines[li], xPad, y);
+    }
     ctx.restore();
   }
+
+  ctx.restore();
   ctx.restore();
 }
+
+
+function fitTextMultiline(ctx, text, maxWidth, opts = {}) {
+  const {
+    maxLines = 2,
+    startSize = 16,
+    minSize = 10,
+    fontFamily = "Arial",
+    fontWeight = 600,
+  } = opts;
+
+  let size = startSize;
+  let lines = [];
+
+  while (size >= minSize) {
+    ctx.font = `${fontWeight} ${size}px ${fontFamily}`;
+    lines = wrapToWidth(ctx, text, maxWidth, maxLines);
+    if (lines.length <= maxLines) break;
+    size -= 1;
+  }
+
+  if (lines.length > maxLines) {
+    lines = lines.slice(0, maxLines - 1).concat(
+      ellipsizeToWidth(ctx, lines.slice(maxLines - 1).join(" "), maxWidth)
+    );
+  }
+
+  return { fontSize: Math.max(size, minSize), lines };
+}
+
+
+function wrapToWidth(ctx, text, maxWidth, maxLines) {
+  const words = text.split(/\s+/).filter(Boolean);
+  if (words.length === 0) return [""];
+
+  const lines = [];
+  let line = words[0];
+
+  if (ctx.measureText(line).width > maxWidth) {
+    return [ellipsizeToWidth(ctx, line, maxWidth)];
+  }
+
+  for (let i = 1; i < words.length; i++) {
+    const test = line + " " + words[i];
+    if (ctx.measureText(test).width <= maxWidth) {
+      line = test;
+    } else {
+      lines.push(line);
+      line = words[i];
+
+      if (maxLines && lines.length === maxLines - 1) {
+        lines.push(ellipsizeToWidth(ctx, words.slice(i).join(" "), maxWidth));
+        return lines;
+      }
+    }
+  }
+  lines.push(line);
+  return lines;
+}
+
+function ellipsizeToWidth(ctx, text, maxWidth) {
+  const ellipsis = "…";
+  if (ctx.measureText(text).width <= maxWidth) return text;
+  let lo = 0, hi = text.length;
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1;
+    const candidate = text.slice(0, mid) + ellipsis;
+    if (ctx.measureText(candidate).width <= maxWidth) lo = mid; else hi = mid - 1;
+  }
+  return text.slice(0, lo) + ellipsis;
+}
+
