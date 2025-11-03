@@ -28,4 +28,8 @@ public class UserService {
     public long getUserIdByUsername(String username){
         return userRepository.findIdByUsername(username);
     }
+
+    public String getUsernameByUserId(Long id){
+        return userRepository.findUsernameById(id);
+    }
 }
