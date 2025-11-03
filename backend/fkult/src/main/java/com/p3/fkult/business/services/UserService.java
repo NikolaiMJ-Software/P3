@@ -29,7 +29,4 @@ public class UserService {
         return userRepository.findIdByUsername(username);
     }
 
-    public String getUsernameByUserId(Long id){
-        return userRepository.findUsernameById(id);
-    }
 }

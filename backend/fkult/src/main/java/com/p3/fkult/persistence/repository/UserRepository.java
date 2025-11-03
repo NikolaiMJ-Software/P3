@@ -47,9 +47,4 @@ public class UserRepository {
         return jdbcTemplate.queryForObject("SELECT id FROM user WHERE username = ?", Long.class, username);
     }
 
-    // Find username by Id
-    public String findUsernameById(Long id) {
-        return jdbcTemplate.queryForObject("SELECT username FROM user WHERE id = ?", String.class, id);
-    }
-
 }
