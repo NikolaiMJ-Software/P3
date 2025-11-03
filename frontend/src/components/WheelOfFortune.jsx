@@ -6,8 +6,8 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
   const [rotation, setRotation] = useState(0);
   const [winner, setWinner] = useState(null);
   const [winnerValue, setWinnerValue] = useState(null);
-  const [krestenRule, setKrestenRule] = useState(null);
-  const [krestenRuleAt, setKrestenRuleAt] = useState(0);
+  const [KrestensLaw, setKrestensLaw] = useState(null);
+  const [KrestensLawAt, setKrestensLawAt] = useState(0);
 
   const radius = size / 2;
 
@@ -34,8 +34,8 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
     const adjusted = (clickedDeg - (rotation % 360) + 360) % 360;
     const arcDeg = 360 / inputs.length;
     const idx = Math.floor(adjusted / arcDeg);
-    setKrestenRule(idx);
-    setKrestenRuleAt(performance.now());
+    setKrestensLaw(idx);
+    setKrestensLawAt(performance.now());
     // testing Krestens rule
     //console.log("Primed rig index:", idx);
   };
@@ -48,11 +48,11 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
 
     let idx;
     const now = performance.now();
-    if (krestenRule != null && (now - krestenRuleAt) < 1500 && krestenRule >= 0 && krestenRule < inputs.length) {
-      idx = krestenRule;
+    if (KrestensLaw != null && (now - KrestensLawAt) < 1500 && KrestensLaw >= 0 && KrestensLaw < inputs.length) {
+      idx = KrestensLaw;
       // clear right away so subsequent spins don't reuse it accidentally
-      setKrestenRule(null);
-      setKrestenRuleAt(0);
+      setKrestensLaw(null);
+      setKrestensLawAt(0);
     } else {
       idx = Math.floor(Math.random() * inputs.length);
     }
