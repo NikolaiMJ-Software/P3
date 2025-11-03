@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
+export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRemove }) {
   const canvasRef = useRef(null);
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [winner, setWinner] = useState(null);
+  const [winnerValue, setWinnerValue] = useState(null);
+  const [KrestensLaw, setKrestensLaw] = useState(null);
+  const [KrestensLawAt, setKrestensLawAt] = useState(0);
 
   const radius = size / 2;
 
@@ -20,12 +23,40 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
     drawWheel(ctx, radius, inputs);
   }, [inputs, size]);
 
+  const onCanvasClick = (e) => {
+    if (!canvasRef.current || inputs.length === 0) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - radius; // relative to center
+    const y = e.clientY - rect.top - radius;  // relative to center
+    // convert to degrees (0 = right, increasing clockwise)
+    const clickedDeg = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+    // account for current wheel rotation so we get the original segment
+    const adjusted = (clickedDeg - (rotation % 360) + 360) % 360;
+    const arcDeg = 360 / inputs.length;
+    const idx = Math.floor(adjusted / arcDeg);
+    setKrestensLaw(idx);
+    setKrestensLawAt(performance.now());
+    // testing Krestens rule
+    //console.log("Primed rig index:", idx);
+  };
+
   const spin = () => {
     if (spinning || inputs.length === 0) return;
     setSpinning(true);
     setWinner(null);
+    setWinnerValue(null);
 
-    const idx = Math.floor(Math.random() * inputs.length);
+    let idx;
+    const now = performance.now();
+    if (KrestensLaw != null && (now - KrestensLawAt) < 1500 && KrestensLaw >= 0 && KrestensLaw < inputs.length) {
+      idx = KrestensLaw;
+      // clear right away so subsequent spins don't reuse it accidentally
+      setKrestensLaw(null);
+      setKrestensLawAt(0);
+    } else {
+      idx = Math.floor(Math.random() * inputs.length);
+    }
+
     const n = inputs.length;
     const arc = 360 / n;
 
@@ -49,10 +80,19 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
         setSpinning(false);
         setWinner(inputs[idx]);
         onResult?.(inputs[idx], idx);
+        setWinnerValue(idx);
       }
     };
     requestAnimationFrame(animate);
   };
+
+  const handleRemove = () => {
+    if (winnerValue == null) return;
+    onRemove?.(winnerValue, winner);       // <— tell parent to remove
+    setWinner(null);
+    setWinnerValue(null);
+  };
+
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
@@ -76,9 +116,10 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
           transition: spinning ? "none" : "transform 0.1s linear",
         }}
       >
-        <canvas ref={canvasRef} className="block" />
+        <canvas ref={canvasRef} className="block" onClick={onCanvasClick} />
 
         <button
+          type="button"
           onClick={spin}
           disabled={spinning || inputs.length === 0}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
@@ -91,8 +132,11 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult }) {
       </div>
 
       {/* local winner readout (optional; page can also handle via onResult) */}
-      <div className="text-center mt-4 min-h-6">
+      <div className="text-center mt-4 min-h-6 z-50 relative">
         {winner && <>Result: <span className="font-semibold">{winner}</span></>}
+      </div>
+      <div className = "text-center">
+        {winnerValue != null &&(<button onClick={handleRemove} className="px-3 py-1 rounded border mt-2 hover:bg-gray-100 z-50 relative">Remove</button>)}
       </div>
     </div>
   );
@@ -247,3 +291,4 @@ function ellipsizeToWidth(ctx, text, maxWidth) {
   }
   return text.slice(0, lo) + ellipsis;
 }
+
