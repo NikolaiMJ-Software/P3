@@ -26,10 +26,10 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<MovieRequest> searchMovies(String query) {
+    public List<MovieRequest> searchMovies(String query, int page, int limit) {
         //partial matches (case-insensitive)
         List<MovieRequest> movieRequests = new ArrayList<MovieRequest>();
-        movieRepository.searchMovies(query).forEach(movie -> {
+        movieRepository.searchMovies(query, page, limit).forEach(movie -> {
             MovieRequest movieRequest = new MovieRequest(
                     movie.getTconst(),
                     movie.getMovieName(),
@@ -39,6 +39,11 @@ public class MovieService {
             movieRequests.add(movieRequest);
         });
         return movieRequests;
+    }
+
+    public int getMovieSearchCount(String query){
+        int count = movieRepository.countMovies(query);
+        return count;
     }
 
     public List<MovieRequest> getMoviesByIds(List<Long> movieIds) {

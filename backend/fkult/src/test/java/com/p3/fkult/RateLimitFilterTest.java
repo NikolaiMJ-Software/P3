@@ -56,7 +56,7 @@ public class RateLimitFilterTest {
         assertEquals(429, response.getStatus());
     }
 
-    // /api/themes (limit 5)
+    // /api/themes (limit 101)
     @Test
     void themesWithinLimit() throws IOException, ServletException {
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -66,7 +66,7 @@ public class RateLimitFilterTest {
         request.setRemoteAddr("127.0.0.1");
         request.setRequestURI("/api/themes");
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 100; i++) {
             response = new MockHttpServletResponse();
             filter.doFilter(request, response, chain);
             assertEquals(200, response.getStatus());
@@ -83,6 +83,40 @@ public class RateLimitFilterTest {
         request.setRequestURI("/api/themes");
 
         for (int i = 0; i < 102; i++) {
+            response = new MockHttpServletResponse();
+            filter.doFilter(request, response, chain);
+        }
+
+        assertEquals(429, response.getStatus());
+    }
+
+    // /api/sound-sample (limit 90)
+    @Test
+    void soundSampleWithinLimit() throws IOException, ServletException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        FilterChain chain = (req, res) -> {}; // Dummy chain
+
+        request.setRemoteAddr("192.0.0.1");
+        request.setRequestURI("/api/sound-sample");
+
+        for (int i = 0; i < 90; i++) {
+            response = new MockHttpServletResponse();
+            filter.doFilter(request, response, chain);
+            assertEquals(200, response.getStatus());
+        }
+    }
+
+    @Test
+    void soundSampleOverLimit() throws IOException, ServletException {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        FilterChain chain = (req, res) -> {}; // Dummy chain
+
+        request.setRemoteAddr("192.0.0.1");
+        request.setRequestURI("/api/sound-sample");
+
+        for (int i = 0; i < 91; i++) {
             response = new MockHttpServletResponse();
             filter.doFilter(request, response, chain);
         }
