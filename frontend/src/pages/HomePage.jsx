@@ -56,7 +56,8 @@ export default function HomePage() {
             </div>
             <aside className="col-span-12 lg:col-span-3 lg:ml-2 pt-10">
                 <div className="sticky top-10 flex flex-col gap-4 z-10">
-                    <button className="w-full block rounded-2xl px-6 py-3 bg-white hover:bg-gray-300 border">
+                    <button className="w-full block rounded-2xl px-6 py-3 bg-white hover:bg-gray-300 border"
+                        onClick={() => {navigate(`/faq/${user}`)}}>
                         Info
                     </button>
 

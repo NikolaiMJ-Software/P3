@@ -40,7 +40,7 @@ export async function banUser(body){
         body: JSON.stringify(body)
     });
     if (!response.ok){
-        throw new Error(`HTTP error! Status: ${response.status}`)
+        return "Something went wrong"
     }
     return response.text();
 }
@@ -52,7 +52,7 @@ export async function unbanUser(body){
         body: JSON.stringify(body)
     });
     if (!response.ok){
-        throw new Error(`HTTP error! Status: ${response.status}`)
+        return "Something went wrong"
     }
     return response.text();
 }

@@ -3,8 +3,8 @@ import { fetchShuffledThemes } from "../services/themeService";
 
 export default function ThemeVoting() {
   const [themes, setThemes] = useState([]);
-  const [error, setError] = useState(null);
 
+  // Get list of shuffled themes
   useEffect(() => {
     async function loadThemes() {
       try {
@@ -14,14 +14,13 @@ export default function ThemeVoting() {
         setError("Failed to load themes");
       }
     }
-
     loadThemes();
   }, []);
 
+  // HTML of the page
   return (
-    <div style={{ padding: "1rem" }}>
+    <div>
       <h1>Theme Voting</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
       {themes.length > 0 ? (
         <ul>
           {themes.map((theme, index) => (
