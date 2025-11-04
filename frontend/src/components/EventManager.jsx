@@ -18,7 +18,7 @@ export default function EventManager() {
     ]
 
     return (
-        <div className={"grow-1 flex flex-col p-5 max-w-180"}>
+        <div className={"grow-1 flex flex-col p-5 "}>
             <div className={"text-center border p-2"}>
                 <p>Event Manager</p>
             </div>
@@ -55,7 +55,7 @@ function EventButton({ onClick, label }){
 function Event ({ eventName, date }){
     return (
         <div className={"m-1 p-1.5 flex flex-row justify-between border rounded"}>
-            <div className={"m-1 grow-1 text-center border max-w-100"}>
+            <div className={"m-1 grow-1 text-center border"}>
                 {eventName}
             </div>
             <div className={"p-1 m-1 border w-17 text-center"}>

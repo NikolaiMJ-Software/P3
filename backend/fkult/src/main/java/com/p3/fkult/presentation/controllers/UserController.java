@@ -36,6 +36,23 @@ public class UserController {
         return ResponseEntity.ok("Admin Successfully created");
     }
 
+    @PostMapping("/admin/ban_user")
+    public ResponseEntity<?> banUser(@RequestBody List<String> body){
+        if (body == null || body.get(0) == null || body.get(1) == null) return ResponseEntity.badRequest().build();
+
+        if (checkForAdminUser(body.getFirst()) == 0) return ResponseEntity.status(403).body("user not admin");
+        return userService.postUserBan(body.get(1), 1);
+    }
+
+    @PostMapping("/admin/unban_user")
+    public ResponseEntity<?> unbanUser(@RequestBody List<String> body){
+        if (body == null || body.get(0) == null || body.get(1) == null) return ResponseEntity.badRequest().build();
+
+        if (checkForAdminUser(body.getFirst()) == 0) return ResponseEntity.status(403).body("user not admin");
+        return userService.postUserBan(body.get(1), 0);
+    }
+
+
     @GetMapping("/id/{username}")
     public long getUserIdByUsername(@PathVariable String username){
         return userService.getUserIdByUsername(username);
