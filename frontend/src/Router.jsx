@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage.jsx";
 import MessagesPage from "./pages/MessagesPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import ThemeBrowser from "./components/ThemeBrowser.jsx";
-import SubmitSSTestPage from "./pages/SubmitSSTestPage.jsx";
+import SubmitSSTestPage from "./components/SubmitSSTestPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx"
 import ThemeVoting from "./pages/ThemeVoting.jsx"
 
