@@ -22,12 +22,21 @@ public class UserService {
     public User getUser(String username){
         return userRepository.findUser(username);
     }
-    public void postAdminUser(String username){
-        userRepository.updateAdminStatus(username);
+    public ResponseEntity<?> postAdminUser(String username, int status){
+        if (status > 1 || status < 0) return ResponseEntity.status(400).body("Status not applicable: " + status);
+
+        User result = userRepository.updateAdminStatus(username, status);
+
+        if (result.getAdmin() == status) return ResponseEntity.ok("User updated successfully");
+        else return ResponseEntity.status(500).body("User not correctly updated");
     }
 
     public ResponseEntity<?> postUserBan(String username, int status){
-        return userRepository.updateUserBanStatus(username, status);
+        if (getUser(username).getId() < 0) return ResponseEntity.status(403).body("user does not exist");
+
+        User result = userRepository.updateUserBanStatus(username, status);
+        if (result.getBanned() == status) return ResponseEntity.ok("User updated successfully: " + status);
+        else return ResponseEntity.status(500).body("User not correctly updated");
     }
 
 

@@ -1,6 +1,7 @@
 package com.p3.fkult.persistence.repository;
 
 import com.p3.fkult.persistence.entities.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,8 +24,8 @@ public class UserRepository {
                     rs.getLong("id"),
                     rs.getString("username"),
                     rs.getString("name"),
-                    rs.getBoolean("is_banned"),
-                    rs.getBoolean("is_admin")
+                    rs.getInt("is_banned"),
+                    rs.getInt("is_admin")
             );
 
     //database operations
@@ -33,20 +34,21 @@ public class UserRepository {
     }
 
     public User findUser(String username){
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM user WHERE username = ?", rowMapper, username);
+        } catch (EmptyResultDataAccessException e){
+            return new User(-1, "error", "Error Error", 0, 0);
+        }
+    }
+
+    public User updateAdminStatus(String username, int status){
+        jdbcTemplate.update("UPDATE user SET is_admin = ? WHERE username = ?", status, username);
         return jdbcTemplate.queryForObject("SELECT * FROM user WHERE username = ?", rowMapper, username);
     }
 
-    public void updateAdminStatus(String username){
-        //check if user is or is not admin
-        Boolean isAdmin = jdbcTemplate.queryForObject("SELECT is_admin FROM user WHERE username = ?", Boolean.class, username);
-        jdbcTemplate.update("UPDATE user SET is_admin = ? WHERE username = ?", Boolean.FALSE.equals(isAdmin), username);
-
-    }
-
-    public ResponseEntity<?> updateUserBanStatus(String username, int status){
-        if (status > 1 || status < 0) return ResponseEntity.status(500).body("Internal Server Error: updateUserBanStatus status = " + status);
+    public User updateUserBanStatus(String username, int status){
         jdbcTemplate.update("UPDATE user SET is_banned = ? WHERE username = ?", status, username);
-        return ResponseEntity.ok("User ban status successfully updated");
+        return jdbcTemplate.queryForObject("SELECT * FROM user WHERE username = ?", rowMapper, username);
     }
 
     // Find ID by username

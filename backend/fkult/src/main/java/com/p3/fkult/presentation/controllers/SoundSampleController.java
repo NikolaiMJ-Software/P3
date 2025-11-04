@@ -1,12 +1,17 @@
 package com.p3.fkult.presentation.controllers;
 
 import com.p3.fkult.business.services.SoundSampleService;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/api/ss")
+@RequestMapping("/api/sound-sample")
 public class SoundSampleController {
 
     // Download copy of soundsampleservice to use its functions
@@ -29,5 +34,19 @@ public class SoundSampleController {
             @RequestPart(value = "link", required = false) String link,
             @RequestPart(value = "fileName", required = false) String fileName) {
         return service.delete(link, fileName);
+    }
+
+    // Fetch function to get all sound samples 
+    @GetMapping
+    public List<SoundSampleRequest> getSoundSamples(
+        @RequestParam(defaultValue = "false") boolean quick, 
+        @RequestParam(defaultValue = "false") boolean weighted) {
+
+        return service.getAllSoundSamples(quick, weighted).stream()
+            .map(s -> new SoundSampleRequest(
+                s.getLink() != null ? s.getLink() : s.getFile().getPath(),
+                s.getUsername()
+            ))
+            .collect(Collectors.toList());
     }
 }

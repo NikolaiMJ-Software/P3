@@ -30,3 +30,16 @@ export async function addTheme(name, userId, movieIds, drinkingRules) {
 export async function deleteTheme(id) {
     await fetch(`${API_URL}/${id}`, { method: "DELETE" });
 }
+
+export async function fetchShuffledThemes() {
+  try {
+    const response = await fetch(`${API}/vote/getShuffledThemes`);
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching shuffled themes:", error);
+    throw error;
+  }
+}

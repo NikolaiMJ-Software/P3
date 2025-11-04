@@ -18,13 +18,13 @@ export default function ThemeBrowser() {
     }
 
     return (
-        <div className={"m-10"}>
+        <div className={"p-10"}>
             <ThemeCreationPopup
                 isOpen={isPopupOpen}
                 onClose={() => setIsPopupOpen(false)}
                 onSubmit={handleCreateTheme}
             />
-            <div className={"w-300 h-fit border-2 border-black rounded-3xl p-8"}>
+            <div className={"w-full max-w-full h-fit border-2 border-black rounded-3xl p-8"}>
                 {/* Upcoming themes card container */}
                 <p className={"m-4 font-bold"}>Upcoming themes</p>
                 <div className={"flex gap-5 p-4 overflow-x-auto"}>

@@ -1,0 +1,58 @@
+import { API } from './api.jsx'
+const API_URL = `${API}/sound-sample`; //backend address
+
+async function getSoundSamples(quick = false, weighted = false) {
+    const res = await fetch(`${API_URL}?quick=${quick}&weighted=${weighted}`);
+    return res.json();
+}
+
+async function addSoundSample(file, userId) {
+    // Setup sound sample object and convert to JSON
+    const soundSample = {
+        link: trimmedLink,
+        filePath: null,
+        userId: userId
+    };
+    const soundSampleJson = JSON.stringify(soundSample);
+
+    // Create data form for soundsample and file
+    const formData = new FormData();
+    formData.append("soundSample", soundSampleJson);
+    if(file) formData.append("file", file);  
+
+    // Send POST request to backend
+    const response = await fetch(`${API}/upload`, {
+        method: "POST",
+        body: formData,
+    });
+
+    if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+    }
+
+    return response.text();
+}
+
+// Create data form for sound sample deletion (with either link or file name)
+async function deleteSoundSample(link, fileName) {
+    const formData = new FormData();
+    if (link) {
+        formData.append("link", link);
+    } else if (fileName) {
+        formData.append("fileName", fileName);
+    }
+
+    // Send DELETE request to backend
+    const response = await fetch(`${API}/delete`, {
+        method: "DELETE",
+        body: formData,
+    });
+
+    if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+    }
+
+    return response.text();
+}
+
+export { getSoundSamples, addSoundSample, deleteSoundSample };

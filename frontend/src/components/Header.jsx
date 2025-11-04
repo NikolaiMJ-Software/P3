@@ -3,10 +3,31 @@ import pizzaWEBP from '../assets/pizza.webp'
 import discordWEBP from '../assets/discord.webp'
 import userPNG from "../assets/User.png"
 import {useNavigate, useParams} from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
 
 export default function Header(){
     const navigate = useNavigate();
     const {username} = useParams();
+    const [open, setOpen] = useState(false);
+    const menuRef = useRef(null);
+
+
+    const logout = () =>{
+        sessionStorage.removeItem("username");
+        navigate("/login");
+    };
+
+
+    // Close dropdown if clicked outside
+    useEffect(() => {
+        function handleClickOutside(e) {
+            if (menuRef.current && !menuRef.current.contains(e.target)) {
+                setOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     return (
         <header className="pb-10 flex justify-between top-0 inset-x-0">
@@ -30,11 +51,36 @@ export default function Header(){
                     onClick={() => {window.location.href = "https://discord.gg/zV3GEZyY6z"}}
                 />
 
-                <NavButton
-                    label={`${username}`}
-                    icon={userPNG}
-                    onClick={() => {navigate(`/admin/${username}`)}}
-                />
+                <div className="relative flex-col pr-1" ref={menuRef}>
+                     <button
+                        className="flex transition-colors hover:bg-gray-300 cursor-pointer rounded-4xl border size-12 items-center justify-center"
+                        onClick={()=> setOpen(prev => !prev)}
+                        title={username}
+                        >
+                        <img className="w-9 h-9" src={userPNG} alt="User menu"/>
+                     </button>
+                     <p className="text-center align-top text-sm">{username}</p>
+
+                     {open && (
+                        <div className="absolute right-0 top-14 w-36 bg-white border rounded-xl shadow-lg z-50">
+                            <button
+                                className="block w-full text-left px-4 py-2 hover:bg-gray-200 rounded-t-xl"
+                                onClick={()=>{
+                                    setOpen(false);
+                                    navigate(`/admin/${username}`);
+                                }}
+                                >
+                                Admin
+                            </button>
+                            <button
+                                className="block w-full text-left px-4 py-2 hover:bg-gray-200 text-red-500 rounded-b-xl"
+                                onClick={logout}
+                                >
+                                Logout
+                            </button>
+                        </div>
+                     )}
+                </div>
             </div>
         </header>
     )
