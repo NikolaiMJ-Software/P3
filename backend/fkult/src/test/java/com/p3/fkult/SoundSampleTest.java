@@ -159,8 +159,8 @@ public class SoundSampleTest {
     }
 
     private List<User> createTargetUsers() {
-        User user1 = new User(1l, "k1m", "Kim Nielsen", false, false);
-        User user2 = new User(2l, "Bob", "Bob Marlie", false, false);
+        User user1 = new User(1l, "k1m", "Kim Nielsen", 0, 0);
+        User user2 = new User(2l, "Bob", "Bob Marlie", 0, 0);
         return Arrays.asList(user1, user2);
     }
 
