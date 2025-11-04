@@ -53,10 +53,16 @@ public class MovieController {
 
     //Search by movie name
     @GetMapping("/search")
-    public ResponseEntity<List<Movie>> searchMovies(@RequestParam String q) {
-        List<Movie> results = movieService.searchMovies(q);
+    public ResponseEntity<List<MovieRequest>> searchMovies(@RequestParam String q) {
+        List<MovieRequest> results = movieService.searchMovies(q);
         return ResponseEntity.ok(results);
     } // to test the search: http://localhost:8080/api/movies/search?q=moviename
+
+    @GetMapping("/poster/{tconst}")
+    public ResponseEntity<String> getPoster(@PathVariable String tconst){
+        String posterURL = movieService.getPosterByTconst(tconst);
+        return ResponseEntity.ok(posterURL);
+    }
 
     //IMDb preview (scraping http to json)
     @GetMapping("/preview/{tconst}")

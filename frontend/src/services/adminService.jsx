@@ -11,9 +11,7 @@ export async function isAdmin(username){
     return response.json();
 }
 
-export async function postAdmin(username, admin){
-
-
+export async function postAdmin(username){
     const response = await fetch(`${API_URL}/admin/${username}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -26,3 +24,26 @@ export async function postAdmin(username, admin){
     return response.text();
 }
 
+export async function banUser(body){
+    const response = await fetch(`${API_URL}/admin/ban_user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+    });
+    if (!response.ok){
+        throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+    return response.text();
+}
+
+export async function unbanUser(body){
+    const response = await fetch(`${API_URL}/admin/unban_user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+    });
+    if (!response.ok){
+        throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+    return response.text();
+}

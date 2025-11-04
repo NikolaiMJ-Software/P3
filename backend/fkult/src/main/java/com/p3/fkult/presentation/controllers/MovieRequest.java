@@ -2,6 +2,7 @@ package com.p3.fkult.presentation.controllers;
 
 public class MovieRequest {
     private long movieId;
+    private String tConst;
     private String title;
     private String moviePosterURL;
     private int runtimeMinutes;
@@ -13,6 +14,13 @@ public class MovieRequest {
         this.moviePosterURL = moviePosterURL;
         this.runtimeMinutes = runtimeMinutes;
         this.year = year;
+    }
+    public MovieRequest(String tConst, String title, int runtimeMinutes, int year, String moviePosterURL){
+        this.tConst = tConst;
+        this.title = title;
+        this.runtimeMinutes = runtimeMinutes;
+        this.year = year;
+        this.moviePosterURL = moviePosterURL;
     }
 
     //setters
@@ -31,6 +39,7 @@ public class MovieRequest {
     public void setYear(int year){
         this.year = year;
     }
+    public void settConst(String tConst){this.tConst = tConst;}
 
     //getters
     public long getMovieId(){
@@ -48,4 +57,5 @@ public class MovieRequest {
     public int getYear(){
         return year;
     }
+    public String gettConst(){return tConst;}
 }
