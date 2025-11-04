@@ -2,12 +2,10 @@ package com.p3.fkult.shuffleFilterTests;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.p3.fkult.business.services.shuffleFilter.ShuffleFilter;
-import com.p3.fkult.persistence.entities.SoundSample;
 import com.p3.fkult.persistence.entities.Theme;
 
 public class ShuffleThemeTest {

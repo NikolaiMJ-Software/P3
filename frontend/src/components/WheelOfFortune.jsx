@@ -6,6 +6,8 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
   const [rotation, setRotation] = useState(0);
   const [winner, setWinner] = useState(null);
   const [winnerValue, setWinnerValue] = useState(null);
+  const [krestensLaw, setKrestensLaw] = useState(null);
+  const [krestensLawAt, setKrestensLawAt] = useState(0);
 
   const radius = size / 2;
 
@@ -21,13 +23,52 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
     drawWheel(ctx, radius, inputs);
   }, [inputs, size]);
 
+  const onCanvasClick = (e) => {
+    if (spinning) return;
+    if (!canvasRef.current || inputs.length === 0) return;
+
+    const rect = canvasRef.current.getBoundingClientRect();
+
+    // vector from canvas center (in screen coords)
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const vx = e.clientX - cx;
+    const vy = e.clientY - cy;
+
+    // un-rotate by current CSS rotation so we’re back in "wheel drawing" space
+    const rad = (- (rotation % 360)) * Math.PI / 180;
+    const ux = vx * Math.cos(rad) - vy * Math.sin(rad);
+    const uy = vx * Math.sin(rad) + vy * Math.cos(rad);
+
+    // angle in our unrotated space (0° = right, clockwise)
+    const angleDeg = (Math.atan2(uy, ux) * 180 / Math.PI + 360) % 360;
+
+    const arcDeg = 360 / inputs.length;
+    const idx = Math.floor((angleDeg + 1e-6) / arcDeg) % inputs.length; // epsilon avoids boundary ties
+
+    setKrestensLaw(idx);
+    setKrestensLawAt(performance.now());
+    console.log("Primed rig index:", idx);
+  };
+
+
   const spin = () => {
     if (spinning || inputs.length === 0) return;
     setSpinning(true);
     setWinner(null);
     setWinnerValue(null);
 
-    const idx = Math.floor(Math.random() * inputs.length);
+    let idx;
+    const now = performance.now();
+    if (krestensLaw != null && (now - krestensLawAt) < 1500 && krestensLaw >= 0 && krestensLaw < inputs.length) {
+      idx = krestensLaw;
+      // clear right away so subsequent spins don't reuse it accidentally
+      setKrestensLaw(null);
+      setKrestensLawAt(0);
+    } else {
+      idx = Math.floor(Math.random() * inputs.length);
+    }
+
     const n = inputs.length;
     const arc = 360 / n;
 
@@ -87,9 +128,10 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
           transition: spinning ? "none" : "transform 0.1s linear",
         }}
       >
-        <canvas ref={canvasRef} className="block" />
+        <canvas ref={canvasRef} className="block" onClick={onCanvasClick} />
 
         <button
+          type="button"
           onClick={spin}
           disabled={spinning || inputs.length === 0}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2

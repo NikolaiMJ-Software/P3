@@ -12,7 +12,7 @@ export default function SubmissionManager() {
                 <p onClick={() => setTab("SoundSamples")} className={`grow-1 cursor-pointer text-center p-3 ${(tab === "SoundSamples") ? null : "border-b"}`}> Sound Samples</p>
             </div>
             <div className={""}>
-                <p> {getComponent(tab)} </p>
+                {getComponent(tab)}
             </div>
         </div>
     )
