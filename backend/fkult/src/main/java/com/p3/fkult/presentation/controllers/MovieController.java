@@ -53,10 +53,22 @@ public class MovieController {
 
     //Search by movie name
     @GetMapping("/search")
-    public ResponseEntity<List<MovieRequest>> searchMovies(@RequestParam String q) {
-        List<MovieRequest> results = movieService.searchMovies(q);
+    public ResponseEntity<List<MovieRequest>> searchMovies(@RequestParam String q,
+                                                           @RequestParam(defaultValue = "1") int page,
+                                                           @RequestParam(defaultValue = "6") int limit) {
+        if (limit > 40) limit = 40;
+        if (limit < 0) limit = 0;
+        List<MovieRequest> results = movieService.searchMovies(q, page, limit);
+        if(results.size() <= 0) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(results);
-    } // to test the search: http://localhost:8080/api/movies/search?q=moviename
+    } // to test the search: GET http://localhost:8080/api/movies/search?q=MovieTitle&page=1
+
+    @GetMapping("/search/count")
+    public ResponseEntity<Integer> countMovies(@RequestParam String q){
+        Integer count = movieService.getMovieSearchCount(q);
+        return ResponseEntity.ok(count);
+    }
+
 
     @GetMapping("/poster/{tconst}")
     public ResponseEntity<String> getPoster(@PathVariable String tconst){
