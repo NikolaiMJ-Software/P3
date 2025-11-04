@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ThemeBrowser from "../components/ThemeBrowser.jsx";
 import SoundSampleBrowser from "../components/SoundSampleBrowser.jsx";
+import SubmitSSTestPage from "../components/SubmitSSTestPage.jsx";
 
 
 export default function HomePage() {
@@ -43,8 +44,15 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-12 gap-6">
-            <div className="col-span-12 lg:col-span-9 min-w-0 overflow-hidden">
-                {selected === "themes" ? <ThemeBrowser /> : <SoundSampleBrowser />}
+            <div className="col-span-12 lg:col-span-9 min-w-0 overflow-hidden"> {
+                selected === "themes" ? (
+                    <ThemeBrowser />
+                ) : selected === "samples" ? (
+                    <SoundSampleBrowser />
+                ) : selected === "submitSample" ? (
+                    <SubmitSSTestPage />
+                ) : null
+            }
             </div>
             <aside className="col-span-12 lg:col-span-3 lg:ml-2 pt-10">
                 <div className="sticky top-10 flex flex-col gap-4 z-10">
@@ -75,8 +83,8 @@ export default function HomePage() {
                         Create theme
                     </button>
                     <button className={`w-full block rounded-2xl px-6 py-3
-                        ${selected === "" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-300 border"}`}>
-                        Submit Sound Sample
+                        ${selected === "submitSample" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-300 border"}`}
+                            onClick={() => setSelected("submitSample")}> Submit Sound Sample
                     </button>
                 </div>
                 
