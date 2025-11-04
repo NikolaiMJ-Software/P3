@@ -35,7 +35,7 @@ public class UserService {
         if (getUser(username).getId() < 0) return ResponseEntity.status(403).body("user does not exist");
 
         User result = userRepository.updateUserBanStatus(username, status);
-        if (result.getBanned() == status) return ResponseEntity.ok("User updated successfully");
+        if (result.getBanned() == status) return ResponseEntity.ok("User updated successfully: " + status);
         else return ResponseEntity.status(500).body("User not correctly updated");
     }
 

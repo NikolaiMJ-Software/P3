@@ -46,7 +46,7 @@ export async function banUser(body){
 }
 
 export async function unbanUser(body){
-    const response = await fetch(`${API_URL}/admin/ban_user`, {
+    const response = await fetch(`${API_URL}/admin/unban_user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)

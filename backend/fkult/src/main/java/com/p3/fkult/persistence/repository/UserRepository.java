@@ -47,12 +47,7 @@ public class UserRepository {
     }
 
     public User updateUserBanStatus(String username, int status){
-        try {
-            jdbcTemplate.update("UPDATE user SET is_banned = ? WHERE username = ?", status, username);
-        } catch (EmptyResultDataAccessException e){
-            return new User(-1, "error", "Error Error", 0, (status+1)%2);
-        }
-
+        jdbcTemplate.update("UPDATE user SET is_banned = ? WHERE username = ?", status, username);
         return jdbcTemplate.queryForObject("SELECT * FROM user WHERE username = ?", rowMapper, username);
     }
 
