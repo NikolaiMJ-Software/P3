@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {isAdmin, postAdmin} from "../services/adminService.jsx"
+import {becomeAdmin, isAdmin, unbecomeAdmin} from "../services/adminService.jsx"
 import {useEffect, useState} from "react";
 import UserManager from "../components/UserManager.jsx";
 import EventManager from "../components/EventManager.jsx";
@@ -26,6 +26,7 @@ export default function AdminPage(){
             <div>
                 <p>Hello {username}</p>
                 <AdminButton
+                    func={unbecomeAdmin}
                     username={username}
                     label={`Unbecome Admin`}
                 />
@@ -57,6 +58,7 @@ export default function AdminPage(){
             <div>
                 <p>GET OUT!</p>
                 <AdminButton
+                    func={becomeAdmin}
                     username={username}
                     label={`Become Admin`}
                 />
@@ -71,10 +73,10 @@ export default function AdminPage(){
     </div>
 }
 
-function AdminButton({ username, label }){
+function AdminButton({ func, username, label }){
     return (
         <button onClick={() => {async function buttonclick(){
-            const response = await postAdmin(username);
+            const response = await func(username);
             if (response){
                 window.location.reload();
             }

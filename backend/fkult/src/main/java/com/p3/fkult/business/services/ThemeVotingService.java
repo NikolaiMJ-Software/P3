@@ -13,29 +13,25 @@ import com.p3.fkult.presentation.controllers.ThemeRequest;
 @Service
 public class ThemeVotingService {
 
-    // Download copy of ThemeService to use its functions
+    // Download copy of the themes
     private final List<ThemeRequest> themes;
     public ThemeVotingService(ThemeService themeService) {
         this.themes = themeService.getAllThemes();
     }
 
-    // Get list of themes
-    public List<ThemeRequest> getThemes() {
-        return themes;
-    }
+    // Get shuffled list of themes to avoid repeated presenters
+    public List<ThemeRequest> getShuffledThemes() {
 
-    // Shuffle themes to avoid repeated presenters
-    public void ShuffleThemes() {
-        if (themes == null || themes.size() < 2) return;
+        // Returns basic list of themes if shuffling is ineffective
+        if (themes == null || themes.size() < 2) return themes;
 
         // Group themes by userId
-        Map<Long, Queue<ThemeRequest>> grouped = themes.stream()
-            .collect(Collectors.groupingBy(
-                ThemeRequest::getUserId,
-                Collectors.toCollection(LinkedList::new)
-            ));
+        Map<Long, Queue<ThemeRequest>> grouped = themes.stream().collect(Collectors.groupingBy(
+            ThemeRequest::getUserId,
+            Collectors.toCollection(LinkedList::new)
+        ));
 
-        List<ThemeRequest> reordered = new ArrayList<>();
+        List<ThemeRequest> shuffled = new ArrayList<>();
         Long lastUserId = null;
 
         while (!grouped.isEmpty()) {
@@ -55,14 +51,13 @@ public class ThemeVotingService {
             }
 
             Queue<ThemeRequest> queue = grouped.get(chosenUserId);
-            reordered.add(queue.poll());
+            shuffled.add(queue.poll());
             lastUserId = chosenUserId;
 
             if (queue.isEmpty()) grouped.remove(chosenUserId);
         }
 
         // Replace old order with new one
-        themes.clear();
-        themes.addAll(reordered);
+        return shuffled;
     }
 }

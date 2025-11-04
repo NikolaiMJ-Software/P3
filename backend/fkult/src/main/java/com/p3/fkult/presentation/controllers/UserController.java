@@ -27,13 +27,12 @@ public class UserController {
     @GetMapping("/admin/{username}")
     public int checkForAdminUser(@PathVariable String username) {
         User user = userService.getUser(username);
-        return user.getAdmin() ? 1 : 0;
+        return user.getAdmin();
     }
 
     @PostMapping("/admin/{username}")
-    public ResponseEntity<String> changeAdminValueOfUser(@PathVariable String username) {
-        userService.postAdminUser(username);
-        return ResponseEntity.ok("Admin Successfully created");
+    public ResponseEntity<?> changeAdminValueOfUser(@PathVariable String username, @RequestParam int status) {
+        return userService.postAdminUser(username, status);
     }
 
     @PostMapping("/admin/ban_user")

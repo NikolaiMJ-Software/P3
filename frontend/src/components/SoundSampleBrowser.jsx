@@ -2,8 +2,8 @@
 export default function SoundSampleBrowser() {
 
     return (
-    <div className={"m-10"}>
-        <div className={"w-300 h-fit border-2 border-black rounded-3xl p-8"}>
+    <div className={"p-10"}>
+        <div className={"w-full max-w-full h-fit border-2 border-black rounded-3xl p-8"}>
             {/* Upcoming themes card container */}
             <p className={"m-4 font-bold"}>Your sound samples</p>
             <div className={"flex gap-5 p-4 overflow-x-auto"}>
