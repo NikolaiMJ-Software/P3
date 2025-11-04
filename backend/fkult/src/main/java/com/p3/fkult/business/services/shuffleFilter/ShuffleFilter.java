@@ -10,6 +10,7 @@ public class ShuffleFilter {
 
         List<T> copy = new ArrayList<>(list);
         List<T> shuffledList = new ArrayList<>();
+        //Object<Long, T> tempList = new Object();
 
         // Count the number of times a user appears
         List<T> totalUsers = new ArrayList<>();

@@ -52,5 +52,4 @@ public class UserRepository {
         return jdbcTemplate.queryForObject("SELECT id FROM user WHERE username = ?", Long.class, username);
     }
 
-
 }
