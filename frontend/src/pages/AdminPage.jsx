@@ -69,7 +69,7 @@ export default function AdminPage(){
     return <div>
         <p>What the helly. This ain't supposed to happen</p>
         <br/>
-        <p>isAdminUser: ${JSON.stringify(isAdminUser)}</p>
+        <p>isAdminUser: {JSON.stringify(isAdminUser)}</p>
     </div>
 }
 

@@ -1,6 +1,7 @@
 package com.p3.fkult.persistence.repository;
 
 import com.p3.fkult.persistence.entities.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -33,7 +34,11 @@ public class UserRepository {
     }
 
     public User findUser(String username){
-        return jdbcTemplate.queryForObject("SELECT * FROM user WHERE username = ?", rowMapper, username);
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM user WHERE username = ?", rowMapper, username);
+        } catch (EmptyResultDataAccessException e){
+            return new User(-1, "error", "Error Error", 0, 0);
+        }
     }
 
     public User updateAdminStatus(String username, int status){
@@ -44,7 +49,6 @@ public class UserRepository {
     public User updateUserBanStatus(String username, int status){
         jdbcTemplate.update("UPDATE user SET is_banned = ? WHERE username = ?", status, username);
         return jdbcTemplate.queryForObject("SELECT * FROM user WHERE username = ?", rowMapper, username);
-                //ResponseEntity.ok("User ban status successfully updated");
     }
 
     // Find ID by username
