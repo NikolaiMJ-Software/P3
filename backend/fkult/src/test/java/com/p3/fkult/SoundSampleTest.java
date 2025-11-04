@@ -59,13 +59,23 @@ public class SoundSampleTest {
             "audio/mpeg", // Content type
             "dummy content".getBytes() // File content
         );
+        File uploadedFile = new File("soundSampleUploads/sample.mp3");
 
+        try {
         // Act
         String response = service.upload(file, json);
 
         // Assert
         assertEquals("Upload complete!", response);
         verify(repository, times(1)).save(any(SoundSample.class));
+        assertTrue(uploadedFile.exists(), "Uploaded file should exist");
+
+    } finally {
+        // Cleanup
+        if (uploadedFile.exists()) {
+            assertTrue(uploadedFile.delete(), "Cleanup: uploaded file deleted");
+        }
+    }
     }
 
     @Test
