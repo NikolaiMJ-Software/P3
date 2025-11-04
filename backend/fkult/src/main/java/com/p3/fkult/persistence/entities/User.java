@@ -4,11 +4,11 @@ public class User {
     private long id;
     private String username;
     private String name;
-    private boolean banned;
-    private boolean admin;
+    private int banned;
+    private int admin;
 
     //constructor
-    public User(long id, String username, String name, boolean banned, boolean admin){
+    public User(long id, String username, String name, int banned, int admin){
         this.id = id;
         this.username = username;
         this.name = name;
@@ -26,10 +26,10 @@ public class User {
     public String getName(){
         return this.name;
     }
-    public boolean getBanned() {
+    public int getBanned() {
         return this.banned;
     }
-    public boolean getAdmin(){
+    public int getAdmin(){
         return this.admin;
     }
 
@@ -43,10 +43,10 @@ public class User {
     public void setName(String value){
         this.name = value;
     }
-    public void setBanned(boolean value) {
+    public void setBanned(int value) {
         this.banned = value;
     }
-    public void setAdmin(boolean value){
+    public void setAdmin(int value){
         this.admin = value;
     }
 
