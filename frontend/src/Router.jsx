@@ -9,6 +9,7 @@ import ThemeVoting from "./pages/ThemeVoting.jsx"
 
 import Header from "./components/Header.jsx";
 import WheelOfFortunePage from "./pages/WheelOfFortunePage.jsx";
+import FAQPage from "./pages/FAQPage.jsx";
 
 function Layout() {
     return(
@@ -34,6 +35,7 @@ export default function Router() {
                     <Route path="/:username" element={<HomePage />} />
                     <Route path="/admin/:username" element={<AdminPage/>} />
                     <Route path="/wheel/:username" element={<WheelOfFortunePage/>} />
+                    <Route path="/faq/:username" element={<FAQPage/>}/>
                 </Route>
 
                 {/* Routes that don't have the header */}
