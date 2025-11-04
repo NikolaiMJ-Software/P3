@@ -1,6 +1,7 @@
 package com.p3.fkult.persistence.repository;
 
 import com.p3.fkult.persistence.entities.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -40,6 +41,12 @@ public class UserRepository {
         Boolean isAdmin = jdbcTemplate.queryForObject("SELECT is_admin FROM user WHERE username = ?", Boolean.class, username);
         jdbcTemplate.update("UPDATE user SET is_admin = ? WHERE username = ?", Boolean.FALSE.equals(isAdmin), username);
 
+    }
+
+    public ResponseEntity<?> updateUserBanStatus(String username, int status){
+        if (status > 1 || status < 0) return ResponseEntity.status(500).body("Internal Server Error: updateUserBanStatus status = " + status);
+        jdbcTemplate.update("UPDATE user SET is_banned = ? WHERE username = ?", status, username);
+        return ResponseEntity.ok("User ban status successfully updated");
     }
 
     // Find ID by username
