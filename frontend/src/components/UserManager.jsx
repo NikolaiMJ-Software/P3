@@ -4,6 +4,7 @@ import {useState} from "react";
 
 export default function UserManager(){
     const [user, setUser] = useState("")
+    const [message, setMessage] = useState("")
     const {username} = useParams();
 
     return (
@@ -15,10 +16,11 @@ export default function UserManager(){
                 <div className={"flex flex-col justify-center"}>
                     <p>Username:</p>
                     <input onChange={e => setUser(e.target.value)} className={"border"}/>
+                    <p className={"text-gray-400"}>{message}</p>
                 </div>
                 <div className={"flex flex-col "}>
-                    <BanButton onClick={() => unbanUser([username, user])} label={"Unban"}/>
-                    <BanButton onClick={() => banUser([username, user])} label={"Ban"}/>
+                    <BanButton onClick={() => setMessage(unbanUser([username, user]))} label={"Unban"}/>
+                    <BanButton onClick={() => setMessage(banUser([username, user]))} label={"Ban"}/>
                 </div>
 
             </div>

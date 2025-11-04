@@ -40,19 +40,19 @@ export async function banUser(body){
         body: JSON.stringify(body)
     });
     if (!response.ok){
-        throw new Error(`HTTP error! Status: ${response.status}`)
+        return "Something went wrong"
     }
     return response.text();
 }
 
 export async function unbanUser(body){
-    const response = await fetch(`${API_URL}/admin/unban_user`, {
+    const response = await fetch(`${API_URL}/admin/ban_user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
     });
     if (!response.ok){
-        throw new Error(`HTTP error! Status: ${response.status}`)
+        return "Something went wrong"
     }
     return response.text();
 }
