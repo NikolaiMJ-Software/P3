@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { addSoundSample, deleteSoundSample } from "../services/soundSampleService";
 
 // This is a page to showcase the functionality of submitting a sound sample via file upload or URL input.
 export default function SubmitSSTestPage() {
 
     // Setup variables
     const [link, setUrl] = useState("");
-    const [file, setFile] = useState(null)
     const [fileName, setFileName] = useState("");
     const [message, setMessage] = useState("");
     const { username } = useParams();
@@ -32,31 +32,10 @@ export default function SubmitSSTestPage() {
             return;
         }
 
-        // Setup sound sample object and convert to JSON
-        const soundSample = {
-            link: trimmedLink,
-            filePath: null,
-            userId: userId
-        };
-        const soundSampleJson = JSON.stringify(soundSample);
-
-        // Create data form for soundsample and file
-        const formData = new FormData();
-        formData.append("soundSample", soundSampleJson);
-        if(file) formData.append("file", file);  
-
-        // Send POST request to backend
+        // Submit sound sample
         try {
-            const response = await fetch("http://localhost:8080/api/ss/upload", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
-            }
-            const resultText = await response.text();
-            setMessage(resultText);
+            const resText = await addSoundSample(trimmedLink, userId);
+            setMessage(resText);
         } catch (error) {
             console.error("Upload failed:", error);
             setMessage("Upload failed: " + error.message);
@@ -65,7 +44,6 @@ export default function SubmitSSTestPage() {
 
     // Handles sound sample deletion
     const handleDelete = async () => {
-
         // Remove whitespace from inputs
         const trimmedLink = link?.trim();
         const trimmedFileName = fileName?.trim();
@@ -76,31 +54,14 @@ export default function SubmitSSTestPage() {
             return;
         }
 
-        // Create data form for sound sample deletion (with either link or file name)
-        const formData = new FormData();
-        if (trimmedLink) {
-            formData.append("link", trimmedLink);
-        } else if (trimmedFileName) {
-            formData.append("fileName", trimmedFileName);
-        }
-
-        // Send DELETE request to backend
-        try{
-            const response = await fetch("http://localhost:8080/api/delete", {
-                method: "DELETE",
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error(`Server error: ${response.status}`);
-            }
-            const resultText = await response.text();
-            setMessage(resultText);
+        // Delete sound sample
+        try {
+            const resText = await deleteSoundSample(trimmedLink, trimmedFileName);
+            setMessage(resText);
         } catch (error) {
             console.error("Deletion failed:", error);
             setMessage("Deletion failed: " + error.message);
         }
-
     }
 
     // HTML of the page

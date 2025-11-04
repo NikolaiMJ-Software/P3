@@ -6,29 +6,53 @@ async function getSoundSamples(quick = false, weighted = false) {
     return res.json();
 }
 
-async function addSoundSample(file, soundSample) {
-    const formData = new FormData();
-    if (file) {
-        formData.append("file", file);
-    }
-    formData.append("soundSample", JSON.stringify(soundSample));
+async function addSoundSample(file, userId) {
+    // Setup sound sample object and convert to JSON
+    const soundSample = {
+        link: trimmedLink,
+        filePath: null,
+        userId: userId
+    };
+    const soundSampleJson = JSON.stringify(soundSample);
 
+    // Create data form for soundsample and file
+    const formData = new FormData();
+    formData.append("soundSample", soundSampleJson);
+    if(file) formData.append("file", file);  
+
+    // Send POST request to backend
     const response = await fetch(`${API}/upload`, {
         method: "POST",
-        body: formData
+        body: formData,
     });
+
+    if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+    }
 
     return response.text();
 }
 
+// Create data form for sound sample deletion (with either link or file name)
 async function deleteSoundSample(link, fileName) {
-    const res = await fetch(`${API}/delete`, { 
+    const formData = new FormData();
+    if (link) {
+        formData.append("link", link);
+    } else if (fileName) {
+        formData.append("fileName", fileName);
+    }
+
+    // Send DELETE request to backend
+    const response = await fetch(`${API}/delete`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ link, fileName })
+        body: formData,
     });
 
-    return res.text();
+    if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+    }
+
+    return response.text();
 }
 
 export { getSoundSamples, addSoundSample, deleteSoundSample };

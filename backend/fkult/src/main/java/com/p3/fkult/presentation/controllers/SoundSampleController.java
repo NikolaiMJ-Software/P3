@@ -30,8 +30,10 @@ public class SoundSampleController {
 
     // Fetch function to delete an existing sound sample by either link or file name
     @DeleteMapping("/delete")
-    public String delete(@RequestBody Map<String, String> body) {
-        return service.delete(body.get("link"), body.get("fileName"));
+    public String delete(
+            @RequestPart(value = "link", required = false) String link,
+            @RequestPart(value = "fileName", required = false) String fileName) {
+        return service.delete(link, fileName);
     }
 
     // Fetch function to get all sound samples 
