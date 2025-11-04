@@ -2,6 +2,7 @@ package com.p3.fkult.business.services;
 
 import com.p3.fkult.persistence.entities.User;
 import com.p3.fkult.persistence.repository.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,13 @@ public class UserService {
         userRepository.updateAdminStatus(username);
     }
 
+    public ResponseEntity<?> postUserBan(String username, int status){
+        return userRepository.updateUserBanStatus(username, status);
+    }
+
+
     public long getUserIdByUsername(String username){
         return userRepository.findIdByUsername(username);
     }
+
 }

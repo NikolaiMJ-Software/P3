@@ -6,8 +6,8 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
   const [rotation, setRotation] = useState(0);
   const [winner, setWinner] = useState(null);
   const [winnerValue, setWinnerValue] = useState(null);
-  const [KrestensLaw, setKrestensLaw] = useState(null);
-  const [KrestensLawAt, setKrestensLawAt] = useState(0);
+  const [krestensLaw, setKrestensLaw] = useState(null);
+  const [krestensLawAt, setKrestensLawAt] = useState(0);
 
   const radius = size / 2;
 
@@ -24,21 +24,33 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
   }, [inputs, size]);
 
   const onCanvasClick = (e) => {
+    if (spinning) return;
     if (!canvasRef.current || inputs.length === 0) return;
+
     const rect = canvasRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - radius; // relative to center
-    const y = e.clientY - rect.top - radius;  // relative to center
-    // convert to degrees (0 = right, increasing clockwise)
-    const clickedDeg = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
-    // account for current wheel rotation so we get the original segment
-    const adjusted = (clickedDeg - (rotation % 360) + 360) % 360;
+
+    // vector from canvas center (in screen coords)
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const vx = e.clientX - cx;
+    const vy = e.clientY - cy;
+
+    // un-rotate by current CSS rotation so we’re back in "wheel drawing" space
+    const rad = (- (rotation % 360)) * Math.PI / 180;
+    const ux = vx * Math.cos(rad) - vy * Math.sin(rad);
+    const uy = vx * Math.sin(rad) + vy * Math.cos(rad);
+
+    // angle in our unrotated space (0° = right, clockwise)
+    const angleDeg = (Math.atan2(uy, ux) * 180 / Math.PI + 360) % 360;
+
     const arcDeg = 360 / inputs.length;
-    const idx = Math.floor(adjusted / arcDeg);
+    const idx = Math.floor((angleDeg + 1e-6) / arcDeg) % inputs.length; // epsilon avoids boundary ties
+
     setKrestensLaw(idx);
     setKrestensLawAt(performance.now());
-    // testing Krestens rule
-    //console.log("Primed rig index:", idx);
+    console.log("Primed rig index:", idx);
   };
+
 
   const spin = () => {
     if (spinning || inputs.length === 0) return;
@@ -48,8 +60,8 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
 
     let idx;
     const now = performance.now();
-    if (KrestensLaw != null && (now - KrestensLawAt) < 1500 && KrestensLaw >= 0 && KrestensLaw < inputs.length) {
-      idx = KrestensLaw;
+    if (krestensLaw != null && (now - krestensLawAt) < 1500 && krestensLaw >= 0 && krestensLaw < inputs.length) {
+      idx = krestensLaw;
       // clear right away so subsequent spins don't reuse it accidentally
       setKrestensLaw(null);
       setKrestensLawAt(0);

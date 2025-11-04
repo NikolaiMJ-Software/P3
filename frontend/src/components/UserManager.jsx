@@ -1,18 +1,26 @@
+import {banUser, unbanUser} from "../services/adminService.jsx"
+import {useParams} from "react-router-dom";
+import {useState} from "react";
+
 export default function UserManager(){
+    const [user, setUser] = useState("")
+    const {username} = useParams();
+
     return (
         <div className="p-5 flex flex-col mr-20 ml-20">
             <div className={"border text-center"}>
-                User Management
+                User Manager
             </div>
             <div className={"p-5 border border-t-0 flex flex-row justify-between content-center"}>
                 <div className={"flex flex-col justify-center"}>
-                    Username:
-                    <input className={"border"}/>
+                    <p>Username:</p>
+                    <input onChange={e => setUser(e.target.value)} className={"border"}/>
                 </div>
                 <div className={"flex flex-col "}>
-                    <BanButton label={"Unban"}/>
-                    <BanButton label={"Ban"}/>
+                    <BanButton onClick={() => unbanUser([username, user])} label={"Unban"}/>
+                    <BanButton onClick={() => banUser([username, user])} label={"Ban"}/>
                 </div>
+
             </div>
         </div>
     )

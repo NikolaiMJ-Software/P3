@@ -31,13 +31,13 @@ export default function AdminPage(){
                 />
                 <div className="flex flex-col">
                     {/* Top Half */}
-                    <div className=" flex flex-row justify-between ">
+                    <div className="flex flex-row justify-between ">
                         {/* Event Manager */}
                         <EventManager/>
                         {/* Upper Right */}
                         <div className="grow-1 flex flex-col justify-between">
                             {/* Intro Text */}
-                            <div className="grow-3 mt-20 text-center text-xl">
+                            <div className="mt-20 text-center text-xl">
                                 <h1>Welcome Admin!</h1>
                                 <br/>
                                 <h1>What actions shall we do today my lord?</h1>
