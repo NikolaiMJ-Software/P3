@@ -1,11 +1,12 @@
 import { useState } from "react";
 import logo from "../assets/logo.png"
 import MovieCard, {ThemeMovieCard} from "./MovieCard.jsx";
+import DrinkingRuleCreator from "./DrinkingRuleCreator.jsx";
 
 export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) {
     const [title, setTitle] = useState("");
     const [movies, setMovies] = useState([]);
-    const [rules, setRules] = useState("");
+    const [rules, setRules] = useState([]);
     const [pageCount, setPageCount] = useState(1);
     const [totalPageCount, setTotalPageCount] = useState(1);
 
@@ -44,6 +45,10 @@ export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) 
         onClose();
     };
 
+
+
+
+
     if (!isOpen) {
         return null;
     }
@@ -59,7 +64,7 @@ export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) 
 
                 <div className={"flex flex-row"}>
                     {/* Left Movie searcher*/}
-                    <div className={"items-center flex-col flex gap-1 border-black border-1 m-2 p-2 w-[600px]" }>
+                    <div className={"items-center relative flex-col flex gap-1 border-black border-1 m-2 p-2 w-[600px] h-[640px]" }>
                         <div className={"flex flex-row"}>
                             <input type={"text"} placeholder={"Search Movie or enter iMDB link..."} className={"w-100 text-center text-black border-1 m-2 p-2 rounded-2xl overflow-y-auto overflow-x-hidden max-h-[200px]"}/>
                             <button className={"text-center text-black border-1 m-2 p-2 rounded-2xl overflow-y-auto overflow-x-hidden hover:cursor-pointer hover:bg-gray-300"}>Search</button>
@@ -69,9 +74,8 @@ export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) 
                         <MovieSuggestion movieName={"Pirates of the Carribean"} posterURL={"https://m.media-amazon.com/images/M/MV5BMTcwODc1MTMxM15BMl5BanBnXkFtZTYwMDg1NzY3._V1_FMjpg_UX1000_.jpg"} year={"2004"} runtime={"140"}></MovieSuggestion>
                         <MovieSuggestion movieName={"Pirates of the Carribean"} posterURL={"https://m.media-amazon.com/images/M/MV5BMTcwODc1MTMxM15BMl5BanBnXkFtZTYwMDg1NzY3._V1_FMjpg_UX1000_.jpg"} year={"2004"} runtime={"140"}></MovieSuggestion>
                         <MovieSuggestion movieName={"Pirates of the Carribean"} posterURL={"https://m.media-amazon.com/images/M/MV5BMTcwODc1MTMxM15BMl5BanBnXkFtZTYwMDg1NzY3._V1_FMjpg_UX1000_.jpg"} year={"2004"} runtime={"140"}></MovieSuggestion>
-                        <MovieSuggestion movieName={"Pirates of the Carribean"} posterURL={"https://m.media-amazon.com/images/M/MV5BMTcwODc1MTMxM15BMl5BanBnXkFtZTYwMDg1NzY3._V1_FMjpg_UX1000_.jpg"} year={"2004"} runtime={"140"}></MovieSuggestion>
-
-                        <div className={"flex flex-row gap-4"}>
+                        <MovieSuggestion movieName={"langt movie navn som virkelig tager meget plads på siden"} posterURL={"https://i1.sndcdn.com/artworks-uGJeJgu2YvAOEq59-vwTFWQ-t500x500.jpg"} year={"2004"} runtime={"140"}></MovieSuggestion>
+                        <div className={"absolute bottom-4 flex flex-row gap-4"}>
                             <button className={"border-2 text-lg p-2 hover:cursor-pointer hover:bg-gray-500"}>
                                 <p>prev</p>
                             </button>
@@ -81,8 +85,7 @@ export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) 
                             </button>
                         </div>
                     </div>
-
-                    {/* Right Theme Creator*/}
+                    {/* Right Theme Creator */}
                     <div className={"items-center flex-col flex gap-1 border-1 m-2 p-2 w-[600px]"}>
                         <input type={"text"} placeholder={"Enter theme title"} className={"w-100 text-center text-black border-1 m-2 p-2 rounded-2xl"}/>
                         <button
@@ -95,15 +98,12 @@ export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) 
                                 {movies.map((movie) => {
                                     return <ThemeMovieCard title={movie.title}></ThemeMovieCard>
                                 })}
-                                <ThemeMovieCard title={"Pirates of the Carribean"} year={"2004"} moviePosterURL={"https://m.media-amazon.com/images/M/MV5BMTcwODc1MTMxM15BMl5BanBnXkFtZTYwMDg1NzY3._V1_FMjpg_UX1000_.jpg"} runtimeMinutes={140}></ThemeMovieCard>
+                                <ThemeMovieCard cl title={"Pirates of the Carribean"} year={"2004"} moviePosterURL={"https://m.media-amazon.com/images/M/MV5BMTcwODc1MTMxM15BMl5BanBnXkFtZTYwMDg1NzY3._V1_FMjpg_UX1000_.jpg"} runtimeMinutes={140}></ThemeMovieCard>
                                 <ThemeMovieCard title={"Pirates of the Carribean"} year={"2004"} moviePosterURL={"https://m.media-amazon.com/images/M/MV5BMTcwODc1MTMxM15BMl5BanBnXkFtZTYwMDg1NzY3._V1_FMjpg_UX1000_.jpg"} runtimeMinutes={140}></ThemeMovieCard>
                             </div>
                             {movies.runtime}
                         </div>
-                        <p className={""}>Drinking rules:</p>
-                        <div>
-                            <input type={"text"}/>
-                        </div>
+                        <DrinkingRuleCreator></DrinkingRuleCreator>
                     </div>
                 </div>
             </div>
@@ -120,7 +120,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL}) {
         <div className={"flex-row flex items-center gap-4 p-1 border-black border-2 rounded-2xl w-135 h-20"}>
             <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl"}/>
             <div className={"flex flex-col"}>
-                <p className="font-bold">{movieName}</p>
+                <p className="font-bold truncate max-w-[370px]">{movieName}</p>
                 <p>{year}</p>
                 <p>{runtimeHours + "h " + runtimeMinutesLeft + "m "}</p>
 
