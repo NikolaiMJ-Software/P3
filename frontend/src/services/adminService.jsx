@@ -39,9 +39,6 @@ export async function banUser(body){
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
     });
-    if (!response.ok){
-        return "Something went wrong"
-    }
     return response.text();
 }
 
@@ -51,8 +48,5 @@ export async function unbanUser(body){
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
     });
-    if (!response.ok){
-        return "Something went wrong"
-    }
     return response.text();
 }
