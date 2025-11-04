@@ -2,19 +2,26 @@ package com.p3.fkult.business.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.p3.fkult.persistence.entities.SoundSample;
+import com.p3.fkult.persistence.entities.User;
 import com.p3.fkult.persistence.repository.SoundSampleRepository;
+import com.p3.fkult.business.services.shuffleFilter.*;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.*;
 
 @Service
 public class SoundSampleService {
 
     // Download copy of repository to run its code
     private final SoundSampleRepository repository;
-    public SoundSampleService(SoundSampleRepository repository) {
+    private final UserService userService;
+
+    public SoundSampleService(SoundSampleRepository repository, UserService userService) {
         this.repository = repository;
+        this.userService = userService;
     }
 
     // Handles sound sample uploads with either link or file
@@ -78,5 +85,60 @@ public class SoundSampleService {
 
         // Delete sound sample object in the database
         return repository.delete(link, filePath);
+    }
+
+    // Get all sound samples
+    public List<SoundSample> getAllSoundSamples(Boolean quick, Boolean weighted){
+        try {
+            List<SoundSample> allSoundSamples = repository.getAll();
+            List<SoundSample> soundSample = new ArrayList<>();
+            
+            if (quick && weighted) {
+                return allSoundSamples;
+            }
+            
+            // Option for shuffle
+            ShuffleFilter shuffleFilter = new ShuffleFilter();
+            if(quick) {
+                allSoundSamples = shuffleFilter.quickShuffle(allSoundSamples);
+            } else if(weighted) {
+                allSoundSamples = shuffleFilter.weightedShuffle(allSoundSamples);
+            }
+
+            List<User> allUsers = userService.getAllUsers();
+            String name = null;
+            for (SoundSample i : allSoundSamples) {
+                // Convert userId to username
+                for (User j : allUsers) {
+                    if (i.getUserId() == j.getId()) {
+                        name = j.getName();
+                        break;
+                    }
+                }
+
+                // Get the file or link
+                if (i.getFilePath() != null) {
+                    soundSample.add(new SoundSample(getFile(i.getFilePath()), name));
+                } else {
+                    soundSample.add(new SoundSample(i.getLink(), name));
+                }
+            }
+
+            return soundSample;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public File getFile(String filePath) {
+        try {
+            File file = new File(filePath);
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

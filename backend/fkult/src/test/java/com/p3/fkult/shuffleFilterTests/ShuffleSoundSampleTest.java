@@ -32,7 +32,6 @@ public class ShuffleSoundSampleTest {
 
     @Test
     void quickShuffleFilter() {
-        System.out.println("Dette er SS test QUICK");
         List<SoundSample> shuffled = shuffleFilter.quickShuffle(soundSample);
 
         assertEquals(soundSample.size(), shuffled.size());
@@ -50,7 +49,6 @@ public class ShuffleSoundSampleTest {
 
     @Test
     void weightedShuffleFilter() {
-        System.out.println("Dette er SS test WEIGHT");
         List<SoundSample> shuffled = shuffleFilter.weightedShuffle(soundSample);
         
         assertEquals(soundSample.size(), shuffled.size());
