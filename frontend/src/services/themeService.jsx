@@ -33,7 +33,7 @@ export async function deleteTheme(id) {
 
 export async function fetchShuffledThemes() {
   try {
-    const response = await fetch("http://localhost:8080/api/vote/getShuffledThemes");
+    const response = await fetch(`${API}/api/vote/getShuffledThemes`);
     if (!response.ok) {
       throw new Error(`Server error: ${response.status}`);
     }
