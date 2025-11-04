@@ -69,12 +69,32 @@ public class MovieRepository {
         String sql = "UPDATE movie SET poster_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, posterURL, movieId);
     }
-    public List<Movie> searchMovies(String keyword) {
+    public List<Movie> searchMovies(String keyword, int page, int limit) {
         //case insenstive + partial matches
-        String sql = "SELECT * FROM movie WHERE LOWER(movie_name) LIKE LOWER(?) AND is_active = 1 AND year > 0 AND runtime_minutes > 0 LIMIT 5";
+        String sql = """
+        SELECT * FROM movie 
+        WHERE LOWER(movie_name) LIKE LOWER(?) 
+        AND is_active = 1 
+        AND year > 0
+        AND runtime_minutes > 0 
+        LIMIT ? OFFSET ?
+        """;
+        int offset = (page-1) * limit;
         String likePattern = "%" + keyword + "%";
-        return jdbcTemplate.query(sql, rowMapper, likePattern);
-    } 
+        return jdbcTemplate.query(sql, rowMapper, likePattern, limit, offset);
+    }
+
+    public int countMovies(String keyword){
+        String sql = """
+        SELECT COUNT(*) FROM movie 
+        WHERE LOWER(movie_name) LIKE LOWER(?) 
+        AND is_active = 1 
+        AND year > 0
+        AND runtime_minutes > 0 
+        """;
+        String likePattern = "%" + keyword + "%";
+        return jdbcTemplate.queryForObject(sql, Integer.class, likePattern);
+    }
 
     //upsert function
     public int upsertFromImdbFile(File tsvGz, boolean onlyMovies, boolean markInactiveMissing) throws IOException {
