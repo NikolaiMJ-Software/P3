@@ -23,7 +23,7 @@ export default function DrinkingRuleCreator() {
                 <input type={"text"} value={ruleInput} onChange={(event) => setRuleInput(event.target.value)} onKeyDown={(event) => {if (event.key === "Enter"){event.preventDefault(); addRule();}}} className={"border-2 rounded-2xl w-100 text-center"} placeholder={"Write drinking rule..."}/>
                 <button className={"border-2 rounded-2xl p-1 hover:cursor-pointer hover:bg-gray-300"} onClick={addRule}>Add</button>
             </div>
-            <div className="overflow-y-auto overflow-x-hidden max-h-[200px] max-w-[500px]">
+            <div className="overflow-y-auto overflow-x-hidden max-h-[120px] max-w-[500px]">
                 {rules.map((rule, index) => (
                     <div
                         key={index}
@@ -34,7 +34,7 @@ export default function DrinkingRuleCreator() {
                             onClick={() => removeRule(index)}
                             className="text-red-500 font-bold px-2 hover:text-red-700 m-1"
                         >
-                            ✖
+                            X
                         </button>
                     </div>
                 ))}

@@ -22,7 +22,7 @@ export function MovieCardSmall({moviePosterURL, title, runtimeMinutes}){
         </div>
     </div>)
 }
-export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes}){
+export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove}){
     const runtimeHours = Math.floor(runtimeMinutes / 60)
     const runtimeMinutesLeft = runtimeMinutes % 60;
 
@@ -37,5 +37,8 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes}){
                 />
             </div>
             <p>{runtimeHours + "h " + runtimeMinutesLeft + "m"}</p>
+            {onRemove && (
+                <button onClick={onRemove} className="text-red-500 font-bold px-3 py-1 rounded-xl hover:text-red-700">Remove</button>
+            )}
         </div>)
 }
