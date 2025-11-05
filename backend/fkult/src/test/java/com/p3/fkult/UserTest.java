@@ -24,6 +24,7 @@ public class UserTest {
 
     @Mock
     private UserRepository userRepository;
+    @Mock
     private Authenticator auth;
     private UserService userService;
 
@@ -119,6 +120,7 @@ public class UserTest {
     void testUpdateUserBan(){
         // Arrange
         when(auth.receiveUsername("test")).thenReturn(true);
+        when(userService.getIfUserBanned("test")).thenReturn(false);
 
         User after = new User(1, "test", "Test Person", 1, 0);
         when(userRepository.updateUserBanStatus("test", 1)).thenReturn(after);
@@ -130,5 +132,19 @@ public class UserTest {
         // Assert
         assertEquals(expected, result);
         verify(userRepository).updateUserBanStatus("test", 1);
+    }
+
+    @Test
+    @DisplayName("Check if a banned user is banned")
+    void testCheckBan() {
+        // Arrange
+        when(userRepository.findIfUserBanned("test")).thenReturn(true);
+
+        // Act
+        boolean result = userService.getIfUserBanned("test");
+
+        // Assert
+        assertTrue(result);
+        verify(userRepository).findIfUserBanned("test");
     }
 }

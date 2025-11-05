@@ -37,8 +37,9 @@ public class UserService {
     public ResponseEntity<?> postUserBan(String username, int status){
         boolean res = auth.receiveUsername(username);
         if (!res) return ResponseEntity.status(403).body("User does not exist");
-        User user = getUser(username);
-        if (user.getBanned() == status) return ResponseEntity.ok("User already " + ((status == 1) ? "banned" : "unbanned"));
+
+        if (getIfUserBanned(username) == (status == 1)) return ResponseEntity.ok("User already " + ((status == 1) ? "banned" : "unbanned"));
+
         User result = userRepository.updateUserBanStatus(username, status);
         if (result.getBanned() == status) return ResponseEntity.ok("User successfully " + ((status == 1) ? "banned" : "unbanned"));
         else return ResponseEntity.status(500).body("User not correctly updated");
