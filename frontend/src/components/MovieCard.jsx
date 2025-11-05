@@ -22,9 +22,27 @@ export function MovieCardSmall({moviePosterURL, title, runtimeMinutes}){
         </div>
     </div>)
 }
-export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove}){
+export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove, isSeries}){
     const runtimeHours = Math.floor(runtimeMinutes / 60)
     const runtimeMinutesLeft = runtimeMinutes % 60;
+    if (isSeries){
+        return (
+            <div className={"w-full flex flex-col items-center border-2 rounded-2xl"}>
+                <p className={"text-[15px] text-center mt-1 truncate w-full text-lg"}>{title}</p>
+                <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-gray-300 bg-white">
+                    <img
+                        src={moviePosterURL}
+                        alt={`Poster for ${title}`}
+                        className={`w-full h-full object-cover`}
+                    />
+                </div>
+                <p className={"font-bold"}>Series</p>
+                {onRemove && (
+                    <button onClick={onRemove} className="text-red-500 font-bold px-3 py-1 rounded-xl hover:text-red-700">Remove</button>
+                )}
+            </div>
+        )
+    }
 
     return(
         <div className={"w-full flex flex-col items-center border-2 rounded-2xl"}>

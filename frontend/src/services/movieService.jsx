@@ -24,11 +24,12 @@ export async function getMoviesByTconsts(movieTconsts) {
         }
         const data = await response.json();
 
-        if (Array.isArray(data)) {
+        if (!Array.isArray(data)) {
             console.error("Expected array, received: ", data);
             return [];
         }
-        return response.json();
+
+        return data;
     }catch (e) {
         console.error("Error fetching movies:", e);
         return[];

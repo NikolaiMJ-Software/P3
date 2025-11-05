@@ -2,7 +2,7 @@ import MovieCard, {MovieCardSmall} from "./MovieCard.jsx";
 import {useEffect, useState} from "react";
 import {getMovies, getMoviesByTconsts} from "../services/movieService.jsx";
 
-export default function ThemeCard({title, name, tConsts, drinkingRules}){
+export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries}){
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {

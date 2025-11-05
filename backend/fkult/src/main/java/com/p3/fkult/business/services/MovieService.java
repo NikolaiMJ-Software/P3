@@ -35,7 +35,9 @@ public class MovieService {
                     movie.getMovieName(),
                     movie.getRuntimeMinutes(),
                     movie.getYear(),
-                    movie.getPosterURL());
+                    movie.getPosterURL(),
+                    movie.getIsSeries()
+                    );
             movieRequests.add(movieRequest);
         });
         return movieRequests;
