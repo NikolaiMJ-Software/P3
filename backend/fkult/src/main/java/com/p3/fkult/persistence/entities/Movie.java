@@ -8,9 +8,10 @@ public class Movie {
     private Integer year;
     private Integer runtimeMinutes;
     private Boolean isActive;
+    private Boolean isSeries;
     private String posterURL;
 
-    public Movie(long id, String tconst, String movieName, String originalMovieName, Integer year, Integer runtimeMinutes, Boolean isActive, String posterURL){
+    public Movie(long id, String tconst, String movieName, String originalMovieName, Integer year, Integer runtimeMinutes, Boolean isActive, Boolean isSeries, String posterURL){
         this.id = id;
         this.tconst = tconst;
         this.movieName = movieName;
@@ -18,11 +19,12 @@ public class Movie {
         this.year = year;
         this.runtimeMinutes = runtimeMinutes;
         this.isActive = isActive;
+        this.isSeries = isSeries;
         this.posterURL = posterURL;
     }
-    public Movie(int id, String tconst, String movieName, String originalMovieName, int year, int runtimeMinutes, boolean isActive, String posterURL) {
+    public Movie(int id, String tconst, String movieName, String originalMovieName, int year, int runtimeMinutes, boolean isActive, boolean isSeries, String posterURL) {
         //overloaded constructor that accepts primitives for year runtimeMinutes and isActive
-        this((long)id, tconst, movieName, originalMovieName, Integer.valueOf(year), Integer.valueOf(runtimeMinutes), Boolean.valueOf(isActive), posterURL);
+        this((long)id, tconst, movieName, originalMovieName, Integer.valueOf(year), Integer.valueOf(runtimeMinutes), Boolean.valueOf(isActive), Boolean.valueOf(isSeries), posterURL);
     }
 
 
@@ -47,6 +49,9 @@ public class Movie {
     }
     public Boolean getIsActive(){
         return this.isActive;
+    }
+    public Boolean getIsSeries(){
+        return this.isSeries;
     }
     public String getPosterURL(){
         return this.posterURL;
@@ -73,6 +78,9 @@ public class Movie {
     }
     public void setIsActive(Boolean isActive){
         this.isActive = isActive;
+    }
+    public void setIsSeries(Boolean isSeries){
+        this.isSeries = isSeries;
     }
     public void setPosterURL(String posterURL){
         this.posterURL = posterURL;
