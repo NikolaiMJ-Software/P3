@@ -7,6 +7,8 @@ public class MovieRequest {
     private String moviePosterURL;
     private int runtimeMinutes;
     private int year;
+    private boolean isSeries;
+
     //constructor
     public MovieRequest(long movieId, String title, String moviePosterURL, int runtimeMinutes, int year){
         this.movieId = movieId;
@@ -15,12 +17,13 @@ public class MovieRequest {
         this.runtimeMinutes = runtimeMinutes;
         this.year = year;
     }
-    public MovieRequest(String tConst, String title, int runtimeMinutes, int year, String moviePosterURL){
+    public MovieRequest(String tConst, String title, int runtimeMinutes, int year, String moviePosterURL, boolean isSeries){
         this.tConst = tConst;
         this.title = title;
         this.runtimeMinutes = runtimeMinutes;
         this.year = year;
         this.moviePosterURL = moviePosterURL;
+        this.isSeries = isSeries;
     }
 
     //setters
@@ -40,6 +43,7 @@ public class MovieRequest {
         this.year = year;
     }
     public void settConst(String tConst){this.tConst = tConst;}
+    public void setIsSeries(boolean isSeries){this.isSeries = isSeries;}
 
     //getters
     public long getMovieId(){
@@ -58,4 +62,5 @@ public class MovieRequest {
         return year;
     }
     public String gettConst(){return tConst;}
+    public boolean getIsSeries(){return isSeries;}
 }
