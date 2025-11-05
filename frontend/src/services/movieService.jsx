@@ -11,12 +11,28 @@ export async function getMovies(movieIds){
 }
 
 export async function getMoviesByTconsts(movieTconsts) {
-    const response = await fetch(`${API_URL}/batchByTconst`,{
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(movieTconsts),
-    });
-    return response.json();
+    try{
+        const response = await fetch(`${API_URL}/batchByTconst`,{
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(movieTconsts),
+
+        });
+        if (!response.ok){
+            console.error("Server responded with: ", response.status);
+            return[];
+        }
+        const data = await response.json();
+
+        if (Array.isArray(data)) {
+            console.error("Expected array, received: ", data);
+            return [];
+        }
+        return response.json();
+    }catch (e) {
+        console.error("Error fetching movies:", e);
+        return[];
+    }
 }
 
 export async function searchMovies(query, page, limit){
