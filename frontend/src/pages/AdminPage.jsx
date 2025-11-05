@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {becomeAdmin, isAdmin, unbecomeAdmin} from "../services/adminService.jsx"
+import {adminUser, isAdmin, unadminUser} from "../services/adminService.jsx"
 import {useEffect, useState} from "react";
 import UserManager from "../components/UserManager.jsx";
 import EventManager from "../components/EventManager.jsx";
@@ -26,7 +26,7 @@ export default function AdminPage(){
             <div>
                 <p>Hello {username}</p>
                 <AdminButton
-                    func={unbecomeAdmin}
+                    func={unadminUser}
                     username={username}
                     label={`Unbecome Admin`}
                 />
@@ -58,7 +58,7 @@ export default function AdminPage(){
             <div>
                 <p>GET OUT!</p>
                 <AdminButton
-                    func={becomeAdmin}
+                    func={adminUser}
                     username={username}
                     label={`Become Admin`}
                 />

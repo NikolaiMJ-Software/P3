@@ -11,25 +11,19 @@ export async function isAdmin(username){
     return response.json();
 }
 
-export async function becomeAdmin(username){
+export async function adminUser(username){
     const response = await fetch(`${API_URL}/admin/${username}?status=1`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
     });
-    if (!response.ok){
-        throw new Error(`HTTP error! Status: ${response.status}`)
-    }
     return response.text();
 }
 
-export async function unbecomeAdmin(username){
+export async function unadminUser(username){
     const response = await fetch(`${API_URL}/admin/${username}?status=0`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
     });
-    if (!response.ok){
-        throw new Error(`HTTP error! Status: ${response.status}`)
-    }
     return response.text();
 }
 

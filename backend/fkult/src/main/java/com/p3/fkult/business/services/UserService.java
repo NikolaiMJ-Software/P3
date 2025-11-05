@@ -28,9 +28,12 @@ public class UserService {
     public ResponseEntity<?> postAdminUser(String username, int status){
         if (status > 1 || status < 0) return ResponseEntity.status(400).body("Status not applicable: " + status);
 
+        boolean res = auth.receiveUsername(username);
+        if (!res) return ResponseEntity.status(403).body("User does not exist");
+
         User result = userRepository.updateAdminStatus(username, status);
 
-        if (result.getAdmin() == status) return ResponseEntity.ok("User updated successfully");
+        if (result.getAdmin() == status) return ResponseEntity.ok("User successfully " + ((status == 1) ? "admin" : "unadmin"));
         else return ResponseEntity.status(500).body("User not correctly updated");
     }
 
