@@ -49,4 +49,8 @@ public class UserService {
         return userRepository.findIdByUsername(username);
     }
 
+    public boolean getIfUserBanned(String username){
+        return userRepository.findIfUserBanned(username);
+    }
+
 }
