@@ -107,7 +107,12 @@ export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) 
             if (prev.some(m => m.tConst === movie.tConst)) return prev;
             return [...prev, movie];
         })
+
     }
+
+    const handleRemoveMovie = (tConst) => {
+    setMovies(prev => prev.filter(m => m.tConst !== tConst));
+    };
 
     const resetForm = () => {
         setTitle("");
@@ -161,11 +166,23 @@ export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) 
                             className={"absolute bottom-4 left-1/2 transform -translate-x-1/2 font-semibold px-8 py-3 rounded-xl border-2 border-black hover:bg-gray-300"}>Confirm
                         </button>
                         <p className={"text-center"}>Movies</p>
-                        <div className={"w-full max-w-[500px] h-70 overflow-x-auto overflow-y-hidden gap-"}>
+                        {movies.length > 0 && (() => {
+                            const totalRuntime = movies.reduce((sum, m) => sum + (m.runtimeMinutes || 0), 0);
+                            const totalHours = Math.floor(totalRuntime / 60);
+                            const totalMinutes = totalRuntime % 60;
+                            return (
+                                <p className="text-center font-semibold mt-2">
+                                    Total runtime: {totalHours}h {totalMinutes}m
+                                </p>
+                            );
+                        })()}
+                        
+                        <div className={"w-full max-w-[500px] overflow-x-auto overflow-y-hidden gap-"}>
                             <div className={"flex flex-row gap-4 items-center"}>
                                 {movies.map(m =>{
-                                    return<ThemeMovieCard title={m.title} runtimeMinutes={m.runtimeMinutes} moviePosterURL={m.moviePosterURL}></ThemeMovieCard>
+                                    return<ThemeMovieCard title={m.title} runtimeMinutes={m.runtimeMinutes} moviePosterURL={m.moviePosterURL} onRemove={() => handleRemoveMovie(m.tConst)}></ThemeMovieCard>
                                 })}
+                                
                             </div>
                         </div>
                         <DrinkingRuleCreator></DrinkingRuleCreator>
