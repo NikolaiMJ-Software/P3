@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS movie (
   year                INTEGER,
   runtime_minutes     INTEGER CHECK (runtime_minutes IS NULL OR runtime_minutes > 0),
   is_active           INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0,1)),
+  is_series           INTEGER NOT NULL DEFAULT 0 CHECK (is_series IN (0,1)),
   poster_url          TEXT
 );
 
