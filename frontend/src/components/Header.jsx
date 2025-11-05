@@ -2,6 +2,8 @@ import logoPNG from '../assets/logo.png';
 import pizzaWEBP from '../assets/pizza.webp'
 import discordWEBP from '../assets/discord.webp'
 import userPNG from "../assets/User.png"
+import englishPNG from "../assets/english.png"
+import danishPNG from "../assets/danish.png"
 import {useNavigate, useParams} from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 
@@ -10,6 +12,20 @@ export default function Header(){
     const {username} = useParams();
     const [open, setOpen] = useState(false);
     const menuRef = useRef(null);
+
+
+    const [lang, setLang] = useState(() => localStorage.getItem("lang") || "da");
+
+    useEffect(() => {
+        localStorage.setItem("lang", lang);
+        document.documentElement.setAttribute("lang", lang);
+        window.dispatchEvent(new CustomEvent("lang-change", { detail: lang }));
+
+    }, [lang]);
+
+    const toggleLang = () => {
+        setLang(prev => (prev === "da" ? "en" : "da"))
+    };
 
 
     const logout = () =>{
@@ -39,6 +55,12 @@ export default function Header(){
             <h1 className="relative top-2 left-0 right-0 text-center text-3xl bold">F-Kult</h1>
 
             <div className="flex">
+                <NavButton
+                label={lang === "en" ? "English" : "Dansk"}
+                icon={lang === "en" ? englishPNG : danishPNG}
+                onClick={toggleLang}
+                />
+
                 <NavButton
                     label="Pizza"
                     icon={pizzaWEBP}
