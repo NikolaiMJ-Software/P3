@@ -1,5 +1,6 @@
 package com.p3.fkult;
 
+import com.p3.fkult.business.services.Authenticator;
 import com.p3.fkult.business.services.UserService;
 import com.p3.fkult.persistence.entities.User;
 import com.p3.fkult.persistence.repository.UserRepository;
@@ -23,12 +24,13 @@ public class UserTest {
 
     @Mock
     private UserRepository userRepository;
+    private Authenticator auth;
     private UserService userService;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, auth);
     }
 
     @Test
@@ -113,14 +115,16 @@ public class UserTest {
 
 
     @Test
-    @DisplayName("Update ban status of existing user")
+    @DisplayName("ban unbanned user")
     void testUpdateUserBan(){
         // Arrange
-        User user = new User(1, "test", "Test Person", 1, 0);
-        when(userRepository.updateUserBanStatus("test", 1)).thenReturn(user);
+        when(auth.receiveUsername("test")).thenReturn(true);
+
+        User after = new User(1, "test", "Test Person", 1, 0);
+        when(userRepository.updateUserBanStatus("test", 1)).thenReturn(after);
 
         // Act
-        ResponseEntity expected = ResponseEntity.ok("User updated successfully");
+        ResponseEntity expected = ResponseEntity.ok("User successfully banned");
         ResponseEntity<?> result = userService.postUserBan("test", 1);
 
         // Assert

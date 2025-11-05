@@ -1,6 +1,7 @@
 package com.p3.fkult.business.services;
 
 import com.p3.fkult.persistence.entities.User;
+import com.p3.fkult.persistence.repository.AuthRepository;
 import com.p3.fkult.persistence.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,9 +11,11 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final Authenticator auth;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, Authenticator auth) {
         this.userRepository = userRepository;
+        this.auth = auth;
     }
 
     public List<User> getAllUsers(){
@@ -32,12 +35,9 @@ public class UserService {
     }
 
     public ResponseEntity<?> postUserBan(String username, int status){
+        boolean res = auth.receiveUsername(username);
+        if (!res) return ResponseEntity.status(403).body("User does not exist");
         User user = getUser(username);
-        if (user.getId() < 0) {
-            //get user from fklub
-
-            return ResponseEntity.status(403).body("user does not exist");
-        }
         if (user.getBanned() == status) return ResponseEntity.ok("User already " + ((status == 1) ? "banned" : "unbanned"));
         User result = userRepository.updateUserBanStatus(username, status);
         if (result.getBanned() == status) return ResponseEntity.ok("User successfully " + ((status == 1) ? "banned" : "unbanned"));
