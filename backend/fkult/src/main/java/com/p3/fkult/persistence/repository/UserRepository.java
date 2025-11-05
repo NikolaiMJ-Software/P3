@@ -56,4 +56,9 @@ public class UserRepository {
         return jdbcTemplate.queryForObject("SELECT id FROM user WHERE username = ?", Long.class, username);
     }
 
+    //test if user banned
+    public boolean findIfUserBanned(String username){
+        return jdbcTemplate.queryForObject("SELECT is_banned FROM user WHERE username = ?", boolean.class, username);
+    }
+
 }

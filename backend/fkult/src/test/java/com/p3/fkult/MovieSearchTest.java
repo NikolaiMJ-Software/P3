@@ -40,6 +40,7 @@ public class MovieSearchTest {
         2020,
         120,
         true,
+        false,
         null
         );
         when(movieRepository.searchMovies("test", 1, 6)).thenReturn(List.of(testMovie));
