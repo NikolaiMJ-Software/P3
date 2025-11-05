@@ -199,7 +199,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
     const runtimeMinutesLeft = runtime % 60;
 
     return(
-        <div className={"flex-row flex items-center gap-4 p-1 border-black border-2 rounded-2xl w-135 h-20"}>
+        <div onClick={onAdd} className={"flex-row flex items-center gap-4 p-1 border-black border-2 rounded-2xl w-135 h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]"}>
             <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
                 <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
             </div>
