@@ -1,6 +1,8 @@
 import React from "react";
 import { useEffect, useRef, useState } from "react";
 
+//colors to be added red, yellow, blue, green, beige 
+
 export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRemove }) {
   const canvasRef = useRef(null);
   const [spinning, setSpinning] = useState(false);
@@ -9,6 +11,14 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
   const [winnerValue, setWinnerValue] = useState(null);
   const [krestensLaw, setKrestensLaw] = useState(null);
   const [krestensLawAt, setKrestensLawAt] = useState(0);
+
+  const SLICE_COLORS = [
+  "#f87171", // soft red
+  "#fde68a", // muted yellow
+  "#93c5fd", // light blue
+  "#86efac", // soft green
+  "#f5e6c8", // beige
+  ];
 
   const radius = size / 2;
 
@@ -21,7 +31,7 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
     canvas.style.width = `${size}px`;
     canvas.style.height = `${size}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    drawWheel(ctx, radius, inputs);
+    drawWheel(ctx, radius, inputs, SLICE_COLORS);
   }, [inputs, size]);
 
   const onCanvasClick = (e) => {
@@ -53,17 +63,24 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
   };
 
 
+  const RIG_WINDOW_MS = 1500;
+
   const spin = () => {
     if (spinning || inputs.length === 0) return;
     setSpinning(true);
     setWinner(null);
     setWinnerValue(null);
 
+    // --- pick index (keeps Krestens law intact) ---
     let idx;
     const now = performance.now();
-    if (krestensLaw != null && (now - krestensLawAt) < 1500 && krestensLaw >= 0 && krestensLaw < inputs.length) {
+    if (
+      krestensLaw != null &&
+      now - krestensLawAt < RIG_WINDOW_MS &&
+      krestensLaw >= 0 &&
+      krestensLaw < inputs.length
+    ) {
       idx = krestensLaw;
-      // clear right away so subsequent spins don't reuse it accidentally
       setKrestensLaw(null);
       setKrestensLawAt(0);
     } else {
@@ -71,33 +88,52 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
     }
 
     const n = inputs.length;
-    const arc = 360 / n;
+    const arcDeg = 360 / n;
 
-    // pointer is on the RIGHT (0deg) → align chosen center to 0deg
-    const targetCenter = idx * arc + arc / 2;
-    const current = rotation % 360;
-    let delta = (0 - targetCenter - current);
-    delta = ((delta % 360) + 360) % 360;
+    // --- logarithmic spintid & turns (only affects timing/feel) ---
+    const baseMs = 2400;        // base duration
+    const durK   = 650;         // duration grows with log(n)
+    const logn   = Math.log1p(n);
+    const duration = baseMs + durK * logn;
 
-    const total = 360 * 5 + delta;
-    const duration = 3000;
+    const minTurns = 4;
+    const turnsK   = 1.2;       // rotations grow slightly with log(n)
+    const fullTurns = Math.max(minTurns, Math.round(minTurns + turnsK * logn));
+
+    // --- target angle math (unchanged) ---
+    const sliceHalf = arcDeg / 2;
+    const CENTER_MARGIN_DEG = Math.min(8, sliceHalf * 0.4); 
+    const maxBias = Math.max(0, sliceHalf - CENTER_MARGIN_DEG);
+    const biasDeg = (Math.random() * 2 - 1) * maxBias;
+
+    const targetCenter = idx * arcDeg + sliceHalf + biasDeg; // degrees
+    const current = rotation % 360;                    // degrees
+    let delta = 0 - targetCenter - current;           // degrees
+    delta = ((delta % 360) + 360) % 360;              // normalize to [0,360)
+
+    const total = 360 * fullTurns + delta;            // degrees
     const start = performance.now();
     const startRot = rotation;
 
+    // --- logarithmic ease-out curve ---
+    const easeOutExpo = (p) => (p === 1 ? 1 : 1 - Math.pow(2, -10 * p)); 
+
     const animate = (t) => {
       const p = Math.min((t - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      const eased = easeOutExpo(p);
       setRotation(startRot + total * eased);
       if (p < 1) requestAnimationFrame(animate);
       else {
         setSpinning(false);
         setWinner(inputs[idx]);
-        onResult?.(inputs[idx], idx);
         setWinnerValue(idx);
+        onResult?.(inputs[idx], idx);
       }
     };
+
     requestAnimationFrame(animate);
   };
+
 
   const handleRemove = () => {
     if (winnerValue == null) return;
@@ -155,7 +191,7 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
   );
 }
 
-function drawWheel(ctx, r, inputs) {
+function drawWheel(ctx, r, inputs, colors = []) {
   ctx.clearRect(0, 0, r * 2, r * 2);
 
   // base circle
@@ -176,6 +212,30 @@ function drawWheel(ctx, r, inputs) {
   ctx.beginPath();
   ctx.arc(r, r, r - 1.5, 0, Math.PI * 2); // -1.5 to stay inside stroke
   ctx.clip();
+
+  // colored slices
+  ctx.save();
+  ctx.translate(r, r);
+  if (n === 1) {
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fillStyle = colors[0] || "#ddd";
+    ctx.fill();
+  } else {
+    for (let i = 0; i < n; i++) {
+      const start = i * arc;
+      const end = start + arc;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, r, start, end);
+      ctx.closePath();
+      ctx.fillStyle = colors[i % colors.length] || "#ddd";
+      ctx.fill();
+    }
+  }
+  ctx.restore();
 
   // separators
   if (n>1){

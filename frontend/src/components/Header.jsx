@@ -24,7 +24,9 @@ export default function Header(){
     }, [lang]);
 
     const toggleLang = () => {
-        setLang(prev => (prev === "da" ? "en" : "da"))
+        setLang(prev => (prev === "da" ? "en" : "da"));
+        //test log
+        //console.log(lang);
     };
 
 
@@ -56,8 +58,8 @@ export default function Header(){
 
             <div className="flex">
                 <NavButton
-                label={lang === "en" ? "English" : "Dansk"}
-                icon={lang === "en" ? englishPNG : danishPNG}
+                label={lang === "da" ? "English" : "Dansk"}
+                icon={lang === "da" ? englishPNG : danishPNG}
                 onClick={toggleLang}
                 />
 
