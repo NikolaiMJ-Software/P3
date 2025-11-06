@@ -25,4 +25,4 @@ backend/database/*.tsv.gz
 /backend/fkult/database/title.basics-1470140994653455941.tsv.gz.tmp
 
 # Sound samples Files
-backend/soundSampleUploads/
+backend/fkult/soundSampleUploads/
