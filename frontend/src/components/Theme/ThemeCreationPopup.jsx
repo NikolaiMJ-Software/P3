@@ -3,6 +3,9 @@ import logo from "../../assets/logo.png"
 import {ThemeMovieCard} from "./MovieCard.jsx";
 import DrinkingRuleCreator from "./DrinkingRuleCreator.jsx";
 import {getMovieCount, getMoviePoster, searchMovies} from "../../services/movieService.jsx";
+import ThemeCreatorTopcontent from "./ThemeCreatorTopcontent.jsx";
+import ThemeMovieSearcher from "./ThemeMovieSearcher.jsx";
+import ThemeCreator from "./ThemeCreator.jsx";
 const MOVIE_LIMIT = 6;
 
 export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) {
@@ -124,10 +127,6 @@ export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) 
         onClose();
     };
 
-
-
-
-
     if (!isOpen) {
         return null;
     }
@@ -135,107 +134,24 @@ export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) 
         <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
             <div className="relative bg-white rounded-2xl p-6 shadow-lg w-[1200px] h-200">
                 {/* Top content */}
-                <h2 className={"text-2xl font-semibold mb-4 text-center items-center"}>Create new theme</h2>
-                <img src={logo}
-                     alt="logo"
-                     className="absolute top-3 left-3 w-15 h-15 object-contain"/>
-                <button onClick={handleClose} className={" absolute top-3 right-3 text-5xl"}>X</button>
-
+                <ThemeCreatorTopcontent handleClose={handleClose}></ThemeCreatorTopcontent>
                 <div className={"flex flex-row"}>
                     {/* Left Movie searcher*/}
-                    <div className={"items-center relative flex-col flex gap-1 border-black border-1 m-2 p-2 w-[600px] h-[640px]" }>
-                        <div className={"flex flex-row"}>
-                            <input onKeyDown={event => event.key === "Enter" && (event.preventDefault(), setSearchQuery(event.target.value))} type="text" placeholder="Search Movie or enter IMDb link..." className="w-100 text-center text-black border-1 m-2 p-2 rounded-2xl overflow-y-auto overflow-x-hidden max-h-[200px]" />
-                            <button onClick={event => setSearchQuery(event.target.previousSibling.value)} className="text-center text-black border-1 m-2 p-2 rounded-2xl overflow-y-auto overflow-x-hidden hover:cursor-pointer hover:bg-gray-300">Search</button>
-                        </div>
-                        {foundMovies.map((movie) => {
-                            return <MovieSuggestion movieName={movie.title} year={movie.year} posterURL={movie.moviePosterURL} runtime={movie.runtimeMinutes} tConst={movie.tConst} onAdd={() => handleAddMovies(movie)} isSeries={movie.isSeries}></MovieSuggestion>
-                        })}
-                        <div className="absolute bottom-4 flex flex-row gap-4">
-                            <button onClick={() => setPageCount(prev => Math.max(1, prev - 1))} className="border-2 text-lg p-2 hover:cursor-pointer hover:bg-gray-500">Prev</button>
-                            <p className="mt-3">{`${pageCount}/${totalPageCount}`}</p>
-                            <button onClick={() => setPageCount(prev => Math.min(totalPageCount, prev + 1))} className="border-2 text-lg p-2 hover:cursor-pointer hover:bg-gray-500">Next</button>
-                            <p className="mt-3">{movieCount}</p>
-                        </div>
-                    </div>
+                    <ThemeMovieSearcher foundMovies={foundMovies}
+                                        handleAddMovies={handleAddMovies}
+                                        movieCount={movieCount}
+                                        pageCount={pageCount}
+                                        setPageCount={setPageCount}
+                                        totalPageCount={totalPageCount}
+                                        setSearchQuery={setSearchQuery}>
+                    </ThemeMovieSearcher>
                     {/* Right Theme Creator */}
-                    <div className={"items-center flex-col flex gap-1 border-1 m-2 p-2 w-[600px]"}>
-                        <input type={"text"} placeholder={"Enter theme title"} className={"w-100 text-center text-black border-1 m-2 p-2 rounded-2xl"}/>
-                        <button
-                            onClick={onSubmit}
-                            className={"absolute bottom-4 left-1/2 transform -translate-x-1/2 font-semibold px-8 py-3 rounded-xl border-2 border-black hover:bg-gray-300"}>Confirm
-                        </button>
-                        <p className={"text-center"}>Movies</p>
-                        {movies.length > 0 && (() => {
-                            const totalRuntime = movies.reduce((sum, m) => sum + (m.runtimeMinutes || 0), 0);
-                            const totalHours = Math.floor(totalRuntime / 60);
-                            const totalMinutes = totalRuntime % 60;
-                            return (
-                                <p className="text-center font-semibold mt-2">
-                                    Total runtime: {totalHours}h {totalMinutes}m
-                                </p>
-                            );
-                        })()}
-                        
-                        <div className={"w-full max-w-[500px] overflow-x-auto overflow-y-hidden gap-"}>
-                            <div className={"flex flex-row gap-4 items-center"}>
-                                {movies.map(movie =>{
-                                    return<ThemeMovieCard title={movie.title} runtimeMinutes={movie.runtimeMinutes} moviePosterURL={movie.moviePosterURL} onRemove={() => handleRemoveMovie(movie.tConst)} isSeries={movie.isSeries}></ThemeMovieCard>
-                                })}
-                                
-                            </div>
-                        </div>
-                        <DrinkingRuleCreator></DrinkingRuleCreator>
-                    </div>
+                    <ThemeCreator onSubmit={onSubmit}
+                                  movies={movies}
+                                  handleRemoveMovie={handleRemoveMovie}>
+                    </ThemeCreator>
                 </div>
             </div>
-        </div>
-    )
-}
-
-export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, onAdd, isSeries}) {
-
-    const runtimeHours = Math.floor(runtime / 60)
-    const runtimeMinutesLeft = runtime % 60;
-
-
-    //different layout for shows, series and such.
-    if(isSeries){
-        return (
-            <div className={"flex-row flex items-center gap-4 p-1 border-black border-2 rounded-2xl w-135 h-20"}>
-                <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
-                    <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
-                </div>
-                <div className={"flex flex-col"}>
-                    <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
-                        <p className="font-bold truncate max-w-[370px] text-blue-400 ">{movieName}</p><p className={"font-bold"}>Series</p>
-                    </a>
-                    <p>{year}</p>
-                </div>
-                <button onClick={onAdd} className="px-3 py-1 rounded-lg hover:bg-gray-300 cursor-pointer transition  ml-auto">
-                    Add
-                </button>
-            </div>
-        )
-    }
-
-    return(
-        <div onClick={onAdd} className={"flex-row flex items-center gap-4 p-1 border-black border-2 rounded-2xl w-135 h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]"}>
-            <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
-                <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
-            </div>
-
-            <div className={"flex flex-col"}>
-                <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
-                    <p className="font-bold truncate max-w-[370px] text-blue-400 ">{movieName}</p>
-                </a>
-                <p>{year}</p>
-                <p>{runtimeHours + "h " + runtimeMinutesLeft + "m "}</p>
-
-            </div>
-            <button onClick={onAdd} className="px-3 py-1 rounded-lg hover:bg-gray-300 cursor-pointer transition  ml-auto">
-                Add
-            </button>
         </div>
     )
 }
