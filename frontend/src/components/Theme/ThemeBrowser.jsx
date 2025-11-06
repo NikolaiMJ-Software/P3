@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import {getThemes} from "../services/themeService.jsx";
+import {getThemes} from "../../services/themeService.jsx";
 import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
-import SoundSampleBrowser from "./SoundSampleBrowser.jsx";
+import SoundSampleBrowser from "../SoundSampleBrowser.jsx";
 import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
 
 export default function ThemeBrowser() {

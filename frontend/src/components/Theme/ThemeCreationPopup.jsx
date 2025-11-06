@@ -1,8 +1,8 @@
 import {useEffect, useState} from "react";
-import logo from "../assets/logo.png"
+import logo from "../../assets/logo.png"
 import {ThemeMovieCard} from "./MovieCard.jsx";
 import DrinkingRuleCreator from "./DrinkingRuleCreator.jsx";
-import {getMovieCount, getMoviePoster, searchMovies} from "../services/movieService.jsx";
+import {getMovieCount, getMoviePoster, searchMovies} from "../../services/movieService.jsx";
 const MOVIE_LIMIT = 6;
 
 export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) {
