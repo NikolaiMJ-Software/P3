@@ -6,6 +6,14 @@ export async function getUsers(){
     return response.json();
 }
 
+export async function getIdByUser(username) {
+    const response = await fetch(`${API_URL}/id/${username}`);
+    if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+    }
+    return response.text();
+}
+
 export async function isAdmin(username){
     const response = await fetch(`${API_URL}/admin/${username}`);
     return response.json();

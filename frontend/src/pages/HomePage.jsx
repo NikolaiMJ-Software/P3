@@ -3,8 +3,9 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ThemeBrowser from "../components/Theme/ThemeBrowser.jsx";
 import SoundSampleBrowser from "../components/SoundSampleBrowser.jsx";
-import SubmitSSTestPage from "../components/SubmitSSTestPage.jsx";
+import SubmitSSPage from "../components/SubmitSSPage.jsx";
 import { useTranslation } from "react-i18next";
+
 
 export default function HomePage() {
     const navigate = useNavigate();
@@ -51,7 +52,7 @@ export default function HomePage() {
                 ) : selected === "samples" ? (
                     <SoundSampleBrowser />
                 ) : selected === "submitSample" ? (
-                    <SubmitSSTestPage />
+                    <SubmitSSPage />
                 ) : null
             }
             </div>

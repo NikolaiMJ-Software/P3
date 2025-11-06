@@ -3,13 +3,11 @@ package com.p3.fkult.presentation.controllers;
 import com.p3.fkult.business.services.SoundSampleService;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/sound-sample")
 public class SoundSampleController {
