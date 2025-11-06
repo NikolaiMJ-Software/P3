@@ -4,7 +4,7 @@
   "discord": "Discord",
   "admin": "Admin",
   "logout": "Logout",
-  "username": "{{name}}",
+  "username": "Username",
   "sound sample": "Sound Sample",
   "themes": "Themes",
   "theme": "Theme",
@@ -12,5 +12,8 @@
   "submit": "Submit",
   "event": "Event",
   "welcome": "Welcome",
-  "welcomeMessage": "What actions shall we do today my lord?"
+  "welcomeMessage": "What actions shall we do today my lord?",
+  "play": "Play",
+  "wheel": "Wheel of Fortune",
+  "vote": "vote"
 }

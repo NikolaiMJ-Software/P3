@@ -4,7 +4,7 @@
   "discord": "Discord",
   "admin": "Admin",
   "logout": "Log ud",
-  "username": "{{name}}",
+  "username": "Brugernavn",
   "sound sample": "Lydprøveforslag",
   "themes": "Temaer",
   "theme": "Tema",
@@ -12,5 +12,8 @@
   "submit": "Indsend",
   "event": "Begivenhed",
   "welcome": "Velkommen",
-  "welcomeMessage": "🙏"
+  "welcomeMessage": "🙏",
+  "play": "Afspil",
+  "wheel": "Lykkehjul",
+  "vote": "votering"
 }

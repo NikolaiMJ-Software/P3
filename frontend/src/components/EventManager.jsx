@@ -1,10 +1,12 @@
 import settingsPNG from "../assets/settings.png"
 import {useParams, useNavigate} from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function EventManager() {
     //get all the events
     const navigate = useNavigate();
     const {username} = useParams();
+    const {t} = useTranslation();
 
     const currentEvents = [
         <Event eventName={"Første Begivenhed"} date={"30/10"}/>
@@ -24,16 +26,16 @@ export default function EventManager() {
             </div>
             <div className={"border border-t-0 flex flex-col p-3"}>
                 <div className={"flex flex-row justify-evenly p-3"}>
-                    <EventButton label={"Start Votering"}/>
-                    <EventButton label={"Afspil lydprøveforslag"}/>
-                    <EventButton label={"Lykkehjul"} onClick={() => {navigate(`/wheel/${username}`)}}/>
+                    <EventButton label={`Start ${t("vote")}`}/>
+                    <EventButton label={`${t("play")} ${t("sound sample")}`}/>
+                    <EventButton label={`${t("wheel")}`} onClick={() => {navigate(`/wheel/${username}`)}}/>
                 </div>
                 <div className={"flex flex-row justify-between"}>
                     <div className={"flex-grow-1 border overflow-auto max-h-70"}>
                         {currentEvents}
                     </div>
                     <div className={"m-2"}>
-                        <EventButton label={"Skab Begivenhed"}/>
+                        <EventButton label={`${t("create")} ${t("event")}`}/>
                     </div>
                 </div>
             </div>
