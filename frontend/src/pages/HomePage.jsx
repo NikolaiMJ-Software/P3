@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
-import ThemeBrowser from "../components/ThemeBrowser.jsx";
+import ThemeBrowser from "../components/Theme/ThemeBrowser.jsx";
 import SoundSampleBrowser from "../components/SoundSampleBrowser.jsx";
 import SubmitSSTestPage from "../components/SubmitSSTestPage.jsx";
 
