@@ -23,6 +23,22 @@ export default function WheelOfFortunePage() {
    });
   };
 
+  // Shuffle button handler
+  const handleShuffle = () => {
+    const lines = entriesText
+      .split("\n")
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    // Fisher–Yates shuffle
+    for (let i = lines.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [lines[i], lines[j]] = [lines[j], lines[i]];
+    }
+
+    setEntriesText(lines.join("\n"));
+  };
+
   return (
     <div className="p-6 flex items-center justify-center">
       <div className="flex gap-8 items-start">
@@ -35,6 +51,11 @@ export default function WheelOfFortunePage() {
             value={entriesText}
             onChange={(e) => setEntriesText(e.target.value)}
           />
+          <button
+            onClick={handleShuffle}
+            className="mt-3 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 active:scale-95 transition-transform">
+            Shuffle Entries
+          </button>
         </div>
       </div>
     </div>

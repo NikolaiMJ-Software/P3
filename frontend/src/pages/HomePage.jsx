@@ -12,6 +12,7 @@ export default function HomePage() {
     const [selected, setSelected] = useState("themes")
 
     const user = routeUsername || sessionStorage.getItem("username")
+    const lang = sessionStorage.getItem("lang")
 
     useEffect(() => {
         if (!user) {
