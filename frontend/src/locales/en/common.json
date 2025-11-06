@@ -9,5 +9,7 @@
   "themes": "Themes",
   "theme": "Theme",
   "create": "Create",
-  "submit": "Submit"
+  "submit": "Submit",
+  "event": "Event",
+  "welcome": "Welcome"
 }

@@ -9,5 +9,7 @@
   "themes": "Temaer",
   "theme": "Tema",
   "create": "Skab",
-  "submit": "Indsend"
+  "submit": "Indsend",
+  "event": "Begivenhed",
+  "welcome": "Velkommen"
 }
