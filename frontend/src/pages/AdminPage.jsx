@@ -30,7 +30,7 @@ export default function AdminPage(){
                 <AdminButton
                     func={unadminUser}
                     username={username}
-                    label={`Afbliv Admin`}
+                    label={`Unbecome Admin`}
                 />
                 <div className="flex flex-col">
                     {/* Top Half */}
@@ -43,7 +43,7 @@ export default function AdminPage(){
                             <div className="mt-20 text-center text-xl">
                                 <h1>{t("welcome")} Admin!</h1>
                                 <br/>
-                                <h1>What actions shall we do today my lord?</h1>
+                                <h1>{t("welcomeMessage")}</h1>
                             </div>
                             {/* User Manager */}
                             <UserManager/>

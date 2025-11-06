@@ -57,4 +57,12 @@ public class UserService {
         return userRepository.findIfUserBanned(username);
     }
 
+    public String getUserNameById(long id){
+        String name = userRepository.findUserNameById(id);
+        if (name != null){
+            return name;
+        }
+        return "User not found";
+    }
+
 }

@@ -11,5 +11,6 @@
   "create": "Skab",
   "submit": "Indsend",
   "event": "Begivenhed",
-  "welcome": "Velkommen"
+  "welcome": "Velkommen",
+  "welcomeMessage": "🙏"
 }

@@ -11,5 +11,6 @@
   "create": "Create",
   "submit": "Submit",
   "event": "Event",
-  "welcome": "Welcome"
+  "welcome": "Welcome",
+  "welcomeMessage": "What actions shall we do today my lord?"
 }

@@ -51,9 +51,13 @@ public class UserController {
         return userService.postUserBan(body.get(1), 0);
     }
 
-
     @GetMapping("/id/{username}")
     public long getUserIdByUsername(@PathVariable String username){
         return userService.getUserIdByUsername(username);
+    }
+
+    @GetMapping("/full_name/{id}")
+    public String getUserNameById(@PathVariable long id){
+        return userService.getUserNameById(id);
     }
 }

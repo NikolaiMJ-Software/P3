@@ -61,4 +61,8 @@ public class UserRepository {
         return jdbcTemplate.queryForObject("SELECT is_banned FROM user WHERE username = ?", boolean.class, username);
     }
 
+    public String findUserNameById(long id){
+        return jdbcTemplate.queryForObject("SELECT name FROM user WHERE id = ?", String.class, id);
+    }
+
 }
