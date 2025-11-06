@@ -6,9 +6,10 @@ import {getMovieCount, getMoviePoster, searchMovies} from "../../services/movieS
 import ThemeCreatorTopcontent from "./ThemeCreatorTopcontent.jsx";
 import ThemeMovieSearcher from "./ThemeMovieSearcher.jsx";
 import ThemeCreator from "./ThemeCreator.jsx";
+import {addTheme} from "../../services/themeService.jsx";
 const MOVIE_LIMIT = 6;
 
-export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) {
+export default function ThemeCreationPopup({isOpen, onClose}) {
     const [title, setTitle] = useState("");
     const [movies, setMovies] = useState([]);
     const [rules, setRules] = useState([]);
@@ -94,13 +95,7 @@ export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) 
             alert("Please add at least one movie");
             return;
         }
-        onSubmit({
-            title,
-            movies,
-            rules: rules.trim() || null,
-            userId,
-        });
-
+        addTheme(title, sessionStorage.getItem("username"), movies, rules)
         resetForm();
         onClose();
     };
@@ -146,7 +141,7 @@ export default function ThemeCreationPopup({isOpen, onClose, onSubmit, userId}) 
                                         setSearchQuery={setSearchQuery}>
                     </ThemeMovieSearcher>
                     {/* Right Theme Creator */}
-                    <ThemeCreator onSubmit={onSubmit}
+                    <ThemeCreator onSubmit={handleSubmit}
                                   movies={movies}
                                   handleRemoveMovie={handleRemoveMovie}>
                     </ThemeCreator>

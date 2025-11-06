@@ -6,11 +6,12 @@ export async function getThemes() {
     return response.json();
 }
 
-export async function addTheme(name, userId, movieIds, drinkingRules) {
-    const body = {
+export async function addTheme(name, username, tConsts, drinkingRules) {
+    const body =
+    {
         name: name,
-        userId: userId,
-        movieIds: movieIds,
+        username: username,
+        tConsts: tConsts,
         drinkingRules: drinkingRules
     };
 

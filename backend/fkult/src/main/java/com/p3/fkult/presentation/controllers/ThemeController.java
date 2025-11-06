@@ -26,7 +26,10 @@ public class ThemeController {
 
     @PostMapping
     public ResponseEntity<String> createTheme(@RequestBody ThemeRequest themeRequest) {
-        themeService.createTheme(themeRequest);
+        if (themeRequest.getName() == null || themeRequest.gettConsts() == null || themeRequest.getDrinkingRules() == null){
+            return ResponseEntity.badRequest().body("Theme data wrong");
+        }
+        themeService.createThemeWithTConsts(themeRequest);
         return ResponseEntity.ok("Theme created successfully");
     }
 }
