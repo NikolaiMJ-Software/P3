@@ -26,6 +26,7 @@ public class UserTest {
     private UserRepository userRepository;
     @Mock
     private Authenticator auth;
+
     private UserService userService;
 
     @BeforeEach
@@ -86,9 +87,10 @@ public class UserTest {
         // Arrange
         User user = new User(1, "test", "Test Person", 0, 1);
         when(userRepository.updateAdminStatus("test", 1)).thenReturn(user);
+        when(auth.receiveUsername("test")).thenReturn(true);
 
         // Act
-        ResponseEntity expected = ResponseEntity.ok("User updated successfully");
+        ResponseEntity expected = ResponseEntity.ok("User successfully admin");
         ResponseEntity<?> result = userService.postAdminUser("test", 1);
 
         // Assert
@@ -98,10 +100,11 @@ public class UserTest {
     }
 
     @Test
-    @DisplayName("Attempt to make user admin but failure. Expect error")
+    @DisplayName("Fail to make user admin")
     void testUpdateAdminFail(){
         // Arrange
         User user = new User(1, "test", "Test Person", 0, 0);
+        when(auth.receiveUsername("test")).thenReturn(true);
         when(userRepository.updateAdminStatus("test", 1)).thenReturn(user);
 
         // Act

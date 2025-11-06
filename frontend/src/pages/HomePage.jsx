@@ -3,16 +3,17 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ThemeBrowser from "../components/Theme/ThemeBrowser.jsx";
 import SoundSampleBrowser from "../components/SoundSampleBrowser.jsx";
-import SubmitSSTestPage from "../components/SubmitSSTestPage.jsx";
+import SubmitSSPage from "../components/SubmitSSPage.jsx";
+import { useTranslation } from "react-i18next";
 
 
 export default function HomePage() {
     const navigate = useNavigate();
     const {username: routeUsername} = useParams();
     const [selected, setSelected] = useState("themes")
+    const {t} = useTranslation();
 
     const user = routeUsername || sessionStorage.getItem("username")
-    const lang = sessionStorage.getItem("lang")
 
     useEffect(() => {
         if (!user) {
@@ -38,10 +39,10 @@ export default function HomePage() {
         <div className={"flex gap-4 ml-10"}>
             <button className={`border px-6 py-3 rounded-2xl transition-colors
             ${selected === "themes" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-300"}`}
-                    onClick={() => setSelected("themes")}>Themes</button>
+                    onClick={() => setSelected("themes")}>{t("themes")}</button>
             <button className={`border px-6 py-3 rounded-2xl transition-colors
             ${selected === "samples" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-300"}`}
-                    onClick={() => setSelected("samples")}>Lydprøveforslag</button>
+                    onClick={() => setSelected("samples")}>{t("sound sample")}</button>
         </div>
 
         <div className="grid grid-cols-12 gap-6">
@@ -51,7 +52,7 @@ export default function HomePage() {
                 ) : selected === "samples" ? (
                     <SoundSampleBrowser />
                 ) : selected === "submitSample" ? (
-                    <SubmitSSTestPage />
+                    <SubmitSSPage />
                 ) : null
             }
             </div>
@@ -82,11 +83,11 @@ export default function HomePage() {
 
                     <button className={`w-full block rounded-2xl px-6 py-3
                         ${selected === "" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-300 border"}`}>
-                        Create theme
+                        {t("create")} {t("theme")}
                     </button>
                     <button className={`w-full block rounded-2xl px-6 py-3
                         ${selected === "submitSample" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-300 border"}`}
-                            onClick={() => setSelected("submitSample")}> Submit Sound Sample
+                            onClick={() => setSelected("submitSample")}> {t("submit")} {t("sound sample")}
                     </button>
                 </div>
                 

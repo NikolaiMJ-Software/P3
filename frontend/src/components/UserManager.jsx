@@ -25,7 +25,7 @@ function BanManager() {
     return (
         <div className={"p-5 border border-t-0 flex flex-row justify-between content-center"}>
             <div className={"flex flex-col justify-center"}>
-                <p>Username:</p>
+                <p>Brugernavn:</p>
                 <input onChange={e => setUser(e.target.value)} className={"border"}/>
                 <p className={"text-gray-400"}>{message}</p>
             </div>

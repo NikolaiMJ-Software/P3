@@ -1,5 +1,6 @@
-import {useState} from "react";
-import settingsPNG from "../assets/settings.png";
+import {useEffect, useState} from "react";
+import {getThemes} from "../services/themeService.jsx";
+import {fullName} from "../services/adminService.jsx";
 
 export default function SubmissionManager() {
     const [tab, setTab] = useState("ThemeSubmissions")
@@ -8,8 +9,8 @@ export default function SubmissionManager() {
         <div className={"m-5 mt-20 border flex flex-col"}>
             {/* Choose Manager */}
             <div className={"flex flex-row justify-between"}>
-                <p onClick={() => setTab("ThemeSubmissions")} className={`grow-1 cursor-pointer text-center p-3 border-r ${(tab === "ThemeSubmissions") ? null : "border-b"}`}> Theme Submissions</p>
-                <p onClick={() => setTab("SoundSamples")} className={`grow-1 cursor-pointer text-center p-3 ${(tab === "SoundSamples") ? null : "border-b"}`}> Sound Samples</p>
+                <p onClick={() => setTab("ThemeSubmissions")} className={`grow-1 cursor-pointer text-center p-3 border-r ${(tab === "ThemeSubmissions") ? null : "border-b"}`}> Film Forslag</p>
+                <p onClick={() => setTab("SoundSamples")} className={`grow-1 cursor-pointer text-center p-3 ${(tab === "SoundSamples") ? null : "border-b"}`}> Lydprøveforslag</p>
             </div>
             <div className={""}>
                 {getComponent(tab)}
@@ -34,35 +35,49 @@ function getComponent(currentComponent){
 }
 
 function ThemeSubmissions(){
+    const [themes, setThemes] = useState([]);
+    const [name, setName] = useState("")
     //Get the themes
-    const themes = [<Theme/>, <Theme/>,<Theme/>,<Theme/>,<Theme/>,<Theme/>
-    ]
+    useEffect(() => {
+        async function load() {
+            const items = await getThemes();
+            const userNames = await Promise.all(
+                items.map(async item => {
+                    const userName = await fullName(item.userId);
+                    return <Theme key={item.themeId} name={item.name} user={userName} timestamp={item.timestamp}/>
+                })
+            )
+            setThemes(userNames)
+        }
+        load()
+    },[])
+
 
     return (
         <div>
             <div className={"p-5 flex flex-row justify-evenly"}>
                 {/* Filters and stuff */}
                 <div className={"flex flex-col"}>
-                    <p>Search for user:</p>
+                    <p>Søg efter bruger:</p>
                     <input className={"border"}/>
                 </div>
                 <div className={"flex flex-col"}>
-                    <p>Sort based on:</p>
+                    <p>Sorter baseret på:</p>
                     <select className={"border hover:bg-gray-200"}>
-                        <option>Latest first</option>
-                        <option>Oldest first</option>
-                        <option>Alphabetically</option>
-                        <option>Length asc</option>
-                        <option>Length des</option>
+                        <option>Seneste</option>
+                        <option>Ældste</option>
+                        <option>Alfabetisk</option>
+                        <option>Længde asc</option>
+                        <option>Længde des</option>
                     </select>
                 </div>
                 <div className={"flex flex-col"}>
-                    <p>Filters:</p>
+                    <p>Filtre:</p>
                     <label>
-                        Include voted themes: <input className={"border"} type={"checkbox"}/>
+                        Inkluder stemte forslag: <input className={"border"} type={"checkbox"}/>
                     </label>
                     <label>
-                        Include non-watched themes: <input className={"border"} type={"checkbox"}/>
+                        Inkluder ikke-set forslag: <input className={"border"} type={"checkbox"}/>
                     </label>
                 </div>
             </div>
@@ -74,17 +89,17 @@ function ThemeSubmissions(){
     )
 }
 
-function Theme(){
+function Theme({ key, name, user, timestamp}){
     return (
         <div className={"m-10 mt-5 mb-5 border rounded flex flex-row justify-between"}>
             <div>
-                hello
+                {name}
             </div>
             <div>
-                hello
+                {user}
             </div>
             <div>
-                hello
+                {timestamp}
             </div>
         </div>
     )

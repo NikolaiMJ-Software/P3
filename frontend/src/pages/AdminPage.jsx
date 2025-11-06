@@ -4,11 +4,13 @@ import {useEffect, useState} from "react";
 import UserManager from "../components/UserManager.jsx";
 import EventManager from "../components/EventManager.jsx";
 import SubmissionManager from "../components/SubmissionManager.jsx";
+import { useTranslation } from "react-i18next";
 
 
 export default function AdminPage(){
     const {username} = useParams();
     const [isAdminUser, setIsAdminUser] = useState(undefined);
+    const {t} = useTranslation();
 
     //check if {username} is admin
     useEffect(() => {
@@ -39,9 +41,9 @@ export default function AdminPage(){
                         <div className="grow-1 flex flex-col justify-between">
                             {/* Intro Text */}
                             <div className="mt-20 text-center text-xl">
-                                <h1>Welcome Admin!</h1>
+                                <h1>{t("welcome")} Admin!</h1>
                                 <br/>
-                                <h1>What actions shall we do today my lord?</h1>
+                                <h1>{t("welcomeMessage")}</h1>
                             </div>
                             {/* User Manager */}
                             <UserManager/>
@@ -60,7 +62,7 @@ export default function AdminPage(){
                 <AdminButton
                     func={adminUser}
                     username={username}
-                    label={`Become Admin`}
+                    label={`Bliv Admin`}
                 />
             </div>
         )
