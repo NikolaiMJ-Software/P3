@@ -6,10 +6,10 @@ async function getSoundSamples(quick = false, weighted = false) {
     return res.json();
 }
 
-async function addSoundSample(file, userId) {
+async function addSoundSample(link, file, userId) {
     // Setup sound sample object and convert to JSON
     const soundSample = {
-        link: trimmedLink,
+        link: link,
         filePath: null,
         userId: userId
     };
@@ -21,7 +21,7 @@ async function addSoundSample(file, userId) {
     if(file) formData.append("file", file);  
 
     // Send POST request to backend
-    const response = await fetch(`${API}/upload`, {
+    const response = await fetch(`${API_URL}/upload`, {
         method: "POST",
         body: formData,
     });
@@ -43,7 +43,7 @@ async function deleteSoundSample(link, fileName) {
     }
 
     // Send DELETE request to backend
-    const response = await fetch(`${API}/delete`, {
+    const response = await fetch(`${API_URL}/delete`, {
         method: "DELETE",
         body: formData,
     });

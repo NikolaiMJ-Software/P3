@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ThemeBrowser from "../components/ThemeBrowser.jsx";
 import SoundSampleBrowser from "../components/SoundSampleBrowser.jsx";
-import SubmitSSTestPage from "../components/SubmitSSTestPage.jsx";
+import SubmitSSPage from "../components/SubmitSSPage.jsx";
 
 
 export default function HomePage() {
@@ -50,7 +50,7 @@ export default function HomePage() {
                 ) : selected === "samples" ? (
                     <SoundSampleBrowser />
                 ) : selected === "submitSample" ? (
-                    <SubmitSSTestPage />
+                    <SubmitSSPage />
                 ) : null
             }
             </div>
