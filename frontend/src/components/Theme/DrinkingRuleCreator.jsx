@@ -1,5 +1,5 @@
 import { useState } from "react";
-import logo from "../assets/logo.png"
+import logo from "../../assets/logo.png"
 import MovieCard, {ThemeMovieCard} from "./MovieCard.jsx";
 
 export default function DrinkingRuleCreator() {
