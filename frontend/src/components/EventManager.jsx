@@ -7,14 +7,14 @@ export default function EventManager() {
     const {username} = useParams();
 
     const currentEvents = [
-        <Event eventName={"First Event"} date={"30/10"}/>
-        ,<Event eventName={"Second Event"} date={"31/10"}/>
-        ,<Event eventName={"Third Event"} date={"32/10"}/>
-        ,<Event eventName={"Fourth Event"} date={"33/10"}/>
-        ,<Event eventName={"Fifth Event"} date={"34/10"}/>
-        ,<Event eventName={"Sixth Event"} date={"35/10"}/>
-        ,<Event eventName={"Seventh Event"} date={"1/11"}/>
-        ,<Event eventName={"Eight Event"} date={"2/11"}/>
+        <Event eventName={"Første Begivenhed"} date={"30/10"}/>
+        ,<Event eventName={"Anden Begivenhed"} date={"31/10"}/>
+        ,<Event eventName={"Tredje Begivenhed"} date={"32/10"}/>
+        ,<Event eventName={"Fjerde Begivenhed"} date={"33/10"}/>
+        ,<Event eventName={"Femte Begivenhed"} date={"34/10"}/>
+        ,<Event eventName={"Sjette Begivenhed"} date={"35/10"}/>
+        ,<Event eventName={"Syvende Begivenhed"} date={"1/11"}/>
+        ,<Event eventName={"Ottene Begivenhed"} date={"2/11"}/>
     ]
 
     return (
@@ -24,19 +24,16 @@ export default function EventManager() {
             </div>
             <div className={"border border-t-0 flex flex-col p-3"}>
                 <div className={"flex flex-row justify-evenly p-3"}>
-                    <EventButton label={"Start Theme Vote"}/>
-                    <EventButton label={"Play Sound Sample"}/>
-                    <EventButton label={"Wheel of Fortune"} onClick={() => {navigate(`/wheel/${username}`)}}/>
+                    <EventButton label={"Start Votering"}/>
+                    <EventButton label={"Afspil lydprøveforslag"}/>
+                    <EventButton label={"Lykkehjul"} onClick={() => {navigate(`/wheel/${username}`)}}/>
                 </div>
-                <div>
-                    Event Calender
-                    <div className={"flex flex-row justify-between"}>
-                        <div className={"flex-grow-1 border overflow-auto max-h-60"}>
-                            {currentEvents}
-                        </div>
-                        <div className={"m-2"}>
-                            <EventButton label={"Create Event"}/>
-                        </div>
+                <div className={"flex flex-row justify-between"}>
+                    <div className={"flex-grow-1 border overflow-auto max-h-70"}>
+                        {currentEvents}
+                    </div>
+                    <div className={"m-2"}>
+                        <EventButton label={"Skab Begivenhed"}/>
                     </div>
                 </div>
             </div>

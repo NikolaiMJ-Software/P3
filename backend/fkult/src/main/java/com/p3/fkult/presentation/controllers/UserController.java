@@ -46,8 +46,8 @@ public class UserController {
     @PostMapping("/admin/unban_user")
     public ResponseEntity<?> unbanUser(@RequestBody List<String> body){
         if (body == null || body.get(0) == null || body.get(1) == null) return ResponseEntity.badRequest().build();
-
         if (checkForAdminUser(body.getFirst()) == 0) return ResponseEntity.status(403).body("user not admin");
+
         return userService.postUserBan(body.get(1), 0);
     }
 

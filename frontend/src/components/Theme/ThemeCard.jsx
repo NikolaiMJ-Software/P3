@@ -1,14 +1,15 @@
 import MovieCard, {MovieCardSmall} from "./MovieCard.jsx";
 import {useEffect, useState} from "react";
-import {getMovies, getMoviesByTconsts} from "../services/movieService.jsx";
+import {getMovies, getMoviesByTconsts} from "../../services/movieService.jsx";
 
-export default function ThemeCard({title, name, tConsts, drinkingRules}){
+export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries}){
     const [movies, setMovies] = useState([]);
 
-    const moviesToShow = Array.isArray(movies) ? movies.slice(0, 2) : [];
     useEffect(() => {
-        getMoviesByTconsts(tConsts).then(setMovies);
-    }, []);
+        getMoviesByTconsts(tConsts).then(setMovies)
+    }, [tConsts]);
+
+    const safeMovies = Array.isArray(movies) ? movies : [];
 
     return(
         <div className={"relative w-60 h-80 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
@@ -21,7 +22,7 @@ export default function ThemeCard({title, name, tConsts, drinkingRules}){
             </div>
 
             <div className={"flex justify-between gap-2 mt-3"}>
-                {movies.slice(0,2).map((movie) => (
+                {safeMovies.slice(0,2).map((movie) => (
                     <MovieCardSmall key={movie.id} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes}/>
                 ))}
             </div>

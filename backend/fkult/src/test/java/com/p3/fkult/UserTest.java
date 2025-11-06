@@ -1,5 +1,6 @@
 package com.p3.fkult;
 
+import com.p3.fkult.business.services.Authenticator;
 import com.p3.fkult.business.services.UserService;
 import com.p3.fkult.persistence.entities.User;
 import com.p3.fkult.persistence.repository.UserRepository;
@@ -23,12 +24,15 @@ public class UserTest {
 
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private Authenticator auth;
+
     private UserService userService;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, auth);
     }
 
     @Test
@@ -83,9 +87,10 @@ public class UserTest {
         // Arrange
         User user = new User(1, "test", "Test Person", 0, 1);
         when(userRepository.updateAdminStatus("test", 1)).thenReturn(user);
+        when(auth.receiveUsername("test")).thenReturn(true);
 
         // Act
-        ResponseEntity expected = ResponseEntity.ok("User updated successfully");
+        ResponseEntity expected = ResponseEntity.ok("User successfully admin");
         ResponseEntity<?> result = userService.postAdminUser("test", 1);
 
         // Assert
@@ -95,10 +100,11 @@ public class UserTest {
     }
 
     @Test
-    @DisplayName("Attempt to make user admin but failure. Expect error")
+    @DisplayName("Fail to make user admin")
     void testUpdateAdminFail(){
         // Arrange
         User user = new User(1, "test", "Test Person", 0, 0);
+        when(auth.receiveUsername("test")).thenReturn(true);
         when(userRepository.updateAdminStatus("test", 1)).thenReturn(user);
 
         // Act
@@ -113,18 +119,35 @@ public class UserTest {
 
 
     @Test
-    @DisplayName("Update ban status of existing user")
+    @DisplayName("ban unbanned user")
     void testUpdateUserBan(){
         // Arrange
-        User user = new User(1, "test", "Test Person", 1, 0);
-        when(userRepository.updateUserBanStatus("test", 1)).thenReturn(user);
+        when(auth.receiveUsername("test")).thenReturn(true);
+        when(userService.getIfUserBanned("test")).thenReturn(false);
+
+        User after = new User(1, "test", "Test Person", 1, 0);
+        when(userRepository.updateUserBanStatus("test", 1)).thenReturn(after);
 
         // Act
-        ResponseEntity expected = ResponseEntity.ok("User updated successfully");
+        ResponseEntity expected = ResponseEntity.ok("User successfully banned");
         ResponseEntity<?> result = userService.postUserBan("test", 1);
 
         // Assert
         assertEquals(expected, result);
         verify(userRepository).updateUserBanStatus("test", 1);
+    }
+
+    @Test
+    @DisplayName("Check if a banned user is banned")
+    void testCheckBan() {
+        // Arrange
+        when(userRepository.findIfUserBanned("test")).thenReturn(true);
+
+        // Act
+        boolean result = userService.getIfUserBanned("test");
+
+        // Assert
+        assertTrue(result);
+        verify(userRepository).findIfUserBanned("test");
     }
 }

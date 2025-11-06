@@ -1,12 +1,6 @@
 package com.p3.fkult.business.services;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.stream.Collectors;
-
+import java.util.*;
 import org.springframework.stereotype.Service;
 import com.p3.fkult.presentation.controllers.ThemeRequest;
 
@@ -19,45 +13,30 @@ public class ThemeVotingService {
         this.themes = themeService.getAllThemes();
     }
 
-    // Get shuffled list of themes to avoid repeated presenters
+    // Get shuffled list of themes that avoid repeated user ids
     public List<ThemeRequest> getShuffledThemes() {
-
-        // Returns basic list of themes if shuffling is ineffective
         if (themes == null || themes.size() < 2) return themes;
 
-        // Group themes by userId
-        Map<Long, Queue<ThemeRequest>> grouped = themes.stream().collect(Collectors.groupingBy(
-            ThemeRequest::getUserId,
-            Collectors.toCollection(LinkedList::new)
-        ));
+        // Create list of shuffled themes
+        List<ThemeRequest> shuffled = new ArrayList<>(themes);
+        Collections.shuffle(shuffled);
 
-        List<ThemeRequest> shuffled = new ArrayList<>();
-        Long lastUserId = null;
+        // Manages list to avoid repeated user ids
+        for (int i = 0; i < shuffled.size() - 1; i++) {
+            ThemeRequest current = shuffled.get(i);
+            ThemeRequest next = shuffled.get(i + 1);
 
-        while (!grouped.isEmpty()) {
-            Long chosenUserId = null;
-
-            // Find a user that is not the same as the last one
-            for (Long userId : grouped.keySet()) {
-                if (!userId.equals(lastUserId)) {
-                    chosenUserId = userId;
-                    break;
+            // If the next one has the same userId, try to swap with another further ahead
+            if (current.getUserId().equals(next.getUserId())) {
+                for (int j = i + 2; j < shuffled.size(); j++) {
+                    if (!shuffled.get(j).getUserId().equals(current.getUserId())) {
+                        // Swap next with j
+                        Collections.swap(shuffled, i + 1, j);
+                        break;
+                    }
                 }
             }
-
-            // If all remaining are same user, pick the first
-            if (chosenUserId == null) {
-                chosenUserId = grouped.keySet().iterator().next();
-            }
-
-            Queue<ThemeRequest> queue = grouped.get(chosenUserId);
-            shuffled.add(queue.poll());
-            lastUserId = chosenUserId;
-
-            if (queue.isEmpty()) grouped.remove(chosenUserId);
         }
-
-        // Replace old order with new one
         return shuffled;
     }
 }

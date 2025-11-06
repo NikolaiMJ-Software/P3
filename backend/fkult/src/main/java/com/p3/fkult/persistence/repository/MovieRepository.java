@@ -39,6 +39,7 @@ public class MovieRepository {
                     rs.getInt("year"),
                     rs.getInt("runtime_minutes"),
                     rs.getBoolean("is_active"),
+                    rs.getBoolean("is_series"),
                     rs.getString("poster_url")
             );
 
@@ -102,14 +103,15 @@ public class MovieRepository {
     jdbcTemplate.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_movie_tconst ON movie(tconst)");
 
     final String upsertSql =
-        "INSERT INTO movie (tconst, movie_name, original_movie_name, year, runtime_minutes, is_active) " +
-        "VALUES (?, ?, ?, ?, ?, 1) " +
+        "INSERT INTO movie (tconst, movie_name, original_movie_name, year, runtime_minutes, is_active, is_series) " +
+        "VALUES (?, ?, ?, ?, ?, 1, ?) " +
         "ON CONFLICT(tconst) DO UPDATE SET " +
         "  movie_name=excluded.movie_name, " +
         "  original_movie_name=excluded.original_movie_name, " +
         "  year=excluded.year, " +
         "  runtime_minutes=excluded.runtime_minutes, " +
-        "  is_active=1";
+        "  is_active=1, " +
+        "  is_series=excluded.is_series";
 
     if (markInactiveMissing) {
         jdbcTemplate.execute("CREATE TEMP TABLE IF NOT EXISTS tmp_seen(tconst TEXT PRIMARY KEY) WITHOUT ROWID");
@@ -135,7 +137,10 @@ public class MovieRepository {
 
             String tconst = c[0];
             String titleType = c[1];
-            if (onlyMovies && !"movie".equals(titleType)) continue;
+            if (onlyMovies && !( "movie".equals(titleType) || "tvSeries".equals(titleType) )) {continue;}
+
+            Integer seriesType;
+            if ("tvSeries".equals(titleType)){seriesType = 1;}else{seriesType = 0;}
 
             String primaryTitle  = normalize(c[2]);
             String originalTitle = normalize(c[3]);
@@ -147,7 +152,7 @@ public class MovieRepository {
             Integer runtime   = parseIntOrNull(c[7]);
             if (startYear != null && (startYear < 1888 || startYear > currentYear)) continue;
 
-            upserts.add(new Object[]{ tconst, movieName, originalTitle, startYear, runtime });
+            upserts.add(new Object[]{ tconst, movieName, originalTitle, startYear, runtime, seriesType });
             if (markInactiveMissing) seen.add(new Object[]{ tconst });
             processed++;
 
