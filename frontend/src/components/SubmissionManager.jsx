@@ -1,5 +1,6 @@
-import {useState} from "react";
-import settingsPNG from "../assets/settings.png";
+import {useEffect, useState} from "react";
+import {getThemes} from "../services/themeService.jsx";
+import {fullName} from "../services/adminService.jsx";
 
 export default function SubmissionManager() {
     const [tab, setTab] = useState("ThemeSubmissions")
@@ -34,9 +35,23 @@ function getComponent(currentComponent){
 }
 
 function ThemeSubmissions(){
+    const [themes, setThemes] = useState([]);
+    const [name, setName] = useState("")
     //Get the themes
-    const themes = [<Theme/>, <Theme/>,<Theme/>,<Theme/>,<Theme/>,<Theme/>
-    ]
+    useEffect(() => {
+        async function load() {
+            const items = await getThemes();
+            const userNames = await Promise.all(
+                items.map(async item => {
+                    const userName = await fullName(item.userId);
+                    return <Theme key={item.themeId} name={item.name} user={userName} timestamp={item.timestamp}/>
+                })
+            )
+            setThemes(userNames)
+        }
+        load()
+    },[])
+
 
     return (
         <div>
@@ -74,17 +89,17 @@ function ThemeSubmissions(){
     )
 }
 
-function Theme(){
+function Theme({ key, name, user, timestamp}){
     return (
         <div className={"m-10 mt-5 mb-5 border rounded flex flex-row justify-between"}>
             <div>
-                hello
+                {name}
             </div>
             <div>
-                hello
+                {user}
             </div>
             <div>
-                hello
+                {timestamp}
             </div>
         </div>
     )

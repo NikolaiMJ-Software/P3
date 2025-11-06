@@ -6,6 +6,7 @@ import englishPNG from "../assets/english.png"
 import danishPNG from "../assets/danish.png"
 import {useNavigate, useParams} from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Header(){
     const navigate = useNavigate();
@@ -13,15 +14,17 @@ export default function Header(){
     const [open, setOpen] = useState(false);
     const menuRef = useRef(null);
 
+    const {t, i18n} = useTranslation();
 
     const [lang, setLang] = useState(() => localStorage.getItem("lang") || "da");
 
     useEffect(() => {
+        i18n.changeLanguage(lang);
         localStorage.setItem("lang", lang);
         document.documentElement.setAttribute("lang", lang);
         window.dispatchEvent(new CustomEvent("lang-change", { detail: lang }));
 
-    }, [lang]);
+    }, [lang, i18n]);
 
     const toggleLang = () => {
         setLang(prev => (prev === "da" ? "en" : "da"));
@@ -58,19 +61,19 @@ export default function Header(){
 
             <div className="flex">
                 <NavButton
-                label={lang === "da" ? "English" : "Dansk"}
-                icon={lang === "da" ? englishPNG : danishPNG}
+                label={lang === "da" ? "Dansk" : "English"}
+                icon={lang === "da" ? danishPNG : englishPNG}
                 onClick={toggleLang}
                 />
 
                 <NavButton
-                    label="Pizza"
+                    label={t("Pizza")}
                     icon={pizzaWEBP}
                     onClick={() => {window.location.href = "https://f-kult-pizza-bestiller.vercel.app/"}}
                 />
 
                 <NavButton
-                    label="Discord"
+                    label={t("Discord")}
                     icon={discordWEBP}
                     onClick={() => {window.location.href = "https://discord.gg/zV3GEZyY6z"}}
                 />
@@ -94,13 +97,13 @@ export default function Header(){
                                     navigate(`/admin/${username}`);
                                 }}
                                 >
-                                Admin
+                                {t("Admin")}
                             </button>
                             <button
                                 className="block w-full text-left px-4 py-2 hover:bg-gray-200 text-red-500 rounded-b-xl"
                                 onClick={logout}
                                 >
-                                Logout
+                                {t("logout")}
                             </button>
                         </div>
                      )}
