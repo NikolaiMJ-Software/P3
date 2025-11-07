@@ -2,7 +2,7 @@ import { API } from './api.jsx'
 const API_URL = `${API}/sound-sample`; //backend address
 
 async function getSoundSamples(quick = false, weighted = false) {
-    const res = await fetch(`${API_URL}?quick=${quick}&weighted=${weighted}`);
+    const res = await fetch(`${API_URL}/get-all?quick=${quick}&weighted=${weighted}`);
     return res.json();
 }
 

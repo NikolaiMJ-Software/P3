@@ -1,41 +1,27 @@
 package com.p3.fkult.presentation.controllers;
 
-import java.io.File;
-
 public class SoundSampleRequest {
-    private String username;
-    private File file;
-    private String link;
+    private String usersFullName;
+    private String soundSample;
     
-    public SoundSampleRequest(File file, String username) {
-        this.file = file;
-        this.username = username;
-    }
-    public SoundSampleRequest(String link, String username) {
-        this.link = link;
-        this.username = username;
+    public SoundSampleRequest(String soundSample, String usersFullName) {
+        this.soundSample = soundSample;
+        this.usersFullName = usersFullName;
     }
 
     // Getters
+    public String getSoundSample() {
+        return soundSample;
+    }
     public String getUsername() {
-        return this.username;
-    }
-    public File getFile() {
-        return this.file;
-    }
-    public String getLink() {
-        return this.link;
+        return usersFullName;
     }
 
     // Setters
-    public void setUsername(String username) {
-        this.username = username;
+    public void setSoundSample(String soundSample) {
+        this.soundSample = soundSample;
     }
-    public void setFile(File file) {
-        this.file = file;
+    public void setUsername(String usersFullName) {
+        this.usersFullName = usersFullName;
     }
-    public void setLink(String link) {
-        this.link = link;
-    }
-
 }

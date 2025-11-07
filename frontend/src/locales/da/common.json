@@ -23,5 +23,9 @@
   "one entry per line": "Et input per linje",
   "upcoming themes": "Opkommende temaer",
   "drinking rules": "Drikke regler",
-  "create theme": "Skab Tema"
+  "create theme": "Skab Tema",
+  "insertLink": "Indtast URL...",
+  "or": "Eller",
+  "browse": "Vælge fil",
+  "file": "Fil"
 }

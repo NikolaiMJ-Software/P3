@@ -8,7 +8,6 @@ public class SoundSample implements HasUserId{
     private String link;
     private String filePath;
     private Long userId;
-    private String username;
     private Integer userCount;
     private double userWeight;
     private File file;
@@ -20,16 +19,6 @@ public class SoundSample implements HasUserId{
         this.filePath = filePath;
         this.userId = userId;
     }
-    
-    public SoundSample(File file, String username) {
-        this.file = file;
-        this.username = username;
-    }
-
-    public SoundSample(String link, String username) {
-        this.link = link;
-        this.username = username;
-    }
 
     // Get functions
     public String getLink(){
@@ -40,9 +29,6 @@ public class SoundSample implements HasUserId{
     }
     public Long getUserId(){
         return this.userId;
-    }
-    public String getUsername() {
-        return this.username;
     }
     public File getFile() {
         return this.file;

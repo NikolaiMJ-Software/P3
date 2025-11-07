@@ -4,6 +4,7 @@ import discordWEBP from '../assets/discord.webp'
 import userPNG from "../assets/User.png"
 import englishPNG from "../assets/english.png"
 import danishPNG from "../assets/danish.png"
+import React from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";

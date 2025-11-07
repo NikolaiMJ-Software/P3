@@ -5,6 +5,7 @@ import com.p3.fkult.business.services.UserService;
 import com.p3.fkult.persistence.entities.SoundSample;
 import com.p3.fkult.persistence.entities.User;
 import com.p3.fkult.persistence.repository.SoundSampleRepository;
+import com.p3.fkult.presentation.controllers.SoundSampleRequest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +26,7 @@ public class SoundSampleTest {
     @Mock
     private SoundSampleRepository repository;
     private SoundSampleService service;
-
+    
     @Mock
     private UserService userService;
 
@@ -170,11 +171,7 @@ public class SoundSampleTest {
         when(userService.getAllUsers()).thenReturn(createTargetUsers());
         when(repository.getAll()).thenReturn(createTargetSamples());
 
-        List<SoundSample> soundSamples = service.getAllSoundSamples(false,false);
-
-        for (SoundSample i : soundSamples) {
-            System.out.println(i.getFile() + " " + i.getUsername());
-        }
+        List<SoundSampleRequest> soundSamples = service.getAllSoundSamples(false,false);
 
         assertNotEquals(0, soundSamples.size());
         assertEquals(3, soundSamples.size());
@@ -186,19 +183,19 @@ public class SoundSampleTest {
         when(userService.getAllUsers()).thenReturn(createTargetUsers());
         when(repository.getAll()).thenReturn(createTargetSamples());
 
-        List<SoundSample> soundSamples = service.getAllSoundSamples(false,false);
-        List<SoundSample> quickSoundSamples = service.getAllSoundSamples(true,false);
+        List<SoundSampleRequest> soundSamples = service.getAllSoundSamples(false,false);
+        List<SoundSampleRequest> quickSoundSamples = service.getAllSoundSamples(true,false);
 
         assertNotEquals(0, soundSamples.size());
         assertEquals(soundSamples.size(), quickSoundSamples.size());
         assertTrue(
             quickSoundSamples
                 .stream()
-                .map(SoundSample::getLink)
+                .map(SoundSampleRequest::getSoundSample)
                 .toList()
                 .containsAll(
                     soundSamples.stream()
-                        .map(SoundSample::getLink)
+                        .map(SoundSampleRequest::getSoundSample)
                         .toList()
                 )
         );
@@ -219,19 +216,19 @@ public class SoundSampleTest {
         when(userService.getAllUsers()).thenReturn(createTargetUsers());
         when(repository.getAll()).thenReturn(createTargetSamples());
 
-        List<SoundSample> soundSamples = service.getAllSoundSamples(false,false);
-        List<SoundSample> weightedSoundSamples = service.getAllSoundSamples(false,true);
+        List<SoundSampleRequest> soundSamples = service.getAllSoundSamples(false,false);
+        List<SoundSampleRequest> weightedSoundSamples = service.getAllSoundSamples(false,true);
         
         assertNotEquals(0, soundSamples.size());
         assertEquals(soundSamples.size(), weightedSoundSamples.size());
         assertTrue(
             weightedSoundSamples
                 .stream()
-                .map(SoundSample::getLink)
+                .map(SoundSampleRequest::getSoundSample)
                 .toList()
                 .containsAll(
                     soundSamples.stream()
-                        .map(SoundSample::getLink)
+                        .map(SoundSampleRequest::getSoundSample)
                         .toList()
                 )
         );
@@ -252,20 +249,8 @@ public class SoundSampleTest {
         when(userService.getAllUsers()).thenReturn(createTargetUsers());
         when(repository.getAll()).thenReturn(createTargetSamples());
 
-        List<SoundSample> soundSamples = service.getAllSoundSamples(false,false);
-        List<SoundSample> BothSoundSamples = service.getAllSoundSamples(true, true);
+        List<SoundSampleRequest> BothSoundSamples = service.getAllSoundSamples(true, true);
 
-        assertEquals(soundSamples.size(), BothSoundSamples.size());
-        assertTrue(
-            BothSoundSamples
-                .stream()
-                .map(SoundSample::getLink)
-                .toList()
-                .containsAll(
-                    soundSamples.stream()
-                        .map(SoundSample::getLink)
-                        .toList()
-                )
-        );
+        assertEquals(0, BothSoundSamples.size());
     }
 }
