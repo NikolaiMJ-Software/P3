@@ -1,11 +1,11 @@
 import {ThemeMovieCard} from "./MovieCard.jsx";
 import DrinkingRuleCreator from "./DrinkingRuleCreator.jsx";
 
-export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie}){
+export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie, setTitle}){
 
     return(
         <div className={"items-center flex-col flex gap-1 border-1 m-2 p-2 w-[600px]"}>
-            <input type={"text"} placeholder={"Enter theme title"} className={"w-100 text-center text-black border-1 m-2 p-2 rounded-2xl"}/>
+            <input type={"text"} onChange={event => setTitle(event.target.value)} placeholder={"Enter theme title"} className={"w-100 text-center text-black border-1 m-2 p-2 rounded-2xl"}/>
             <button
                 onClick={handleSubmit}
                 className={"absolute bottom-4 left-1/2 transform -translate-x-1/2 font-semibold px-8 py-3 rounded-xl border-2 border-black hover:bg-gray-300"}>

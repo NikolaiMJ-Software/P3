@@ -5,7 +5,7 @@ import SoundSampleBrowser from "../SoundSampleBrowser.jsx";
 import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
 import { useTranslation } from "react-i18next";
 import ThemeToggleButtons from "./Themebrowser/ThemeToggleButtons.jsx";
-import ThemeCollection from "./Themebrowser/ThemeCollection.jsx";
+import ThemeCollection, {UpcomingThemeCollection} from "./Themebrowser/ThemeCollection.jsx";
 
 export default function ThemeBrowser() {
     const [themes, setThemes] = useState([]);
@@ -37,7 +37,6 @@ export default function ThemeBrowser() {
             console.error("Error creating theme:", error);
             alert("failed to create theme");
         }
-
     }
 
     return (
@@ -48,10 +47,13 @@ export default function ThemeBrowser() {
                 onSubmit={handleCreateTheme}
             />
             <div className={"w-full max-w-full h-fit border-2 border-black rounded-3xl p-8"}>
+
                 {/* Upcoming themes card container */}
-                <p className={"m-4 font-bold"}>Upcoming themes</p>
-                <ThemeCollection themes={themes}/>
+                <p className={"m-4 font-bold"}>{t("upcoming themes")}</p>
+                <UpcomingThemeCollection themes={themes}/>
+
                 <div className={"border-1 m-8"} ></div>
+
                 {/* Top toggle buttons */}
                 <ThemeToggleButtons selected={selected} onSelect={setSelected}/>
                 <div>
@@ -62,6 +64,7 @@ export default function ThemeBrowser() {
                     {/* individual cards */}
                     <ThemeCollection isCreator={true} onClick={() => setIsPopupOpen(true)} themes={themes}></ThemeCollection>
                 </div>
+
             </div>
         </div>
     )

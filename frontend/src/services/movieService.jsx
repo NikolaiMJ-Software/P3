@@ -11,6 +11,9 @@ export async function getMovies(movieIds){
 }
 
 export async function getMoviesByTconsts(movieTconsts) {
+    if (!Array.isArray(movieTconsts)){
+        console.error("movieTconsts not an array");
+    }
     try{
         const response = await fetch(`${API_URL}/batchByTconst`,{
             method: "POST",

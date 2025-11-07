@@ -16,6 +16,12 @@
   "play": "Play",
   "wheel": "Wheel of Fortune",
   "vote": "vote",
+  "your themes": "Your themes",
+  "new themes": "New themes",
+  "old themes": "Old themes",
   "shuffle entries": "Shuffle Entries",
-  "one entry per line": "One entry per line"
+  "one entry per line": "One entry per line",
+  "upcoming themes": "Upcoming themes",
+  "drinking rules": "Drinking Rules",
+  "create theme": "Create Theme"
 }
