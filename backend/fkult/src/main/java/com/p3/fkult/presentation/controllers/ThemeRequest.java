@@ -1,18 +1,29 @@
 package com.p3.fkult.presentation.controllers;
 import com.p3.fkult.persistence.entities.Movie;
 import java.util.List;
+import java.util.stream.Collectors;
+
 public class ThemeRequest {
     private Long themeId;
     private String name;
     private Long userId;
     private List<Long> movieIds;
     private List<String> drinkingRules;
+    private List<String> tConsts;
+    private String username;
 
     public ThemeRequest(Long themeId, String name, Long userId, List<Long> movieIds, List<String> drinkingRules){
         this.themeId = themeId;
         this.name = name;
         this.userId = userId;
         this.movieIds = movieIds;
+        this.drinkingRules = drinkingRules;
+    }
+    public ThemeRequest(List<String> tConsts, Long themeId, String name, String username, List<String> drinkingRules){
+        this.themeId = themeId;
+        this.name = name;
+        this.username = username;
+        this.tConsts = tConsts;
         this.drinkingRules = drinkingRules;
     }
 
@@ -24,10 +35,30 @@ public class ThemeRequest {
     public Long getUserId() { return userId; }
     public List<Long> getMovieIds() { return movieIds; }
     public List<String> getDrinkingRules() { return drinkingRules; }
+    public List<String> gettConsts() { return tConsts; }
+    public String getUsername(){ return username; }
 
     //setters
     public void setName(String name) { this.name = name; }
     public void setUserId(Long userId) { this.userId = userId; }
     public void setMovieIds(List<Long> movieIds) { this.movieIds = movieIds; }
     public void setRules(List<String> rules) { this.drinkingRules = rules; }
+    public void settConsts(List<String> tConsts) {this.tConsts = tConsts;}
+    public void setUsername(String username){this.username = username;}
+
+    @Override
+    public String toString() {
+        return "ThemeRequest{" +
+                "themeId=" + themeId +
+                ", name='" + name + '\'' +
+                ", userId=" + userId +
+                ", username='" + username + '\'' +
+                ", movieIds=" + (movieIds != null ? movieIds.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(", ")) : "null") +
+                ", drinkingRules=" + (drinkingRules != null ? String.join(", ", drinkingRules) : "null") +
+                ", tConsts=" + (tConsts != null ? String.join(", ", tConsts) : "null") +
+                '}';
+    }
+
 }

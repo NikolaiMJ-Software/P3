@@ -4,12 +4,21 @@
   "discord": "Discord",
   "admin": "Admin",
   "logout": "Log ud",
-  "username": "{{name}}",
+  "username": "Brugernavn",
   "sound sample": "Lydprøveforslag",
   "themes": "Temaer",
   "theme": "Tema",
   "create": "Skab",
   "submit": "Indsend",
   "event": "Begivenhed",
-  "welcome": "Velkommen"
+  "welcome": "Velkommen",
+  "welcomeMessage": "🙏",
+  "play": "Afspil",
+  "wheel": "Lykkehjul",
+  "vote": "votering",
+  "your themes": "Dine temaer",
+  "new themes": "Nye temaer",
+  "old themes": "Gamle temaer",
+  "shuffle entries": "Bland Input",
+  "one entry per line": "Et input per linje"
 }

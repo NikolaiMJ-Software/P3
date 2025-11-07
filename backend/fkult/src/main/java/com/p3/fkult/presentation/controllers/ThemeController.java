@@ -26,7 +26,14 @@ public class ThemeController {
 
     @PostMapping
     public ResponseEntity<String> createTheme(@RequestBody ThemeRequest themeRequest) {
-        themeService.createTheme(themeRequest);
+        if (    themeRequest.getName() == null ||
+                themeRequest.getName().isBlank() ||
+                themeRequest.gettConsts() == null ||
+                themeRequest.gettConsts().isEmpty())
+        {
+            return ResponseEntity.badRequest().body("Theme data not accepted please ensure there is a title and at least one tConst" + themeRequest.toString());
+        }
+        themeService.createThemeWithTConsts(themeRequest);
         return ResponseEntity.ok("Theme created successfully");
     }
 }

@@ -1,6 +1,8 @@
 import { API } from './api.jsx'
 const API_URL = `${API}/user`; //backend address
 
+// GETS
+
 export async function getUsers(){
     const response = await fetch(API_URL);
     return response.json();
@@ -18,6 +20,13 @@ export async function isAdmin(username){
     const response = await fetch(`${API_URL}/admin/${username}`);
     return response.json();
 }
+
+export async function fullName(id){
+    const response = await fetch(`${API_URL}/full_name/${id}`)
+    return response.text()
+}
+
+// POSTS
 
 export async function adminUser(username){
     const response = await fetch(`${API_URL}/admin/${username}?status=1`, {
@@ -52,3 +61,4 @@ export async function unbanUser(body){
     });
     return response.text();
 }
+

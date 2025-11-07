@@ -19,12 +19,14 @@ public class ThemeService {
     private final MovieRepository movieRepository;
     private final DrinkingRuleRepository drinkingRuleRepository;
     private final ThemeMovieRepository themeMovieRepository;
+    private final UserRepository userRepository;
 
-    public ThemeService(ThemeRepository themeRepository, MovieRepository movieRepository, DrinkingRuleRepository drinkingRuleRepository, ThemeMovieRepository themeMovieRepository){
+    public ThemeService(ThemeRepository themeRepository, MovieRepository movieRepository, DrinkingRuleRepository drinkingRuleRepository, ThemeMovieRepository themeMovieRepository, UserRepository userRepository){
         this.themeRepository = themeRepository;
         this.movieRepository = movieRepository;
         this.drinkingRuleRepository = drinkingRuleRepository;
         this.themeMovieRepository = themeMovieRepository;
+        this.userRepository = userRepository;
     }
     public List<ThemeRequest> getAllThemes() {
         List<ThemeRequest> themeRequests = new ArrayList<>();
@@ -59,5 +61,24 @@ public class ThemeService {
 
         themeRequest.getDrinkingRules().forEach(ruleText ->
                 drinkingRuleRepository.save(new DrinkingRule(themeId, ruleText)));
+    }
+
+    @Transactional
+    public void createThemeWithTConsts(ThemeRequest themeRequest){
+        Long userId = userRepository.findUser(themeRequest.getUsername()).getId();
+        long themeId = themeRepository.save(new Theme(themeRequest.getName(), userId)).getId();
+
+        List<Long> movieIds = themeRequest.gettConsts().stream().map(
+                tConst -> movieRepository.findByTconst(tConst).getId()
+        ).toList();
+
+        List<ThemeMovie> themeMovies = movieIds
+                .stream()
+                .map(movieId -> new ThemeMovie(themeId,movieId))
+                .toList();
+        themeMovies.forEach(themeMovie -> themeMovieRepository.save(themeMovie));
+
+        themeRequest.getDrinkingRules().forEach(ruleText ->
+                drinkingRuleRepository.save(new DrinkingRule(themeId,ruleText)));
     }
 }

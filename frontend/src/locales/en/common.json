@@ -4,12 +4,18 @@
   "discord": "Discord",
   "admin": "Admin",
   "logout": "Logout",
-  "username": "{{name}}",
+  "username": "Username",
   "sound sample": "Sound Sample",
   "themes": "Themes",
   "theme": "Theme",
   "create": "Create",
   "submit": "Submit",
   "event": "Event",
-  "welcome": "Welcome"
+  "welcome": "Welcome",
+  "welcomeMessage": "What actions shall we do today my lord?",
+  "play": "Play",
+  "wheel": "Wheel of Fortune",
+  "vote": "vote",
+  "shuffle entries": "Shuffle Entries",
+  "one entry per line": "One entry per line"
 }

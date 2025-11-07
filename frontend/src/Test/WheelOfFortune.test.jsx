@@ -4,6 +4,8 @@ import { MemoryRouter } from "react-router-dom";
 import React from "react";
 import * as matchers from "@testing-library/jest-dom/matchers"; 
 import WheelOfFortunePage from "../pages/WheelOfFortunePage";
+import { I18nextProvider } from "react-i18next";
+import baseI18n from "../i18n";
 
 expect.extend(matchers);
 
@@ -27,6 +29,7 @@ const make2dContext = () => {
     setTransform: vi.fn(),
     clearRect: vi.fn(),
     beginPath: vi.fn(),
+    closePath: vi.fn(),
     arc: vi.fn(),
     fill: vi.fn(),
     stroke: vi.fn(),
@@ -77,7 +80,6 @@ const mockRAFInstantFinish = () => {
 
 describe("Testing Wheel of Fortune", () =>{
     beforeEach(()=>{
-        cleanup();
         fetch.mockReset();
         mockNavigate.mockReset();
         mockCanvas();
@@ -85,33 +87,42 @@ describe("Testing Wheel of Fortune", () =>{
     });
 
     afterEach(() => {
+    cleanup();
     vi.restoreAllMocks();
     });
 
-    it("Test rendering of the page", () =>{
+    it("Test rendering of the page", async () =>{
+        const i18n = baseI18n.cloneInstance();
+        await i18n.changeLanguage("da");
         render(
+          <I18nextProvider i18n={i18n}>
             <MemoryRouter>
                 <WheelOfFortunePage />
             </MemoryRouter>
+          </I18nextProvider>
         );
 
         //assert
-        expect(screen.getByText("One entry per line")).toBeInTheDocument();
-        const textarea = screen.getByRole("textbox");
+        await screen.findByText("Et input per linje");
+        expect(screen.getByText("Et input per linje")).toBeInTheDocument();
+        const textarea = await screen.findByRole('textbox');
         expect(textarea).toHaveValue("Pirates\nThe Squad\nGruppe 6");
         expect(screen.getByRole("button", { name: /spin/i })).toBeEnabled();
     })
 
-    it("Test if spin button is disabled with 0 entries and re enabled when adding entries", () => {
-        //arrange
+    it("Test if spin button is disabled with 0 entries and re enabled when adding entries", async () => {
+        const i18n = baseI18n.cloneInstance();
+        await i18n.changeLanguage("en");
         render(
-        <MemoryRouter>
-            <WheelOfFortunePage />
-        </MemoryRouter>
+          <I18nextProvider i18n={i18n}>
+            <MemoryRouter>
+                <WheelOfFortunePage />
+            </MemoryRouter>
+          </I18nextProvider>
         );
     
-        const textarea = screen.getByRole("textbox");
-        const spinButton = screen.getByRole("button", { name: /spin/i });
+        const textarea = await screen.findByRole('textbox');
+        const spinButton = await screen.findByRole('button', { name: /spin/i });
 
     
         // clear all entries
@@ -128,15 +139,23 @@ describe("Testing Wheel of Fortune", () =>{
     });
 
 
-    it("removes the winning entry from the textarea when clicking Remove", () => {
-        //arrange
+    it("removes the winning entry from the textarea when clicking Remove", async () => {
+        const i18n = baseI18n.cloneInstance();
+        await i18n.changeLanguage("en");
         render(
-        <MemoryRouter>
-            <WheelOfFortunePage />
-        </MemoryRouter>
+          <I18nextProvider i18n={i18n}>
+            <MemoryRouter>
+                <WheelOfFortunePage />
+            </MemoryRouter>
+          </I18nextProvider>
         );
 
-        const canvas = document.querySelector("canvas");
+        await screen.findByRole('button', { name: /spin/i }); // waits for first paint
+        const canvas = await waitFor(() => {
+          const el = document.querySelector('canvas');
+          if (!el) throw new Error('canvas not mounted yet');
+          return el;
+        });
         const rect = canvas.getBoundingClientRect();
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
@@ -154,7 +173,7 @@ describe("Testing Wheel of Fortune", () =>{
 
         //Assert
         // Checking if Pirates is removed in the textarea and the rest of the values exist
-        const textarea = screen.getByRole("textbox");
+        const textarea = await screen.findByRole('textbox');
         expect(textarea).not.toHaveValue(expect.stringContaining("Pirates"));
         expect(textarea.value.trim()).toBe("The Squad\nGruppe 6");
     });
