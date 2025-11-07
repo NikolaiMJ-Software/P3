@@ -17,5 +17,9 @@
   "wheel": "Wheel of Fortune",
   "vote": "vote",
   "shuffle entries": "Shuffle Entries",
-  "one entry per line": "One entry per line"
+  "one entry per line": "One entry per line",
+  "insertLink": "Insert URL...",
+  "or": "Or",
+  "browse": "Browse",
+  "file": "File"
 }
