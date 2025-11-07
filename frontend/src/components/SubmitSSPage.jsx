@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { addSoundSample, deleteSoundSample } from "../services/soundSampleService";
+import { addSoundSample, deleteSoundSample, getSoundSamples } from "../services/soundSampleService";
 import { getIdByUser } from "../services/adminService.jsx"
+import { useTranslation } from "react-i18next";
 
 // This is a page to showcase the functionality of submitting a sound sample via file upload or URL input.
 export default function SubmitSSTestPage() {
+    const {t} = useTranslation();
 
     // Setup variables
     const [link, setUrl] = useState("");
@@ -64,6 +66,20 @@ export default function SubmitSSTestPage() {
         }
     }
 
+    const playSoundSamples = async () => {
+        let quickShuffle = false;
+        let weightedShuffle = false;
+        let soundSample;
+        // Get sound sample
+        try {
+            const res = await getSoundSamples(quickShuffle, weightedShuffle);
+            soundSample = res;
+        } catch (error) {
+            console.error("Get all Sound samples failed:", error);
+        }
+        console.log(soundSample);
+    }
+
     // HTML of the page
     return (
         <div className={"p-10"}>
@@ -74,26 +90,26 @@ export default function SubmitSSTestPage() {
                         <input
                             className="border px-2 py-1 rounded w-64"
                             type="text" 
-                            placeholder="Insert link..."
+                            placeholder={t("insertLink")}
                             onChange={(e) => setUrl(e.target.value)}
                         />
                     </label>
                 </div>
 
                 <div className="flex justify-center">
-                    Or
+                    {t("or")}
                 </div>
 
                 {/* File picker */}
                 <div className="flex justify-center">
                     <label className="px-4 py-1 transition-colors cursor-pointer bg-white hover:bg-gray-300 border">
-                        Browse
+                        {t("browse")}
                         <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }}
                         />
                     </label>
                 </div>
                 <div className="flex justify-center items-center min-h-4">
-                    {file && <div className="flex items-center text-sm text-gray-600">File: {file.name}</div>}
+                    {file && <div className="flex items-center text-sm text-gray-600">{t("file")}: {file.name}</div>}
                 </div>
 
                 {/* Buttons */}
@@ -101,7 +117,7 @@ export default function SubmitSSTestPage() {
                     <button className="px-6 py-2 rounded-2xl text-white bg-blue-500 hover:bg-blue-600"
                     type="button"
                     onClick={handleSubmit}>
-                        Submit
+                        {t("submit")}
                     </button>
                     {/*<button className="px-6 py-2 rounded-2xl text-white bg-red-500 hover:bg-red-700"
                     type="button"
@@ -130,8 +146,12 @@ export default function SubmitSSTestPage() {
                 </div>
 
                 {/* JONAS insert media player here */}
-                <div>
-
+                <div className="flex justify-center gap-6">
+                    <button className="px-6 py-2 rounded-2xl text-white bg-blue-500 hover:bg-blue-600"
+                    type="button"
+                    onClick={playSoundSamples}>
+                        Get all soundSample
+                    </button>
                 </div>
             </form>
         </div>

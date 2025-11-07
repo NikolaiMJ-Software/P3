@@ -1,9 +1,11 @@
+import {useTranslation} from "react-i18next";
 
 export default function ThemeToggleButtons({selected, onSelect}){
+    const {t} = useTranslation();
     const buttons = [
-        {key: "your", label: "Your themes"},
-        {key: "new", label: "New themes"},
-        {key: "old", label: "Old themes"},
+        {key: "your", label: t("your themes")},
+        {key: "new", label: t("new themes")},
+        {key: "old", label: t("Old themes")},
     ];
 
     return(

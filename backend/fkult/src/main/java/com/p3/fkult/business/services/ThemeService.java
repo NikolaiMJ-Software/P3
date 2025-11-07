@@ -77,8 +77,9 @@ public class ThemeService {
                 .map(movieId -> new ThemeMovie(themeId,movieId))
                 .toList();
         themeMovies.forEach(themeMovie -> themeMovieRepository.save(themeMovie));
-
-        themeRequest.getDrinkingRules().forEach(ruleText ->
-                drinkingRuleRepository.save(new DrinkingRule(themeId,ruleText)));
+        if (!(themeRequest.getDrinkingRules() == null)){
+            themeRequest.getDrinkingRules().forEach(ruleText ->
+                    drinkingRuleRepository.save(new DrinkingRule(themeId,ruleText)));
+        }
     }
 }

@@ -102,13 +102,11 @@ public class MovieService {
             return null;
         }
         if(movie.getPosterURL() != null && !movie.getPosterURL().isBlank()){
-            System.out.println("Found cached poster" + movie.getPosterURL());
             return movie.getPosterURL();
         }
 
         String tConst = movie.getTconst() + "/";
         String movieURL = IMDB_URL + tConst;
-        System.out.println("Fetching poster from: " + movieURL);
 
         try {
             // Use browser-like headers to avoid IMDb giving a 403 forbidden
