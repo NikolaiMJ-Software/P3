@@ -15,5 +15,7 @@
   "welcomeMessage": "🙏",
   "play": "Afspil",
   "wheel": "Lykkehjul",
-  "vote": "votering"
+  "vote": "votering",
+  "shuffle entries": "Bland Input",
+  "one entry per line": "Et input per linje"
 }

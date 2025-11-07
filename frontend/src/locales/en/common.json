@@ -15,5 +15,7 @@
   "welcomeMessage": "What actions shall we do today my lord?",
   "play": "Play",
   "wheel": "Wheel of Fortune",
-  "vote": "vote"
+  "vote": "vote",
+  "shuffle entries": "Shuffle Entries",
+  "one entry per line": "One entry per line"
 }
