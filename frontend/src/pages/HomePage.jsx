@@ -4,6 +4,7 @@ import { useState } from "react";
 import ThemeBrowser from "../components/Theme/ThemeBrowser.jsx";
 import SoundSampleBrowser from "../components/SoundSampleBrowser.jsx";
 import SubmitSSPage from "../components/SubmitSSPage.jsx";
+import NextTheme from "../components/Theme/NextTheme";
 import { useTranslation } from "react-i18next";
 import React from "react";
 
@@ -65,22 +66,15 @@ export default function HomePage() {
                     </button>
 
                     {/* Next Theme — placeholder card */}
-                    <div className="rounded-2xl border px-4 py-3">
-                    <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Next Theme</span>
-                        <span className="text-sm text-gray-600">16/10</span>
-                    </div>
+                    <NextTheme
+                    dateLabel="13/11"
+                    title="Comical Horror Movies"
+                    posters={[
+                        "https://m.media-amazon.com/images/M/MV5BNTBhNWJjZWItYzY3NS00M2NkLThmOWYtYTlmNzBmN2UxZWFjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+                        "https://m.media-amazon.com/images/M/MV5BMTAxNGQwMjEtNjdjNy00NmQwLTkwYTEtNGIwZWJjZjU5M2FmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+                    ]}
+                    />
 
-                    {/* Title placeholder */}
-                    <div className="mt-2 h-5 w-2/3 rounded bg-gray-100" />
-
-                    {/* Thumbnail placeholders */}
-                    <div className="mt-3 grid grid-cols-3 gap-2">
-                        <div className="h-16 rounded-md bg-gray-100" />
-                        <div className="h-16 rounded-md bg-gray-100" />
-                        <div className="h-16 rounded-md bg-gray-100" />
-                    </div>
-                    </div>
 
                     <button className={`w-full block rounded-2xl px-6 py-3
                         ${selected === "" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-300 border"}`}>
