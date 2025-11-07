@@ -1,9 +1,14 @@
 package com.p3.fkult.business.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.p3.fkult.persistence.entities.DrinkingRule;
 import com.p3.fkult.persistence.entities.SoundSample;
+import com.p3.fkult.persistence.entities.Theme;
+import com.p3.fkult.persistence.entities.ThemeMovie;
 import com.p3.fkult.persistence.entities.User;
 import com.p3.fkult.persistence.repository.SoundSampleRepository;
+import com.p3.fkult.presentation.controllers.SoundSampleRequest;
+import com.p3.fkult.presentation.controllers.ThemeRequest;
 import com.p3.fkult.business.services.shuffleFilter.*;
 
 import org.springframework.stereotype.Service;
@@ -88,48 +93,46 @@ public class SoundSampleService {
     }
 
     // Get all sound samples
-    public List<SoundSample> getAllSoundSamples(Boolean quick, Boolean weighted){
-        try {
-            List<SoundSample> allSoundSamples = repository.getAll();
-            List<SoundSample> soundSample = new ArrayList<>();
-            
-            if (quick && weighted) {
-                return allSoundSamples;
-            }
-            
-            // Option for shuffle
-            ShuffleFilter shuffleFilter = new ShuffleFilter();
-            if(quick) {
-                allSoundSamples = shuffleFilter.quickShuffle(allSoundSamples);
-            } else if(weighted) {
-                allSoundSamples = shuffleFilter.weightedShuffle(allSoundSamples);
-            }
+    public List<SoundSampleRequest> getAllSoundSamples(Boolean quick, Boolean weighted){
+        List<SoundSample> allSoundSamples = repository.getAll();
+        List<SoundSampleRequest> soundSamplesRequests = new ArrayList<>();
 
-            List<User> allUsers = userService.getAllUsers();
-            String name = null;
-            for (SoundSample i : allSoundSamples) {
-                // Convert userId to username
-                for (User j : allUsers) {
-                    if (i.getUserId() == j.getId()) {
-                        name = j.getName();
-                        break;
-                    }
-                }
-
-                // Get the file or link
-                if (i.getFilePath() != null) {
-                    soundSample.add(new SoundSample(getFile(i.getFilePath()), name));
-                } else {
-                    soundSample.add(new SoundSample(i.getLink(), name));
-                }
-            }
-
-            return soundSample;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        if (quick && weighted) {
+            return new ArrayList<>();
         }
+        
+        // Option for shuffle
+        ShuffleFilter shuffleFilter = new ShuffleFilter();
+        if (quick) {
+            allSoundSamples = shuffleFilter.quickShuffle(allSoundSamples);
+        } else if(weighted) {
+            allSoundSamples = shuffleFilter.weightedShuffle(allSoundSamples);
+        }
+System.out.println(allSoundSamples);
+
+        List<User> allUsers = userService.getAllUsers();
+        String name = null;
+System.out.println(allUsers);
+        for (SoundSample soundSample : allSoundSamples) {
+            // Convert userId to username
+            for (User user : allUsers) {
+                if (soundSample.getUserId().equals(user.getId())) {
+                    name = user.getName();
+                    break;
+                }
+            }
+
+            // Get the file or link
+            if (soundSample.getFilePath() != null) {
+                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(soundSample.getFilePath(), name);
+                soundSamplesRequests.add(soundSamplesRequest);
+            } else {
+                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(soundSample.getLink(), name);
+                soundSamplesRequests.add(soundSamplesRequest);
+            }
+        }
+
+        return soundSamplesRequests;
     }
 
     public File getFile(String filePath) {

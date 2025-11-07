@@ -26,7 +26,7 @@ public class SoundSampleRepository {
 
     // Get all SoundSamples from the database
     public List<SoundSample> getAll(){
-        String sql = "SELECT * FROM sound_sample";
+        String sql = "SELECT * FROM sound_samples";
         return jdbcTemplate.query(sql, rowMapper);
     }
 

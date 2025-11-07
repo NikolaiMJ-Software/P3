@@ -1,6 +1,7 @@
 package com.p3.fkult.presentation.controllers;
 
 import com.p3.fkult.business.services.SoundSampleService;
+//import com.p3.fkult.persistence.entities.SoundSample;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,16 +36,10 @@ public class SoundSampleController {
     }
 
     // Fetch function to get all sound samples 
-    @GetMapping
-    public List<SoundSampleRequest> getSoundSamples(
-        @RequestParam(defaultValue = "false") boolean quick, 
+    @GetMapping("/get-all")
+    public List<SoundSampleRequest> getSoundSamples(@
+        RequestParam(defaultValue = "false") boolean quick, 
         @RequestParam(defaultValue = "false") boolean weighted) {
-
-        return service.getAllSoundSamples(quick, weighted).stream()
-            .map(s -> new SoundSampleRequest(
-                s.getLink() != null ? s.getLink() : s.getFile().getPath(),
-                s.getUsername()
-            ))
-            .collect(Collectors.toList());
+            return service.getAllSoundSamples(quick, weighted);
     }
 }
