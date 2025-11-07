@@ -1,11 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import WheelOfFortune from "../components/WheelOfFortune.jsx";
+import { useTranslation } from "react-i18next";
 
 export default function WheelOfFortunePage() {
   const [entriesText, setEntriesText] = useState(
     "Pirates\nThe Squad\nGruppe 6"
   );
+  const {t} = useTranslation();
 
   const inputs = entriesText
     .split("\n")
@@ -45,7 +47,7 @@ export default function WheelOfFortunePage() {
         <WheelOfFortune inputs={inputs} size={516} onResult={handleResult} onRemove={handleRemove} />
 
         <div className="w-72">
-          <div className="mb-2 text-sm text-gray-600">One entry per line</div>
+          <div className="mb-2 text-sm text-gray-600">{t("one entry per line")}</div>
           <textarea
             className="w-full h-72 p-3 rounded-lg border"
             value={entriesText}
@@ -54,7 +56,7 @@ export default function WheelOfFortunePage() {
           <button
             onClick={handleShuffle}
             className="mt-3 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 active:scale-95 transition-transform">
-            Shuffle Entries
+            {t("shuffle entries")}
           </button>
         </div>
       </div>
