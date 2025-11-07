@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { addSoundSample, deleteSoundSample } from "../services/soundSampleService";
+import { addSoundSample, deleteSoundSample, getSoundSamples } from "../services/soundSampleService";
 import { getIdByUser } from "../services/adminService.jsx"
 
 // This is a page to showcase the functionality of submitting a sound sample via file upload or URL input.
@@ -62,6 +62,20 @@ export default function SubmitSSTestPage() {
             console.error("Deletion failed:", error);
             setMessage("Deletion failed: " + error.message);
         }
+    }
+
+    const playSoundSamples = async () => {
+        let quickShuffle = false;
+        let weightedShuffle = false;
+        let soundSample;
+        // Get sound sample
+        try {
+            const res = await getSoundSamples(quickShuffle, weightedShuffle);
+            soundSample = res;
+        } catch (error) {
+            console.error("Get all Sound samples failed:", error);
+        }
+        console.log(soundSample);
     }
 
     // HTML of the page
@@ -130,8 +144,12 @@ export default function SubmitSSTestPage() {
                 </div>
 
                 {/* JONAS insert media player here */}
-                <div>
-
+                <div className="flex justify-center gap-6">
+                    <button className="px-6 py-2 rounded-2xl text-white bg-blue-500 hover:bg-blue-600"
+                    type="button"
+                    onClick={playSoundSamples}>
+                        Get all soundSample
+                    </button>
                 </div>
             </form>
         </div>
