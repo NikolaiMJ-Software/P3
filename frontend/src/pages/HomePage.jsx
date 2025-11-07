@@ -5,6 +5,7 @@ import ThemeBrowser from "../components/Theme/ThemeBrowser.jsx";
 import SoundSampleBrowser from "../components/SoundSampleBrowser.jsx";
 import SubmitSSPage from "../components/SubmitSSPage.jsx";
 import { useTranslation } from "react-i18next";
+import React from "react";
 
 
 export default function HomePage() {
@@ -101,6 +102,6 @@ export default function HomePage() {
 
         <h1>Welcome to the Home Page</h1>
         <button onClick={goToMessages}>Messages</button>
-        <button onClick={goToThemes}>Themes</button>
+        <button onClick={goToThemes}>Themesdsa</button>
     </>
 }
