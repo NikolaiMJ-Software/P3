@@ -1,6 +1,7 @@
 import MovieCard, {MovieCardSmall} from "./MovieCard.jsx";
 import {useEffect, useState} from "react";
 import {getMovies, getMoviesByTconsts} from "../../services/movieService.jsx";
+import {useTranslation} from "react-i18next";
 
 export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries}){
     const [movies, setMovies] = useState([]);
@@ -10,6 +11,7 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
     }, [tConsts]);
 
     const safeMovies = Array.isArray(movies) ? movies : [];
+    const {t} = useTranslation();
 
     return(
         <div className={"relative w-60 h-80 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
@@ -17,7 +19,7 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
             <div>
                 <h1 className={"text-xl font-bold"}>{title}</h1>
                 <h2 className={"text-sm text-gray-600"}>{name}</h2>
-                <h3 className={"mt-2 font-semibold text-sm"}>Drinking Rules:</h3>
+                <h3 className={"mt-2 font-semibold text-sm"}>{t("drinking rules")}</h3>
                 <ul className={"text-xs list-disc list-inside"}>{drinkingRules.map((rule) => {return (<li key={rule}>{rule}</li>)})}</ul>
             </div>
 
@@ -53,11 +55,11 @@ export function ThemeCardSmall({title, name, tConsts}){
     )
 }
 export function ThemeCreationCard({onClick}){
-
+    const {t} = useTranslation();
     return(
         <div onClick={onClick} className={"relative w-60 h-80 border-2 border-black rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
             "text-lg font-medium shadow-sm hover:bg-green-100 transition shrink-0"}>
-            <p className={"mb-4 text-center"}>Create Theme</p>
+            <p className={"mb-4 text-center"}>{t("create theme")}</p>
             <div className={"bg-green-200 flex justify-center items-center w-16 h-16 border-5 border-green-500 rounded-full"}>
                 <span className="text-5xl font-bold text-green-500 mb-2.5">+</span>
             </div>

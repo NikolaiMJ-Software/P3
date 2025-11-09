@@ -6,7 +6,7 @@ import {getMovieCount, getMoviePoster, searchMovies} from "../../services/movieS
 import ThemeCreatorTopcontent from "./ThemeCreatorTopcontent.jsx";
 import ThemeMovieSearcher from "./ThemeMovieSearcher.jsx";
 import ThemeCreator from "./ThemeCreator.jsx";
-import {addTheme} from "../../services/themeService.jsx";
+import {addTheme, getThemes} from "../../services/themeService.jsx";
 const MOVIE_LIMIT = 6;
 
 export default function ThemeCreationPopup({isOpen, onClose}) {
@@ -85,8 +85,9 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
         const parts = link.split("/");
         return parts.find(p => p.startsWith("tt")) || null;
     }
-
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        console.log("submitting...")
+        alert("submitting")
         if(!title){
             alert("Please enter theme title");
             return;
@@ -95,10 +96,16 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
             alert("Please add at least one movie");
             return;
         }
-        addTheme(title, sessionStorage.getItem("username"), movies, rules)
-        resetForm();
-        onClose();
-    };
+        try {
+            const username = sessionStorage.getItem("username")
+            const drinkingRules = rules || "";
+            await addTheme(title, username, movies.map(movie => movie.tConst), drinkingRules);
+            alert("Theme created sucessfully! ");
+        } catch (error) {
+            console.error("Error creating theme:", error);
+            alert("failed to create theme" + error);
+        }
+    }
 
     const handleAddMovies = (movie) => {
         setMovies(prev =>{
@@ -141,9 +148,12 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
                                         setSearchQuery={setSearchQuery}>
                     </ThemeMovieSearcher>
                     {/* Right Theme Creator */}
-                    <ThemeCreator onSubmit={handleSubmit}
-                                  movies={movies}
-                                  handleRemoveMovie={handleRemoveMovie}>
+                    <ThemeCreator
+                        handleSubmit={handleSubmit}
+                        movies={movies}
+                        handleRemoveMovie={handleRemoveMovie}
+                        setTitle={setTitle}
+                    >
                     </ThemeCreator>
                 </div>
             </div>

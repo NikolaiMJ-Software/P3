@@ -12,6 +12,9 @@ public class ThemeRequest {
     private List<String> tConsts;
     private String username;
 
+    //Springboot requires a default constructor to deserialize using @RequestBody on endpoints
+    public ThemeRequest(){}
+
     public ThemeRequest(Long themeId, String name, Long userId, List<Long> movieIds, List<String> drinkingRules){
         this.themeId = themeId;
         this.name = name;
@@ -21,6 +24,13 @@ public class ThemeRequest {
     }
     public ThemeRequest(List<String> tConsts, Long themeId, String name, String username, List<String> drinkingRules){
         this.themeId = themeId;
+        this.name = name;
+        this.username = username;
+        this.tConsts = tConsts;
+        this.drinkingRules = drinkingRules;
+    }
+
+    public ThemeRequest(String name, String username, List<String> tConsts, List<String> drinkingRules){
         this.name = name;
         this.username = username;
         this.tConsts = tConsts;
@@ -42,7 +52,7 @@ public class ThemeRequest {
     public void setName(String name) { this.name = name; }
     public void setUserId(Long userId) { this.userId = userId; }
     public void setMovieIds(List<Long> movieIds) { this.movieIds = movieIds; }
-    public void setRules(List<String> rules) { this.drinkingRules = rules; }
+    public void setDrinkingRules(List<String> rules) { this.drinkingRules = rules; }
     public void settConsts(List<String> tConsts) {this.tConsts = tConsts;}
     public void setUsername(String username){this.username = username;}
 
