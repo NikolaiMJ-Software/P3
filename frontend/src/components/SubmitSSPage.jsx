@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { addSoundSample, deleteSoundSample, getSoundSamples } from "../services/soundSampleService";
+import { addSoundSample, deleteSoundSample, getSoundSamples, getSoundsampleFile } from "../services/soundSampleService";
 import { getIdByUser } from "../services/adminService.jsx"
 import { useTranslation } from "react-i18next";
 
@@ -36,7 +36,6 @@ export default function SubmitSSTestPage() {
         // Submit sound sample
         try {
             const resText = await addSoundSample(trimmedLink, file, userId);
-            console.log('TEXT JA JA:', resText);
             setMessage(resText);
         } catch (error) {
             console.error("Upload failed:", error);
@@ -78,6 +77,12 @@ export default function SubmitSSTestPage() {
             console.error("Get all Sound samples failed:", error);
         }
         console.log(soundSample);
+    }
+
+    const getSSFile = async (filePath) => {
+        let file = await getSoundsampleFile(filePath);
+        console.log(file);
+        return file;
     }
 
     // HTML of the page
@@ -151,6 +156,14 @@ export default function SubmitSSTestPage() {
                     type="button"
                     onClick={playSoundSamples}>
                         Get all soundSample
+                    </button>
+                </div>
+
+                <div className="flex justify-center gap-6">
+                    <button className="px-6 py-2 rounded-2xl text-white bg-blue-500 hover:bg-blue-600"
+                    type="button"
+                    onClick={() => getSSFile("Grass.jpg")}>
+                        Get file
                     </button>
                 </div>
             </form>
