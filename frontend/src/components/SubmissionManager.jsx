@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {getThemes} from "../services/themeService.jsx";
 import {fullName} from "../services/adminService.jsx";
 import {useTranslation} from "react-i18next";
+import {t} from "i18next";
 
 export default function SubmissionManager() {
     const [tab, setTab] = useState("ThemeSubmissions")
@@ -79,7 +80,7 @@ function ThemeSubmissions(){
                     </label>
                 </div>
             </div>
-            <div className={"border-t"}>
+            <div className={"border-t max-h-150 overflow-auto"}>
                 {themes.map(theme => (
                     <Theme item={theme} />
                 ))}
@@ -104,18 +105,28 @@ function Theme({ item }){
         }
         loadName()
     }, []);
-
+    const divcss = "grow m-2 w-1/6  mr-10 ml-10"
+    const css = "border text-center"
 
     return (
-        <div className={"m-10 mt-5 mb-5 border rounded flex flex-row justify-between"}>
-            <div>
+        <div className={"m-10 mt-3 mb-3 border rounded flex flex-row justify-between"}>
+            <div className={"border m-4 p-2 grow-1 w-1/6 text-center"}>
                 {name}
             </div>
-            <div>
-                {user}
+            <div className={divcss}>
+                <p>{t("Uploaded by")}:</p>
+                <p className={css}>{user}</p>
             </div>
-            <div>
-                {"6-7"}
+            <div className={divcss}>
+                <p>{t("Submitted on")}</p>
+                <p className={css}>{"6-7"}</p>
+            </div>
+            <div className={divcss}>
+                <p>{t("Seen on")}</p>
+                <p className={css}>{"6-7"}</p>
+            </div>
+            <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-6xl font-thin"}>
+                <p>X</p>
             </div>
         </div>
     )
