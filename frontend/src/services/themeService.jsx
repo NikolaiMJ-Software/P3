@@ -44,3 +44,16 @@ export async function fetchShuffledThemes() {
     throw error;
   }
 }
+
+export async function updateThemeVotes(id, votes) {
+  try {
+    const response = await fetch(`${API}/vote/update-vote/${id}/${votes}`)
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+    return await response.text();
+  } catch (error) {
+    console.log("Error updating theme votes: ", error);
+    throw error;
+  }
+}
