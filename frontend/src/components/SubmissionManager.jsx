@@ -105,15 +105,9 @@ function ThemeSubmissions(){
 
 function Theme({ item, onToggle, isExpanded }){
     const [movies, setMovies] = useState([])
-    const [loaded, setLoaded] = useState(false);
-
-    const loadMovies = async () => {
-        await getMovies(item.movieIds).then(setMovies)
-        setLoaded(true)
-    }
 
     const handleClick = async () => {
-        if (!loaded) await loadMovies();
+        await getMovies(item.movieIds).then(setMovies)
         onToggle();
     }
 
