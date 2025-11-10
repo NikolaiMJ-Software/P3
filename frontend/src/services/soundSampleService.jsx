@@ -55,4 +55,13 @@ async function deleteSoundSample(link, fileName) {
     return response.text();
 }
 
-export { getSoundSamples, addSoundSample, deleteSoundSample };
+async function getSoundsampleFile(filePath) {
+    try {
+        const res = await fetch(`${API_URL}/download?filePath=${filePath}`);
+        return res.json();
+    } catch (error) {
+        console.error(`Failed to get file: ${filePath} `, error);
+    }
+}
+
+export { getSoundSamples, addSoundSample, deleteSoundSample, getSoundsampleFile };

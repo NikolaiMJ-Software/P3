@@ -108,11 +108,9 @@ public class SoundSampleService {
         } else if(weighted) {
             allSoundSamples = shuffleFilter.weightedShuffle(allSoundSamples);
         }
-System.out.println(allSoundSamples);
 
         List<User> allUsers = userService.getAllUsers();
         String name = null;
-System.out.println(allUsers);
         for (SoundSample soundSample : allSoundSamples) {
             // Convert userId to username
             for (User user : allUsers) {
@@ -135,10 +133,13 @@ System.out.println(allUsers);
         return soundSamplesRequests;
     }
 
-    public File getFile(String filePath) {
+    public File getSoundSampleFile(String fileName) {
         try {
-            File file = new File(filePath);
+            String filePath = null;
+            filePath = new File("soundSampleUploads" + File.separator + fileName).getAbsolutePath();
+            File file = new File(filePath).getAbsoluteFile();
             return file;
+            
         } catch (Exception e) {
             e.printStackTrace();
             return null;

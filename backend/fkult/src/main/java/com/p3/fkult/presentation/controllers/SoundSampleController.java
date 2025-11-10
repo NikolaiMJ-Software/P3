@@ -1,10 +1,10 @@
 package com.p3.fkult.presentation.controllers;
 
 import com.p3.fkult.business.services.SoundSampleService;
-//import com.p3.fkult.persistence.entities.SoundSample;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.io.File;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,9 +37,15 @@ public class SoundSampleController {
 
     // Fetch function to get all sound samples 
     @GetMapping("/get-all")
-    public List<SoundSampleRequest> getSoundSamples(@
-        RequestParam(defaultValue = "false") boolean quick, 
+    public List<SoundSampleRequest> getSoundSamples(
+        @RequestParam(defaultValue = "false") boolean quick, 
         @RequestParam(defaultValue = "false") boolean weighted) {
             return service.getAllSoundSamples(quick, weighted);
+    }
+
+    // Fetch function to get all sound samples 
+    @GetMapping("/download")
+    public File getSoundSamples(@RequestParam String filePath) {
+        return service.getSoundSampleFile(filePath);
     }
 }
