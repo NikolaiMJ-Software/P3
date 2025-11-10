@@ -3,18 +3,22 @@ package com.p3.fkult.business.services;
 import java.util.*;
 import org.springframework.stereotype.Service;
 import com.p3.fkult.presentation.controllers.ThemeRequest;
+import com.p3.fkult.persistence.repository.ThemeRepository;
 
 @Service
 public class ThemeVotingService {
 
-    // Download copy of the themes
-    private final List<ThemeRequest> themes;
-    public ThemeVotingService(ThemeService themeService) {
-        this.themes = themeService.getAllThemes();
+    // Download copy of ThemeService to utilize its functions
+    private final ThemeRepository themeRepository;
+    private final ThemeService themeService;
+    public ThemeVotingService(ThemeService themeService, ThemeRepository themeRepository) {
+        this.themeService = themeService;
+        this.themeRepository = themeRepository;
     }
 
     // Get shuffled list of themes that avoid repeated user ids
     public List<ThemeRequest> getShuffledThemes() {
+        List<ThemeRequest> themes = themeService.getAllThemes();
         if (themes == null || themes.size() < 2) return themes;
 
         // Create list of shuffled themes
@@ -38,5 +42,16 @@ public class ThemeVotingService {
             }
         }
         return shuffled;
+    }
+
+    
+    // Updates the votes of a theme based on the id
+    public String UpdateVote(long id, long votes) {
+        try{
+            themeRepository.setVote(id, votes);
+            return "Set votes for theme " + id + " to: " + votes;
+        } catch (Exception error) {
+            return "failed to update votes for id " + id + " due to error: " + error;
+        }
     }
 }
