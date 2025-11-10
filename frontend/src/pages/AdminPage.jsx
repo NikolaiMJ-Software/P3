@@ -30,7 +30,7 @@ export default function AdminPage(){
                 <AdminButton
                     func={unadminUser}
                     username={username}
-                    label={`Unbecome Admin`}
+                    label={t("unbecome admin")}
                 />
                 <div className="flex flex-col">
                     {/* Top Half */}
@@ -62,7 +62,7 @@ export default function AdminPage(){
                 <AdminButton
                     func={adminUser}
                     username={username}
-                    label={`Bliv Admin`}
+                    label={t("become admin")}
                 />
             </div>
         )
