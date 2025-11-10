@@ -1,42 +1,49 @@
 import { useState, useEffect } from "react";
 import { fetchShuffledThemes } from "../services/themeService";
-import { getMoviePoster } from "../services/movieService";
+import { getMoviePosterById } from "../services/movieService";
 
 export default function ThemeVoting() {
   const [themes, setThemes] = useState([]);
 
-  // Get all theme data
   useEffect(() => {
     async function loadThemes() {
       try {
-        const data = await fetchShuffledThemes();
 
-        // For each theme, fetch all its movie posters
-        const themesWithPosters = await Promise.all(
-          data.map(async (theme) => {
-            if (!theme.movieIds || theme.movieIds.length === 0) {
-              return { ...theme, posters: [] };
-            }
+        // Fetch all shuffled themes
+        const themesData = await fetchShuffledThemes();
+
+        // Add the posters for each movie
+        const enrichedThemes = await Promise.all(
+          themesData.map(async (theme) => {
+            const movieIds = theme.movieIds || [];
+
+            // Fetch posters for each movie ID
             const posters = await Promise.all(
-              theme.movieIds.map(async (tConst) => {
+              movieIds.map(async (id) => {
                 try {
-                  const posterUrl = await getMoviePoster(tConst);
+                  const posterUrl = await getMoviePosterById(id);
                   return posterUrl;
-                } catch {
-                  return null; // fallback if a single poster fails
+                } catch (err) {
+                  console.warn(`Failed to fetch poster for movie ${id}`, err);
+                  return null;
                 }
               })
             );
 
-            return { ...theme, posters: posters.filter(Boolean) };
+            // 3️⃣ Append posters to theme object
+            return {
+              ...theme,
+              posters: posters.filter(Boolean), // remove any nulls
+            };
           })
         );
 
-        setThemes(themesWithPosters);
-      } catch (err) {
-        // Error something here
+        setThemes(enrichedThemes);
+      } catch (error) {
+        console.error("Error loading themes:", error);
       }
     }
+
     loadThemes();
   }, []);
 
