@@ -62,3 +62,9 @@ export async function getMoviePoster(tConst){
     if (!response.ok) throw new Error("Failed to fetch poster");
     return await response.text(); // your endpoint returns string
 }
+
+export async function getMoviePosterById(id){
+    const response = await fetch(`${API_URL}/poster/id/${id}`);
+    if (!response.ok) throw new Error("Failed movie poster by id");
+    return await response.text();
+}

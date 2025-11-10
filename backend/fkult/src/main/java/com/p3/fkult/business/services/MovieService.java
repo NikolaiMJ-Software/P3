@@ -95,6 +95,11 @@ public class MovieService {
         return getPosterURL(movie);
     }
 
+    public String getPosterById(long id){
+        Movie movie = movieRepository.findById(id);
+        return getPosterURL(movie);
+    }
+
     //ChatGPT said this is maybe illegal... but... it works though
     public String getPosterURL(Movie movie) {
         if (movie.getTconst() == null) {
@@ -145,5 +150,10 @@ public class MovieService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public String getTconstById(long id){
+        Movie movie = movieRepository.findById(id);
+        return movie.getTconst();
     }
 }
