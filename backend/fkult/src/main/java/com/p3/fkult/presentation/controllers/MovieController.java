@@ -96,9 +96,14 @@ public class MovieController {
         }
     }
 
+    @GetMapping("/poster/id/{id}")
+    public String tconstById(@PathVariable long id) {
+        return movieService.getPosterById(id);
+    }
+
     private String getMeta(Document doc, String property) {
         Element meta = doc.selectFirst("meta[property=" + property + "]");
         return meta != null ? meta.attr("content") : "";
     }
+
 }
-    
