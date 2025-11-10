@@ -1,14 +1,10 @@
 package com.p3.fkult.business.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.p3.fkult.persistence.entities.DrinkingRule;
 import com.p3.fkult.persistence.entities.SoundSample;
-import com.p3.fkult.persistence.entities.Theme;
-import com.p3.fkult.persistence.entities.ThemeMovie;
 import com.p3.fkult.persistence.entities.User;
 import com.p3.fkult.persistence.repository.SoundSampleRepository;
 import com.p3.fkult.presentation.controllers.SoundSampleRequest;
-import com.p3.fkult.presentation.controllers.ThemeRequest;
 import com.p3.fkult.business.services.shuffleFilter.*;
 
 import org.springframework.stereotype.Service;
@@ -138,7 +134,6 @@ public class SoundSampleService {
             String filePath = null;
             filePath = new File("soundSampleUploads" + File.separator + fileName).getAbsolutePath();
             File file = new File(filePath).getAbsoluteFile();
-System.out.println("Does files exist:" + file.exists());
             if (!file.exists()) {
                 return null;
             }
