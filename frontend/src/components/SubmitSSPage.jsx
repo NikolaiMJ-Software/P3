@@ -87,7 +87,7 @@ export default function SubmitSSTestPage() {
 
     // HTML of the page
     return (
-        <div className={"p-10"}>
+        <div className={"p-10 relative"}>
             <form className={"w-full max-w-full h-fit border-2 border-black p-8 flex flex-col items-center gap-3"}>
                 {/* URL input */}
                 <div className="flex justify-center">
@@ -161,8 +161,8 @@ export default function SubmitSSTestPage() {
 
                 <div className="flex justify-center gap-6">
                     <button className="px-6 py-2 rounded-2xl text-white bg-blue-500 hover:bg-blue-600"
-                    type="button"
-                    onClick={() => getSSFile("Grass.jpg")}>
+                        type="button"
+                        onClick={() => getSSFile("Grass.jpg")}>
                         Get file
                     </button>
                 </div>
