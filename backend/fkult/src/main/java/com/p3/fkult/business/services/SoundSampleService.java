@@ -138,8 +138,12 @@ public class SoundSampleService {
             String filePath = null;
             filePath = new File("soundSampleUploads" + File.separator + fileName).getAbsolutePath();
             File file = new File(filePath).getAbsoluteFile();
+System.out.println("Does files exist:" + file.exists());
+            if (!file.exists()) {
+                return null;
+            }
             return file;
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
