@@ -1,6 +1,7 @@
 package com.p3.fkult.business.services;
 
 import com.p3.fkult.persistence.entities.DrinkingRule;
+import com.p3.fkult.persistence.entities.Movie;
 import com.p3.fkult.persistence.entities.Theme;
 import com.p3.fkult.persistence.entities.ThemeMovie;
 import com.p3.fkult.persistence.repository.*;
@@ -39,11 +40,19 @@ public class ThemeService {
                     .stream()
                     .map(ThemeMovie::getMovieid)
                     .toList();
+            List<String> tconsts = movieIds.stream()
+                    .map(id -> {
+                        Movie movie = movieRepository.findById(id);
+                        return movie != null ? movie.getTconst() : null;
+                    })
+                    .filter(tconst -> tconst != null)
+                    .toList();
             List<String> drinkingRules = drinkingRuleRepository.findByThemeId(theme.getId())
                     .stream()
                     .map(DrinkingRule::getRuleText)
                     .toList();
             ThemeRequest themeRequest = new ThemeRequest(theme.getId(),  name, userId, movieIds, drinkingRules);
+            themeRequest.settConsts(tconsts);
             themeRequests.add(themeRequest);
         };
         System.out.println("Found themes: " + themes.size());
