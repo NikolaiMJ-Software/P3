@@ -1,16 +1,18 @@
 import {useEffect, useState} from "react";
 import {getThemes} from "../services/themeService.jsx";
 import {fullName} from "../services/adminService.jsx";
+import {useTranslation} from "react-i18next";
 
 export default function SubmissionManager() {
     const [tab, setTab] = useState("ThemeSubmissions")
+    const {t} = useTranslation();
 
     return (
         <div className={"m-5 mt-20 border flex flex-col"}>
             {/* Choose Manager */}
             <div className={"flex flex-row justify-between"}>
-                <p onClick={() => setTab("ThemeSubmissions")} className={`grow-1 cursor-pointer text-center p-3 border-r ${(tab === "ThemeSubmissions") ? null : "border-b"}`}> Film Forslag</p>
-                <p onClick={() => setTab("SoundSamples")} className={`grow-1 cursor-pointer text-center p-3 ${(tab === "SoundSamples") ? null : "border-b"}`}> Lydprøveforslag</p>
+                <p onClick={() => setTab("ThemeSubmissions")} className={`w-1/2 cursor-pointer text-center p-3 border-r ${(tab === "ThemeSubmissions") ? null : "border-b"}`}> {t("themes")}</p>
+                <p onClick={() => setTab("SoundSamples")} className={`w-1/2 cursor-pointer text-center p-3 ${(tab === "SoundSamples") ? null : "border-b"}`}> {t("sound samples")}</p>
             </div>
             <div className={""}>
                 {getComponent(tab)}
@@ -36,21 +38,17 @@ function getComponent(currentComponent){
 
 function ThemeSubmissions(){
     const [themes, setThemes] = useState([]);
-    const [name, setName] = useState("")
     //Get the themes
     useEffect(() => {
-        async function load() {
+        async function loadThemes() {
             const items = await getThemes();
-            const userNames = await Promise.all(
-                items.map(async item => {
-                    const userName = await fullName(item.userId);
-                    return <Theme key={item.themeId} name={item.name} user={userName} timestamp={item.timestamp}/>
-                })
-            )
-            setThemes(userNames)
+            setThemes(items); // just set the raw theme data
         }
-        load()
-    },[])
+
+        loadThemes();
+    }, []);
+
+    const {t} = useTranslation();
 
 
     return (
@@ -58,38 +56,56 @@ function ThemeSubmissions(){
             <div className={"p-5 flex flex-row justify-evenly"}>
                 {/* Filters and stuff */}
                 <div className={"flex flex-col"}>
-                    <p>Søg efter bruger:</p>
+                    <p>{t("search for")} {t("user")}:</p>
                     <input className={"border"}/>
                 </div>
                 <div className={"flex flex-col"}>
-                    <p>Sorter baseret på:</p>
+                    <p>{t("sort based on")}:</p>
                     <select className={"border hover:bg-gray-200"}>
-                        <option>Seneste</option>
-                        <option>Ældste</option>
-                        <option>Alfabetisk</option>
-                        <option>Længde asc</option>
-                        <option>Længde des</option>
+                        <option>{t("latest")}</option>
+                        <option>{t("oldest")}</option>
+                        <option>{t("alphabetical")}</option>
+                        <option>{t("length")} asc</option>
+                        <option>{t("length")} des</option>
                     </select>
                 </div>
                 <div className={"flex flex-col"}>
-                    <p>Filtre:</p>
+                    <p>{t("filters")}:</p>
                     <label>
-                        Inkluder stemte forslag: <input className={"border"} type={"checkbox"}/>
+                        {t("include")} {t("voted")} {t("themes")}: <input className={"border"} type={"checkbox"}/>
                     </label>
                     <label>
-                        Inkluder ikke-set forslag: <input className={"border"} type={"checkbox"}/>
+                        {t("include")} {t("non-watched")} {t("themes")}: <input className={"border"} type={"checkbox"}/>
                     </label>
                 </div>
             </div>
             <div className={"border-t"}>
-                {themes}
+                {themes.map(theme => (
+                    <Theme item={theme} />
+                ))}
             </div>
         </div>
 
     )
 }
 
-function Theme({ key, name, user, timestamp}){
+function Theme({ item }){
+    const [user, setUserName] = useState("");
+    const name = item.name
+
+    useEffect(() => {
+        async function loadName(){
+            try{
+                fullName(item.userId).then(setUserName)
+            } catch (e){
+                console.error("Error loading user name:", e)
+                setUserName("error")
+            }
+        }
+        loadName()
+    }, []);
+
+
     return (
         <div className={"m-10 mt-5 mb-5 border rounded flex flex-row justify-between"}>
             <div>
@@ -99,7 +115,7 @@ function Theme({ key, name, user, timestamp}){
                 {user}
             </div>
             <div>
-                {timestamp}
+                {"6-7"}
             </div>
         </div>
     )
