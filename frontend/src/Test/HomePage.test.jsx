@@ -19,6 +19,9 @@ vi.mock("../components/SoundSampleBrowser.jsx", () => ({
 vi.mock("../components/SubmitSSPage.jsx", () => ({
   default: () => <div data-testid="SubmitSSPage" />,
 }));
+vi.mock("../components/theme/NextTheme.jsx", () => ({
+  default: () => <div data-testid="NextTheme" />,
+}));
 
 // mock navigate
 const mockNavigate = vi.fn();
