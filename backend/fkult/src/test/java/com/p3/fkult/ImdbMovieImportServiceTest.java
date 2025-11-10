@@ -11,6 +11,8 @@ import org.junit.jupiter.api.io.TempDir;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import java.io.File;
@@ -105,38 +107,45 @@ class ImdbMovieImportServiceTest {
             "Expected RuntimeException if repository fails");
     }
     
-    @Test
-    @DisplayName("downloadTemp cleans up temp file when IOException occurs")
-    void testDownloadTempSimulatedFailure(@TempDir Path tempDir) throws Exception {
+@Test
+@DisplayName("downloadTemp cleans up temp file when IOException occurs")
+void testDownloadTempSimulatedFailure(@TempDir Path tempDir) throws Exception {
+    // Use the real service (repo is irrelevant for this test)
     ImdbMovieImportService svc = new ImdbMovieImportService(mock(MovieRepository.class));
 
-        // Prepare temporary directory
-        Path dataDir = tempDir.resolve("database");
-        Files.createDirectories(dataDir);
+    // Make the service write relative to the temp dir ("database" is a relative Path)
+    System.setProperty("user.dir", tempDir.toString());
 
-        // Reflectively grab downloadTemp
-        Method m = ImdbMovieImportService.class.getDeclaredMethod("downloadTemp");
-        m.setAccessible(true);
+    // Locate the protected method with the correct signature
+    Method m = ImdbMovieImportService.class
+            .getDeclaredMethod("downloadTemp", String.class, String.class);
+    m.setAccessible(true);
 
-    // Instead of changing IMDB_URL, mock the failure directly
+    // A missing local file URL so openStream() fails -> downloadTemp catches and deletes .tmp
+    String badUrl = tempDir.resolve("nope-does-not-exist.gz").toUri().toString();
+    String prefix = "title.basics-";
+
+    // Invoke and assert that it throws IOException (wrapped in InvocationTargetException)
     try {
-        throw new IOException("Simulated network failure");
-    } catch (IOException e) {
-        // Clean up manually like the real method would
-        try (var files = Files.list(dataDir)) {
-            files.forEach(path -> {
-                try {
-                    Files.deleteIfExists(path);
-                } catch (IOException ignored) {}
-            });
+        m.invoke(svc, badUrl, prefix);
+        fail("Expected an IOException from downloadTemp");
+    } catch (InvocationTargetException ite) {
+        assertTrue(ite.getCause() instanceof IOException, "Cause should be IOException");
+    }
+
+    // Verify: no leftover *.tmp files under the expected "database" dir
+    Path dataDir = tempDir.resolve("database");
+    if (Files.exists(dataDir)) {
+        try (var stream = Files.list(dataDir)) {
+            long leftovers = stream
+                    .filter(p -> p.getFileName().toString().endsWith(".tmp"))
+                    .count();
+            assertEquals(0, leftovers, "Temp files should be deleted after simulated failure");
         }
     }
-
-    // Verify no temp files remain
-    try (var files = Files.list(dataDir)) {
-        assertEquals(0, files.count(), "Temp files should be deleted after simulated failure");
-    }
 }
+
+
 }
 
 

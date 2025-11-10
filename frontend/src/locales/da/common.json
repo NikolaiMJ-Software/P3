@@ -39,5 +39,7 @@
   "non-watched": "ikke-set",
   "search for": "Søg efter",
   "sort based on": "Sorter baseret på",
-  "filters": "Filtre"
+  "filters": "Filtre",
+  "become admin": "Bliv Admin",
+  "unbecome admin": "Ubliv Admin"
 }

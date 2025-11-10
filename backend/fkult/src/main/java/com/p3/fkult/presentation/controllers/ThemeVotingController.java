@@ -20,4 +20,10 @@ public class ThemeVotingController {
     public List<ThemeRequest> getShuffledThemes() {
         return themeVotingService.getShuffledThemes();
     }
+
+    // Update the votes on a theme
+    @GetMapping("/update-vote/{id}/{votes}")
+    public String updateVotes(@PathVariable("id") long id, @PathVariable("votes") long votes) {
+        return themeVotingService.UpdateVote(id, votes);
+    }
 }
