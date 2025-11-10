@@ -72,6 +72,7 @@ export default function HomePage() {
                     posters={[
                         "https://m.media-amazon.com/images/M/MV5BNTBhNWJjZWItYzY3NS00M2NkLThmOWYtYTlmNzBmN2UxZWFjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
                         "https://m.media-amazon.com/images/M/MV5BMTAxNGQwMjEtNjdjNy00NmQwLTkwYTEtNGIwZWJjZjU5M2FmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+                        "https://m.media-amazon.com/images/M/MV5BNzJjZTg0ZmMtMTg0Ny00NzYxLWFjMWMtMWFiYmNkMTNjZGMyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
                     ]}
                     />
 
@@ -88,14 +89,5 @@ export default function HomePage() {
                 
             </aside>
         </div>
-
-
-
-
-
-
-        <h1>Welcome to the Home Page</h1>
-        <button onClick={goToMessages}>Messages</button>
-        <button onClick={goToThemes}>Themesdsa</button>
     </>
 }
