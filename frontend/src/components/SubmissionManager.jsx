@@ -1,6 +1,8 @@
 import {useEffect, useState} from "react";
 import {getThemes} from "../services/themeService.jsx";
 import {fullName} from "../services/adminService.jsx";
+import {t} from "i18next";
+import {getMovies} from "../services/movieService.jsx";
 
 export default function SubmissionManager() {
     const [tab, setTab] = useState("ThemeSubmissions")
@@ -9,8 +11,8 @@ export default function SubmissionManager() {
         <div className={"m-5 mt-20 border flex flex-col"}>
             {/* Choose Manager */}
             <div className={"flex flex-row justify-between"}>
-                <p onClick={() => setTab("ThemeSubmissions")} className={`grow-1 cursor-pointer text-center p-3 border-r ${(tab === "ThemeSubmissions") ? null : "border-b"}`}> Film Forslag</p>
-                <p onClick={() => setTab("SoundSamples")} className={`grow-1 cursor-pointer text-center p-3 ${(tab === "SoundSamples") ? null : "border-b"}`}> Lydprøveforslag</p>
+                <p onClick={() => setTab("ThemeSubmissions")} className={`w-1/2 cursor-pointer text-center p-3 border-r ${(tab === "ThemeSubmissions") ? null : "border-b"}`}> {t("themes")}</p>
+                <p onClick={() => setTab("SoundSamples")} className={`w-1/2 cursor-pointer text-center p-3 ${(tab === "SoundSamples") ? null : "border-b"}`}> {t("sound samples")}</p>
             </div>
             <div className={""}>
                 {getComponent(tab)}
@@ -36,71 +38,119 @@ function getComponent(currentComponent){
 
 function ThemeSubmissions(){
     const [themes, setThemes] = useState([]);
-    const [name, setName] = useState("")
+    const [expandedTheme, setExpandedTheme] = useState(null)
+    //const [filteredThemes, setFilteredThemes] = useState([])
+    const [searchName, setSearchName] = useState("")
+
     //Get the themes
     useEffect(() => {
-        async function load() {
+        async function loadThemes() {
             const items = await getThemes();
-            const userNames = await Promise.all(
+            await Promise.all(
                 items.map(async item => {
-                    const userName = await fullName(item.userId);
-                    return <Theme key={item.themeId} name={item.name} user={userName} timestamp={item.timestamp}/>
+                    item.username = await fullName(item.userId);
                 })
             )
-            setThemes(userNames)
+            //return the array
+            setThemes(items);
         }
-        load()
-    },[])
+        loadThemes();
+    }, []);
 
+    //Filter time
+    const filteredThemes = themes.filter(theme =>
+        theme.username.toLowerCase().includes(searchName.toLowerCase())
+    );
+    const toggleTheme = (id) => {
+        setExpandedTheme(expandedTheme === id ? null : id);
+    };
 
     return (
         <div>
             <div className={"p-5 flex flex-row justify-evenly"}>
                 {/* Filters and stuff */}
                 <div className={"flex flex-col"}>
-                    <p>Søg efter bruger:</p>
-                    <input className={"border"}/>
+                    <p>{t("search for")} {t("user")}:</p>
+                    <input onChange={e => setSearchName(e.target.value)} className={"border"}/>
                 </div>
                 <div className={"flex flex-col"}>
-                    <p>Sorter baseret på:</p>
+                    <p>{t("sort based on")}:</p>
                     <select className={"border hover:bg-gray-200"}>
-                        <option>Seneste</option>
-                        <option>Ældste</option>
-                        <option>Alfabetisk</option>
-                        <option>Længde asc</option>
-                        <option>Længde des</option>
+                        <option>{t("latest")}</option>
+                        <option>{t("oldest")}</option>
+                        <option>{t("alphabetical")}</option>
+                        <option>{t("length")} asc</option>
+                        <option>{t("length")} des</option>
                     </select>
                 </div>
                 <div className={"flex flex-col"}>
-                    <p>Filtre:</p>
+                    <p>{t("filters")}:</p>
                     <label>
-                        Inkluder stemte forslag: <input className={"border"} type={"checkbox"}/>
+                        {t("include")} {t("voted")} {t("themes")}: <input className={"border"} type={"checkbox"}/>
                     </label>
                     <label>
-                        Inkluder ikke-set forslag: <input className={"border"} type={"checkbox"}/>
+                        {t("include")} {t("non-watched")} {t("themes")}: <input className={"border"} type={"checkbox"}/>
                     </label>
                 </div>
             </div>
-            <div className={"border-t"}>
-                {themes}
+            <div className={"border-t max-h-135 overflow-auto"}>
+                {filteredThemes.map(theme => (
+                    <Theme item={theme} isExpanded={expandedTheme === theme.themeId} onToggle={() => toggleTheme(theme.themeId)}/>
+                ))}
             </div>
         </div>
 
     )
 }
 
-function Theme({ key, name, user, timestamp}){
+function Theme({ item, onToggle, isExpanded }){
+    const [movies, setMovies] = useState([])
+    const [loaded, setLoaded] = useState(false);
+
+    const loadMovies = async () => {
+        await getMovies(item.movieIds).then(setMovies)
+        setLoaded(true)
+    }
+
+    const handleClick = async () => {
+        if (!loaded) await loadMovies();
+        onToggle();
+    }
+
     return (
-        <div className={"m-10 mt-5 mb-5 border rounded flex flex-row justify-between"}>
-            <div>
-                {name}
+        <div className={"m-10 mt-3 mb-3 border rounded flex flex-col"}>
+            <div className={"flex flex-row justify-between cursor-pointer"} onClick={handleClick}>
+                <div className={"border m-4 p-2 grow-1 w-1/6 text-center"}>
+                    {item.name}
+                </div>
+                <ThemePart label={t("Uploaded by")} content={item.username}/>
+                <ThemePart label={t("Submitted on")} content={"6-7"}/>
+                <ThemePart label={t("Seen on")} content={"6-7"}/>
+                <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-6xl font-thin"}>
+                    <p className={"cursor-pointer"} onClick={() => console.log("Hello World!")}>X</p>
+                </div>
             </div>
-            <div>
-                {user}
-            </div>
-            <div>
-                {timestamp}
-            </div>
+            {isExpanded && (
+                <div className="bg-gray-50 border-t p-4 flex flex-row overflow-auto">
+                    {movies.map((movie) => (
+                        <div className="flex justify-between items-center rounded border m-2 p-1">
+                            <div className={"flex flex-col items-center min-w-40"}>
+                                <p className="font-bold text-center">{movie.title}</p>
+                                <img src={movie.moviePosterURL} className={"h-60 w-40"}/>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
+
+function ThemePart({ label, content}){
+    return (
+        <div className={"grow m-2 w-1/6  mr-10 ml-10"}>
+            <p>{label}</p>
+            <p className={"border text-center"}>{content}</p>
         </div>
     )
 }

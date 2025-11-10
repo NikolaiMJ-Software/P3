@@ -2,7 +2,7 @@ import settingsPNG from "../assets/settings.png"
 import {useParams, useNavigate} from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-export default function EventManager() {
+export default function EventManager({ className }) {
     //get all the events
     const navigate = useNavigate();
     const {username} = useParams();
@@ -20,13 +20,13 @@ export default function EventManager() {
     ]
 
     return (
-        <div className={"grow-1 flex flex-col p-5 "}>
+        <div className={className}>
             <div className={"text-center border p-2"}>
                 <p>Event Manager</p>
             </div>
             <div className={"border border-t-0 flex flex-col p-3"}>
-                <div className={"flex flex-row justify-evenly p-3"}>
-                    <EventButton label={`Start ${t("vote")}`}/>
+                <div className={"flex flex-row justify-evenly p-3 overflow-auto"}>
+                    <EventButton label={t("start vote")}/>
                     <EventButton label={`${t("play")} ${t("sound sample")}`}/>
                     <EventButton label={`${t("wheel")}`} onClick={() => {navigate(`/wheel/${username}`)}}/>
                 </div>
@@ -34,7 +34,7 @@ export default function EventManager() {
                     <div className={"flex-grow-1 border overflow-auto max-h-70"}>
                         {currentEvents}
                     </div>
-                    <div className={"m-2"}>
+                    <div className={"m-2 w-1/5"}>
                         <EventButton label={`${t("create")} ${t("event")}`}/>
                     </div>
                 </div>

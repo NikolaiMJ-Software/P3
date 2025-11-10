@@ -1,5 +1,7 @@
-export default function NextTheme({dateLabel,date,title = "",posters = [],}) {
-  const label = dateLabel ??(() => {
+export default function NextTheme({ dateLabel, date, title = "", posters = [] }) {
+  const label =
+    dateLabel ??
+    (() => {
       if (!date) return "";
       const d = new Date(date);
       if (isNaN(d)) return "";
@@ -9,7 +11,7 @@ export default function NextTheme({dateLabel,date,title = "",posters = [],}) {
     })();
 
   return (
-    <div className="rounded-2xl border px-4 py-4 bg-white">
+    <div className="rounded-2xl border px-4 py-4 bg-white [container-type:inline-size]">
       {/* header/date */}
       <div className="flex items-center justify-between">
         <span className="text-sm text-gray-600">Next Theme</span>
@@ -22,30 +24,44 @@ export default function NextTheme({dateLabel,date,title = "",posters = [],}) {
           {title}
         </p>
       </div>
-        {/* posters */}
-        <div
-        className="mt-4 overflow-x-auto pb-2"
+
+      {/* posters */}
+      <div
+        className="mt-4 overflow-x-auto pb-2 pr-2"
         style={{ scrollbarGutter: "stable both-edges" }}
-        >
-        <div className="flex w-max mx-auto gap-4 px-2 snap-x snap-mandatory">
-            {posters.length > 0 ? (
+      >
+        <div className="flex w-full gap-3 px-2 snap-x snap-mandatory">
+          {posters.length > 0 ? (
             posters.map((src, i) => (
-                <img
+              <div
                 key={`${src}-${i}`}
-                src={src}
-                alt={`Poster ${i + 1}`}
-                className="h-48 w-32 md:h-64 md:w-44 rounded-md object-cover flex-none border bg-gray-50 snap-start"
-                loading="lazy"
+                className="
+                  shrink-0 snap-start aspect-[2/3]
+                  w-[46%]
+                  min-w-[8rem] max-w-[14rem]
+                  @[420px]:w-[38%]
+                  @[560px]:w-[31%]
+                  @[720px]:w-[24%]
+                "
+              >
+                <img
+                  src={src}
+                  alt={`Poster ${i + 1}`}
+                  className="w-full h-full rounded-md object-cover border bg-gray-50"
+                  loading="lazy"
                 />
+              </div>
             ))
-            ) : (
+          ) : (
             <div className="text-sm text-gray-500 py-6 text-center w-full">
-                No posters
+              No posters
             </div>
-            )}
+          )}
         </div>
-        </div>
+      </div>
     </div>
   );
 }
+
+
 
