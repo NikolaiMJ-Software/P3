@@ -153,7 +153,7 @@ public class SoundSampleTest {
     }
 
     private List<SoundSample> createTargetSamples() {
-        SoundSample sample1 = new SoundSample(null, "/film/intro.mp3", 1L);
+        SoundSample sample1 = new SoundSample(null, "/intro.mp3", 1L);
         SoundSample sample2 = new SoundSample("https://cdn.example.com/sound/wind.mp3", null, 1l);
         SoundSample sample3 = new SoundSample("https://www.example.com/audio/intro.mp3", null, 2l);
         return Arrays.asList(sample1, sample2, sample3);
@@ -252,5 +252,52 @@ public class SoundSampleTest {
         List<SoundSampleRequest> BothSoundSamples = service.getAllSoundSamples(true, true);
 
         assertEquals(0, BothSoundSamples.size());
+    }
+
+    @Test
+    // Get a spesafc existing sound sample file
+    void getExistingSoundSampleFile() throws Exception {
+
+        // Arrange
+        Long userId = 1l;
+        String json = String.format("{\"link\":\"null\",\"filePath\":null,\"userId\":\"%s\"}", userId);
+        MockMultipartFile file = new MockMultipartFile(
+            "file", // Data type
+            "sample.mp3", // Original file name
+            "audio/mpeg", // Content type
+            "dummy content".getBytes() // File content
+        );
+        File uploadedFile = new File("soundSampleUploads/sample.mp3");
+
+        try {
+            // Act
+            String response = service.upload(file, json);
+
+            // Assert the sound sample
+            assertEquals("Upload complete!", response);
+            verify(repository, times(1)).save(any(SoundSample.class));
+            assertTrue(uploadedFile.exists(), "Uploaded file should exist");
+
+            // Assert getting the sound sample file
+            String fileName = "sample.mp3";
+            File resFile = service.getSoundSampleFile(fileName);
+            int resLength = resFile.getAbsolutePath().length();
+            String resFileName = resFile.getAbsolutePath().substring(resLength - fileName.length(), resLength);
+            assertEquals(fileName, resFileName);
+
+        } finally {
+            // Cleanup
+            if (uploadedFile.exists()) {
+                assertTrue(uploadedFile.delete(), "Cleanup: uploaded file deleted");
+            }
+        }
+    }
+
+    @Test
+    // Try to get an non-existing sound sample file
+    void getNonExistingSoundSampleFile() throws Exception {
+        File file = service.getSoundSampleFile("/notAFile.mp3");
+
+        assertEquals(null, file);
     }
 }
