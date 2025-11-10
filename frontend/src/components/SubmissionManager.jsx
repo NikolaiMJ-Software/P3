@@ -1,13 +1,11 @@
 import {useEffect, useState} from "react";
 import {getThemes} from "../services/themeService.jsx";
 import {fullName} from "../services/adminService.jsx";
-import {useTranslation} from "react-i18next";
 import {t} from "i18next";
 import {getMovies} from "../services/movieService.jsx";
 
 export default function SubmissionManager() {
     const [tab, setTab] = useState("ThemeSubmissions")
-    const {t} = useTranslation();
 
     return (
         <div className={"m-5 mt-20 border flex flex-col"}>
@@ -39,24 +37,33 @@ function getComponent(currentComponent){
 }
 
 function ThemeSubmissions(){
-    const {t} = useTranslation();
     const [themes, setThemes] = useState([]);
     const [expandedTheme, setExpandedTheme] = useState(null)
+    //const [filteredThemes, setFilteredThemes] = useState([])
+    const [searchName, setSearchName] = useState("")
+
     //Get the themes
     useEffect(() => {
         async function loadThemes() {
             const items = await getThemes();
-            setThemes(items); // just set the raw theme data
+            await Promise.all(
+                items.map(async item => {
+                    item.username = await fullName(item.userId);
+                })
+            )
+            //return the array
+            setThemes(items);
         }
-
         loadThemes();
     }, []);
 
+    //Filter time
+    const filteredThemes = themes.filter(theme =>
+        theme.username.toLowerCase().includes(searchName.toLowerCase())
+    );
     const toggleTheme = (id) => {
         setExpandedTheme(expandedTheme === id ? null : id);
     };
-
-
 
     return (
         <div>
@@ -64,7 +71,7 @@ function ThemeSubmissions(){
                 {/* Filters and stuff */}
                 <div className={"flex flex-col"}>
                     <p>{t("search for")} {t("user")}:</p>
-                    <input className={"border"}/>
+                    <input onChange={e => setSearchName(e.target.value)} className={"border"}/>
                 </div>
                 <div className={"flex flex-col"}>
                     <p>{t("sort based on")}:</p>
@@ -87,7 +94,7 @@ function ThemeSubmissions(){
                 </div>
             </div>
             <div className={"border-t max-h-135 overflow-auto"}>
-                {themes.map(theme => (
+                {filteredThemes.map(theme => (
                     <Theme item={theme} isExpanded={expandedTheme === theme.themeId} onToggle={() => toggleTheme(theme.themeId)}/>
                 ))}
             </div>
@@ -97,23 +104,8 @@ function ThemeSubmissions(){
 }
 
 function Theme({ item, onToggle, isExpanded }){
-    const [user, setUserName] = useState("");
     const [movies, setMovies] = useState([])
     const [loaded, setLoaded] = useState(false);
-    const name = item.name
-    console.log(`${item.themeId} ${isExpanded}`)
-
-    useEffect(() => {
-        async function loadName(){
-            try{
-                fullName(item.userId).then(setUserName)
-            } catch (e){
-                console.error("Error loading user name:", e)
-                setUserName("error")
-            }
-        }
-        loadName()
-    }, []);
 
     const loadMovies = async () => {
         await getMovies(item.movieIds).then(setMovies)
@@ -122,7 +114,6 @@ function Theme({ item, onToggle, isExpanded }){
 
     const handleClick = async () => {
         if (!loaded) await loadMovies();
-        console.log(movies)
         onToggle();
     }
 
@@ -130,9 +121,9 @@ function Theme({ item, onToggle, isExpanded }){
         <div className={"m-10 mt-3 mb-3 border rounded flex flex-col"}>
             <div className={"flex flex-row justify-between cursor-pointer"} onClick={handleClick}>
                 <div className={"border m-4 p-2 grow-1 w-1/6 text-center"}>
-                    {name}
+                    {item.name}
                 </div>
-                <ThemePart label={t("Uploaded by")} content={user}/>
+                <ThemePart label={t("Uploaded by")} content={item.username}/>
                 <ThemePart label={t("Submitted on")} content={"6-7"}/>
                 <ThemePart label={t("Seen on")} content={"6-7"}/>
                 <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-6xl font-thin"}>
