@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { addSoundSample, deleteSoundSample, getSoundSamples, getSoundsampleFile } from "../services/soundSampleService";
 import { getIdByUser } from "../services/adminService.jsx"
@@ -153,8 +153,8 @@ export default function SubmitSSTestPage() {
                 {/* JONAS insert media player here */}
                 <div className="flex justify-center gap-6">
                     <button className="px-6 py-2 rounded-2xl text-white bg-blue-500 hover:bg-blue-600"
-                    type="button"
-                    onClick={playSoundSamples}>
+                        type="button"
+                        onClick={playSoundSamples}>
                         Get all soundSample
                     </button>
                 </div>
