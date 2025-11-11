@@ -1,87 +1,123 @@
 import { useState, useEffect } from "react";
-import { fetchShuffledThemes } from "../services/themeService";
-import { getMoviePoster } from "../services/movieService";
+import { fetchShuffledThemes, updateThemeVotes } from "../services/themeService";
+import { getMoviePosterById } from "../services/movieService";
+import ThemeVotingDisplay from "../components/Theme/ThemeVotingDisplay";
 
 export default function ThemeVoting() {
   const [themes, setThemes] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [inputValue, setInputValue] = useState("");
 
-  // Get all theme data
   useEffect(() => {
     async function loadThemes() {
       try {
-        const data = await fetchShuffledThemes();
 
-        // For each theme, fetch all its movie posters
-        const themesWithPosters = await Promise.all(
-          data.map(async (theme) => {
-            if (!theme.movieIds || theme.movieIds.length === 0) {
-              return { ...theme, posters: [] };
-            }
+        // Fetch all shuffled themes
+        const themesData = await fetchShuffledThemes();
+
+        // Add the posters for each movie
+        const posterThemes = await Promise.all(
+          themesData.map(async (theme) => {
+            const movieIds = theme.movieIds || [];
+
+            // Fetch posters for each movie ID
             const posters = await Promise.all(
-              theme.movieIds.map(async (tConst) => {
+              movieIds.map(async (id) => {
                 try {
-                  const posterUrl = await getMoviePoster(tConst);
+                  const posterUrl = await getMoviePosterById(id);
                   return posterUrl;
-                } catch {
-                  return null; // fallback if a single poster fails
+                } catch (err) {
+                  console.warn(`Failed to fetch poster for movie ${id}`, err);
+                  return null;
                 }
               })
             );
 
-            return { ...theme, posters: posters.filter(Boolean) };
+            // Append posters to theme object
+            return {
+              ...theme,
+              posters: posters.filter(Boolean), // remove any nulls
+            };
           })
         );
 
-        setThemes(themesWithPosters);
-      } catch (err) {
-        // Error something here
+        setThemes(posterThemes);
+      } catch (error) {
+        console.error("Error loading themes:", error);
       }
     }
+
     loadThemes();
   }, []);
 
-  // HTML of the page
-  return (
-    <div style={{ padding: "1rem" }}>
-      <h1>Theme Voting</h1>
+const submitVote = async (votes) => {
+  if (votes !== "") {
+    try {
+      const result = await updateThemeVotes(themes[currentIndex].themeId, votes);
+      alert(result);
+      setInputValue("");
+    } catch (err) {
+      alert("Failed to update votes");
+    }
+  } else {
+    alert("Please enter an amount of votes");
+  }
+};
 
-      {themes.length > 0 ? (
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {themes.map((theme, index) => (
-            <li
-              key={index}
-              style={{
-                marginBottom: "2rem",
-                borderBottom: "1px solid #ccc",
-                paddingBottom: "1rem",
-              }}
-            >
-              <h2>{theme.name}</h2>
+  const handleNext = () =>
+    setCurrentIndex((prev) => (prev + 1) % themes.length);
+  const handlePrevious = () =>
+    setCurrentIndex((prev) => (prev === 0 ? themes.length - 1 : prev - 1));
 
-              <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-                {theme.posters.length > 0 ? (
-                  theme.posters.map((poster, idx) => (
-                    <img
-                      key={idx}
-                      src={poster}
-                      alt={`Poster for ${theme.name}`}
-                      style={{
-                        width: "180px",
-                        borderRadius: "10px",
-                        objectFit: "cover",
-                      }}
-                    />
-                  ))
-                ) : (
-                  <p>No posters available</p>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Loading themes...</p>
-      )}
+  if (themes.length === 0) return <p>Loading themes...</p>;
+
+  const currentTheme = themes[currentIndex];
+
+return (
+    <div className="flex flex-col h-screen">
+      {/* Display the current theme */}
+      <div className="flex-1">
+        <ThemeVotingDisplay theme={currentTheme} />
+      </div>
+
+      {/* Bottom controls */}
+      <div className="flex flex-col p-6 bg-gray-900 text-white gap-4">
+        <div className="flex justify-between items-center mb-2">
+          <button
+            onClick={handlePrevious}
+            className="px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600"
+          >
+            ← Previous
+          </button>
+
+          <h2 className="text-lg font-semibold">
+            {currentIndex + 1} / {themes.length}
+          </h2>
+
+          <button
+            onClick={handleNext}
+            className="px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600"
+          >
+            Next →
+          </button>
+        </div>
+
+        <div className="flex justify-center">
+          <input
+            type="number"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)} // Just update state
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                submitVote(inputValue); // Only call function on Enter
+                setInputValue("");
+              }
+            }}
+            placeholder="Enter a number"
+            className="px-4 py-2 rounded-md text-black w-32 text-center"
+          />
+        </div>
+      </div>
     </div>
   );
 }

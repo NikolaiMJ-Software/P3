@@ -99,7 +99,9 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
         try {
             const username = sessionStorage.getItem("username")
             const drinkingRules = rules || "";
+            console.log("Sending theme:", { title, username, movies, drinkingRules });
             await addTheme(title, username, movies.map(movie => movie.tConst), drinkingRules);
+            
             alert("Theme created sucessfully! ");
         } catch (error) {
             console.error("Error creating theme:", error);

@@ -1,13 +1,14 @@
 import {adminUser, banUser, unadminUser, unbanUser} from "../services/adminService.jsx"
 import {useParams} from "react-router-dom";
 import {useState} from "react";
+import {useTranslation} from "react-i18next";
 
-export default function UserManager(){
+export default function UserManager({ className }){
     const [tab, setTab] = useState("ban")
 
 
     return (
-        <div className="p-5 flex flex-col mr-20 ml-20">
+        <div className={className}>
             <div className={"border border-b-0 text-center flex flex-row justify-between"}>
                 <p onClick={() => setTab("ban")} className={`grow-1 cursor-pointer text-center p-3 border-r ${(tab === "ban") ? null : "border-b"}`}> Ban Manager </p>
                 <p onClick={() => setTab("admin")} className={`grow-1 cursor-pointer text-center p-3 ${(tab === "admin") ? null : "border-b"}`}> Admin Manager</p>
@@ -21,11 +22,12 @@ function BanManager() {
     const [user, setUser] = useState("")
     const [message, setMessage] = useState("")
     const {username} = useParams();
+    const {t} = useTranslation();
 
     return (
-        <div className={"p-5 border border-t-0 flex flex-row justify-between content-center"}>
+        <div className={"p-5 border border-t-0 flex flex-row justify-between content-center flex-1 overflow-auto"}>
             <div className={"flex flex-col justify-center"}>
-                <p>Brugernavn:</p>
+                <p>{t("username")}:</p>
                 <input onChange={e => setUser(e.target.value)} className={"border"}/>
                 <p className={"text-gray-400"}>{message}</p>
             </div>
@@ -41,7 +43,7 @@ function AdminManager() {
     const [user, setUser] = useState("")
     const [message, setMessage] = useState("")
     return (
-        <div className={"p-5 border border-t-0 flex flex-row justify-between content-center"}>
+        <div className={"p-5 border border-t-0 flex flex-row justify-between content-center flex-1 overflow-auto"}>
             <div className={"flex flex-col justify-center"}>
                 <p>Username:</p>
                 <input onChange={e => setUser(e.target.value)} className={"border"}/>

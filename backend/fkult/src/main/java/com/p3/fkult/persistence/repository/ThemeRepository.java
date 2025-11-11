@@ -40,4 +40,9 @@ public class ThemeRepository {
         theme.setId(id);
         return theme;
     }
+
+    // Updates the votes of a theme based on the id
+    public void setVote(long id, long votes) {
+        jdbcTemplate.update("UPDATE theme SET vote_count = (?) WHERE id = (?)", votes, id);
+    }
 }

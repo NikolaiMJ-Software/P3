@@ -30,23 +30,23 @@ export default function AdminPage(){
                 <AdminButton
                     func={unadminUser}
                     username={username}
-                    label={`Unbecome Admin`}
+                    label={t("unbecome admin")}
                 />
                 <div className="flex flex-col">
                     {/* Top Half */}
-                    <div className="flex flex-row justify-between ">
+                    <div className="flex flex-row justify-between w-full">
                         {/* Event Manager */}
-                        <EventManager/>
+                        <EventManager className={"flex flex-col p-5 w-1/2"}/>
                         {/* Upper Right */}
-                        <div className="grow-1 flex flex-col justify-between">
+                        <div className="flex flex-col justify-between w-1/2">
                             {/* Intro Text */}
                             <div className="mt-20 text-center text-xl">
                                 <h1>{t("welcome")} Admin!</h1>
                                 <br/>
-                                <h1>{t("welcomeMessage")}</h1>
+                                <h1>{t("welcome message")}</h1>
                             </div>
                             {/* User Manager */}
-                            <UserManager/>
+                            <UserManager className={"p-5 flex flex-col mr-20 ml-20"}/>
                         </div>
                     </div>
                     {/* Bottom Half */}
@@ -62,7 +62,7 @@ export default function AdminPage(){
                 <AdminButton
                     func={adminUser}
                     username={username}
-                    label={`Bliv Admin`}
+                    label={t("become admin")}
                 />
             </div>
         )
