@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {getMovies, getMoviesByTconsts} from "../../services/movieService.jsx";
 import {useTranslation} from "react-i18next";
 
-export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries}){
+export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries, timestamp}){
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
@@ -12,7 +12,6 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
 
     const safeMovies = Array.isArray(movies) ? movies : [];
     const {t} = useTranslation();
-
     return(
         <div className={"relative w-60 h-80 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>

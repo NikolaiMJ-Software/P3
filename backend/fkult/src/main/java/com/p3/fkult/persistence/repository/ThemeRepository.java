@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,13 +25,27 @@ public class ThemeRepository {
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getLong("user_id"),
-                    rs.getTimestamp("timestamp").toLocalDateTime(),
+                    rs.getTimestamp("timestamp").toLocalDateTime().plusHours(1),
                     rs.getObject("vote_count", Integer.class)
             );
 
     //database operations
     public List<Theme> findAll(){
         return jdbcTemplate.query("SELECT * FROM theme", rowMapper);
+    }
+
+    public List<Theme> findAfter(LocalDate localDate){
+        //timestamp >= localDate finds themes created on or after localDate
+        return jdbcTemplate.query("SELECT * FROM theme WHERE timestamp >= ?", rowMapper, localDate);
+    }
+    public List<Theme> findBefore(LocalDate localDate){
+        //timestamp < localDate finds themes created before localDate
+        return jdbcTemplate.query("SELECT * FROM theme WHERE timestamp < ?", rowMapper, localDate);
+    }
+
+    public List<Theme> findFromUser(Long userId){
+        String sql = "SELECT * FROM theme WHERE user_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, userId);
     }
 
     public Theme save(Theme theme) {

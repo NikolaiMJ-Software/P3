@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {addTheme, getThemes} from "../../services/themeService.jsx";
+import {addTheme, getThemes, getNewThemes, getOldThemes} from "../../services/themeService.jsx";
 import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
 import SoundSampleBrowser from "../SoundSampleBrowser.jsx";
 import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
@@ -17,26 +17,12 @@ export default function ThemeBrowser() {
         getThemes().then(setThemes)
     },[])
 
-    const handleCreateTheme = async (themeData) => {
-        try {
-            //extract data
-            const name = themeData.title;
-            const username = themeData.userId;
-            const tConsts = themeData.movies.map(m=> m.tConsts);
-            const drinkingRules = themeData.rules || "";
-
-            await addTheme(name, username, tConsts, drinkingRules);
-
-            //refresh the list
-            const updatedThemes = await getThemes();
-            setThemes(updatedThemes);
-
-            setIsPopupOpen(false);
-            alert("Theme created sucessfully! ");
-        } catch (error) {
-            console.error("Error creating theme:", error);
-            alert("failed to create theme");
-        }
+    const getTodaysDate = () =>{
+        const today = new Date()
+        const year = today.getFullYear()
+        const month = today.getMonth() + 1 //getMonth apparently gets 0-11, so we add 1
+        const date = today.getDate()
+        return (`${year}-${month}-${date}`);
     }
 
     return (
@@ -44,7 +30,6 @@ export default function ThemeBrowser() {
             <ThemeCreationPopup
                 isOpen={isPopupOpen}
                 onClose={() => setIsPopupOpen(false)}
-                onSubmit={handleCreateTheme}
             />
             <div className={"w-full max-w-full h-fit border-2 border-black rounded-3xl p-8"}>
 
