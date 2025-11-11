@@ -4,7 +4,7 @@ import React from "react";
 export default function FAQPage() {
   return (
     <main className="px-4 sm:px-6 ">
-      <div className="max-w-3xl ">
+      <div className="max-w-3xl border rounded-2xl px-12 py-10 w-full">
         <h1 className="text-3xl font-semibold">Regler</h1>
         <hr className="my-4" />
 
@@ -52,6 +52,9 @@ export default function FAQPage() {
           <li>Slow motion</li>
           <li>Et antal regler bestemt af personen som foreslog filmene</li>
         </ul>
+        <hr className="my-4" />
+        <h1 className="text-3xl font-semibold">Tidligere Semestre</h1>
+        <hr className="my-4" />
       </div>
     </main>
   );
