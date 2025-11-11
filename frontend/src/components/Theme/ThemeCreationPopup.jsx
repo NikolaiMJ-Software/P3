@@ -155,6 +155,8 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
                         movies={movies}
                         handleRemoveMovie={handleRemoveMovie}
                         setTitle={setTitle}
+                        rules={rules}
+                        setRules={setRules}
                     >
                     </ThemeCreator>
                 </div>

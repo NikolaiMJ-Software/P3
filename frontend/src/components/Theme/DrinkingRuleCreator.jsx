@@ -2,9 +2,8 @@ import { useState } from "react";
 import logo from "../../assets/logo.png"
 import MovieCard, {ThemeMovieCard} from "./MovieCard.jsx";
 
-export default function DrinkingRuleCreator() {
+export default function DrinkingRuleCreator({rules, setRules}) {
     const [ruleInput, setRuleInput] = useState("");
-    const [rules, setRules] = useState([]);
 
     const addRule = () => {
         if (ruleInput.trim() === "") return;

@@ -1,7 +1,7 @@
 import {ThemeMovieCard} from "./MovieCard.jsx";
 import DrinkingRuleCreator from "./DrinkingRuleCreator.jsx";
 
-export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie, setTitle}){
+export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie, setTitle, rules, setRules}){
 
     return(
         <div className={"items-center flex-col flex gap-1 border-1 m-2 p-2 w-[600px]"}>
@@ -31,7 +31,7 @@ export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie, se
 
                 </div>
             </div>
-            <DrinkingRuleCreator></DrinkingRuleCreator>
+            <DrinkingRuleCreator  rules={rules} setRules={setRules}></DrinkingRuleCreator>
         </div>
     )
 }
