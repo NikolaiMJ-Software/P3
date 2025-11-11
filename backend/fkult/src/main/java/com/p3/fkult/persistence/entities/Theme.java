@@ -1,6 +1,8 @@
 package com.p3.fkult.persistence.entities;
 
 import java.time.LocalDateTime;
+
+
 import com.p3.fkult.business.services.shuffleFilter.HasUserId;
 
 public class Theme implements HasUserId {
@@ -24,6 +26,7 @@ public class Theme implements HasUserId {
         this.name = name;
         this.userid = userid;
     }
+
     //getters
     public long getId(){
         return this.id;

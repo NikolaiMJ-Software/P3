@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {addTheme, getThemes} from "../../services/themeService.jsx";
+import {addTheme, getThemes, getNewThemes, getOldThemes} from "../../services/themeService.jsx";
 import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
 import SoundSampleBrowser from "../SoundSampleBrowser.jsx";
 import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
@@ -17,6 +17,13 @@ export default function ThemeBrowser() {
         getThemes().then(setThemes)
     },[])
 
+    const getTodaysDate = () =>{
+        const today = new Date()
+        const year = today.getFullYear()
+        const month = today.getMonth() + 1 //getMonth apparently gets 0-11, so we add 1
+        const date = today.getDate()
+        return (`${year}-${month}-${date}`);
+    }
 
     return (
         <div className={"p-10"}>
