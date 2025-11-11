@@ -14,6 +14,7 @@ export default function ThemeCollection({isCreator, onClick, themes}){
                         name={theme.username}
                         title={theme.name}
                         tConsts={theme.tConsts}
+                        timestamp={theme.timestamp}
                         >
                     </ThemeCard>
                 })}

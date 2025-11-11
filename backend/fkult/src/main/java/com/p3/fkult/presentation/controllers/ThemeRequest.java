@@ -1,5 +1,6 @@
 package com.p3.fkult.presentation.controllers;
-import com.p3.fkult.persistence.entities.Movie;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +12,7 @@ public class ThemeRequest {
     private List<String> drinkingRules;
     private List<String> tConsts;
     private String username;
-
+    private LocalDateTime timestamp;
     //Springboot requires a default constructor to deserialize using @RequestBody on endpoints
     public ThemeRequest(){}
 
@@ -36,6 +37,14 @@ public class ThemeRequest {
         this.tConsts = tConsts;
         this.drinkingRules = drinkingRules;
     }
+    public ThemeRequest(Long themeId, String name, Long userId, List<Long> movieIds, List<String> drinkingRules, LocalDateTime timestamp) {
+        this.themeId = themeId;
+        this.name = name;
+        this.userId = userId;
+        this.movieIds = movieIds;
+        this.drinkingRules = drinkingRules;
+        this.timestamp = timestamp;
+    }
 
     //getters
     public Long getThemeId(){
@@ -47,6 +56,7 @@ public class ThemeRequest {
     public List<String> getDrinkingRules() { return drinkingRules; }
     public List<String> gettConsts() { return tConsts; }
     public String getUsername(){ return username; }
+    public LocalDateTime getTimestamp() { return timestamp; }
 
     //setters
     public void setName(String name) { this.name = name; }
@@ -55,6 +65,7 @@ public class ThemeRequest {
     public void setDrinkingRules(List<String> rules) { this.drinkingRules = rules; }
     public void settConsts(List<String> tConsts) {this.tConsts = tConsts;}
     public void setUsername(String username){this.username = username;}
+    public void setTimestamp(LocalDateTime timestamp){this.timestamp = timestamp;}
 
     @Override
     public String toString() {
@@ -68,6 +79,7 @@ public class ThemeRequest {
                 .collect(Collectors.joining(", ")) : "null") +
                 ", drinkingRules=" + (drinkingRules != null ? String.join(", ", drinkingRules) : "null") +
                 ", tConsts=" + (tConsts != null ? String.join(", ", tConsts) : "null") +
+                ", timestamp=" + timestamp +
                 '}';
     }
 

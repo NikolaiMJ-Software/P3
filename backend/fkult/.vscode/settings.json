@@ -1,0 +1,27 @@
+{
+  // Discover unit + integration tests
+  "java.test.sourcePaths": [
+    "src/test/java",
+    "src/it/java"
+  ],
+
+  // Run tests with the "test" Spring profile
+  "java.test.config": [
+    {
+      "name": "JUnit",
+      "workingDirectory": "${workspaceFolder}",
+      "vmArgs": ["-Dspring.profiles.active=test"],
+      "env": { "SPRING_PROFILES_ACTIVE": "test" }
+    }
+  ],
+  "java.test.defaultConfig": "JUnit",
+
+  // Optional: run tests via Maven (respects surefire/failsafe config)
+  "java.test.runner": "maven",
+
+  // QoL
+  "java.test.report.showAfterExecution": "onFailure",
+  "java.test.junit.useExecutionConsole": true,
+  "java.import.maven.enabled": true,
+  "java.configuration.updateBuildConfiguration": "interactive"
+}
