@@ -29,3 +29,9 @@ INSERT INTO sound_samples (link, file_path, user_id) VALUES
 -- Event
 INSERT INTO event (event_date, theme_id) VALUES
 ('2025-11-15', 1);
+
+-- AuthController test
+INSERT INTO user (name, username, is_banned, is_admin) VALUES
+('Allowed User', 'allowed_user', 0, 0),
+('Banned User',  'banned_user',  1, 0);
+
