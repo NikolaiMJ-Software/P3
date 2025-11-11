@@ -1,5 +1,7 @@
 package com.p3.fkult.config;
 import com.p3.fkult.business.services.ImdbMovieImportService;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -12,19 +14,19 @@ import java.nio.file.Paths;
 @Component
 @Order(1) // ensure this runs early
 public class ImdbChecker implements ApplicationRunner {
-    private static final Path DATA_DIR   = Paths.get("database");
-    private static final Path LOCAL_PATH = DATA_DIR.resolve("title.basics.tsv.gz");
-
     private final ImdbMovieImportService importService;
+    private final Path localPath;
 
-    public ImdbChecker(ImdbMovieImportService importService) {
+
+    public ImdbChecker(ImdbMovieImportService importService, @Value("${imdb.local-path:database/title.basics.tsv.gz}") String localPathStr) {
         this.importService = importService;
+        this.localPath = Paths.get(localPathStr);
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        if (Files.exists(LOCAL_PATH)) {
-            System.out.println("[IMDb bootstrap] Dataset already present: " + LOCAL_PATH.toAbsolutePath());
+        if (Files.exists(localPath)) {
+            System.out.println("[IMDb bootstrap] Dataset already present: " + localPath.toAbsolutePath());
             return;
         }
 
