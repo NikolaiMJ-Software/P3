@@ -14,8 +14,8 @@ export default function NextTheme({ dateLabel, date, title = "", posters = [] })
     <div className="rounded-2xl border px-4 py-4 bg-white [container-type:inline-size]">
       {/* header/date */}
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-600">Next Theme</span>
-        <span className="text-sm font-medium text-gray-800">{label}</span>
+        <span className="text-sm text-text-secondary">Next Theme</span>
+        <span className="text-sm font-medium text-text-secondary">{label}</span>
       </div>
 
       {/* title */}
@@ -47,13 +47,13 @@ export default function NextTheme({ dateLabel, date, title = "", posters = [] })
                 <img
                   src={src}
                   alt={`Poster ${i + 1}`}
-                  className="w-full h-full rounded-md object-cover border bg-gray-50"
+                  className="w-full h-full rounded-md object-cover border bg-text-secondary"
                   loading="lazy"
                 />
               </div>
             ))
           ) : (
-            <div className="text-sm text-gray-500 py-6 text-center w-full">
+            <div className="text-sm text-text-secondary py-6 text-center w-full">
               No posters
             </div>
           )}

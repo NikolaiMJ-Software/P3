@@ -1,9 +1,22 @@
 import { API } from './api.jsx'
 const API_URL = `${API}/themes`; //backend address
 
-export async function getThemes() {
-    const response = await fetch(API_URL);
-    return response.json();
+export async function getThemes(selected) {
+    try{
+        if (selected === "your"){
+            const response = await fetch(`${API_URL}/User?username=${sessionStorage.getItem("username")}`);
+            return response.json();
+        }else if (selected === "old"){
+            const response = await fetch(`${API_URL}/Old`);
+            return response.json();
+        }else if (selected === "new"){
+            const response = await fetch(`${API_URL}/New`);
+            return response.json();
+        }
+    }catch (e){
+        throw new Error(`Failed to fetch themes, error: ${e}`)
+    }
+    return;
 }
 
 export async function getNewThemes(){
@@ -15,7 +28,7 @@ export async function getNewThemes(){
 }
 
 export async function getOldThemes(){
-    const response = await fetch(`${API_URL}/Oew`);
+    const response = await fetch(`${API_URL}/Old`);
     if (!response.ok) {
         throw new Error(`Failed to fetch old themes: ${response.status}`);
     }
@@ -24,6 +37,7 @@ export async function getOldThemes(){
 
 
 export async function addTheme(name, username, tConsts, drinkingRules) {
+    console.log(`creating theme with username: ${username}`);
     const body =
     {
         name: name,

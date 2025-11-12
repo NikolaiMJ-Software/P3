@@ -14,8 +14,13 @@ export default function ThemeBrowser() {
     const {t} = useTranslation();
 
     useEffect(() => {
-        getThemes().then(setThemes)
-    },[])
+        getThemes(selected).then(data => {
+            console.log("Selected:", selected);
+            console.log("Received themes:", data);
+            setThemes(data);
+        }).catch(err => console.error("Error loading themes:", err));
+    },[selected])
+
 
     const getTodaysDate = () =>{
         const today = new Date()
@@ -31,7 +36,7 @@ export default function ThemeBrowser() {
                 isOpen={isPopupOpen}
                 onClose={() => setIsPopupOpen(false)}
             />
-            <div className={"w-full max-w-full h-fit border-2 border-black rounded-3xl p-8"}>
+            <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8"}>
 
                 {/* Upcoming themes card container */}
                 <p className={"m-4 font-bold"}>{t("upcoming themes")}</p>

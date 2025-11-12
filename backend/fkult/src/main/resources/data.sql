@@ -1,16 +1,16 @@
 
 -- Insert dummy user
 INSERT OR REPLACE INTO user (id, name, username, is_banned, is_admin)
-VALUES 
-(1, 'Martin', 'Kabuum', 0, 0),
+VALUES
+    (1, 'John Test', 'tester', 0, 1 ),
 (2, 'Mig', 'Mig1', 0, 0),
 (3, 'Mig', 'mig2', 0, 0),
 (4, 'test', 'test', 0, 0),
 (5, 'mig', 'mig', 0, 0);
 
 -- Insert dummy theme with a known ID
-INSERT OR REPLACE INTO theme (id, name, user_id)
-VALUES (1, 'Pirates Night', 1);
+INSERT OR REPLACE INTO theme (id, name, user_id, timestamp)
+VALUES (1, 'Pirates Night', 1, '2024-09-11 08:25:59');
 
 -- Associate movies with this theme
 INSERT OR REPLACE INTO theme_movie (theme_id, movie_id)
@@ -50,3 +50,7 @@ VALUES
 (NULL, '/mix/track1', 5),
 ('https://media.example.com/sample/guitar', NULL, 2),
 (NULL, '/nature/waterfall', 3);
+
+-- Real startup day
+INSERT OR REPLACE INTO event (event_date, theme_id)
+VALUES ('2025-09-11 16:00:00', NULL);

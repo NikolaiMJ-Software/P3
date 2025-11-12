@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -17,13 +18,13 @@ public class EventRepository {
     }
 
     // Setup RowMapper to map database rows to Event objects
-    private final RowMapper<Event> rowMapper = (rs, rowNum) -> (
-        new Event(
-            rs.getLong("id"),
-            LocalDateTime.parse(rs.getString("event_date")),
-            rs.getObject("theme_id") != null ? rs.getLong("theme_id") : null
-        )
-    );
+    private final RowMapper<Event> rowMapper = (rs, rowNum) -> {
+        Long id = rs.getObject("id") != null ? rs.getLong("id") : null;
+        Long themeId = rs.getObject("theme_id") != null ? rs.getLong("theme_id") : null;
+        Timestamp timestamp = rs.getTimestamp("event_date");
+        LocalDateTime eventDate = toLocalDateTime(timestamp);
+        return new Event(id, eventDate, themeId);
+    };
 
     // Get all Events from the database
     public List<Event> getAll(){
@@ -51,5 +52,9 @@ public class EventRepository {
             return null;
         }
         return startups.get(0);
+    }
+
+    private static LocalDateTime toLocalDateTime(Timestamp timestamp) {
+        return (timestamp != null) ? timestamp.toLocalDateTime() : null;
     }
 }

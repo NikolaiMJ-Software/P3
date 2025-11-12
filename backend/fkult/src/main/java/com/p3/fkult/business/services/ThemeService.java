@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class ThemeService {
     }
 
     public List<ThemeRequest> getNewThemes() {
-        LocalDate lastStartUpDate = eventService.getLastStartupDate();
+        LocalDateTime lastStartUpDate = eventService.getLastStartupDate();
         if (lastStartUpDate == null) {
             return convertThemesToThemeRequests(new ArrayList<>());
         }
@@ -48,7 +49,7 @@ public class ThemeService {
     }
 
     public List<ThemeRequest> getOldThemes() {
-        LocalDate lastStartUpDate = eventService.getLastStartupDate();
+        LocalDateTime lastStartUpDate = eventService.getLastStartupDate();
         if (lastStartUpDate == null) {
             return convertThemesToThemeRequests(new ArrayList<>());
         }
@@ -100,6 +101,7 @@ public class ThemeService {
             //constructing a themeRequest one by one
             String name = theme.getName();
             Long userId = theme.getUserid();
+            String username = userRepository.findUserNameById(userId);
             List<Long> movieIds = themeMovieRepository.findByThemeId(theme.getId())
                     .stream()
                     .map(ThemeMovie::getMovieid)
@@ -115,7 +117,7 @@ public class ThemeService {
                     .stream()
                     .map(DrinkingRule::getRuleText)
                     .toList();
-            ThemeRequest themeRequest = new ThemeRequest(theme.getId(),  name, userId, movieIds, drinkingRules, theme.getTimestamp());
+            ThemeRequest themeRequest = new ThemeRequest(theme.getId(),  name, username, userId, movieIds, drinkingRules, theme.getTimestamp());
             themeRequest.settConsts(tconsts);
             themeRequests.add(themeRequest);
         };
