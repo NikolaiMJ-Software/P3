@@ -11,7 +11,7 @@ i18n
     supportedLngs: ["en", "da"],
     fallbackLng: "da",
     lng: "da",
-    ns: ["common"],
+    ns: ["common", "faq"],
     defaultNS: "common",
     detection: {
       order: ["localStorage", "navigator", "htmlTag"],

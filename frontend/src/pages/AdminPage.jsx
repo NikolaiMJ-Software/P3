@@ -85,7 +85,7 @@ function AdminButton({ func, username, label }){
         }
         buttonclick();
         }}
-        className="border hover:bg-gray-300 transition-colors rounded p-0.5">{label}</button>
+        className="border hover:bg-btn-hover-secondary transition-colors rounded p-0.5">{label}</button>
     )
 }
 

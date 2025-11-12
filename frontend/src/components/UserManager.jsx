@@ -29,7 +29,7 @@ function BanManager() {
             <div className={"flex flex-col justify-center"}>
                 <p>{t("username")}:</p>
                 <input onChange={e => setUser(e.target.value)} className={"border"}/>
-                <p className={"text-gray-400"}>{message}</p>
+                <p className={"text-text-secondary"}>{message}</p>
             </div>
             <div className={"flex flex-col "}>
                 <ManagerButton onClick={() => setMessage(unbanUser([username, user]))} label={"Unban"}/>
@@ -47,7 +47,7 @@ function AdminManager() {
             <div className={"flex flex-col justify-center"}>
                 <p>Username:</p>
                 <input onChange={e => setUser(e.target.value)} className={"border"}/>
-                <p className={"text-gray-400"}>{message}</p>
+                <p className={"text-text-secondary"}>{message}</p>
             </div>
             <div className={"flex flex-col "}>
                 <ManagerButton onClick={() => setMessage(unadminUser(user))} label={"Unadmin"}/>
@@ -60,7 +60,7 @@ function AdminManager() {
 function ManagerButton({ onClick, label}){
     return (<button
         onClick= {onClick}
-        className={"border rounded m-1 pl-2 pr-2 hover:bg-gray-200 transition-colors cursor-pointer"}>
+        className={"border rounded m-1 pl-2 pr-2 hover:bg-btn-hover-secondary transition-colors cursor-pointer"}>
         {label}
     </button>)
 }

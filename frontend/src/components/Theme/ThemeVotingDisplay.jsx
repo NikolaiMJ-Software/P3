@@ -2,7 +2,7 @@ export default function ThemeDisplay({ theme }) {
   if (!theme) return null;
 
   return (
-    <div className="flex flex-col h-full bg-gray-950 text-white p-6">
+    <div className="flex flex-col h-full bg-text-secondary text-white p-6">
       {/* Theme name */}
       <h1 className="text-2xl font-semibold text-center mb-6">{theme.name}</h1>
 
