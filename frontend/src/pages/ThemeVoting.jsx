@@ -118,7 +118,7 @@ const submitVote = async (votes) => {
       eventDate.setDate(startDate.getDate() + i * 14); // 2 weeks
 
       // Convert to ISO standard time to fit backend LocalDateTime
-      const formattedDate = new Date(eventTime)
+      const formattedDate = new Date(eventDate)
         .toISOString()
         .slice(0, 19);
 
