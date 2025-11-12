@@ -1,0 +1,65 @@
+{
+  "title": "F-Kult",
+  "sections": {
+    "committee": {
+      "title": "Committee",
+      "p1": "If you have questions about F-Kult, contact F-Kult’s instructor:",
+      "contact": { "topholt": "\"Jakob\" Topholt" }
+    },
+    "timePlace": {
+      "title": "Time and place",
+      "p1": "F-Kult movie nights are (as far as possible) every other Thursday at 16:30 in room 0.2.13 (Jægerstuen) at the Department of Computer Science.",
+      "p2": "Please arrive before 16:45 (pizza order deadline) so you can grab a good seat.",
+      "p3": "We aim to start listening to the sound sample suggestions at 17:00 in 0.1.95 (the auditorium)."
+    },
+    "rules": {
+      "title": "Rules",
+      "intro": "There are a few rules at F-Kult.",
+      "generalTitle": "General rules:",
+      "general": [
+        "Before each movie we play sound samples to make sure audio works.",
+        "You cannot choose consecutive movies (e.g., Die Hard 1 and Die Hard 2).",
+        "Suggested movies should share a theme (e.g., same director or something more obscure).",
+        "At the vote, movies previously watched at F-Kult by attendees present cannot be chosen.",
+        "At the vote, the suggester must give a short pitch. If they are absent, those movies cannot be voted on.",
+        "Movies are watched from oldest to newest.",
+        "After the vote, one movie is watched chosen from the next-best candidates."
+      ],
+      "cheersTitle": "During the movies, we toast when:",
+      "cheers": [
+        "Self-reference (the movie title is spoken)",
+        "Singing and dancing",
+        "UI/interface is shown",
+        "Partial nudity",
+        "Obvious product placement",
+        "Obvious chrome",
+        "Slow motion",
+        "A number of rules set by the movie suggester"
+      ],
+      "cheersDanny": "<link>Danny DeVito</link>"
+    },
+    "story": {
+      "title": "F-Kult website history",
+      "p1": "F-Kult is a committee that screens movies for F-Klub members. We show a broad range of genres, with a focus on cult films.",
+      "p2": "Events are announced on Facebook (the Fembers group), in Falenderen, and on posters — keep your eyes and ears open.",
+      "p3": "<root>From time to time we host special F-Kult nights such as <ol>Beer Matrix</ol> and <fi>Fish Roulette</fi>.</root>",
+      "p4": "<root><po>Poster archive</po> and F-Kult’s <di>Discord</di>.</root>",
+      "dev1": "In 2025, amid a sea of Google Sheets, Discord channels and forgotten pizza orders, seven brave software students were chosen to bring order to F-Kult’s chaos. The project had one goal: unite F-Kult’s scattered processes on a single site where movies, rules, votes and events could live happily together.",
+      "dev2": "Legend has it the group was appointed by Jakob Topholt, whose unmatched wisdom (and, shall we say, frugal tax philosophy) saw potential in the young coders. They were guided and technically supported by Kresten Laust, known for bending even the most unruly APIs to his will (except when MobilePay shuts them down).",
+      "dev3": "There was coding, debating, refactoring, and maybe a sip of Sport Cola, until the new F-Kult site saw the light of day — a digital hub unifying what was once scattered, making life easier for members and organizers alike.",
+      "credits": "<root>The project was made in collaboration with <to>Jakob Topholt</to> and <kr>Kresten Laust</kr>.</root>",
+      "caption": "(From left to right: [Name 1], [Name 2], [Name 3], [Name 4], [Name 5], [Name 6], [Name 7])"
+    }
+  },
+  "links": {
+    "olmatrice": "https://fklub.dk/f-kult/ol-matrice",
+    "fisk": "https://fklub.dk/f-kult/fiske-roulette",
+    "discord": "https://discord.gg/zV3GEZyY6z",
+    "poster": "https://www.fklub.dk/f-kult/plakater",
+    "topholt": "https://fklub.dk/personer/topholt",
+    "kresten": "https://fff.fklub.dk/personer/kresten"
+  }
+}
+
+
+

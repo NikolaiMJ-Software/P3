@@ -1,0 +1,64 @@
+{
+  "title": "F-Kult",
+  "sections": {
+    "committee": {
+      "title": "Udvalg",
+      "p1": "Har du spørgsmål til F-Kult kan du kontakte F-Kults instruktør:",
+      "contact": { "topholt": "\"Jakob\" Topholt" }
+    },
+    "timePlace": {
+      "title": "Tid og sted",
+      "p1": "Filmaftener i F-Kult løber af stablen hver anden torsdag (så vidt muligt) fra kl. 16:30 på Institut for Datalogi i 0.2.13 (Jægerstuen).",
+      "p2": "Mød gerne op inden 16:45, hvor deadlinen for bestilling af pizza er, og så du kan nå at finde et godt siddeaggregat.",
+      "p3": "Vi bestræber os på at begynde at se lydprøveforslag 17:00 i 0.1.95 (auditoriet)."
+    },
+    "rules": {
+      "title": "Regler",
+      "intro": "Til F-Kult er der nogle regler.",
+      "generalTitle": "Følgende er generelle regler:",
+      "general": [
+        "Inden hver film vises der lydprøveforslag, man skal jo sikre at lyden virker.",
+        "Der må ikke vælges film, som er konsekutive (f.eks. Die Hard 1 og Die Hard 2).",
+        "Film, som foreslås, bør dele et tema (f.eks. samme instruktør eller noget mere obskurt).",
+        "Ved afstemningen må der ikke vælges film, som folk, der er til stede ved afstemningen, har set før til F-Kult.",
+        "Ved afstemningen skal personen, der har foreslået filmene, give et kort pitch. Hvis personen ikke er til stede, kan der ikke stemmes på de film.",
+        "Filmene ses i rækkefølgen af ældste først.",
+        "Efter afstemningen ses én film valgt ud fra dem, der var tættest på at blive stemt ind."
+      ],
+      "cheersTitle": "Under filmene skåles der ved følgende:",
+      "cheers": [
+        "Selvreference (filmens titel nævnes i filmen)",
+        "Sang og dans",
+        "UI/interface vises",
+        "Delvis nøgenhed",
+        "Åbenlys produktplacering",
+        "Åbenlys krom",
+        "Slow motion",
+        "Et antal regler bestemt af personen, som foreslog filmene"
+      ],
+      "cheersDanny": "<link>Danny DeVito</link>"
+    },
+    "story": {
+      "title": "F-Kult hjemmeside historie",
+      "p1": "F-Kult er et udvalg, der viser film for F-klubbens medlemmer. Der vises et bredt udvalg af forskellige filmgenrer, men hovedsageligt vises der kultfilm.",
+      "p2": "Arrangementerne annonceres via Facebook (Fembers-gruppen), Falenderen og plakater, så hold blot øjne og ører åbne.",
+      "p3": "<root>Der holdes også til tider specielle F-Kult-aftener, heriblandt <ol>Øl-matrice</ol> og <fi>Fiskeroulette</fi>.</root>",
+      "p4": "<root><po>Plakatarkiv</po> og F-Kults <di>Discord</di>.</root>",
+      "dev1": "I året 2025, midt i et væld af Google Sheets, Discord-kanaler og glemte pizza-bestillinger, blev syv modige softwarestuderende udvalgt til at tage kampen op mod F-Kults kaos. Projektet havde ét formål: at samle F-Kults mange spredte processer på én central side, hvor både film, regler, afstemninger og arrangementer kunne leve lykkeligt sammen i digital harmoni.",
+      "dev2": "Legenden fortæller, at gruppen blev udpeget af selveste Jakob Topholt, der med sin uforlignelige visdom (og tvivlsomme nordjyske økonomiske filosofi) så potentialet i de unge kodere. Under udviklingen modtog de kyndig vejledning og teknisk støtte fra Kresten Laust, der i sandhed er kendt for at kunne få selv de mest uregerlige API’er til at adlyde (når de ikke lige bliver lukket af MobilePay).",
+      "dev3": "Sammen blev der kodet, debatteret, refaktoreret og (måske) drukket en smule Sport Cola, indtil F-Kults nye hjemmeside så dagens lys — et digitalt samlingspunkt, der forener alt det, der før var spredt, og giver både medlemmer og arrangører et lettere liv.",
+      "credits": "<root>Projektet blev lavet i samarbejde med <to>Jakob Topholt</to> og <kr>Kresten Laust</kr>.</root>",
+      "caption": "(Fra venstre: [Navn 1], [Navn 2], [Navn 3], [Navn 4], [Navn 5], [Navn 6], [Navn 7])"
+    }
+  },
+  "links": {
+    "olmatrice": "https://fklub.dk/f-kult/ol-matrice",
+    "fisk": "https://fklub.dk/f-kult/fiske-roulette",
+    "discord": "https://discord.gg/zV3GEZyY6z",
+    "poster": "https://www.fklub.dk/f-kult/plakater",
+    "topholt": "https://fklub.dk/personer/topholt",
+    "kresten": "https://fff.fklub.dk/personer/kresten"
+  }
+}
+
+
