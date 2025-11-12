@@ -9,7 +9,9 @@ export default function ThemeVoting() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [votesArray, setVotesArray] = useState([]);
-  const [winners, setWinners] = useState([]);
+  const [timerStart, setTimerStart] = useState(60);
+  const [timerResetKey, setTimerResetKey] = useState(0);
+
 
   useEffect(() => {
     async function loadThemes() {
@@ -109,7 +111,6 @@ const submitVote = async (votes) => {
     // Sort and select n winners
     const sorted = [...votesArray].sort((a, b) => b.votes - a.votes);
     const topThemes = sorted.slice(0, numberOfWinners);
-    setWinners(topThemes);
 
     // For each winner, schedule events 2 weeks apart
     for (let i = 0; i < topThemes.length; i++) {
@@ -131,10 +132,32 @@ const submitVote = async (votes) => {
     }
   };
 
-  const handleNext = () =>
-    setCurrentIndex((prev) => (prev + 1) % themes.length);
-  const handlePrevious = () =>
-    setCurrentIndex((prev) => (prev === 0 ? themes.length - 1 : prev - 1));
+  const handleTimerClick = () => {
+    const newTime = prompt("Enter new timer duration (in seconds):", timerStart);
+    const parsed = parseInt(newTime, 10);
+    if (!isNaN(parsed) && parsed > 0) {
+      setTimerStart(parsed);
+    } else {
+      alert("Please enter a valid positive number.");
+    }
+  };
+
+  const handleNext = () => {
+  setCurrentIndex((prev) => (prev + 1) % themes.length);
+  resetTimer();
+};
+
+const handlePrevious = () => {
+  setCurrentIndex((prev) => (prev === 0 ? themes.length - 1 : prev - 1));
+  resetTimer();
+};
+
+// Reset the timer to the current timerStart value
+const resetTimer = () => {
+  // Increment a dummy state to trigger useEffect in ThemeVotingDisplay
+  setTimerResetKey((prev) => prev + 1);
+};
+
 
   if (themes.length === 0) return <p>Loading themes...</p>;
 
@@ -144,7 +167,7 @@ return (
     <div className="flex flex-col h-screen">
       {/* Display the current theme */}
       <div className="flex-1">
-        <ThemeVotingDisplay theme={currentTheme} />
+        <ThemeVotingDisplay theme={currentTheme} startTime={timerStart} onTimerClick={handleTimerClick} resetKey={timerResetKey}/>
       </div>
 
       {/* Bottom controls */}

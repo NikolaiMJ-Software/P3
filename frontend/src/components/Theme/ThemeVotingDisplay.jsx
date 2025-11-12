@@ -1,8 +1,40 @@
-export default function ThemeDisplay({ theme }) {
+import { useState, useEffect } from "react";
+
+export default function ThemeVotingDisplay({ theme, startTime, onTimerClick, resetKey }) {
+  const [timeLeft, setTimeLeft] = useState(startTime);
+
+  useEffect(() => {
+    setTimeLeft(startTime);
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [startTime, resetKey]); // resetKey triggers timer restart
+
   if (!theme) return null;
 
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = String(timeLeft % 60).padStart(2, "0");
+
   return (
-    <div className="flex flex-col h-full bg-text-secondary text-white p-6">
+    <div className="relative flex flex-col h-full bg-text-secondary text-white p-6">
+      {/* Timer (top right corner) */}
+      <div
+        className="absolute top-4 right-6 text-lg font-semibold bg-black/50 px-3 py-1 rounded-lg cursor-pointer hover:bg-black/70"
+        onClick={onTimerClick}
+        title="Click to reset or change timer"
+      >
+        {minutes}:{seconds}
+      </div>
+
       {/* Theme name */}
       <h1 className="text-2xl font-semibold text-center mb-6">{theme.name}</h1>
 
