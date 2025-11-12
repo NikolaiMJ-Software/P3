@@ -36,7 +36,7 @@ export default function ThemeBrowser() {
                 isOpen={isPopupOpen}
                 onClose={() => setIsPopupOpen(false)}
             />
-            <div className={"w-full max-w-full h-fit border-2 border-black rounded-3xl p-8"}>
+            <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8"}>
 
                 {/* Upcoming themes card container */}
                 <p className={"m-4 font-bold"}>{t("upcoming themes")}</p>

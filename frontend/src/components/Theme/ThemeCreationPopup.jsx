@@ -135,7 +135,7 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
         return null;
     }
     return (
-        <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
+        <div className="fixed inset-0 flex justify-center items-center bg-text-primary/50 z-50">
             <div className="relative bg-white rounded-2xl p-6 shadow-lg w-[1200px] h-200">
                 {/* Top content */}
                 <ThemeCreatorTopcontent handleClose={handleClose}></ThemeCreatorTopcontent>

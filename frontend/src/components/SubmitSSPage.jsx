@@ -88,7 +88,7 @@ export default function SubmitSSTestPage() {
     // HTML of the page
     return (
         <div className={"p-10 relative"}>
-            <form className={"w-full max-w-full h-fit border-2 border-black rounded-3xl p-8 flex flex-col items-center gap-3"}>
+            <form className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col items-center gap-3"}>
                 {/* URL input */}
                 <div className="flex justify-center">
                     <label>
@@ -107,14 +107,14 @@ export default function SubmitSSTestPage() {
 
                 {/* File picker */}
                 <div className="flex justify-center">
-                    <label className="px-4 py-1 transition-colors cursor-pointer bg-white hover:bg-gray-300 border">
+                    <label className="px-4 py-1 transition-colors cursor-pointer bg-white hover:bg-btn-hover-secondary border">
                         {t("browse")}
                         <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }}
                         />
                     </label>
                 </div>
                 <div className="flex justify-center items-center min-h-4">
-                    {file && <div className="flex items-center text-sm text-gray-600">{t("file")}: {file.name}</div>}
+                    {file && <div className="flex items-center text-sm text-text-secondary">{t("file")}: {file.name}</div>}
                 </div>
 
                 {/* Buttons */}
@@ -147,7 +147,7 @@ export default function SubmitSSTestPage() {
 
                 {/* Message */}
                 <div className="flex justify-center items-center min-h-6">
-                    {message && <div className="text-center text-gray-700">{message}</div>}
+                    {message && <div className="text-center text-text-secondary">{message}</div>}
                 </div>
 
                 {/* JONAS insert media player here */}

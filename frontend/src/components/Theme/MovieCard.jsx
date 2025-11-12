@@ -13,7 +13,7 @@ export function MovieCardSmall({moviePosterURL, title, runtimeMinutes}){
     return(
     <div className={"w-[95px] flex flex-col items-center"}>
         <p className={"text-[10px] text-center mt-1 truncate w-full"}>{title}</p>
-        <div className="w-[100px] h-[150px] overflow-hidden rounded-md shadow-sm border border-gray-300 bg-white">
+        <div className="w-[100px] h-[150px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-white">
             <img
                 src={moviePosterURL}
                 alt={`Poster for ${title}`}
@@ -29,7 +29,7 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove,
         return (
             <div className={"w-full flex flex-col items-center border-2 rounded-2xl"}>
                 <p className={"text-[15px] text-center mt-1 truncate w-full text-lg"}>{title}</p>
-                <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-gray-300 bg-white">
+                <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-white">
                     <img
                         src={moviePosterURL}
                         alt={`Poster for ${title}`}
@@ -38,7 +38,7 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove,
                 </div>
                 <p className={"font-bold"}>Series</p>
                 {onRemove && (
-                    <button onClick={onRemove} className="text-red-500 font-bold px-3 py-1 rounded-xl hover:text-red-700">Remove</button>
+                    <button onClick={onRemove} className="text-text-error font-bold px-3 py-1 rounded-xl hover:text-red-700">Remove</button>
                 )}
             </div>
         )
@@ -47,7 +47,7 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove,
     return(
         <div className={"w-full flex flex-col items-center border-2 rounded-2xl"}>
             <p className={"text-[15px] text-center mt-1 truncate w-full text-lg"}>{title}</p>
-            <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-gray-300 bg-white">
+            <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-white">
                 <img
                     src={moviePosterURL}
                     alt={`Poster for ${title}`}
@@ -56,7 +56,7 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove,
             </div>
             <p>{runtimeHours + "h " + runtimeMinutesLeft + "m"}</p>
             {onRemove && (
-                <button onClick={onRemove} className="text-red-500 font-bold px-3 py-1 rounded-xl hover:text-red-700">Remove</button>
+                <button onClick={onRemove} className="text-text-error font-bold px-3 py-1 rounded-xl hover:text-red-700">Remove</button>
             )}
         </div>)
 }

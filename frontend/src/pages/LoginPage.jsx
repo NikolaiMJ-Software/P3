@@ -78,7 +78,7 @@ export default function LoginPage() {
     </form>
       {showTopholt && (
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-text-primary/50"
         onClick={() => setShowTopholt(false)}
         role="dialog"
         aria-modal="true"
