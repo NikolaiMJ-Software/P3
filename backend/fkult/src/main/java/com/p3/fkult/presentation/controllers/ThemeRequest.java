@@ -45,6 +45,15 @@ public class ThemeRequest {
         this.drinkingRules = drinkingRules;
         this.timestamp = timestamp;
     }
+    public ThemeRequest(Long themeId, String name, String username, Long userId, List<Long> movieIds, List<String> drinkingRules, LocalDateTime timestamp) {
+        this.themeId = themeId;
+        this.name = name;
+        this.username = username;
+        this.userId = userId;
+        this.movieIds = movieIds;
+        this.drinkingRules = drinkingRules;
+        this.timestamp = timestamp;
+    }
 
     //getters
     public Long getThemeId(){

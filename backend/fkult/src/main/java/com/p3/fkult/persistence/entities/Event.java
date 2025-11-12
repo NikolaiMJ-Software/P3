@@ -5,35 +5,35 @@ import java.time.LocalDateTime;
 public class Event {
     private Long id;
     private LocalDateTime eventDate;
-    private long themeId;
+    private Long themeId;
 
     public Event() {}
 
-    public Event(long id, LocalDateTime eventDate, long themeId) {
+    public Event(Long id, LocalDateTime eventDate, Long themeId) {
         this.id = id;
         this.eventDate = eventDate;
         this.themeId = themeId;
     }
 
     // Get functions
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
     public LocalDateTime getEventDate() {
         return this.eventDate;
     }
-    public long getThemeId() {
+    public Long getThemeId() {
         return this.themeId;
     }
 
     // Set functions
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public void setEventDate(LocalDateTime eventDate) {
         this.eventDate = eventDate;
     }
-    public void setThemeId(long themeId) {
+    public void setThemeId(Long themeId) {
         this.themeId = themeId;
     }
 }
