@@ -40,10 +40,10 @@ export default function HomePage() {
         {/* Top toggle buttons */}
         <div className={"flex gap-4 ml-10"}>
             <button className={`btn-home-page
-            ${selected === "themes" ? "" : "bg-primary text-text-primary hover:bg-btn-hover-secondary border"}`}
+            ${selected === "themes" ? "" : "btn-secondary"}`}
                     onClick={() => setSelected("themes")}>{t("themes")}</button>
             <button className={`btn-home-page
-            ${selected === "samples" ? "" : "bg-primary text-text-primary hover:bg-btn-hover-secondary border"}`}
+            ${selected === "samples" ? "" : "btn-secondary"}`}
                     onClick={() => setSelected("samples")}>{t("sound sample")}</button>
         </div>
 
