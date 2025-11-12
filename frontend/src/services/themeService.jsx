@@ -6,6 +6,23 @@ export async function getThemes() {
     return response.json();
 }
 
+export async function getNewThemes(){
+    const response = await fetch(`${API_URL}/New`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch new themes: ${response.status}`);
+    }
+    return response.json()
+}
+
+export async function getOldThemes(){
+    const response = await fetch(`${API_URL}/Oew`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch old themes: ${response.status}`);
+    }
+    return response.json()
+}
+
+
 export async function addTheme(name, username, tConsts, drinkingRules) {
     const body =
     {

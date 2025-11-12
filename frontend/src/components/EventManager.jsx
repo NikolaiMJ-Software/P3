@@ -26,7 +26,7 @@ export default function EventManager({ className }) {
             </div>
             <div className={"border border-t-0 flex flex-col p-3"}>
                 <div className={"flex flex-row justify-evenly p-3 overflow-auto"}>
-                    <EventButton label={t("start vote")}/>
+                    <EventButton label={t("start vote")} onClick={() => {navigate(`/voting/${username}`)}}/>
                     <EventButton label={`${t("play")} ${t("sound sample")}`}/>
                     <EventButton label={`${t("wheel")}`} onClick={() => {navigate(`/wheel/${username}`)}}/>
                 </div>

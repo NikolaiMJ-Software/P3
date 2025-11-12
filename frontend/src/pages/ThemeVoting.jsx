@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { fetchShuffledThemes, updateThemeVotes } from "../services/themeService";
 import { getMoviePosterById } from "../services/movieService";
+import { uploadEvent } from "../services/eventService";
 import ThemeVotingDisplay from "../components/Theme/ThemeVotingDisplay";
 
 export default function ThemeVoting() {
   const [themes, setThemes] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
+  const [votesArray, setVotesArray] = useState([]);
+  const [winners, setWinners] = useState([]);
 
   useEffect(() => {
     async function loadThemes() {
@@ -51,18 +54,82 @@ export default function ThemeVoting() {
   }, []);
 
 const submitVote = async (votes) => {
-  if (votes !== "") {
+    if (votes === "") {
+      alert("Please enter an amount of votes");
+      return;
+    }
+
+    const themeId = themes[currentIndex].themeId;
+
     try {
-      const result = await updateThemeVotes(themes[currentIndex].themeId, votes);
+      const result = await updateThemeVotes(themeId, votes);
       alert(result);
+
+      // Update votesArray for frontend tracking
+      setVotesArray((prevVotes) => {
+        const existing = prevVotes.find((v) => v.themeId === themeId);
+        if (existing) {
+          return prevVotes.map((v) =>
+            v.themeId === themeId ? { ...v, votes: Number(votes) } : v
+          );
+        }
+        return [...prevVotes, { themeId, votes: Number(votes) }];
+      });
+
       setInputValue("");
     } catch (err) {
       alert("Failed to update votes");
     }
-  } else {
-    alert("Please enter an amount of votes");
-  }
-};
+  };
+
+  const endVoting = async () => {
+
+    // Input validation
+    if (votesArray.length === 0) {
+      alert("No votes recorded yet!");
+      return;
+    }
+    const numberOfWinners = parseInt(
+      prompt("How many themes are allowed to win?"),
+      10
+    );
+    if (isNaN(numberOfWinners) || numberOfWinners <= 0) {
+      alert("Please enter a valid positive number.");
+      return;
+    }
+
+    // prompt date for the first event
+    const firstEvent = prompt("Set date of first event in yyyy-mm-dd format");
+    if (!firstEvent || !/^\d{4}-\d{2}-\d{2}$/.test(firstEvent)) {
+      alert("Please enter a valid date in yyyy-mm-dd format.");
+      return;
+    }
+    const startDate = new Date(`${firstEvent}T16:30:00`);
+
+    // Sort and select n winners
+    const sorted = [...votesArray].sort((a, b) => b.votes - a.votes);
+    const topThemes = sorted.slice(0, numberOfWinners);
+    setWinners(topThemes);
+
+    // For each winner, schedule events 2 weeks apart
+    for (let i = 0; i < topThemes.length; i++) {
+      const winner = topThemes[i];
+      const eventDate = new Date(startDate);
+      eventDate.setDate(startDate.getDate() + i * 14); // 2 weeks
+
+      // Convert to ISO standard time to fit backend LocalDateTime
+      const formattedDate = new Date(eventDate)
+        .toISOString()
+        .slice(0, 19);
+
+      try {
+        const result = await uploadEvent(formattedDate, winner.themeId);
+        console.log(`Event uploaded for ${formattedDate}: ${result}`);
+      } catch (err) {
+        console.error("Failed to upload event for:", formattedDate, err);
+      }
+    }
+  };
 
   const handleNext = () =>
     setCurrentIndex((prev) => (prev + 1) % themes.length);
@@ -116,6 +183,12 @@ return (
             placeholder="Enter a number"
             className="px-4 py-2 rounded-md text-black w-32 text-center"
           />
+          <button
+            onClick={endVoting}
+            className="px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600"
+          >
+            End voting
+          </button>
         </div>
       </div>
     </div>

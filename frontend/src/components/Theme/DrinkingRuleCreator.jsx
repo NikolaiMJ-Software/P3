@@ -2,9 +2,8 @@ import { useState } from "react";
 import logo from "../../assets/logo.png"
 import MovieCard, {ThemeMovieCard} from "./MovieCard.jsx";
 
-export default function DrinkingRuleCreator() {
+export default function DrinkingRuleCreator({rules, setRules}) {
     const [ruleInput, setRuleInput] = useState("");
-    const [rules, setRules] = useState([]);
 
     const addRule = () => {
         if (ruleInput.trim() === "") return;
@@ -16,6 +15,7 @@ export default function DrinkingRuleCreator() {
         setRules(rules.filter((_, index) => index !== indexToRemove));
     };
 
+    const saferules = Array.isArray(rules) ? rules : [];
     return(
         <>
             <p className={""}>Drinking rules:</p>
@@ -24,7 +24,7 @@ export default function DrinkingRuleCreator() {
                 <button className={"border-2 rounded-2xl p-1 hover:cursor-pointer hover:bg-gray-300"} onClick={addRule}>Add</button>
             </div>
             <div className="overflow-y-auto overflow-x-hidden max-h-[100px] max-w-[500px]">
-                {rules.map((rule, index) => (
+                {saferules.map((rule, index) => (
                     <div
                         key={index}
                         className="flex flex-row items-center justify-between border-b border-gray-200 py-1 px-2 w-120"

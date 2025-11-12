@@ -72,9 +72,7 @@ CREATE TABLE IF NOT EXISTS sound_samples (
 --event
 CREATE TABLE IF NOT EXISTS event (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  event_date TEXT CHECK (
-  event_date IS NULL OR event_date GLOB '____-__-__'  -- YYYY-MM-DD
-  ),
+  event_date DATETIME,
   theme_id INTEGER,
   FOREIGN KEY (theme_id) REFERENCES theme(id) ON DELETE SET NULL ON UPDATE CASCADE
 );

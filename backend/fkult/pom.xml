@@ -22,49 +22,62 @@
   </properties>
 
   <dependencies>
+    <!-- SQLite driver -->
     <dependency>
       <groupId>org.xerial</groupId>
       <artifactId>sqlite-jdbc</artifactId>
       <version>3.46.0.0</version>
     </dependency>
 
+    <!-- Spring Boot -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-jdbc</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
+    <!-- Jsoup -->
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
       <version>1.17.2</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-
+    <!-- Hibernate dialect pack (includes SQLite dialects) -->
     <dependency>
       <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-community-dialects</artifactId>
       <version>6.5.2.Final</version>
     </dependency>
 
+    <!-- Testing -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- WireMock (standalone avoids javax/jakarta servlet mismatch on Boot 3) -->
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8-standalone</artifactId>
+      <version>2.35.2</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <!-- Spring Boot packaging -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
 
+      <!-- Register src/it/java and src/it/resources for integration tests -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -73,7 +86,9 @@
           <execution>
             <id>add-it-test-sources</id>
             <phase>generate-test-sources</phase>
-            <goals><goal>add-test-source</goal></goals>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
             <configuration>
               <sources>
                 <source>src/it/java</source>
@@ -83,7 +98,9 @@
           <execution>
             <id>add-it-test-resources</id>
             <phase>generate-test-resources</phase>
-            <goals><goal>add-test-resource</goal></goals>
+            <goals>
+              <goal>add-test-resource</goal>
+            </goals>
             <configuration>
               <resources>
                 <resource>
@@ -95,6 +112,7 @@
         </executions>
       </plugin>
 
+      <!-- Unit tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -106,20 +124,20 @@
             <include>**/*TestCase.java</include>
           </includes>
           <excludes>
-            <exclude>**/it/**</exclude>
+            <!-- keep ITs out of surefire -->
             <exclude>**/*IT.java</exclude>
             <exclude>**/*ITCase.java</exclude>
           </excludes>
         </configuration>
       </plugin>
 
+      <!-- Integration tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>3.2.5</version>
         <configuration>
           <includes>
-            <include>**/it/**/*.java</include>
             <include>**/*IT.java</include>
             <include>**/*ITCase.java</include>
           </includes>
@@ -136,3 +154,5 @@
     </plugins>
   </build>
 </project>
+
+

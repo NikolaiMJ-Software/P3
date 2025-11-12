@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {getMovies, getMoviesByTconsts} from "../../services/movieService.jsx";
 import {useTranslation} from "react-i18next";
 
-export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries}){
+export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries, timestamp}){
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
@@ -12,7 +12,6 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
 
     const safeMovies = Array.isArray(movies) ? movies : [];
     const {t} = useTranslation();
-
     return(
         <div className={"relative w-60 h-80 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
@@ -20,10 +19,10 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
                 <h1 className={"text-xl font-bold"}>{title}</h1>
                 <h2 className={"text-sm text-gray-600"}>{name}</h2>
                 <h3 className={"mt-2 font-semibold text-sm"}>{t("drinking rules")}</h3>
-                <ul className={"text-xs list-disc list-inside"}>{drinkingRules.map((rule) => {return (<li key={rule}>{rule}</li>)})}</ul>
+                <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16"}>{drinkingRules.map((rule) => {return (<li key={rule}>{rule}</li>)})}</ul>
             </div>
 
-            <div className={"flex justify-between gap-2 mt-3"}>
+            <div className={"flex justify-between gap-2 mt-2"}>
                 {safeMovies.slice(0,2).map((movie) => (
                     <MovieCardSmall key={movie.id} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes}/>
                 ))}

@@ -12,6 +12,7 @@ record UsernameDTO(String username) {}
 public class AuthController {
     private final Authenticator auth;
     private final UserService user;
+
     public AuthController(Authenticator auth, UserService user) { 
         this.auth = auth; 
         this.user = user;
@@ -20,8 +21,8 @@ public class AuthController {
     @PostMapping("/username")
     public ResponseEntity<String> sendUsername(@RequestBody UsernameDTO body) {
         boolean exists = auth.receiveUsername(body.username());
-        boolean banned = user.getIfUserBanned(body.username());
         if (exists) {
+            boolean banned = user.getIfUserBanned(body.username());
             if(!banned){
                 return ResponseEntity.ok("Login successful");
             }else
