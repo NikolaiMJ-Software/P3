@@ -27,7 +27,7 @@ export default function FAQPage() {
                   href={t("links.olmatrice", { ns })}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-600"
+                  className="text-link"
                 />
               ),
               fi: (
@@ -35,14 +35,13 @@ export default function FAQPage() {
                   href={t("links.fisk", { ns })}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-600"
+                  className="text-link"
                 />
               )
             }}
           />
         </p>
 
-        {/* Plakatarkiv + Discord */}
         <p className="mt-4">
           <Trans
             ns={ns}
@@ -54,7 +53,7 @@ export default function FAQPage() {
                   href={t("links.poster", { ns })}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-600"
+                  className="text-link"
                 />
               ),
               di: (
@@ -62,7 +61,7 @@ export default function FAQPage() {
                   href={t("links.discord", { ns })}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-600"
+                  className="text-link"
                 />
               )
             }}
@@ -80,7 +79,7 @@ export default function FAQPage() {
               href={t("links.topholt", { ns })}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-green-600"
+              className="text-link"
             >
               {t("sections.committee.contact.topholt", { ns })}
             </a>
@@ -118,7 +117,7 @@ export default function FAQPage() {
               href="https://en.wikipedia.org/wiki/Danny_DeVito"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-green-600"
+              className="text-link"
             >
               {t("sections.rules.cheersDannyLabel", { ns, defaultValue: "Danny DeVito" })}
             </a>
@@ -145,7 +144,7 @@ export default function FAQPage() {
                   href={t("links.topholt", { ns })}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-600"
+                  className="text-link"
                 />
               ),
               kr: (
@@ -153,7 +152,7 @@ export default function FAQPage() {
                   href={t("links.kresten", { ns })}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-600"
+                  className="text-link"
                 />
               )
             }}
