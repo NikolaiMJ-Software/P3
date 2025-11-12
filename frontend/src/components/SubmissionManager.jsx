@@ -75,7 +75,7 @@ function ThemeSubmissions(){
                 </div>
                 <div className={"flex flex-col"}>
                     <p>{t("sort based on")}:</p>
-                    <select className={"border hover:bg-gray-200"}>
+                    <select className={"border hover:bg-btn-hover-secondary"}>
                         <option>{t("latest")}</option>
                         <option>{t("oldest")}</option>
                         <option>{t("alphabetical")}</option>
@@ -125,7 +125,7 @@ function Theme({ item, onToggle, isExpanded }){
                 </div>
             </div>
             {isExpanded && (
-                <div className="bg-gray-50 border-t p-4 flex flex-row overflow-auto">
+                <div className="bg-text-secondary border-t p-4 flex flex-row overflow-auto">
                     {movies.map((movie) => (
                         <div className="flex justify-between items-center rounded border m-2 p-1">
                             <div className={"flex flex-col items-center min-w-40"}>

@@ -47,7 +47,7 @@ export default function WheelOfFortunePage() {
         <WheelOfFortune inputs={inputs} size={516} onResult={handleResult} onRemove={handleRemove} />
 
         <div className="w-72">
-          <div className="mb-2 text-sm text-gray-600">{t("one entry per line")}</div>
+          <div className="mb-2 text-sm text-text-secondary">{t("one entry per line")}</div>
           <textarea
             className="w-full h-72 p-3 rounded-lg border"
             value={entriesText}

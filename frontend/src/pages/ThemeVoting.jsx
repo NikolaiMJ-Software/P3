@@ -148,11 +148,11 @@ return (
       </div>
 
       {/* Bottom controls */}
-      <div className="flex flex-col p-6 bg-gray-900 text-white gap-4">
+      <div className="flex flex-col p-6 bg-text-secondary text-white gap-4">
         <div className="flex justify-between items-center mb-2">
           <button
             onClick={handlePrevious}
-            className="px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600"
+            className="px-4 py-2 rounded-md bg-text-secondary hover:bg-btn-hover-secondary"
           >
             ← Previous
           </button>
@@ -163,7 +163,7 @@ return (
 
           <button
             onClick={handleNext}
-            className="px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600"
+            className="px-4 py-2 rounded-md bg-text-secondary hover:bg-btn-hover-secondary"
           >
             Next →
           </button>
@@ -181,11 +181,11 @@ return (
               }
             }}
             placeholder="Enter a number"
-            className="px-4 py-2 rounded-md text-black w-32 text-center"
+            className="px-4 py-2 rounded-md text-text-primary w-32 text-center"
           />
           <button
             onClick={endVoting}
-            className="px-4 py-2 rounded-md bg-gray-700 hover:bg-gray-600"
+            className="px-4 py-2 rounded-md bg-btn-hover-secondary hover:bg-text-secondary"
           >
             End voting
           </button>

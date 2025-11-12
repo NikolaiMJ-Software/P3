@@ -173,8 +173,8 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
           disabled={spinning || inputs.length === 0}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
                      w-20 h-20 rounded-full flex items-center justify-center
-                     bg-white text-text-primary font-semibold shadow-md border-2 border-gray-400
-                     hover:bg-gray-100 active:scale-95 transition-transform cursor-pointer"
+                     bg-white text-text-primary font-semibold shadow-md border-2 border-text-secondary
+                     hover:bg-btn-hover-secondary active:scale-95 transition-transform cursor-pointer"
         >
           SPIN
         </button>
