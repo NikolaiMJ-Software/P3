@@ -4,7 +4,7 @@ import com.p3.fkult.persistence.entities.Event;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -20,32 +20,32 @@ public class EventRepository {
     private final RowMapper<Event> rowMapper = (rs, rowNum) -> (
         new Event(
             rs.getLong("id"),
-            LocalDate.parse(rs.getString("event_date")),
+            LocalDateTime.parse(rs.getString("event_date")),
             rs.getObject("theme_id") != null ? rs.getLong("theme_id") : null
         )
     );
 
     // Get all Events from the database
     public List<Event> getAll(){
-        String sql = "SELECT * FROM events";
+        String sql = "SELECT * FROM event";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     // Save an Event to the database
-    public void save(Event event){
-        String sql = "INSERT INTO events (event_date, theme_id) VALUES (?,?)";
-        jdbcTemplate.update(sql, event.getEventDate(), event.getThemeId());
+    public void save(LocalDateTime eventDate, long themeId){
+        String sql = "INSERT INTO event (event_date, theme_id) VALUES (?,?)";
+        jdbcTemplate.update(sql, eventDate, themeId);
     }
 
     // Delete one Event from the database by id
     public void delete(long id){
-        String sql = "DELETE FROM events WHERE id = ?";
+        String sql = "DELETE FROM event WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     public Event getLastStartupEvent(){
         String sql = "SELECT * FROM event WHERE theme_id IS NULL AND event_date <= ? ORDER BY event_date DESC LIMIT 1";
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
         List<Event> startups = jdbcTemplate.query(sql, rowMapper, today.toString());
         if(startups.isEmpty()){
             return null;
