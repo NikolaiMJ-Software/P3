@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ThemeRepository {
@@ -34,11 +36,21 @@ public class ThemeRepository {
         return jdbcTemplate.query("SELECT * FROM theme", rowMapper);
     }
 
-    public List<Theme> findAfter(LocalDate localDate){
+    public List<Theme> findAfter(LocalDateTime localDate){
         //timestamp >= localDate finds themes created on or after localDate
-        return jdbcTemplate.query("SELECT * FROM theme WHERE timestamp >= ?", rowMapper, localDate);
+        List<Theme> themes = jdbcTemplate.query("SELECT * FROM theme WHERE timestamp >= ?", rowMapper, localDate);
+        if (themes == null || themes.isEmpty()){
+            System.out.println("failed to get themes from db");
+        }else{
+            System.out.println("Found requested themes: " +
+                    themes.stream()
+                            .map(Theme::toString)
+                            .collect(Collectors.joining(", "))
+            );
+        }
+        return themes;
     }
-    public List<Theme> findBefore(LocalDate localDate){
+    public List<Theme> findBefore(LocalDateTime localDate){
         //timestamp < localDate finds themes created before localDate
         return jdbcTemplate.query("SELECT * FROM theme WHERE timestamp < ?", rowMapper, localDate);
     }

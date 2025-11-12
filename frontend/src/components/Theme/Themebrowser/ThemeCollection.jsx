@@ -9,6 +9,7 @@ export default function ThemeCollection({isCreator, onClick, themes}){
                 {/* individual cards */}
                 {isCreator && <ThemeCreationCard onClick={onClick}/>}
                 {safeThemes.map(theme =>  {
+                    console.log(`theme username: ${theme.username}`)
                     return <ThemeCard
                         drinkingRules={theme.drinkingRules}
                         name={theme.username}

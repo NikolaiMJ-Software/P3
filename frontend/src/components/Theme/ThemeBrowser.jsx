@@ -14,8 +14,13 @@ export default function ThemeBrowser() {
     const {t} = useTranslation();
 
     useEffect(() => {
-        getThemes().then(setThemes)
-    },[])
+        getThemes(selected).then(data => {
+            console.log("Selected:", selected);
+            console.log("Received themes:", data);
+            setThemes(data);
+        }).catch(err => console.error("Error loading themes:", err));
+    },[selected])
+
 
     const getTodaysDate = () =>{
         const today = new Date()

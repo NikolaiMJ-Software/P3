@@ -46,6 +46,7 @@ export function ThemeCardSmall({title, name, tConsts}){
                 return <MovieCardSmall
                     key={movie.i}
                     title={movie.title}
+                    name={movie.username}
                     moviePosterURL={movie.moviePosterURL}
                     runtimeMinutes={movie.runtimeMinutes}
                 ></MovieCardSmall>
