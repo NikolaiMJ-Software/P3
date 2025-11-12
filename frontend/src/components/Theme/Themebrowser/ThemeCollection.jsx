@@ -1,4 +1,4 @@
-import ThemeCard, {ThemeCreationCard} from "../ThemeCard.jsx";
+import ThemeCard, {EventStartup, EventThemeCard, ThemeCreationCard} from "../ThemeCard.jsx";
 
 export default function ThemeCollection({isCreator, onClick, themes}){
     const safeThemes = Array.isArray(themes) ? themes : [];
@@ -7,7 +7,6 @@ export default function ThemeCollection({isCreator, onClick, themes}){
         <>
             <div className={"flex gap-5 p-4 overflow-x-auto"}>
                 {/* individual cards */}
-                {isCreator && <ThemeCreationCard onClick={onClick}/>}
                 {safeThemes.map(theme =>  {
                     console.log(`theme username: ${theme.username}`)
                     return <ThemeCard
@@ -32,17 +31,20 @@ export function UpcomingThemeCollection({events}){
             <div className={"flex gap-5 p-4 overflow-x-auto"}>
                 {/* individual cards */}
                 {safeEvents.map(event =>  {
-                    return <ThemeCard
-                        drinkingRules={event.drinkingRules}
+                    if (event.name === null){
+                        return <EventStartup name={event.username} timestamp={event.timestamp}></EventStartup>
+                    }
+                    return <EventThemeCard
                         name={event.username}
-                        title={event.name}
                         tConsts={event.tConsts}
-                    >
-                    </ThemeCard>
+                        title={event.name}
+                        drinkingRules={event.drinkingRules}
+                        timestamp={event.timestamp}
+                        isSeries={event.isSeries}>
+                    </EventThemeCard>
                 })}
-                <ThemeCard drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]}></ThemeCard>
-                <ThemeCard drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]}></ThemeCard>
-                <ThemeCard drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]}></ThemeCard>
+                <EventThemeCard drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]} timestamp={"2025-09-11T16:00:00"}></EventThemeCard>
+                <EventStartup name={"Kabuum"} timestamp={"2026-01-11T16:00:00"}></EventStartup>
             </div>
         </>
     )

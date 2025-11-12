@@ -22,6 +22,21 @@ export function MovieCardSmall({moviePosterURL, title, runtimeMinutes}){
         </div>
     </div>)
 }
+
+export function MovieCardUpcoming({moviePosterURL, title, runtimeMinutes}){
+    return(
+        <div className={"w-[150px] flex flex-col items-center"}>
+            <p className={"text-[10px] text-center mt-1 w-full"}>{title}</p>
+            <div className="w-[150px] h-[225px] overflow-hidden rounded-md shadow-sm border border-gray-300 bg-white">
+                <img
+                    src={moviePosterURL}
+                    alt={`Poster for ${title}`}
+                    className={`w-full h-full object-cover`}
+                />
+            </div>
+        </div>)
+}
+
 export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove, isSeries}){
     const runtimeHours = Math.floor(runtimeMinutes / 60)
     const runtimeMinutesLeft = runtimeMinutes % 60;
