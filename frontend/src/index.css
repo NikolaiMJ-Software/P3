@@ -90,6 +90,7 @@
   --color-btn-text: oklch(1 0 0); /* White */
   --color-text-primary: oklch(0 0 0); /* Black */
   --color-text-secondary: oklch(0.30 0 0); /* Gray */
+  --color-link: oklch(0.627 0.194 149.214); /* Lime green */
   --color-text-error: oklch(0.628 0.2577 29.23); /* Red */
 }
 
