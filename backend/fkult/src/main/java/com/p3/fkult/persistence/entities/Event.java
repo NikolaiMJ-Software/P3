@@ -1,15 +1,15 @@
 package com.p3.fkult.persistence.entities;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Event {
     private Long id;
-    private LocalDate eventDate;
+    private LocalDateTime eventDate;
     private long themeId;
 
     public Event() {}
 
-    public Event(long id, LocalDate eventDate, long themeId) {
+    public Event(long id, LocalDateTime eventDate, long themeId) {
         this.id = id;
         this.eventDate = eventDate;
         this.themeId = themeId;
@@ -19,7 +19,7 @@ public class Event {
     public long getId() {
         return this.id;
     }
-    public LocalDate getEventDate() {
+    public LocalDateTime getEventDate() {
         return this.eventDate;
     }
     public long getThemeId() {
@@ -30,7 +30,7 @@ public class Event {
     public void setId(long id) {
         this.id = id;
     }
-    public void setEventDate(LocalDate eventDate) {
+    public void setEventDate(LocalDateTime eventDate) {
         this.eventDate = eventDate;
     }
     public void setThemeId(long themeId) {

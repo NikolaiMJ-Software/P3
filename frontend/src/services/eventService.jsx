@@ -4,7 +4,7 @@ const API_URL = `${API}/event`; //backend address
 // Handles uploading of events
 export async function uploadEvent(LocalDate, themeId){
     try {
-        const response = fetch(`${API_URL}/upload/${LocalDate}/${themeId}`);
+        const response = await fetch(`${API_URL}/upload/${LocalDate}/${themeId}`, {method: "PUT",});
         if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
         }

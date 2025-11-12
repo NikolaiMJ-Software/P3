@@ -1,6 +1,6 @@
 package com.p3.fkult.presentation.controllers;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +28,7 @@ public class EventController {
 
     // Upload event to the database
     @PutMapping("/upload/{LocalDate}/{themeId}")
-    public String UploadEvent(@PathVariable("LocalDate") LocalDate eventDate, @PathVariable("themeId") long themeId) {
+    public String UploadEvent(@PathVariable("LocalDate") LocalDateTime eventDate, @PathVariable("themeId") long themeId) {
         return service.UploadEvent(eventDate, themeId);
     }
 }

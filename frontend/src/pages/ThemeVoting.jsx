@@ -82,7 +82,7 @@ const submitVote = async (votes) => {
     }
   };
 
-  const endVoting = () => {
+  const endVoting = async () => {
 
     // Input validation
     if (votesArray.length === 0) {
@@ -98,14 +98,37 @@ const submitVote = async (votes) => {
       return;
     }
 
+    // prompt date for the first event
+    const firstEvent = prompt("Set date of first event in yyyy-mm-dd format");
+    if (!firstEvent || !/^\d{4}-\d{2}-\d{2}$/.test(firstEvent)) {
+      alert("Please enter a valid date in yyyy-mm-dd format.");
+      return;
+    }
+    const startDate = new Date(`${firstEvent}T16:30:00`);
+
     // Sort and select n winners
     const sorted = [...votesArray].sort((a, b) => b.votes - a.votes);
     const topThemes = sorted.slice(0, numberOfWinners);
     setWinners(topThemes);
 
-    // Add every winner to database
-    winners.forEach(async (winner) => {
-    });
+    // For each winner, schedule events 2 weeks apart
+    for (let i = 0; i < topThemes.length; i++) {
+      const winner = topThemes[i];
+      const eventDate = new Date(startDate);
+      eventDate.setDate(startDate.getDate() + i * 14); // 2 weeks
+
+      // Convert to ISO standard time to fit backend LocalDateTime
+      const formattedDate = new Date(eventTime)
+        .toISOString()
+        .slice(0, 19);
+
+      try {
+        const result = await uploadEvent(formattedDate, winner.themeId);
+        console.log(`Event uploaded for ${formattedDate}: ${result}`);
+      } catch (err) {
+        console.error("Failed to upload event for:", formattedDate, err);
+      }
+    }
   };
 
   const handleNext = () =>

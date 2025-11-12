@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import com.p3.fkult.persistence.repository.EventRepository;
 import com.p3.fkult.persistence.entities.Event;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 public class EventService {
@@ -17,7 +17,7 @@ public class EventService {
     }
 
     // Handles event uploads
-    public String UploadEvent(LocalDate eventDate, long themeId) {
+    public String UploadEvent(LocalDateTime eventDate, long themeId) {
         try {
             eventRepository.save(eventDate, themeId);
             return "Event upload complete!";
@@ -38,7 +38,7 @@ public class EventService {
         }
     }
 
-    public LocalDate getLastStartupDate(){
+    public LocalDateTime getLastStartupDate(){
         Event event = eventRepository.getLastStartupEvent();
         return event.getEventDate();
         // NOT SURE HERE
