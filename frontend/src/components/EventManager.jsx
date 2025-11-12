@@ -45,7 +45,7 @@ export default function EventManager({ className }) {
 
 function EventButton({ onClick, label }){
     return (
-        <button className={"m-1 p-2 border rounded-2xl hover:bg-gray-300 transition-colors cursor-pointer"} onClick={onClick}>
+        <button className={"btn-primary"} onClick={onClick}>
             {label}
         </button>
     )

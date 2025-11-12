@@ -173,8 +173,8 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
           disabled={spinning || inputs.length === 0}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
                      w-20 h-20 rounded-full flex items-center justify-center
-                     bg-white text-black font-semibold shadow-md border-2 border-gray-400
-                     hover:bg-gray-100 active:scale-95 transition-transform"
+                     bg-white text-text-primary font-semibold shadow-md border-2 border-gray-400
+                     hover:bg-gray-100 active:scale-95 transition-transform cursor-pointer"
         >
           SPIN
         </button>
@@ -185,7 +185,7 @@ export default function WheelOfFortune({ inputs = [], size = 380, onResult, onRe
         {winner && <>Result: <span className="font-semibold">{winner}</span></>}
       </div>
       <div className = "text-center">
-        {winnerValue != null &&(<button onClick={handleRemove} className="px-3 py-1 rounded border mt-2 hover:bg-gray-100 z-50 relative">Remove</button>)}
+        {winnerValue != null &&(<button onClick={handleRemove} className="btn-primary mt-2 z-50 relative">Remove</button>)}
       </div>
     </div>
   );

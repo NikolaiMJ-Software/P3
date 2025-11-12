@@ -55,7 +55,7 @@ export default function WheelOfFortunePage() {
           />
           <button
             onClick={handleShuffle}
-            className="mt-3 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 active:scale-95 transition-transform">
+            className="btn-primary mt-3 w-full active:scale-95 transition-transform">
             {t("shuffle entries")}
           </button>
         </div>

@@ -92,7 +92,7 @@ export default function Header(){
                      {open && (
                         <div className="absolute right-0 top-14 w-36 bg-white border rounded-xl shadow-lg z-50">
                             <button
-                                className="block w-full text-left px-4 py-2 hover:bg-gray-200 rounded-t-xl"
+                                className="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-200 rounded-t-xl"
                                 onClick={()=>{
                                     setOpen(false);
                                     navigate(`/admin/${username}`);
@@ -101,7 +101,7 @@ export default function Header(){
                                 {t("Admin")}
                             </button>
                             <button
-                                className="block w-full text-left px-4 py-2 hover:bg-gray-200 text-red-500 rounded-b-xl"
+                                className="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-200 text-red-500 rounded-b-xl"
                                 onClick={logout}
                                 >
                                 {t("logout")}
