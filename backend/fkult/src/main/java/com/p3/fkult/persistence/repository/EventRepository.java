@@ -32,9 +32,9 @@ public class EventRepository {
     }
 
     // Save an Event to the database
-    public void save(Event event){
+    public void save(LocalDate eventDate, long themeId){
         String sql = "INSERT INTO events (event_date, theme_id) VALUES (?,?)";
-        jdbcTemplate.update(sql, event.getEventDate(), event.getThemeId());
+        jdbcTemplate.update(sql, eventDate, themeId);
     }
 
     // Delete one Event from the database by id

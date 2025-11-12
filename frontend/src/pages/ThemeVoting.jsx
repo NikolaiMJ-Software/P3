@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchShuffledThemes, updateThemeVotes } from "../services/themeService";
 import { getMoviePosterById } from "../services/movieService";
+import { uploadEvent } from "../services/eventService";
 import ThemeVotingDisplay from "../components/Theme/ThemeVotingDisplay";
 
 export default function ThemeVoting() {
@@ -104,7 +105,6 @@ const submitVote = async (votes) => {
 
     // Add every winner to database
     winners.forEach(async (winner) => {
-      
     });
   };
 
