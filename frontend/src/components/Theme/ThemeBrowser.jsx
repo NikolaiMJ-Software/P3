@@ -46,13 +46,12 @@ export default function ThemeBrowser() {
 
                 {/* Top toggle buttons */}
                 <ThemeToggleButtons selected={selected} onSelect={setSelected}/>
-                <div>
-                    {selected === "your" ? <h1>{t("your themes")}</h1> : selected === "new" ? <h1>{t("new themes")}</h1> : <h1>{t("old themes")}</h1>}
-                </div>
                 {/* Your themes card container */}
                 <div className={"pt-4 pl-6 flex row-end-5 flex gap-5"}>
                     {/* individual cards */}
-                    <ThemeCollection isCreator={true} onClick={() => setIsPopupOpen(true)} themes={themes}></ThemeCollection>
+                    {selected === "your" && (<ThemeCreationCard onClick={() => setIsPopupOpen(true)} />
+                    )}
+                    <ThemeCollection isCreator={true} themes={themes}></ThemeCollection>
                 </div>
 
             </div>
