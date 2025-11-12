@@ -39,7 +39,7 @@ public class EventService {
 
     public LocalDate getLastStartupDate(){
         Event event = eventRepository.getLastStartupEvent();
-        return event.getDate();
+        return event.getEventDate();
         // NOT SURE HERE
     }
 }
