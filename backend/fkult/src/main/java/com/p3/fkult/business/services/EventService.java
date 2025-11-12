@@ -5,6 +5,9 @@ import com.p3.fkult.persistence.repository.EventRepository;
 import com.p3.fkult.persistence.entities.Event;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 @Service
 public class EventService {
@@ -19,7 +22,12 @@ public class EventService {
     // Handles event uploads
     public String UploadEvent(LocalDateTime eventDate, long themeId) {
         try {
-            eventRepository.save(eventDate, themeId);
+            
+            ZoneId systemZone = ZoneId.systemDefault();
+            ZonedDateTime utcTime = eventDate.atZone(ZoneOffset.UTC);
+            LocalDateTime localDateTime = utcTime.withZoneSameInstant(systemZone).toLocalDateTime();
+
+            eventRepository.save(localDateTime, themeId);
             return "Event upload complete!";
         } catch (Exception e) {
             e.printStackTrace();

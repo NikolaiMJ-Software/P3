@@ -28,19 +28,19 @@ public class EventRepository {
 
     // Get all Events from the database
     public List<Event> getAll(){
-        String sql = "SELECT * FROM events";
+        String sql = "SELECT * FROM event";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     // Save an Event to the database
     public void save(LocalDateTime eventDate, long themeId){
-        String sql = "INSERT INTO events (event_date, theme_id) VALUES (?,?)";
+        String sql = "INSERT INTO event (event_date, theme_id) VALUES (?,?)";
         jdbcTemplate.update(sql, eventDate, themeId);
     }
 
     // Delete one Event from the database by id
     public void delete(long id){
-        String sql = "DELETE FROM events WHERE id = ?";
+        String sql = "DELETE FROM event WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
