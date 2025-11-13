@@ -2,7 +2,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import ThemeBrowser from "../components/Theme/ThemeBrowser.jsx";
-import SoundSampleBrowser from "../components/SoundSampleBrowser.jsx";
+import SoundSampleBrowser from "../components/SoundSamples/SoundSampleBrowser.jsx";
 import SubmitSSPage from "../components/SubmitSSPage.jsx";
 import NextTheme from "../components/Theme/NextTheme";
 import { useTranslation } from "react-i18next";
