@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {addTheme, getThemes, getNewThemes, getOldThemes} from "../../services/themeService.jsx";
 import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
-import SoundSampleBrowser from "../SoundSampleBrowser.jsx";
 import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
 import { useTranslation } from "react-i18next";
 import ThemeToggleButtons from "./Themebrowser/ThemeToggleButtons.jsx";

@@ -2,10 +2,12 @@ package com.p3.fkult.presentation.controllers;
 
 public class SoundSampleRequest {
     private String usersFullName;
+    private String username;
     private String soundSample;
     
-    public SoundSampleRequest(String soundSample, String usersFullName) {
+    public SoundSampleRequest(String soundSample, String username, String usersFullName) {
         this.soundSample = soundSample;
+        this.username = username;
         this.usersFullName = usersFullName;
     }
 
@@ -14,6 +16,9 @@ public class SoundSampleRequest {
         return soundSample;
     }
     public String getUsername() {
+        return username;
+    }
+    public String getUsersFullName() {
         return usersFullName;
     }
 
@@ -21,7 +26,7 @@ public class SoundSampleRequest {
     public void setSoundSample(String soundSample) {
         this.soundSample = soundSample;
     }
-    public void setUsername(String usersFullName) {
-        this.usersFullName = usersFullName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
