@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import endSound from "../assets/Timer_Sound.mp3";
 
 export default function Timer({
   //variables to determine time, resetkey, onexpire value and class for the buttons  
@@ -10,9 +11,19 @@ export default function Timer({
   const [duration, setDuration] = useState(initialSeconds);
   const [remaining, setRemaining] = useState(initialSeconds);
   const [running, setRunning] = useState(false);
+  const [hasEnded, setHasEnded] = useState(false);
+
 
   const [displayValue, setDisplayValue] = useState(formatTime(initialSeconds));
   const [isEditing, setIsEditing] = useState(false);
+
+  const isExpired = remaining <= 0 && hasEnded;
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    audioRef.current = new Audio(endSound);
+  }, []);
+
 
   function formatTime(s) {
     const m = Math.floor(s / 60);
@@ -79,15 +90,21 @@ export default function Timer({
       setRemaining(duration);
     }
     setRunning(true);
+    setHasEnded(false);
+    stopSound();
   };
 
   const handleStop = () => {
     setRunning(false);
+    setHasEnded(false);
+    stopSound();
   };
 
   const handleRestart = () => {
     setRemaining(duration);
     setRunning(true);
+    setHasEnded(false);
+    stopSound();
   };
 
 
@@ -100,6 +117,8 @@ export default function Timer({
       setDuration(secs);
       setRemaining(secs);
       setDisplayValue(formatTime(secs));
+      setHasEnded(false);
+      stopSound();
     }
     setIsEditing(false);
   };
@@ -114,6 +133,29 @@ export default function Timer({
       e.target.blur();
     }
   };
+
+  useEffect(() => {
+    if (!running) return;
+
+    if (remaining === 0 && !hasEnded) {
+        setHasEnded(true);
+        const audio = audioRef.current;
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+        }
+    }
+  }, [remaining, hasEnded,  running]);
+
+  const stopSound = () => {
+    const audio = audioRef.current;
+    if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+    }
+  };
+
+
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>
@@ -150,8 +192,9 @@ export default function Timer({
         }}
         onBlur={commitDisplayValue}
         onKeyDown={handleInputKeyDown}
-        className="text-xl font-semibold border px-4 py-2 rounded-md bg-transparent text-center w-24"
         aria-label="Timer (mm:ss)"
+        className={`text-xl font-semibold border px-4 py-2 rounded-md bg-transparent text-center w-24 transition-all
+        ${isExpired ? "border-btn-red text-btn-red animate-flash" : ""} `}
       />
     </div>
   );

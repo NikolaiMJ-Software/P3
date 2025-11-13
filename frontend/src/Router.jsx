@@ -6,7 +6,7 @@ import ThemeBrowser from "./components/Theme/ThemeBrowser.jsx";
 import SubmitSSPage from "./components/SubmitSSPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx"
 import ThemeVoting from "./pages/ThemeVoting.jsx"
-import AdminSound from "./pages/AdminSoundSamplePage.jsx"
+import AdminSound from "./pages/AdminSSPage.jsx"
 
 import Header from "./components/Header.jsx";
 import WheelOfFortunePage from "./pages/WheelOfFortunePage.jsx";

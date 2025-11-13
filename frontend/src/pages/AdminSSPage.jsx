@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import Timer from "../components/Timer.jsx";
 
 
-export default function AdminPage(){
+export default function AdminSSPage(){
     const {username} = useParams();
     const [isAdminUser, setIsAdminUser] = useState(undefined);
     const [resetKey, setResetKey] = useState(0);
