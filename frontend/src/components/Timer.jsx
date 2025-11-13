@@ -120,7 +120,7 @@ export default function Timer({
       {/* Start */}
       <button
         onClick={handleStart}
-        className="px-4 py-2 rounded-md bg-green-600 hover:bg-green-700 text-white"
+        className="btn-primary bg-btn-green hover:bg-btn-green-hover text-white"
       >
         Start
       </button>
@@ -128,7 +128,7 @@ export default function Timer({
       {/* Stop */}
       <button
         onClick={handleStop}
-        className="px-4 py-2 rounded-md bg-red-600 hover:bg-red-700 text-white"
+        className="btn-primary bg-btn-red hover:bg-btn-red-hover text-white"
       >
         Stop
       </button>
@@ -136,7 +136,7 @@ export default function Timer({
       {/* Restart */}
       <button
         onClick={handleRestart}
-        className="px-4 py-2 rounded-md bg-yellow-500 hover:bg-yellow-600 text-white"
+        className="btn-primary bg-btn-yellow hover:bg-btn-yellow-hover text-white"
       >
         Restart
       </button>
