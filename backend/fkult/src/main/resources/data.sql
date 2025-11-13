@@ -1,6 +1,6 @@
 
 -- Insert dummy user
-INSERT OR REPLACE INTO user (id, name, username, is_banned, is_admin)
+INSERT OR IGNORE INTO user (id, name, username, is_banned, is_admin)
 VALUES
     (1, 'John Test', 'tester', 0, 1 ),
 (2, 'Mig', 'Mig1', 0, 0),
@@ -9,26 +9,26 @@ VALUES
 (5, 'mig', 'mig', 0, 0);
 
 -- Insert dummy theme with a known ID
-INSERT OR REPLACE INTO theme (id, name, user_id, timestamp)
+INSERT OR IGNORE INTO theme (id, name, user_id, timestamp)
 VALUES (1, 'Pirates Night', 1, '2024-09-11 08:25:59');
 
 -- Associate movies with this theme
-INSERT OR REPLACE INTO theme_movie (theme_id, movie_id)
+INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
 SELECT 1, 1
 WHERE EXISTS (SELECT 1 FROM movie WHERE id = 1);
 
-INSERT OR REPLACE INTO theme_movie (theme_id, movie_id)
+INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
 SELECT 1, 2
 WHERE EXISTS (SELECT 1 FROM movie WHERE id = 2);
 
 -- Add drinking rules
-INSERT OR REPLACE INTO drinking_rule (theme_id, rule_text)
+INSERT OR IGNORE INTO drinking_rule (id ,theme_id, rule_text)
 VALUES
-(1, 'Drink when someone says "pirate"'),
-(1, 'Take a sip whenever a ship appears on screen');
+(1,1, 'Drink when someone says "pirate"'),
+(2,1, 'Take a sip whenever a ship appears on screen');
 
 -- Dummy sound samples
-INSERT OR REPLACE INTO sound_samples (link, file_path, user_id)
+INSERT OR IGNORE INTO sound_samples (link, file_path, user_id)
 VALUES 
 (NULL, '/film/starwars', 1),
 ('https://www.example.com/audio/intro.mp3', Null, 2),
@@ -52,5 +52,5 @@ VALUES
 (NULL, '/nature/waterfall', 3);
 
 -- Real startup day
-INSERT OR REPLACE INTO event (event_date, theme_id)
+INSERT OR IGNORE INTO event (event_date, theme_id)
 VALUES ('2025-09-11 16:00:00', NULL);

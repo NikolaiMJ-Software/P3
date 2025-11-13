@@ -7,6 +7,7 @@ export default function ThemeCollection({isCreator, onClick, themes}){
         <>
             <div className={"flex gap-5 p-4 overflow-x-auto"}>
                 {/* individual cards */}
+                {isCreator && <ThemeCreationCard onClick={onClick}></ThemeCreationCard>}
                 {safeThemes.map(theme =>  {
                     console.log(`theme username: ${theme.username}`)
                     return <ThemeCard
