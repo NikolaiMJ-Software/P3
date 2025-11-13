@@ -106,22 +106,23 @@ public class SoundSampleService {
         }
 
         List<User> allUsers = userService.getAllUsers();
-        String name = null;
+        String name = null, username = null;
         for (SoundSample soundSample : allSoundSamples) {
             // Convert userId to username
             for (User user : allUsers) {
                 if (soundSample.getUserId().equals(user.getId())) {
                     name = user.getName();
+                    username = user.getUsername();
                     break;
                 }
             }
 
             // Get the file or link
             if (soundSample.getFilePath() != null) {
-                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(soundSample.getFilePath(), name);
+                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(soundSample.getFilePath(), username, name);
                 soundSamplesRequests.add(soundSamplesRequest);
             } else {
-                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(soundSample.getLink(), name);
+                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(soundSample.getLink(), username, name);
                 soundSamplesRequests.add(soundSamplesRequest);
             }
         }
