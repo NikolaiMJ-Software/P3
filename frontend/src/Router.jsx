@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage.jsx";
 import MessagesPage from "./pages/MessagesPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import ThemeBrowser from "./components/Theme/ThemeBrowser.jsx";
+import SoundSampleBrowser from "./components/SoundSamples/SoundSampleBrowser.jsx";
 import SubmitSSPage from "./components/SubmitSSPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx"
 import ThemeVoting from "./pages/ThemeVoting.jsx"
@@ -32,6 +33,7 @@ export default function Router() {
                         <Route path="/messages/:username" element={<MessagesPage />} />
                         <Route path="/themes/:username" element={<ThemeBrowser />} />
                         <Route path="/submit/:username" element={<SubmitSSPage />}/>
+                        <Route path="/sound-samples/:username" element={<SoundSampleBrowser/>}/>
                         <Route path="/voting/:username" element={<ThemeVoting />}/>
                         {/* User logged in paths */}
                         <Route path="/:username" element={<HomePage />} />
