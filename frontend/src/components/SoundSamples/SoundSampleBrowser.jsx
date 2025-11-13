@@ -8,28 +8,31 @@ export default function SoundSampleBrowser() {
     const {t} = useTranslation();
     const { username } = useParams();
     const [usersSS, setUsersSoundSample] = useState([]);
-    let soundSamples = [];
+    const [soundSamples, setSoundSample] = useState([]);
 
-    useEffect( async () => {
-        console.log("her", soundSamples);
-        soundSamples = await getSoundSamples();
-        console.log("der", soundSamples);
-        soundSamples.forEach(soundSample => {
-            if (soundSample.username.toLowerCase() === username.toLowerCase()) {
-                setUsersSoundSample(soundSample);
-            }
-        });
-        console.log("ja", soundSamples);
-        console.log("USERS: ", usersSS);
-    }, []);
+    useEffect(() => {
+        async function load(){
+            const SS = await getSoundSamples();
+            setSoundSample(SS);
+            // Filter only users
+            const usersSoundSample = SS.filter(
+                SS => SS.username.toLowerCase() === username.toLowerCase()
+            );
+
+            setUsersSoundSample(usersSoundSample);
+            console.log("All SS: ", SS);
+            console.log("Users SS: ", usersSoundSample);
+        };
+        
+        load();
+    }, [username]);
 
     return (
     <div className={"p-10"}>
         <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8"}>
             {/* Upcoming themes card container */}
             <p className={"m-4 font-bold"}>Uploaded soundsamples</p>
-            <div className={"flex gap-5 p-4 overflow-x-auto"}>
-                {/* individual cards */}
+            <div className="flex flex-col">
                 <UplaodedSoundSamples soundSamples={soundSamples}/>
             </div>
 

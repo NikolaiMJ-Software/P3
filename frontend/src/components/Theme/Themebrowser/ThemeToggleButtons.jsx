@@ -5,7 +5,7 @@ export default function ThemeToggleButtons({selected, onSelect}){
     const buttons = [
         {key: "your", label: t("your themes")},
         {key: "new", label: t("new themes")},
-        {key: "old", label: t("Old themes")},
+        {key: "old", label: t("old themes")},
     ];
 
     return(

@@ -86,8 +86,6 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
         return parts.find(p => p.startsWith("tt")) || null;
     }
     const handleSubmit = async () => {
-        console.log("submitting...")
-        alert("submitting")
         if(!title){
             alert("Please enter theme title");
             return;
@@ -107,6 +105,7 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
             console.error("Error creating theme:", error);
             alert("failed to create theme" + error);
         }
+        onClose()
     }
 
     const handleAddMovies = (movie) => {
