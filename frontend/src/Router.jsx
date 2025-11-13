@@ -7,6 +7,7 @@ import SoundSampleBrowser from "./components/SoundSamples/SoundSampleBrowser.jsx
 import SubmitSSPage from "./components/SubmitSSPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx"
 import ThemeVoting from "./pages/ThemeVoting.jsx"
+import AdminSound from "./pages/AdminSSPage.jsx"
 
 import Header from "./components/Header.jsx";
 import WheelOfFortunePage from "./pages/WheelOfFortunePage.jsx";
@@ -38,7 +39,9 @@ export default function Router() {
                         {/* User logged in paths */}
                         <Route path="/:username" element={<HomePage />} />
                         <Route path="/admin/:username" element={<AdminPage/>} />
-                        <Route path="/wheel/:username" element={<WheelOfFortunePage/>} />
+                        <Route path="/admin/wheel/:username" element={<WheelOfFortunePage/>} />
+                        <Route path="/admin/sound-sample/:username" element={<AdminSound/>}/>
+                        <Route path="/admin/voting/:username" element={<ThemeVoting />}/>
                         <Route path="/faq/:username" element={<FAQPage/>}/>
                     </Route>
                 </Route>

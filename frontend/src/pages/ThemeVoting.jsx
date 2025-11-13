@@ -3,13 +3,14 @@ import { fetchShuffledThemes, updateThemeVotes } from "../services/themeService"
 import { getMoviePosterById } from "../services/movieService";
 import { uploadEvent } from "../services/eventService";
 import ThemeVotingDisplay from "../components/Theme/ThemeVotingDisplay";
+import Timer from "../components/Timer";
 
 export default function ThemeVoting() {
   const [themes, setThemes] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [votesArray, setVotesArray] = useState([]);
-  const [timerStart, setTimerStart] = useState(60);
+  const [timerStart] = useState(60);
   const [timerResetKey, setTimerResetKey] = useState(0);
 
 
@@ -132,21 +133,10 @@ const submitVote = async (votes) => {
     }
   };
 
-  const handleTimerClick = () => {
-    const newTime = prompt("Enter new timer duration (in seconds):", timerStart);
-    const parsed = parseInt(newTime, 10);
-    if (!isNaN(parsed) && parsed > 0) {
-      setTimerStart(parsed);
-    } else {
-      alert("Please enter a valid positive number.");
-    }
-  };
-
-  const handleNext = () => {
+const handleNext = () => {
   setCurrentIndex((prev) => (prev + 1) % themes.length);
   resetTimer();
 };
-
 const handlePrevious = () => {
   setCurrentIndex((prev) => (prev === 0 ? themes.length - 1 : prev - 1));
   resetTimer();
@@ -159,15 +149,24 @@ const resetTimer = () => {
 };
 
 
-  if (themes.length === 0) return <p>Loading themes...</p>;
+if (themes.length === 0) return <p>Loading themes...</p>;
 
-  const currentTheme = themes[currentIndex];
+const currentTheme = themes[currentIndex];
 
 return (
     <div className="flex flex-col h-screen">
+
+      {/* Timer at the top right corner */ }
+      <div className="flex justify-end p-4 bg-text-secondary">
+        <Timer
+          initialSeconds={timerStart}
+          resetKey={timerResetKey}
+        />
+      </div>
+
       {/* Display the current theme */}
       <div className="flex-1">
-        <ThemeVotingDisplay theme={currentTheme} startTime={timerStart} onTimerClick={handleTimerClick} resetKey={timerResetKey}/>
+        <ThemeVotingDisplay theme={currentTheme}/>
       </div>
 
       {/* Bottom controls */}

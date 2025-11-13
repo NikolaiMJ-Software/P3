@@ -92,6 +92,12 @@
   --color-text-secondary: oklch(0.30 0 0); /* Gray */
   --color-link: oklch(0.627 0.194 149.214); /* Lime green */
   --color-text-error: oklch(0.628 0.2577 29.23); /* Red */
+  --color-btn-red: oklch(0.577 0.245 27.325); /* Darker Red */
+  --color-btn-red-hover: oklch(0.505 0.213 27.518); /* Even Darker Red */
+  --color-btn-green: oklch(0.627 0.194 149.214); /* Green */
+  --color-btn-green-hover: oklch(0.527 0.154 150.069); /* Darker Green */
+  --color-btn-yellow: oklch(0.795 0.184 86.047); /* Yellow */
+  --color-btn-yellow-hover: oklch(0.681 0.162 75.834); /* Darker Yellow */
 }
 
 @layer components {
@@ -117,4 +123,15 @@
     hover:bg-btn-hover-secondary
     border
   }
+}
+
+/*animation for timer*/
+@keyframes flash {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+.animate-flash {
+  animation: flash 0.8s infinite ease-in-out;
 }
