@@ -6,6 +6,7 @@ export default function Timer({
   initialSeconds = 60,
   resetKey,
   onExpire,
+  onStop,
   className = "",
 }) {
   const [duration, setDuration] = useState(initialSeconds);
@@ -98,6 +99,7 @@ export default function Timer({
     setRunning(false);
     setHasEnded(false);
     stopSound();
+    if (onStop) onStop();
   };
 
   const handleRestart = () => {
