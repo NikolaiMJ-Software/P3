@@ -9,16 +9,18 @@ export default function SoundSampleBrowser() {
     const { username } = useParams();
     const [usersSS, setUsersSoundSample] = useState([]);
     const [soundSamples, setSoundSample] = useState([]);
+    const [sortUsersSSText, setSortUsersText] = useState("latest");
+    const [sortAllSSText, setSortAllText] = useState("oldest");
 
     useEffect(() => {
         async function load(){
             const SS = await getSoundSamples();
-            setSoundSample(SS);
             // Filter only users
             const usersSoundSample = SS.filter(
                 SS => SS.username.toLowerCase() === username.toLowerCase()
             );
-
+            
+            setSoundSample([...SS].reverse());
             setUsersSoundSample(usersSoundSample);
             console.log("All SS: ", SS);
             console.log("Users SS: ", usersSoundSample);
@@ -27,12 +29,34 @@ export default function SoundSampleBrowser() {
         load();
     }, [username]);
 
+    const sortSS = (selected) => {
+        if (selected === "usersSS") {
+            setUsersSoundSample([...usersSS].reverse());
+            setSortUsersText(
+                sortUsersSSText === "latest" ? "oldest" : "latest"
+            );
+
+        } else if (selected === "allSS") {
+            setSoundSample([...soundSamples].reverse());
+            setSortAllText(
+                sortAllSSText === "latest" ? "oldest" : "latest"
+            );
+        }
+    }
+
     return (
     <div className={"p-10"}>
         <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8"}>
 
             {/* Users sound sample card container */}
-            <p className={"m-4 font-bold"}>Your sound samples</p>
+            <div className="flex justify-between items-center m-4">
+                <div className={"m-4 font-bold"}>Your sound samples</div>
+                <button className="btn-primary"
+                    type="button"
+                    onClick={() => sortSS("usersSS")}>
+                    {t(sortUsersSSText)}
+                </button>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                 <UplaodedSoundSamples soundSamples={usersSS}/>
             </div>
@@ -40,7 +64,14 @@ export default function SoundSampleBrowser() {
             <div className={"border-1 m-8"}></div>
 
             {/* Upcoming themes card container */}
-            <p className={"m-4 font-bold"}>Uploaded soundsamples</p>
+            <div className="flex justify-between items-center m-4">
+                <div className={"m-4 font-bold"}>Uploaded soundsamples</div>
+                <button className="btn-primary"
+                    type="button"
+                    onClick={() => sortSS("allSS")}>
+                    {t(sortAllSSText)}
+                </button>
+            </div>
             <div className="w-full max-w-full h-fit">
                 <UplaodedSoundSamples soundSamples={soundSamples}/>
             </div>
