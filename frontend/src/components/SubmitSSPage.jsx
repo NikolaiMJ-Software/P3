@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { addSoundSample, deleteSoundSample, getSoundSamples, getSoundsampleFile } from "../services/soundSampleService";
+import { addSoundSample, getSoundSamples, getSoundsampleFile } from "../services/soundSampleService";
 import { getIdByUser } from "../services/adminService.jsx"
 import { useTranslation } from "react-i18next";
 
@@ -21,6 +21,10 @@ export default function SubmitSSPage() {
 
         // Sanitize input
         const trimmedLink = link?.trim();
+        if (!trimmedLink.includes("https://")) {
+            setMessage("Not a link: " + trimmedLink);
+            return;
+        }
 
         // Get the user ID from the backend
         let userId;
@@ -34,52 +38,20 @@ export default function SubmitSSPage() {
         }
 
         // Submit sound sample and reset input
-        try {
-            const resText = await addSoundSample(trimmedLink, file, userId);
-            setMessage(resText);
-            setFile(null);
-            setUrl("");
-            document.getElementById("textField").value = "";
-        } catch (error) {
-            console.error("Upload failed:", error);
-            setMessage("Upload failed: " + error.message);
-        }
-    }
-
-    // Handles sound sample deletion
-    const handleDelete = async () => {
-        // Remove whitespace from inputs
-        const trimmedLink = link?.trim();
-        const trimmedFileName = fileName?.trim();
-
-        // Validate input
-        if (!trimmedLink && !trimmedFileName) {
-            setMessage("Please provide a link or file name for deletion.");
-            return;
-        }
-
-        // Delete sound sample
-        try {
-            const resText = await deleteSoundSample(trimmedLink, trimmedFileName);
-            setMessage(resText);
-        } catch (error) {
-            console.error("Deletion failed:", error);
-            setMessage("Deletion failed: " + error.message);
-        }
+        const resText = await addSoundSample(trimmedLink, file, userId);
+        setMessage(resText);
+        setFile(null);
+        setUrl("");
+        document.getElementById("textField").value = "";
     }
 
     const playSoundSamples = async () => {
         let quickShuffle = false;
         let weightedShuffle = false;
-        let soundSample;
+
         // Get sound sample
-        try {
-            const res = await getSoundSamples(quickShuffle, weightedShuffle);
-            soundSample = res;
-        } catch (error) {
-            console.error("Get all Sound samples failed:", error);
-        }
-        console.log(soundSample);
+        const res = await getSoundSamples(quickShuffle, weightedShuffle);
+        console.log(res);
     }
 
     const getSSFile = async (filePath) => {
