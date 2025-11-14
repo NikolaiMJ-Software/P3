@@ -4,13 +4,8 @@ import DrinkingRuleCreator from "./DrinkingRuleCreator.jsx";
 export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie, setTitle, rules, setRules}){
 
     return(
-        <div className={"items-center flex-col flex gap-1 border-1 m-2 p-2 w-[600px]"}>
+        <div className={"items-center flex-col flex gap-1 border-1 m-2 p-2 min-h-[640px]"}>
             <input type={"text"} onChange={event => setTitle(event.target.value)} placeholder={"Enter theme title"} className={"w-100 text-center text-text-primary border-1 m-2 p-2 rounded-2xl"}/>
-            <button
-                onClick={handleSubmit}
-                className={"absolute bottom-4 left-1/2 transform -translate-x-1/2 font-semibold px-8 py-3 rounded-xl border-2 border-text-primary hover:bg-btn-hover-secondary"}>
-                Submit
-            </button>
             <p className={"text-center"}>Movies</p>
             {movies.length > 0 && (() => {
                 const totalRuntime = movies.reduce((sum, m) => sum + (m.runtimeMinutes || 0), 0);
