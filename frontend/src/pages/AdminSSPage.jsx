@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 import Timer from "../components/Timer.jsx";
 import { addSoundSample, deleteSoundSample, getSoundSamples, getSoundsampleFile } from "../services/soundSampleService.jsx";
+import { useNavigate } from "react-router-dom";
 
 
 export default function AdminSSPage(){
@@ -13,6 +14,7 @@ export default function AdminSSPage(){
     const {t} = useTranslation();
     const [soundSamples, setSoundSamples] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const navigate = useNavigate();
 
 
     //check if {username} is admin
@@ -33,22 +35,34 @@ export default function AdminSSPage(){
 
     console.log(isAdminUser)
 
+    //checks if there are more soundsamples then 0
     const hasSamples = soundSamples.length > 0;
+
+    //chooses the current soundsample if there is a soundsample
     const currentSample = hasSamples ? soundSamples[currentIndex] : null;
 
+    //navigation function that takes care of the next and previous button, and the buffer delete
     const handleNavigate = async (direction) => {
         if (!hasSamples) return;
 
+        //defines the deletion index
         const deleteIndex = currentIndex - 3;
 
+        //makes a list to update the soundsamples
         let updated = soundSamples;
 
+        //if statement to ensure deleteindex is not less then 0 or higher then list length
         if (deleteIndex >= 0 && deleteIndex < soundSamples.length) {
+            //defines sound sample to delete
             const sampleToDelete = soundSamples[deleteIndex];
 
+            //deletes sample
             await deleteSoundSample(sampleToDelete.soundSample);
 
+            //sorts out deleted indexes from the updated list
             updated = soundSamples.filter((_, i) => i !== deleteIndex);
+
+            //sets sound samples to the updated list
             setSoundSamples(updated);
         }
 
@@ -56,6 +70,7 @@ export default function AdminSSPage(){
             setCurrentIndex(0);
             return;
         }
+
 
         let baseIndex = currentIndex;
         if (deleteIndex >= 0 && deleteIndex < currentIndex) {
@@ -70,8 +85,28 @@ export default function AdminSSPage(){
         setCurrentIndex(nextIndex);
     };
 
+    //functions to go back and forward using handlenavigate
     const handleNext = () => handleNavigate(1);
     const handlePrevious = () => handleNavigate(-1);
+
+    //function that makes the stop time delete the rest of the buffer samples
+    const handleTimerStop = async () => {
+        if (!hasSamples || currentIndex === 0) return;
+
+        const bufferToDelete = soundSamples.slice(0, currentIndex);
+
+        for (const sample of bufferToDelete) {
+            await deleteSoundSample(sample.soundSample);  
+        }
+
+
+        const updated = soundSamples.slice(currentIndex);
+
+        setSoundSamples(updated);
+        setCurrentIndex(0); 
+    };
+
+
 
 
 
@@ -80,7 +115,7 @@ export default function AdminSSPage(){
             <div className="p-6">
                 {/* Timer */}
                 <div className="flex justify-end mb-6">
-                    <Timer initialSeconds={1800} resetKey={resetKey}/>
+                    <Timer initialSeconds={1800} resetKey={resetKey} onStop={handleTimerStop}/>
                 </div>
 
                 {/* Media Player */}
@@ -127,5 +162,7 @@ export default function AdminSSPage(){
             </div>
 
         )
+    }else if (isAdminUser === 0) {
+        navigate(`/${username}`);
     }
 }

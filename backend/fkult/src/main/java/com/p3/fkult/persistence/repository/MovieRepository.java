@@ -88,30 +88,36 @@ public class MovieRepository {
         jdbcTemplate.update(sql, posterURL, movieId);
     }
     public List<Movie> searchMovies(String keyword, int page, int limit) {
-        //case insenstive + partial matches
+        int offset = (page - 1) * limit;
+        String likePattern = keyword + "*"; // FTS5 prefix search
+
         String sql = """
-        SELECT * FROM movie 
-        WHERE LOWER(movie_name) LIKE LOWER(?) 
-        AND is_active = 1 
-        AND year > 0
-        AND runtime_minutes > 0 
+        SELECT m.*
+        FROM movie m
+        JOIN movie_fts fts ON fts.rowid = m.id
+        WHERE fts.movie_name MATCH ?
+          AND m.is_active = 1
+          AND m.year > 0
+          AND m.runtime_minutes > 0
         LIMIT ? OFFSET ?
-        """;
-        int offset = (page-1) * limit;
-        String likePattern = "%" + keyword + "%";
+    """;
+
+        // Bind the same FTS keyword to both columns
         return jdbcTemplate.query(sql, rowMapper, likePattern, limit, offset);
     }
 
     public int countMovies(String keyword){
+        String ftsPattern = keyword + "*"; // same prefix search
         String sql = """
-        SELECT COUNT(*) FROM movie 
-        WHERE LOWER(movie_name) LIKE LOWER(?) 
-        AND is_active = 1 
-        AND year > 0
-        AND runtime_minutes > 0 
-        """;
-        String likePattern = "%" + keyword + "%";
-        return jdbcTemplate.queryForObject(sql, Integer.class, likePattern);
+        SELECT COUNT(*)
+        FROM movie m
+        JOIN movie_fts fts ON fts.rowid = m.id
+        WHERE fts.movie_name MATCH ?
+          AND m.is_active = 1
+          AND m.year > 0
+          AND m.runtime_minutes > 0
+    """;
+        return jdbcTemplate.queryForObject(sql, Integer.class, ftsPattern);
     }
 
     //upsert function

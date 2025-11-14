@@ -9,7 +9,7 @@ import ThemeCreator from "./ThemeCreator.jsx";
 import {addTheme, getThemes} from "../../services/themeService.jsx";
 const MOVIE_LIMIT = 6;
 
-export default function ThemeCreationPopup({isOpen, onClose}) {
+export default function ThemeCreationPopup() {
     const [title, setTitle] = useState("");
     const [movies, setMovies] = useState([]);
     const [rules, setRules] = useState([]);
@@ -105,7 +105,6 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
             console.error("Error creating theme:", error);
             alert("failed to create theme" + error);
         }
-        onClose()
     }
 
     const handleAddMovies = (movie) => {
@@ -125,21 +124,16 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
         setMovies([]);
         setRules("");
     }
-    const handleClose = () => {
-        resetForm();
-        onClose();
-    };
 
-    if (!isOpen) {
-        return null;
-    }
+
     return (
-        <div className="fixed inset-0 flex justify-center items-center bg-text-primary/50 z-50">
-            <div className="relative bg-white rounded-2xl p-6 shadow-lg w-[1200px] h-200">
+        <div className="p-10 relative">
+            <div className="w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col gap-3">
+
                 {/* Top content */}
-                <ThemeCreatorTopcontent handleClose={handleClose}></ThemeCreatorTopcontent>
-                <div className={"flex flex-row"}>
+                <div className={"flex flex-row gap-6 w-full overflow-hidden"}>
                     {/* Left Movie searcher*/}
+                    <div className="w-[600px] h-[650px]">
                     <ThemeMovieSearcher foundMovies={foundMovies}
                                         handleAddMovies={handleAddMovies}
                                         movieCount={movieCount}
@@ -148,7 +142,9 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
                                         totalPageCount={totalPageCount}
                                         setSearchQuery={setSearchQuery}>
                     </ThemeMovieSearcher>
+                    </div>
                     {/* Right Theme Creator */}
+                    <div className="w-[600px] h-[650px]">
                     <ThemeCreator
                         handleSubmit={handleSubmit}
                         movies={movies}
@@ -158,7 +154,17 @@ export default function ThemeCreationPopup({isOpen, onClose}) {
                         setRules={setRules}
                     >
                     </ThemeCreator>
+                    </div>
+
                 </div>
+                <div className="w-full flex justify-center mt-6">
+                <button
+                    onClick={handleSubmit}
+                    className="px-7 py-3 rounded-xl border-2 border-text-primary hover:bg-btn-hover-secondary"
+                >
+                    Submit
+                </button>
+            </div>
             </div>
         </div>
     )

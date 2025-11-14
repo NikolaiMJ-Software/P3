@@ -77,6 +77,8 @@ CREATE TABLE IF NOT EXISTS event (
   FOREIGN KEY (theme_id) REFERENCES theme(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
+CREATE VIRTUAL TABLE IF NOT EXISTS movie_fts
+    USING fts5(movie_name, original_movie_name, content='movie', content_rowid='id');
 -- Helpful indexes
 CREATE INDEX IF NOT EXISTS idx_movie_year            ON movie(year);
 CREATE INDEX IF NOT EXISTS idx_movie_name_nocase     ON movie(movie_name COLLATE NOCASE);
