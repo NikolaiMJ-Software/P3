@@ -42,5 +42,7 @@
   "filters": "Filtre",
   "become admin": "Bliv Admin",
   "unbecome admin": "Ubliv Admin",
-  "come and vote": "Kom og stem på temaer"
+  "come and vote": "Kom og stem på temaer",
+  "uplSS": "Alle lydprøveforslag",
+  "usersSS": "Dine lydprøveforslag"
 }

@@ -50,7 +50,7 @@ export default function SoundSampleBrowser() {
 
             {/* Users sound sample card container */}
             <div className="flex justify-between items-center m-4">
-                <div className={"m-4 font-bold"}>Your sound samples</div>
+                <div className={"m-4 font-bold"}>{t("usersSS")}</div>
                 <button className="btn-primary"
                     type="button"
                     onClick={() => sortSS("usersSS")}>
@@ -65,7 +65,7 @@ export default function SoundSampleBrowser() {
 
             {/* Upcoming themes card container */}
             <div className="flex justify-between items-center m-4">
-                <div className={"m-4 font-bold"}>Uploaded soundsamples</div>
+                <div className={"m-4 font-bold"}>{t("uplSS")}</div>
                 <button className="btn-primary"
                     type="button"
                     onClick={() => sortSS("allSS")}>
