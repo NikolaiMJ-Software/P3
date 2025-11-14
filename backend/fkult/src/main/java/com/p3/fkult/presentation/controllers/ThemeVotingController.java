@@ -17,7 +17,7 @@ public class ThemeVotingController {
 
     // Get all theme data
     @GetMapping("/getShuffledThemes")
-    public List<ThemeRequest> getShuffledThemes() {
+    public List<ThemeVotingRequest> getShuffledThemes() {
         return themeVotingService.getShuffledThemes();
     }
 

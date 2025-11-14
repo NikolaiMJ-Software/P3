@@ -3,47 +3,88 @@ package com.p3.fkult.business.services;
 import java.util.*;
 import org.springframework.stereotype.Service;
 import com.p3.fkult.presentation.controllers.ThemeRequest;
+import com.p3.fkult.presentation.controllers.ThemeVotingRequest;
 import com.p3.fkult.persistence.repository.ThemeRepository;
+import com.p3.fkult.persistence.repository.UserRepository;
+import com.p3.fkult.persistence.repository.MovieRepository;
 
 @Service
 public class ThemeVotingService {
 
-    // Download copy of ThemeService to utilize its functions
+    // Download copy of different files to utilize their functions
     private final ThemeRepository themeRepository;
     private final ThemeService themeService;
-    public ThemeVotingService(ThemeService themeService, ThemeRepository themeRepository) {
+    private final UserRepository userRepository;
+    private final MovieRepository movieRepository;
+    public ThemeVotingService(ThemeService themeService, ThemeRepository themeRepository, UserRepository userRepository, MovieRepository movieRepository) {
         this.themeService = themeService;
         this.themeRepository = themeRepository;
+        this.userRepository = userRepository;
+        this.movieRepository = movieRepository;
     }
 
     // Get shuffled list of themes that avoid repeated user ids
-    public List<ThemeRequest> getShuffledThemes() {
-        List<ThemeRequest> themes = themeService.getAllThemes();
-        if (themes == null || themes.size() < 2) return themes;
+    public List<ThemeVotingRequest> getShuffledThemes() {
 
-        // Create list of shuffled themes
-        List<ThemeRequest> shuffled = new ArrayList<>(themes);
-        Collections.shuffle(shuffled);
+        // Get default theme info and setup theme data array
+        List<ThemeRequest> themeInfo = themeService.getAllThemes();
+        List<ThemeVotingRequest> themeData = new ArrayList<>();
+        
+        // Run a for-loop to input all data themeData needs
+        for (int i = 0; i < themeInfo.size(); i++){
 
-        // Manages list to avoid repeated user ids
-        for (int i = 0; i < shuffled.size() - 1; i++) {
-            ThemeRequest current = shuffled.get(i);
-            ThemeRequest next = shuffled.get(i + 1);
+            // Set the data we already have from themeInfo
+            themeData.get(i).setThemeId(themeInfo.get(i).getThemeId());
+            themeData.get(i).setThemeName(themeInfo.get(i).getName());
+            themeData.get(i).setDrinkingRules(themeInfo.get(i).getDrinkingRules());
+
+            // Set the name of the submitter
+            themeData.get(i).setSubmitterName(userRepository.findUserNameById(themeInfo.get(i).getUserId()));
+
+            // Set movie names, posters, ratings, and runtimes
+            List<String> movieNames = new ArrayList<>();
+            List<String> moviePosters = new ArrayList<>();
+            List<Long> ratings = new ArrayList<>();
+            List<Long> runTime = new ArrayList<>();
+
+            for (int j = 0; j < themeInfo.get(i).getMovieIds().size(); j++){
+
+                Long movieId = themeInfo.get(i).getMovieIds().get(j);
+
+                movieNames.add(movieRepository.findNameById(movieId));
+                moviePosters.add(movieRepository.findPosterById(movieId));
+                ratings.add(movieRepository.findRatingById(movieId));
+                runTime.add(movieRepository.findRunTimeById(movieId));
+            }
+            themeData.get(i).setMovieNames(movieNames);
+            themeData.get(i).setMoviePosters(moviePosters);
+            themeData.get(i).setRatings(ratings);
+            themeData.get(i).setRunTimes(runTime);
+        }
+
+        // Shuffle the list of theme data
+        Collections.shuffle(themeData);
+
+        // Ensure there arent 2 sequantial themes from same user
+        for (int i = 0; i < themeData.size() - 1; i++) {
+            ThemeVotingRequest current = themeData.get(i);
+            ThemeVotingRequest next = themeData.get(i + 1);
 
             // If the next one has the same userId, try to swap with another further ahead
-            if (current.getUserId().equals(next.getUserId())) {
-                for (int j = i + 2; j < shuffled.size(); j++) {
-                    if (!shuffled.get(j).getUserId().equals(current.getUserId())) {
+            if (current.getSubmitterName().equals(next.getSubmitterName())) {
+                for (int j = i + 2; j < themeData.size(); j++) {
+                    if (!themeData.get(j).getSubmitterName().equals(current.getSubmitterName())) {
                         // Swap next with j
-                        Collections.swap(shuffled, i + 1, j);
+                        Collections.swap(themeData, i + 1, j);
                         break;
                     }
                 }
             }
         }
-        return shuffled;
-    }
 
+        // Return the now shuffled list of theme data
+        return themeData;
+    }
     
     // Updates the votes of a theme based on the id
     public String UpdateVote(long id, long votes) {
