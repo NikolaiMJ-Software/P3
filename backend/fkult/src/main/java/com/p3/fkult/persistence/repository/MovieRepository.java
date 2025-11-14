@@ -67,6 +67,22 @@ public class MovieRepository {
         }
     }
 
+    public String findNameById(Long id){
+        return jdbcTemplate.queryForObject("SELECT movie_name FROM movie WHERE id = ?", String.class, id);
+    }
+
+    public String findPosterById(Long id){
+        return jdbcTemplate.queryForObject("SELECT poster_url FROM movie WHERE id = ?", String.class, id);
+    }
+
+    public Long findRatingById(Long id){
+        return jdbcTemplate.queryForObject("SELECT rating FROM movie WHERE id = ?", Long.class, id);
+    }
+
+    public Long findRunTimeById(Long id){
+        return jdbcTemplate.queryForObject("SELECT runtime_minutes FROM movie WHERE id = ?", Long.class, id);
+    }
+
     public void updatePosterURL(Long movieId, String posterURL){
         String sql = "UPDATE movie SET poster_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, posterURL, movieId);
