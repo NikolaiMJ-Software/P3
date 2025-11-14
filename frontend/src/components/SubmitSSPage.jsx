@@ -21,7 +21,8 @@ export default function SubmitSSPage() {
 
         // Sanitize input
         const trimmedLink = link?.trim();
-        if (!trimmedLink.includes("https://")) {
+        if (trimmedLink && !trimmedLink.includes("https://")) {
+            console.error("Not a link: " + trimmedLink);
             setMessage("Not a link: " + trimmedLink);
             return;
         }
