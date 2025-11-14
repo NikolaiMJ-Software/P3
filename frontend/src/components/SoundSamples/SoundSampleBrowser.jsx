@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import UplaodedSoundSamples from "./SoundSamplesCollection.jsx"
-import { addSoundSample, deleteSoundSample, getSoundSamples, getSoundsampleFile } from "../../services/soundSampleService.jsx";
+import { getSoundSamples } from "../../services/soundSampleService.jsx";
 
 export default function SoundSampleBrowser() {
     const {t} = useTranslation();
@@ -13,21 +13,25 @@ export default function SoundSampleBrowser() {
     const [sortAllSSText, setSortAllText] = useState("oldest");
 
     useEffect(() => {
-        async function load(){
-            const SS = await getSoundSamples();
-            // Filter only users
-            const usersSoundSample = SS.filter(
-                SS => SS.username.toLowerCase() === username.toLowerCase()
-            );
-            
-            setSoundSample([...SS].reverse());
-            setUsersSoundSample(usersSoundSample);
-            console.log("All SS: ", SS);
-            console.log("Users SS: ", usersSoundSample);
-        };
-        
         load();
     }, [username]);
+
+    async function load(){
+        const SS = await getSoundSamples();
+        // Filter only users
+        const usersSoundSample = SS.filter(
+            SS => SS.username.toLowerCase() === username.toLowerCase()
+        );
+        
+        setSoundSample([...SS].reverse());
+        setUsersSoundSample(usersSoundSample);
+        console.log("All SS: ", SS);
+        console.log("Users SS: ", usersSoundSample);
+    };
+    
+    const handleDeleted = () => {
+        load();
+    };
 
     const sortSS = (selected) => {
         if (selected === "usersSS") {
@@ -58,7 +62,7 @@ export default function SoundSampleBrowser() {
                 </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                <UplaodedSoundSamples soundSamples={usersSS}/>
+                <UplaodedSoundSamples soundSamples={usersSS} witch="users" onDeleted={handleDeleted}/>
             </div>
 
             <div className={"border-1 m-8"}></div>
@@ -72,8 +76,8 @@ export default function SoundSampleBrowser() {
                     {t(sortAllSSText)}
                 </button>
             </div>
-            <div className="w-full max-w-full h-fit">
-                <UplaodedSoundSamples soundSamples={soundSamples}/>
+            <div className="w-full max-w-full h-auto p-2">
+                <UplaodedSoundSamples soundSamples={soundSamples} witch=""/>
             </div>
 
         </div>
