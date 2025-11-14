@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {addTheme, getThemes, getNewThemes, getOldThemes} from "../../services/themeService.jsx";
 import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
-import SoundSampleBrowser from "../SoundSampleBrowser.jsx";
 import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
 import { useTranslation } from "react-i18next";
 import ThemeToggleButtons from "./Themebrowser/ThemeToggleButtons.jsx";
@@ -14,12 +13,13 @@ export default function ThemeBrowser() {
     const {t} = useTranslation();
 
     useEffect(() => {
+        setThemes([]);
         getThemes(selected).then(data => {
             console.log("Selected:", selected);
             console.log("Received themes:", data);
             setThemes(data);
         }).catch(err => console.error("Error loading themes:", err));
-    },[selected])
+    },[selected,isPopupOpen])
 
 
     const getTodaysDate = () =>{
@@ -47,13 +47,12 @@ export default function ThemeBrowser() {
                 {/* Top toggle buttons */}
                 <ThemeToggleButtons selected={selected} onSelect={setSelected}/>
                 {/* Your themes card container */}
-                <div className={"pt-4 pl-6 flex row-end-5 flex gap-5"}>
+                <div className={"pt-4 flex row-end-5 flex gap-5"}>
                     {/* individual cards */}
-                    {selected === "your" && (<ThemeCreationCard onClick={() => setIsPopupOpen(true)} />
-                    )}
-                    <ThemeCollection isCreator={true} themes={themes}></ThemeCollection>
+                    {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
+                    {selected === "old" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
+                    {selected === "new" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
                 </div>
-
             </div>
         </div>
     )

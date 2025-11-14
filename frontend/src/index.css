@@ -124,3 +124,14 @@
     border
   }
 }
+
+/*animation for timer*/
+@keyframes flash {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+.animate-flash {
+  animation: flash 0.8s infinite ease-in-out;
+}
