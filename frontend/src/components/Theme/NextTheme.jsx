@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import React from "react";
+
 export default function NextTheme({ dateLabel, date, title = "", posters = [] }) {
   const label =
     dateLabel ??
@@ -10,11 +13,13 @@ export default function NextTheme({ dateLabel, date, title = "", posters = [] })
       return `${dd}/${mm}`;
     })();
 
+    const {t} = useTranslation();
+
   return (
     <div className="rounded-2xl border px-4 py-4 bg-white [container-type:inline-size]">
       {/* header/date */}
       <div className="flex items-center justify-between">
-        <span className="text-sm text-text-secondary">Next Theme</span>
+        <span className="text-sm text-text-secondary">{t('nextTheme')}</span>
         <span className="text-sm font-medium text-text-secondary">{label}</span>
       </div>
 

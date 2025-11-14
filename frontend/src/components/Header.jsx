@@ -52,13 +52,13 @@ export default function Header(){
     }, []);
 
     return (
-        <header className="pb-10 flex justify-between top-0 inset-x-0">
+        <header className="relative pb-10 flex justify-between top-0 inset-x-0">
             <NavButton
                 icon={logoPNG}
                 onClick={() => {navigate(`/${username}`)}}
             />
 
-            <h1 className="relative top-2 left-0 right-0 text-center text-3xl bold">F-Kult</h1>
+            <h1 className="absolute left-1/2 -translate-x-1/2 top-2 text-center text-3xl">F-Kult</h1>
 
             <div className="flex">
                 <NavButton
