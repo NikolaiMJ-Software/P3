@@ -7,6 +7,7 @@ import SubmitSSPage from "../components/SubmitSSPage.jsx";
 import NextTheme from "../components/Theme/NextTheme";
 import { useTranslation } from "react-i18next";
 import React from "react";
+import ThemeCreationPopup from "../components/Theme/ThemeCreationPopup.jsx";
 
 
 export default function HomePage() {
@@ -50,9 +51,11 @@ export default function HomePage() {
         <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-9 min-w-0 overflow-hidden"> {
                 selected === "themes" ? (
-                    <ThemeBrowser />
+                    <ThemeBrowser onCreateTheme={() => setSelected("createTheme")} />
                 ) : selected === "samples" ? (
                     <SoundSampleBrowser />
+                ) : selected === "createTheme" ? (
+                    <ThemeCreationPopup />
                 ) : selected === "submitSample" ? (
                     <SubmitSSPage />
                 ) : null
@@ -78,8 +81,9 @@ export default function HomePage() {
 
 
                     <button className={`btn-home-page
-                        ${selected === "" ? "" : "btn-secondary"}`}>
-                        {t("create")} {t("theme")}
+                        ${selected === "createTheme" ? "" : "btn-secondary"}`}
+                            onClick={() => setSelected("createTheme")}> {t("create")} {t("theme")}
+                        
                     </button>
                     <button className={`btn-home-page
                         ${selected === "submitSample" ? "" : "btn-secondary"}`}
