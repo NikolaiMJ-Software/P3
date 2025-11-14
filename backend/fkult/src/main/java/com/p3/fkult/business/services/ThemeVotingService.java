@@ -33,13 +33,16 @@ public class ThemeVotingService {
         // Run a for-loop to input all data themeData needs
         for (int i = 0; i < themeInfo.size(); i++){
 
+            // Setup new ThemeVotingRequest object
+            ThemeVotingRequest singularTheme = new ThemeVotingRequest();
+
             // Set the data we already have from themeInfo
-            themeData.get(i).setThemeId(themeInfo.get(i).getThemeId());
-            themeData.get(i).setThemeName(themeInfo.get(i).getName());
-            themeData.get(i).setDrinkingRules(themeInfo.get(i).getDrinkingRules());
+            singularTheme.setThemeId(themeInfo.get(i).getThemeId());
+            singularTheme.setThemeName(themeInfo.get(i).getName());
+            singularTheme.setDrinkingRules(themeInfo.get(i).getDrinkingRules());
 
             // Set the name of the submitter
-            themeData.get(i).setSubmitterName(userRepository.findUserNameById(themeInfo.get(i).getUserId()));
+            singularTheme.setSubmitterName(userRepository.findUserNameById(themeInfo.get(i).getUserId()));
 
             // Set movie names, posters, ratings, and runtimes
             List<String> movieNames = new ArrayList<>();
@@ -56,10 +59,13 @@ public class ThemeVotingService {
                 ratings.add(movieRepository.findRatingById(movieId));
                 runTime.add(movieRepository.findRunTimeById(movieId));
             }
-            themeData.get(i).setMovieNames(movieNames);
-            themeData.get(i).setMoviePosters(moviePosters);
-            themeData.get(i).setRatings(ratings);
-            themeData.get(i).setRunTimes(runTime);
+            singularTheme.setMovieNames(movieNames);
+            singularTheme.setMoviePosters(moviePosters);
+            singularTheme.setRatings(ratings);
+            singularTheme.setRunTimes(runTime);
+
+            // Add the singularTheme to the themeData list
+            themeData.add(singularTheme);
         }
 
         // Shuffle the list of theme data

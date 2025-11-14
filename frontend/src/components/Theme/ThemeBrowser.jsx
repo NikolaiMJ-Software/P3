@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import ThemeToggleButtons from "./Themebrowser/ThemeToggleButtons.jsx";
 import ThemeCollection, {UpcomingThemeCollection} from "./Themebrowser/ThemeCollection.jsx";
 
-export default function ThemeBrowser() {
+export default function ThemeBrowser({onCreateTheme}) {
     const [themes, setThemes] = useState([]);
     const [selected, setSelected] = useState("your")
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -32,10 +32,6 @@ export default function ThemeBrowser() {
 
     return (
         <div className={"p-10"}>
-            <ThemeCreationPopup
-                isOpen={isPopupOpen}
-                onClose={() => setIsPopupOpen(false)}
-            />
             <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8"}>
 
                 {/* Upcoming themes card container */}
@@ -49,7 +45,7 @@ export default function ThemeBrowser() {
                 {/* Your themes card container */}
                 <div className={"pt-4 flex row-end-5 flex gap-5"}>
                     {/* individual cards */}
-                    {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
+                    {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={onCreateTheme} ></ThemeCollection>)}
                     {selected === "old" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
                     {selected === "new" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
                 </div>

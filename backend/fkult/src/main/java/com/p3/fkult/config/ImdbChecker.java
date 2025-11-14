@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Component
-@Order(1) // ensure this runs early
+@Order(2) // ensure this runs early
 public class ImdbChecker implements ApplicationRunner {
     private final ImdbMovieImportService importService;
     private final Path localPath;

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { fetchShuffledThemes, updateThemeVotes } from "../services/themeService";
-import { getMoviePosterById } from "../services/movieService";
 import { uploadEvent } from "../services/eventService";
 import ThemeVotingDisplay from "../components/Theme/ThemeVotingDisplay";
 import Timer from "../components/Timer";
@@ -9,89 +8,52 @@ export default function ThemeVoting() {
   const [themes, setThemes] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
-  const [votesArray, setVotesArray] = useState([]);
   const [timerStart] = useState(60);
   const [timerResetKey, setTimerResetKey] = useState(0);
 
-
+  // Fetch all themes on page load
   useEffect(() => {
     async function loadThemes() {
       try {
-
-        // Fetch all shuffled themes
         const themesData = await fetchShuffledThemes();
-
-        // Add the posters for each movie
-        const posterThemes = await Promise.all(
-          themesData.map(async (theme) => {
-            const movieIds = theme.movieIds || [];
-
-            // Fetch posters for each movie ID
-            const posters = await Promise.all(
-              movieIds.map(async (id) => {
-                try {
-                  const posterUrl = await getMoviePosterById(id);
-                  return posterUrl;
-                } catch (err) {
-                  console.warn(`Failed to fetch poster for movie ${id}`, err);
-                  return null;
-                }
-              })
-            );
-
-            // Append posters to theme object
-            return {
-              ...theme,
-              posters: posters.filter(Boolean), // remove any nulls
-            };
-          })
-        );
-
-        setThemes(posterThemes);
+        setThemes(themesData);
       } catch (error) {
         console.error("Error loading themes:", error);
       }
     }
-
     loadThemes();
   }, []);
 
-const submitVote = async (votes) => {
+  // Function to submit votes for the current theme
+  const submitVote = async (votes) => {
     if (votes === "") {
       alert("Please enter an amount of votes");
       return;
     }
-
-    const themeId = themes[currentIndex].themeId;
-
     try {
-      const result = await updateThemeVotes(themeId, votes);
+      const result = await updateThemeVotes(themes[currentIndex].themeId, votes);
+      themes[currentIndex].votes = Number(votes);
       alert(result);
-
-      // Update votesArray for frontend tracking
-      setVotesArray((prevVotes) => {
-        const existing = prevVotes.find((v) => v.themeId === themeId);
-        if (existing) {
-          return prevVotes.map((v) =>
-            v.themeId === themeId ? { ...v, votes: Number(votes) } : v
-          );
-        }
-        return [...prevVotes, { themeId, votes: Number(votes) }];
-      });
-
       setInputValue("");
     } catch (err) {
       alert("Failed to update votes");
     }
   };
 
+  // Function to end voting and schedule events
   const endVoting = async () => {
+    
+    // Check if all themes have been voted on
+    const unvotedThemes = themes.filter(
+      (t) => t.votes === null || t.votes === undefined
+    );
 
-    // Input validation
-    if (votesArray.length === 0) {
-      alert("No votes recorded yet!");
+    if (unvotedThemes.length > 0) {
+      alert("All themes must be voted for before ending voting!");
       return;
     }
+
+    // Ask how many themes are allowed to win
     const numberOfWinners = parseInt(
       prompt("How many themes are allowed to win?"),
       10
@@ -110,29 +72,26 @@ const submitVote = async (votes) => {
     const startDate = new Date(`${firstEvent}T16:30:00`);
 
     // Sort and select n winners
-    const sorted = [...votesArray].sort((a, b) => b.votes - a.votes);
+    const sorted = [...themes].sort((a, b) => (b.votes || 0) - (a.votes || 0));
     const topThemes = sorted.slice(0, numberOfWinners);
 
-    // For each winner, schedule events 2 weeks apart
+    // Schedule events for each winner (2 weeks apart)
     for (let i = 0; i < topThemes.length; i++) {
-      const winner = topThemes[i];
-      const eventDate = new Date(startDate);
-      eventDate.setDate(startDate.getDate() + i * 14); // 2 weeks
 
-      // Convert to ISO standard time to fit backend LocalDateTime
-      const formattedDate = new Date(eventDate)
-        .toISOString()
-        .slice(0, 19);
+      const eventDate = new Date(startDate);
+      eventDate.setDate(startDate.getDate() + i * 14);
+      const formattedDate = eventDate.toISOString().slice(0, 19);
 
       try {
-        const result = await uploadEvent(formattedDate, winner.themeId);
-        console.log(`Event uploaded for ${formattedDate}: ${result}`);
+        const result = await uploadEvent(formattedDate, topThemes[i].themeId);
+        console.log(`Event uploaded for ${formattedDate}:`, result);
       } catch (err) {
-        console.error("Failed to upload event for:", formattedDate, err);
+        console.error("Failed to upload event:", formattedDate, err);
       }
     }
   };
 
+// Buttons to navigate themes
 const handleNext = () => {
   setCurrentIndex((prev) => (prev + 1) % themes.length);
   resetTimer();
