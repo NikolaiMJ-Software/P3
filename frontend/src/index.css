@@ -123,6 +123,24 @@
     hover:bg-btn-hover-secondary
     border
   }
+
+  .card-primary, .card-secondary {
+    @apply 
+    border-2
+    border-text-primary
+    text-lg 
+    font-medium 
+    shadow-sm 
+    hover:shadow-md 
+    transition 
+    shrink-0
+  }
+
+  .card-primary {
+    @apply
+    w-60 
+    h-80
+  }
 }
 
 /*animation for timer*/
