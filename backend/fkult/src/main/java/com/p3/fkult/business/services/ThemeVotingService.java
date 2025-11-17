@@ -1,9 +1,10 @@
 package com.p3.fkult.business.services;
 
 import java.util.*;
+
+import com.p3.fkult.presentation.controllers.UserController;
 import org.springframework.stereotype.Service;
-import com.p3.fkult.presentation.controllers.ThemeRequest;
-import com.p3.fkult.presentation.controllers.ThemeVotingRequest;
+import com.p3.fkult.presentation.DTOs.ThemeVotingRequest;
 import com.p3.fkult.persistence.repository.ThemeRepository;
 import com.p3.fkult.persistence.repository.UserRepository;
 import com.p3.fkult.persistence.repository.MovieRepository;
@@ -27,7 +28,7 @@ public class ThemeVotingService {
     public List<ThemeVotingRequest> getShuffledThemes() {
 
         // Get default theme info and setup theme data array
-        List<ThemeRequest> themeInfo = themeService.getAllThemes();
+        List<UserController.ThemeRequest> themeInfo = themeService.getAllThemes();
         List<ThemeVotingRequest> themeData = new ArrayList<>();
         
         // Run a for-loop to input all data themeData needs

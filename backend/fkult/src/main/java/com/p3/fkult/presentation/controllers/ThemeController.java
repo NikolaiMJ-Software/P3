@@ -1,18 +1,10 @@
 package com.p3.fkult.presentation.controllers;
 
-import com.p3.fkult.business.services.ExampleMessageService;
 import com.p3.fkult.business.services.ThemeService;
 import com.p3.fkult.business.services.UserService;
-import com.p3.fkult.persistence.entities.ExampleMessage;
-import com.p3.fkult.persistence.entities.Theme;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @RestController
@@ -28,25 +20,25 @@ public class ThemeController {
     }
 
     @GetMapping
-    public List<ThemeRequest> getThemes(){
+    public List<UserController.ThemeRequest> getThemes(){
         return themeService.getAllThemes();
     }
 
     @GetMapping("/New")
-    public List<ThemeRequest> getNewThemes(){
+    public List<UserController.ThemeRequest> getNewThemes(){
         return themeService.getNewThemes();
     }
     @GetMapping("/Old")
-    public List<ThemeRequest> getOldThemes(){
+    public List<UserController.ThemeRequest> getOldThemes(){
         return themeService.getOldThemes();
     }
     @GetMapping("/User")
-    public List<ThemeRequest> getUserThemes(@RequestParam String username){
+    public List<UserController.ThemeRequest> getUserThemes(@RequestParam String username){
         return themeService.getUserThemes(username);
     }
 
     @PostMapping
-    public ResponseEntity<String> createTheme(@RequestBody ThemeRequest themeRequest){
+    public ResponseEntity<String> createTheme(@RequestBody UserController.ThemeRequest themeRequest){
         String name = themeRequest.getName();
         String username = themeRequest.getUsername();
         List<String> tConsts = themeRequest.gettConsts();

@@ -1,8 +1,8 @@
 package com.p3.fkult.presentation.controllers;
 
 import com.p3.fkult.business.services.MovieService;
-import com.p3.fkult.persistence.entities.Movie;
 
+import com.p3.fkult.presentation.DTOs.MovieRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

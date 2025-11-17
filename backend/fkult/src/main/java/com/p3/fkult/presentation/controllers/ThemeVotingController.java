@@ -1,6 +1,7 @@
 package com.p3.fkult.presentation.controllers;
 
 import com.p3.fkult.business.services.ThemeVotingService;
+import com.p3.fkult.presentation.DTOs.ThemeVotingRequest;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
