@@ -5,6 +5,7 @@ import {t} from "i18next";
 import {getMovies} from "../services/movieService.jsx";
 import { API } from "../services/api.jsx"
 import {deleteSoundSample, getSoundSamples} from "../services/soundSampleService.jsx";
+import {deleteTheme} from "../services/themeService.jsx";
 
 export default function SubmissionManager() {
     const [tab, setTab] = useState("ThemeSubmissions")
@@ -45,20 +46,26 @@ function ThemeSubmissions(){
     const [searchName, setSearchName] = useState("")
 
     //Get the themes
+    async function loadThemes() {
+        const items = await fetch(API + "/themes").then(e => e.json());
+        console.log(items)
+        await Promise.all(
+            items.map(async item => {
+                item.username = await fullName(item.userId);
+            })
+        )
+        //return the array
+        setThemes(items);
+    }
+
     useEffect(() => {
-        async function loadThemes() {
-            const items = await fetch(API + "/themes").then(e => e.json());
-            console.log(items)
-            await Promise.all(
-                items.map(async item => {
-                    item.username = await fullName(item.userId);
-                })
-            )
-            //return the array
-            setThemes(items);
-        }
         loadThemes();
     }, []);
+
+    async function themeDelete(id) {
+        await deleteTheme(id).then(loadThemes)
+    }
+
 
     //Filter time
     const filteredThemes = themes.filter(theme =>
@@ -98,7 +105,7 @@ function ThemeSubmissions(){
             </div>
             <div className={"border-t h-135 overflow-auto"}>
                 {filteredThemes.map(theme => (
-                    <Theme item={theme} isExpanded={expandedTheme === theme.themeId} onToggle={() => toggleTheme(theme.themeId)}/>
+                    <Theme item={theme} isExpanded={expandedTheme === theme.themeId} onToggle={() => toggleTheme(theme.themeId)} onDelete={() => themeDelete(theme.themeId)}/>
                 ))}
             </div>
         </div>
@@ -106,7 +113,7 @@ function ThemeSubmissions(){
     )
 }
 
-function Theme({ item, onToggle, isExpanded }){
+function Theme({ item, onToggle, isExpanded, onDelete }){
     const [movies, setMovies] = useState([])
     //const [loaded, setLoaded] = useState(false)
 
@@ -127,7 +134,7 @@ function Theme({ item, onToggle, isExpanded }){
                 <SubmissionPart label={t("Uploaded by")} content={item.username}/>
                 <SubmissionPart label={t("Submitted on")} content={"6-7"}/>
                 <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-4xl font-thin"}>
-                    <img className={"cursor-pointe size-10"} src={trashCan} alt={"Delete"} onClick={() => console.log("Hello World!")}/>
+                    <img className={"cursor-pointe size-10"} src={trashCan} alt={"Delete"} onClick={onDelete}/>
                 </div>
             </div>
             {isExpanded && (
@@ -202,10 +209,7 @@ function SoundSampleSubmissions() {
         // Wait until all deletions are finished
         await Promise.all(deletePromises);
 
-        // Clear selection
         setDeletion([]);
-
-        // Optionally reload samples
         await loadSamples();
     }
 

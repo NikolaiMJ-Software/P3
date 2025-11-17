@@ -60,7 +60,7 @@ export async function addTheme(name, username, tConsts, drinkingRules) {
 }
 
 export async function deleteTheme(id) {
-    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    await fetch(`${API}/vote/delete-theme/${id}`, { method: "DELETE" });
 }
 
 export async function fetchShuffledThemes() {
