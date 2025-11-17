@@ -6,8 +6,10 @@ import Timer from "../components/Timer";
 
 export default function ThemeVoting() {
   const [themes, setThemes] = useState([]);
+  const [winningThemes, setWinningThemes] = useState([]);
   const [unVotedThemes, setUnVotedThemes] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [numberOfWinners, setNumberOfWinners] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [timerStart] = useState(60);
   const [timerResetKey, setTimerResetKey] = useState(0);
@@ -69,42 +71,45 @@ export default function ThemeVoting() {
       return;
     }
 
-    // Prompt number of themes allowed to win
-    const numberOfWinners = parseInt(
-      prompt("How many themes are allowed to win?"),
-      10
-    );
-    if (isNaN(numberOfWinners) || numberOfWinners <= 0) {
-      alert("Please enter a valid positive number.");
-      return;
+    // If first time ending voting, prompt for number of winners
+    if (numberOfWinners === 0) {
+      const numberOfWinners = parseInt(
+        prompt("How many themes are allowed to win?"),
+        10
+      );
+      if (isNaN(numberOfWinners) || numberOfWinners <= 0) {
+        alert("Please enter a valid positive number.");
+        return;
+      }
+      setNumberOfWinners(numberOfWinners);
     }
 
     // Sort and select n winners
-    const sorted = [...unVotedThemes].sort((a, b) => (b.votes || 0) - (a.votes || 0));
-    const topThemes = [];
-    while (topThemes.length < numberOfWinners) {
-      
-      // Find out how many themes have the same amount of votes as the current top voted theme
-      const currentVotes = sorted[topThemes.length].votes;
-      const tiedThemes = sorted.filter(theme => theme.votes === currentVotes);
+    let sorted = [...unVotedThemes].sort((a, b) => (b.votes || 0) - (a.votes || 0));
+    let winners = [... winningThemes];
 
-      // Add all tied themes if they fit within the number of winners
-      if (topThemes.length + tiedThemes.length <= numberOfWinners) {
-        topThemes.push(...tiedThemes);
+    while (winners.length < numberOfWinners) {
+      const currentVotes = sorted[0].votes;
+      const tiedThemes = sorted.filter(t => t.votes === currentVotes);
 
-      // Remove added themes from sorted to avoid duplicates
-      sorted = sorted.filter(theme => !tiedThemes.includes(theme));
+      const remainingSlots = numberOfWinners - winners.length;
+
+      if (tiedThemes.length <= remainingSlots) {
+        // They all fit — add them
+        winners = [...winners, ...tiedThemes];
+
+        // Remove them from sorted
+        sorted = sorted.filter(t => t.votes !== currentVotes);
       } else {
+        // Too many tied to fill the remaining slots → trigger tie-break
         setUnVotedThemes(tiedThemes);
         alert("There is a tie among the top themes. Please re-vote to break the tie.");
         return;
       }
     }
 
-
-
-
-    /*const topThemes = sorted.slice(0, numberOfWinners);*/
+    // After the loop finishes:
+    setWinningThemes(winners);
 
     // Prompt date for the first event
     const firstEvent = prompt("Set date of first event in yyyy-mm-dd format");
@@ -115,14 +120,14 @@ export default function ThemeVoting() {
     const startDate = new Date(`${firstEvent}T16:30:00`);
 
     // Schedule events for each winner (2 weeks apart)
-    for (let i = 0; i < topThemes.length; i++) {
+    for (let i = 0; i < winningThemes.length; i++) {
 
       const eventDate = new Date(startDate);
       eventDate.setDate(startDate.getDate() + i * 14);
       const formattedDate = eventDate.toISOString().slice(0, 19);
 
       try {
-        const result = await uploadEvent(formattedDate, topThemes[i].themeId);
+        const result = await uploadEvent(formattedDate, winningThemes[i].themeId);
         console.log(`Event uploaded for ${formattedDate}:`, result);
       } catch (err) {
         console.error("Failed to upload event:", formattedDate, err);
