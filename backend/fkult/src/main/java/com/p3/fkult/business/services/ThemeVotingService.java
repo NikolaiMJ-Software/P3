@@ -101,4 +101,14 @@ public class ThemeVotingService {
             return "failed to update votes for id " + id + " due to error: " + error;
         }
     }
+
+    // Deletes a theme based on the id
+    public String DeleteTheme(long id) {
+        try{
+            themeRepository.delete(id);
+            return "Deleted theme with id: " + id;
+        } catch (Exception error) {
+            return "failed to delete theme for id " + id + " due to error: " + error;
+        }
+    }
 }

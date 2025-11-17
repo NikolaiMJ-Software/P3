@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {getThemes} from "../services/themeService.jsx";
+import trashCan from "../assets/trashCan.png"
 import {fullName} from "../services/adminService.jsx";
 import {t} from "i18next";
 import {getMovies} from "../services/movieService.jsx";
@@ -127,7 +127,7 @@ function Theme({ item, onToggle, isExpanded }){
                 <SubmissionPart label={t("Uploaded by")} content={item.username}/>
                 <SubmissionPart label={t("Submitted on")} content={"6-7"}/>
                 <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-4xl font-thin"}>
-                    <p className={"cursor-pointer"} onClick={() => console.log("Hello World!")}>X</p>
+                    <img className={"cursor-pointe size-10"} src={trashCan} alt={"Delete"} onClick={() => console.log("Hello World!")}/>
                 </div>
             </div>
             {isExpanded && (
@@ -228,7 +228,7 @@ function SoundSampleSubmissions() {
                     </select>
                 </div>
                 <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-4xl font-thin"}>
-                    <p className={"cursor-pointer"} onClick={batchDelete}>X</p>
+                    <img className={"cursor-pointer size-10"} onClick={batchDelete} src={trashCan} alt={"Delete Selected"}/>
                 </div>
             </div>
             <div className={"border-t h-135 overflow-auto"}>
@@ -244,13 +244,13 @@ function SoundSampleSubmissions() {
 function SoundSample({ item, onCheck }) {
     return (
         <div className={"m-10 mt-3 mb-3 border rounded flex flex-row justify-between"}>
-            {/* Checkbox */}
-            <input className={"m-2 size-6"} type={"checkbox"} onChange={() => onCheck(item.soundSample)}/>
             {/* File name */}
             <SubmissionPart content={item.soundSample}/>
             {/* File Type */}
             {/* User */}
             <SubmissionPart content={item.usersFullName}/>
+            {/* Checkbox */}
+            <input className={"m-2 size-6"} type={"checkbox"} onChange={() => onCheck(item.soundSample)}/>
         </div>
     )
 }

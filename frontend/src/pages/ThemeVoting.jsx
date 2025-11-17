@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { fetchShuffledThemes, updateThemeVotes } from "../services/themeService";
+import { fetchShuffledThemes, updateThemeVotes, deleteTheme } from "../services/themeService";
 import { uploadEvent } from "../services/eventService";
 import ThemeVotingDisplay from "../components/Theme/ThemeVotingDisplay";
 import Timer from "../components/Timer";
 
 export default function ThemeVoting() {
   const [themes, setThemes] = useState([]);
+  const [unVotedThemes, setUnVotedThemes] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [inputValue, setInputValue] = useState("");
   const [timerStart] = useState(60);
@@ -17,6 +18,7 @@ export default function ThemeVoting() {
       try {
         const themesData = await fetchShuffledThemes();
         setThemes(themesData);
+        setUnVotedThemes(themesData);
       } catch (error) {
         console.error("Error loading themes:", error);
       }
@@ -24,17 +26,32 @@ export default function ThemeVoting() {
     loadThemes();
   }, []);
 
-  // Function to submit votes for the current theme
-  const submitVote = async (votes) => {
+  // Function to updates votes for the current theme
+  const submitVote = (votes) => {
     if (votes === "") {
       alert("Please enter an amount of votes");
       return;
     }
     try {
-      const result = await updateThemeVotes(themes[currentIndex].themeId, votes);
-      themes[currentIndex].votes = Number(votes);
-      alert(result);
+      // Update votes in unVotedThemes
+      const updatedUnvoted = [...unVotedThemes];
+      updatedUnvoted[currentIndex] = {
+        ...updatedUnvoted[currentIndex],
+        votes: votes,
+      };
+      setUnVotedThemes(updatedUnvoted);
+
+      // Update votes in themes (match by themeId)
+      const updatedThemes = themes.map((t) =>
+        t.themeId === unVotedThemes[currentIndex].themeId
+          ? { ...t, votes: votes }
+          : t
+      );
+      setThemes(updatedThemes);
+      
+      // Reset input field
       setInputValue("");
+
     } catch (err) {
       alert("Failed to update votes");
     }
@@ -44,16 +61,15 @@ export default function ThemeVoting() {
   const endVoting = async () => {
     
     // Check if all themes have been voted on
-    const unvotedThemes = themes.filter(
+    const unvotedThemes = unVotedThemes.filter(
       (t) => t.votes === null || t.votes === undefined
     );
-
     if (unvotedThemes.length > 0) {
       alert("All themes must be voted for before ending voting!");
       return;
     }
 
-    // Ask how many themes are allowed to win
+    // Prompt number of themes allowed to win
     const numberOfWinners = parseInt(
       prompt("How many themes are allowed to win?"),
       10
@@ -63,17 +79,40 @@ export default function ThemeVoting() {
       return;
     }
 
-    // prompt date for the first event
+    // Sort and select n winners
+    const sorted = [...unVotedThemes].sort((a, b) => (b.votes || 0) - (a.votes || 0));
+    const topThemes = [];
+    while (topThemes.length < numberOfWinners) {
+      
+      // Find out how many themes have the same amount of votes as the current top voted theme
+      const currentVotes = sorted[topThemes.length].votes;
+      const tiedThemes = sorted.filter(theme => theme.votes === currentVotes);
+
+      // Add all tied themes if they fit within the number of winners
+      if (topThemes.length + tiedThemes.length <= numberOfWinners) {
+        topThemes.push(...tiedThemes);
+
+      // Remove added themes from sorted to avoid duplicates
+      sorted = sorted.filter(theme => !tiedThemes.includes(theme));
+      } else {
+        setUnVotedThemes(tiedThemes);
+        alert("There is a tie among the top themes. Please re-vote to break the tie.");
+        return;
+      }
+    }
+
+
+
+
+    /*const topThemes = sorted.slice(0, numberOfWinners);*/
+
+    // Prompt date for the first event
     const firstEvent = prompt("Set date of first event in yyyy-mm-dd format");
     if (!firstEvent || !/^\d{4}-\d{2}-\d{2}$/.test(firstEvent)) {
       alert("Please enter a valid date in yyyy-mm-dd format.");
       return;
     }
     const startDate = new Date(`${firstEvent}T16:30:00`);
-
-    // Sort and select n winners
-    const sorted = [...themes].sort((a, b) => (b.votes || 0) - (a.votes || 0));
-    const topThemes = sorted.slice(0, numberOfWinners);
 
     // Schedule events for each winner (2 weeks apart)
     for (let i = 0; i < topThemes.length; i++) {
@@ -93,11 +132,11 @@ export default function ThemeVoting() {
 
 // Buttons to navigate themes
 const handleNext = () => {
-  setCurrentIndex((prev) => (prev + 1) % themes.length);
+  setCurrentIndex((prev) => (prev + 1) % unVotedThemes.length);
   resetTimer();
 };
 const handlePrevious = () => {
-  setCurrentIndex((prev) => (prev === 0 ? themes.length - 1 : prev - 1));
+  setCurrentIndex((prev) => (prev === 0 ? unVotedThemes.length - 1 : prev - 1));
   resetTimer();
 };
 
@@ -108,9 +147,9 @@ const resetTimer = () => {
 };
 
 
-if (themes.length === 0) return <p>Loading themes...</p>;
+if (unVotedThemes.length === 0) return <p>Loading themes...</p>;
 
-const currentTheme = themes[currentIndex];
+const currentTheme = unVotedThemes[currentIndex];
 
 return (
     <div className="flex flex-col h-screen">
@@ -139,7 +178,7 @@ return (
           </button>
 
           <h2 className="text-lg font-semibold">
-            {currentIndex + 1} / {themes.length}
+            {currentIndex + 1} / {unVotedThemes.length}
           </h2>
 
           <button

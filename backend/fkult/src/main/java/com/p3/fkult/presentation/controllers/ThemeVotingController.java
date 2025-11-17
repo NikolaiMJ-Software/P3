@@ -26,4 +26,9 @@ public class ThemeVotingController {
     public String updateVotes(@PathVariable("id") long id, @PathVariable("votes") long votes) {
         return themeVotingService.UpdateVote(id, votes);
     }
+
+    @DeleteMapping("/delete-theme/{id}")
+    public String deleteTheme(@PathVariable("id") long id) {
+        return themeVotingService.DeleteTheme(id);
+    }
 }
