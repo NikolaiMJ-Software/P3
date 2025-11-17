@@ -1,6 +1,6 @@
 import ThemeCard, {EventStartup, EventThemeCard, ThemeCreationCard} from "../ThemeCard.jsx";
 
-export default function ThemeCollection({isCreator, onClick, themes}){
+export default function ThemeCollection({isCreator, onClick, themes, showActions, onDelete}){
     const safeThemes = Array.isArray(themes) ? themes : [];
 
     return(
@@ -9,6 +9,7 @@ export default function ThemeCollection({isCreator, onClick, themes}){
                 {/* individual cards */}
                 {isCreator && <ThemeCreationCard onClick={onClick}></ThemeCreationCard>}
                 {safeThemes.map(theme =>  {
+                    console.log("theme object:", theme);
                     console.log(`theme username: ${theme.username}`)
                     return <ThemeCard
                         drinkingRules={theme.drinkingRules}
@@ -16,6 +17,8 @@ export default function ThemeCollection({isCreator, onClick, themes}){
                         title={theme.name}
                         tConsts={theme.tConsts}
                         timestamp={theme.timestamp}
+                        showActions={showActions}
+                        onDelete={() => onDelete && onDelete(theme.themeId)}
                         >
                     </ThemeCard>
                 })}
@@ -41,7 +44,8 @@ export function UpcomingThemeCollection({events}){
                         title={event.name}
                         drinkingRules={event.drinkingRules}
                         timestamp={event.timestamp}
-                        isSeries={event.isSeries}>
+                        isSeries={event.isSeries}
+                        showActions={showActions}>
                     </EventThemeCard>
                 })}
                 <EventThemeCard drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]} timestamp={"2025-09-11T16:00:00"}></EventThemeCard>

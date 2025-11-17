@@ -4,7 +4,7 @@ import {getMovies, getMoviesByTconsts} from "../../services/movieService.jsx";
 import {useTranslation} from "react-i18next";
 import logo from "../../assets/logo.png"
 
-export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries, timestamp}){
+export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries, timestamp, showActions = false, onDelete}){
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
@@ -16,6 +16,24 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
     return(
         <div className={"relative w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
+
+        {showActions && (
+            <div className="absolute top-2 right-2 flex gap-1">
+                <button
+                    type="button"
+                    className="btn-primary w-6 h-6 flex items-center justify-center rounded-full border border-gray-400 text-xs"
+                    >
+                    ✎
+                    </button>
+                    <button
+                    type="button"
+                    className="btn-primary w-6 h-6 flex items-center justify-center rounded-full border border-gray-400 text-xs"
+                    onClick={onDelete}
+                    >
+                    ✕
+                </button>
+            </div>
+        )}
             <div>
                 <h1 className={"text-xl font-bold"}>{title}</h1>
                 <h2 className={"text-sm text-text-secondary"}>{name}</h2>
