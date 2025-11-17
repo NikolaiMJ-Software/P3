@@ -3,6 +3,8 @@ import {getThemes} from "../services/themeService.jsx";
 import {fullName} from "../services/adminService.jsx";
 import {t} from "i18next";
 import {getMovies} from "../services/movieService.jsx";
+import { API } from "../services/api.jsx"
+import {deleteSoundSample, getSoundSamples} from "../services/soundSampleService.jsx";
 
 export default function SubmissionManager() {
     const [tab, setTab] = useState("ThemeSubmissions")
@@ -30,7 +32,7 @@ function getComponent(currentComponent){
             component = <ThemeSubmissions/>;
             break;
         case 'SoundSamples' :
-            component = <SoundSamples/>;
+            component = <SoundSampleSubmissions/>;
             break;
     }
     return component;
@@ -45,7 +47,8 @@ function ThemeSubmissions(){
     //Get the themes
     useEffect(() => {
         async function loadThemes() {
-            const items = await getThemes();
+            const items = await fetch(API + "/themes").then(e => e.json());
+            console.log(items)
             await Promise.all(
                 items.map(async item => {
                     item.username = await fullName(item.userId);
@@ -93,7 +96,7 @@ function ThemeSubmissions(){
                     </label>
                 </div>
             </div>
-            <div className={"border-t max-h-135 overflow-auto"}>
+            <div className={"border-t h-135 overflow-auto"}>
                 {filteredThemes.map(theme => (
                     <Theme item={theme} isExpanded={expandedTheme === theme.themeId} onToggle={() => toggleTheme(theme.themeId)}/>
                 ))}
@@ -105,8 +108,12 @@ function ThemeSubmissions(){
 
 function Theme({ item, onToggle, isExpanded }){
     const [movies, setMovies] = useState([])
+    //const [loaded, setLoaded] = useState(false)
 
     const handleClick = async () => {
+        //if (loaded) onToggle();
+        //setLoaded(true)
+
         await getMovies(item.movieIds).then(setMovies)
         onToggle();
     }
@@ -117,15 +124,14 @@ function Theme({ item, onToggle, isExpanded }){
                 <div className={"border m-4 p-2 grow-1 w-1/6 text-center"}>
                     {item.name}
                 </div>
-                <ThemePart label={t("Uploaded by")} content={item.username}/>
-                <ThemePart label={t("Submitted on")} content={"6-7"}/>
-                <ThemePart label={t("Seen on")} content={"6-7"}/>
-                <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-6xl font-thin"}>
+                <SubmissionPart label={t("Uploaded by")} content={item.username}/>
+                <SubmissionPart label={t("Submitted on")} content={"6-7"}/>
+                <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-4xl font-thin"}>
                     <p className={"cursor-pointer"} onClick={() => console.log("Hello World!")}>X</p>
                 </div>
             </div>
             {isExpanded && (
-                <div className="bg-text-secondary border-t p-4 flex flex-row overflow-auto">
+                <div className="border-t p-4 flex flex-row overflow-auto">
                     {movies.map((movie) => (
                         <div className="flex justify-between items-center rounded border m-2 p-1">
                             <div className={"flex flex-col items-center min-w-40"}>
@@ -140,7 +146,7 @@ function Theme({ item, onToggle, isExpanded }){
     )
 }
 
-function ThemePart({ label, content}){
+function SubmissionPart({ label, content}){
     return (
         <div className={"grow m-2 w-1/6  mr-10 ml-10"}>
             <p>{label}</p>
@@ -150,7 +156,101 @@ function ThemePart({ label, content}){
 }
 
 
-function SoundSamples() {
-    return "test2"
+function SoundSampleSubmissions() {
+    const [samples, setSamples] = useState([]);
+    const [searchName, setSearchName] = useState("")
+    const [toBeDeleted, setDeletion] = useState([])
+
+    //Get the soundSamples
+    async function loadSamples() {
+        const items = await getSoundSamples();
+        console.log(items)
+
+        //return the array
+        setSamples(items);
+    }
+
+    useEffect(() => {
+        loadSamples();
+    }, []);
+
+    //Filter time
+    const filteredSamples = samples.filter(sample =>
+        sample.usersFullName.toLowerCase().includes(searchName.toLowerCase())
+    );
+
+    const addToDelete = (soundSample) => {
+        console.log(toBeDeleted)
+        if (toBeDeleted === undefined) return
+        console.log(soundSample)
+        setDeletion(arr => {
+            return arr.includes(soundSample)
+                ? arr.filter(item => item !== soundSample)
+                : [...arr, soundSample]
+        })
+    }
+
+    async function batchDelete() {
+        console.log(toBeDeleted)
+        if (!toBeDeleted.length) return;
+
+        // Create an array of promises
+        const deletePromises = toBeDeleted.map(sample =>
+            deleteSoundSample(sample)
+        );
+
+        // Wait until all deletions are finished
+        await Promise.all(deletePromises);
+
+        // Clear selection
+        setDeletion([]);
+
+        // Optionally reload samples
+        await loadSamples();
+    }
+
+    return (
+        <div>
+            <div className={"p-5 flex flex-row justify-evenly"}>
+                {/* Filters and stuff */}
+                <div className={"flex flex-col"}>
+                    <p>{t("search for")} {t("user")}:</p>
+                    <input onChange={e => setSearchName(e.target.value)} className={"border"}/>
+                </div>
+                <div className={"flex flex-col"}>
+                    <p>{t("sort based on")}:</p>
+                    <select className={"border hover:bg-btn-hover-secondary"}>
+                        <option>{t("latest")}</option>
+                        <option>{t("oldest")}</option>
+                        <option>{t("alphabetical")}</option>
+                        <option>{t("length")} asc</option>
+                        <option>{t("length")} des</option>
+                    </select>
+                </div>
+                <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-4xl font-thin"}>
+                    <p className={"cursor-pointer"} onClick={batchDelete}>X</p>
+                </div>
+            </div>
+            <div className={"border-t h-135 overflow-auto"}>
+                {filteredSamples.map(sample => (
+                    <SoundSample item={sample} onCheck={addToDelete}/>
+                ))}
+            </div>
+        </div>
+
+    )
 }
 
+function SoundSample({ item, onCheck }) {
+    return (
+        <div className={"m-10 mt-3 mb-3 border rounded flex flex-row justify-between"}>
+            {/* Checkbox */}
+            <input className={"m-2 size-6"} type={"checkbox"} onChange={() => onCheck(item.soundSample)}/>
+            {/* File name */}
+            <SubmissionPart content={item.soundSample}/>
+            {/* File Type */}
+            {/* User */}
+            <SubmissionPart content={item.usersFullName}/>
+        </div>
+    )
+}
