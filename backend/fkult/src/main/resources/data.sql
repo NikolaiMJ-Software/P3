@@ -9,11 +9,23 @@ VALUES
 (5, 'mig', 'mig', 0, 0);
 
 -- Insert dummy theme with a known ID
+INSERT OR IGNORE INTO theme (id, name, user_id, timestamp)
+VALUES (1, 'Pirates Night', 1, '2024-09-11 08:25:59');
 
 -- Associate movies with this theme
+INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
+SELECT 1, 1
+WHERE EXISTS (SELECT 1 FROM movie WHERE id = 1);
+
+INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
+SELECT 1, 2
+WHERE EXISTS (SELECT 1 FROM movie WHERE id = 2);
 
 -- Add drinking rules
-
+INSERT OR IGNORE INTO drinking_rule (id ,theme_id, rule_text)
+VALUES
+(1,1, 'Drink when someone says "pirate"'),
+(2,1, 'Take a sip whenever a ship appears on screen');
 
 -- Dummy sound samples
 INSERT OR IGNORE INTO sound_samples (link, file_path, user_id)
@@ -40,14 +52,11 @@ VALUES
 (NULL, '/nature/waterfall', 3);
 
 -- Real startup day
-INSERT INTO event (event_date, theme_id)
-SELECT '2026-01-29 16:30:00', NULL
-WHERE NOT EXISTS (
-  SELECT 1 FROM event
-  WHERE event_date = '2026-01-29 16:30:00'
-    AND theme_id IS NULL
-);
+INSERT OR IGNORE INTO event (event_date, theme_id)
+VALUES ('2025-09-11 16:00:00', NULL);
 
+
+/*
 
 -- test theme/events
 INSERT OR IGNORE INTO theme (id, name, user_id)
@@ -117,3 +126,4 @@ WHERE NOT EXISTS (
   WHERE event_date = '2026-02-19 16:45:00'
     AND theme_id   = 3
 );
+*/
