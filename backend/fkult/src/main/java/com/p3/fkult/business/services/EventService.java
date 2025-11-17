@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Service
 public class EventService {
@@ -18,6 +19,10 @@ public class EventService {
     public EventService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
+
+    public List<Event> getAllEvents() {
+    return eventRepository.getAll();
+}
 
     // Handles event uploads
     public String UploadEvent(LocalDateTime eventDate, long themeId) {

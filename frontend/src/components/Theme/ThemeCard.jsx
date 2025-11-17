@@ -1,6 +1,7 @@
 import MovieCard, {MovieCardSmall, ThemeMovieCard, MovieCardUpcoming} from "./MovieCard.jsx";
 import {useEffect, useState} from "react";
 import {getMovies, getMoviesByTconsts} from "../../services/movieService.jsx";
+import { getEvents } from "../../services/eventService.jsx";
 import {useTranslation} from "react-i18next";
 import logo from "../../assets/logo.png"
 
@@ -24,8 +25,8 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
             </div>
 
             <div className={"flex justify-between gap-2"}>
-                {safeMovies.slice(0,2).map((movie) => (
-                    <MovieCardSmall key={movie.id} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes}/>
+                {safeMovies.slice(0,2).map((movie, i) => (
+                    <MovieCardSmall key={movie.id || i} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes}/>
                 ))}
             </div>
         </div>
@@ -77,7 +78,7 @@ export function StartupCard({date}){
         </div>
     )
 }
-export function EventThemeCard({title, name, tConsts, drinkingRules, isSeries, timestamp}){
+export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp, isSeries}){
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
@@ -111,19 +112,19 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, isSeries, t
                 <h2 className={"font-bold text-sm"}>{day() + "/" + month() + "/" + year()}</h2>
                 <h2 className={"font-bold text-sm"}>{"kl. "+hour() + ":" + minute()}</h2>
                 <h3 className={"mt-2 font-semibold text-sm"}>{t("drinking rules")}</h3>
-                <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16"}>{drinkingRules.map((rule) => {return (<li key={rule}>{rule}</li>)})}</ul>
+                <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16"}>{drinkingRules.map((rule, i) => {return <li key={`${title}-rule-${i}`}>{rule}</li>})}</ul>
             </div>
 
             <div className={"flex justify-between gap-2 mt-2"}>
-                {safeMovies.slice(0,2).map((movie) => (
-                    <MovieCardUpcoming key={movie.id} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes}/>
+                {safeMovies.slice(0,2).map((movie, i) => (
+                    <MovieCardUpcoming key={movie.id ?? `${title}-movie-${i}`} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes}/>
                 ))}
             </div>
         </div>
     )
 }
 
-export function EventStartup({timestamp}){
+export function EventStartup({timestamp, onClick}){
 
     const year = () => {
         return timestamp.split("-")[0];

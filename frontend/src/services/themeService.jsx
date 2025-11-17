@@ -12,7 +12,9 @@ export async function getThemes(selected) {
         }else if (selected === "new"){
             const response = await fetch(`${API_URL}/New`);
             return response.json();
-        }
+        } else {
+            const response = await fetch(`${API_URL}`);
+            return response.json();}
     }catch (e){
         throw new Error(`Failed to fetch themes, error: ${e}`)
     }

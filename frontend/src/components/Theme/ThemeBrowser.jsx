@@ -1,25 +1,56 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {addTheme, getThemes, getNewThemes, getOldThemes} from "../../services/themeService.jsx";
+import { getEvents } from "../../services/eventService.jsx";
 import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
 import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
 import { useTranslation } from "react-i18next";
 import ThemeToggleButtons from "./Themebrowser/ThemeToggleButtons.jsx";
 import ThemeCollection, {UpcomingThemeCollection} from "./Themebrowser/ThemeCollection.jsx";
 
+
 export default function ThemeBrowser({onCreateTheme}) {
     const [themes, setThemes] = useState([]);
+    const [events, setEvents] = useState([]);
     const [selected, setSelected] = useState("your")
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [allThemes, setAllThemes] = useState([]);
     const {t} = useTranslation();
 
+    // Load ALL themes once
     useEffect(() => {
-        setThemes([]);
-        getThemes(selected).then(data => {
-            console.log("Selected:", selected);
-            console.log("Received themes:", data);
-            setThemes(data);
-        }).catch(err => console.error("Error loading themes:", err));
-    },[selected,isPopupOpen])
+        getThemes("all")
+            .then(data => {
+                console.log("Loaded ALL themes:", data);
+                setAllThemes(data || []);
+            })
+            .catch(err => console.error("Error loading ALL themes:", err));
+    }, []);
+
+    // Load filtered themes + events whenever selection or popup changes
+    useEffect(() => {
+        getThemes(selected)
+            .then(data => {
+                console.log("Received themes:", data);
+                setThemes(data || []);
+            })
+            .catch(err => {
+                console.error("Error loading themes:", err);
+                setThemes([]);
+            });
+
+        getEvents()
+            .then(data => {
+                console.log("Received events:", data);
+                setEvents(data || []);
+            })
+            .catch(err => {
+                console.error("Error loading events:", err);
+                setEvents([]);
+            });
+
+    }, [selected, isPopupOpen]);
+
+
 
 
     const getTodaysDate = () =>{
@@ -30,13 +61,48 @@ export default function ThemeBrowser({onCreateTheme}) {
         return (`${year}-${month}-${date}`);
     }
 
+console.log("Themes:", themes);
+console.log("Events:", events);
+themes.forEach(t => console.log("THEME:", t));
+events.forEach(e => console.log("EVENT:", e));
+
+const mergedEvents = useMemo(() => {
+    if (!events.length) return [];
+
+    return events.map(ev => {
+        const theme = allThemes.find(t => t.themeId === ev.themeId);
+
+        if (!theme) {
+            console.warn("No theme for event:", ev);
+            return {
+                ...ev,
+                timestamp: ev.eventDate,
+                drinkingRules: [],
+                tConsts: [],
+                name: "(Unknown Theme)",
+                username: "Unknown",
+                isSeries: false
+            };
+        }
+
+        return {
+            ...ev,
+            ...theme,
+            timestamp: ev.eventDate
+        };
+    });
+}, [allThemes, events]);
+console.log("Merged events:", mergedEvents);
+
+
+
     return (
         <div className={"p-10"}>
             <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8"}>
 
                 {/* Upcoming themes card container */}
                 <p className={"m-4 font-bold"}>{t("upcoming themes")}</p>
-                <UpcomingThemeCollection themes={themes}/>
+                <UpcomingThemeCollection events={mergedEvents}/>
 
                 <div className={"border-1 m-8"} ></div>
 
