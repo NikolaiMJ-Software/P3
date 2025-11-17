@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS movie (
   is_active           INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0,1)),
   is_series           INTEGER NOT NULL DEFAULT 0 CHECK (is_series IN (0,1)),
   poster_url          TEXT,
-  rating              TEXT
+  rating              TEXT,
+  last_seen           DATE DEFAULT NULL
 );
 
 -- Themes

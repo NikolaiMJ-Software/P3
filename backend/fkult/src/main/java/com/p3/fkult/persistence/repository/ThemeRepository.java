@@ -72,4 +72,9 @@ public class ThemeRepository {
     public void setVote(long id, long votes) {
         jdbcTemplate.update("UPDATE theme SET vote_count = (?) WHERE id = (?)", votes, id);
     }
+
+    // Deletes a theme based on the id
+    public void delete(long id) {
+        jdbcTemplate.update("DELETE FROM theme WHERE id = ?", id);
+    }
 }

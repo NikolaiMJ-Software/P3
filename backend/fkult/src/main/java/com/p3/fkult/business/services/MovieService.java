@@ -2,7 +2,7 @@ package com.p3.fkult.business.services;
 
 import com.p3.fkult.persistence.entities.Movie;
 import com.p3.fkult.persistence.repository.MovieRepository;
-import com.p3.fkult.presentation.controllers.MovieRequest;
+import com.p3.fkult.presentation.DTOs.MovieRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

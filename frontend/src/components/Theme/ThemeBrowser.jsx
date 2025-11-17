@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import {addTheme, getThemes, getNewThemes, getOldThemes} from "../../services/themeService.jsx";
+import {addTheme, getThemes, getNewThemes, getOldThemes, deleteTheme} from "../../services/themeService.jsx";
 import { getEvents } from "../../services/eventService.jsx";
 import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
 import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
@@ -52,6 +52,15 @@ export default function ThemeBrowser({onCreateTheme}) {
 
 
 
+    const handleDeleteTheme = async (id) => {
+        try {
+        await deleteTheme(id);
+        // update UI locally (optional but nice)
+        setThemes((prev) => prev.filter((t) => t.themeId !== id));
+        } catch (e) {
+        console.error("Failed to delete theme", e);
+        }
+    };
 
     const getTodaysDate = () =>{
         const today = new Date()
@@ -111,7 +120,7 @@ console.log("Merged events:", mergedEvents);
                 {/* Your themes card container */}
                 <div className={"pt-4 flex row-end-5 flex gap-5"}>
                     {/* individual cards */}
-                    {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={onCreateTheme} ></ThemeCollection>)}
+                    {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={onCreateTheme} showActions={true} onDelete={handleDeleteTheme}></ThemeCollection>)}
                     {selected === "old" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
                     {selected === "new" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
                 </div>

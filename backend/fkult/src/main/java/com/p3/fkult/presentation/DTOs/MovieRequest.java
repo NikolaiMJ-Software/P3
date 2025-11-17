@@ -1,4 +1,4 @@
-package com.p3.fkult.presentation.controllers;
+package com.p3.fkult.presentation.DTOs;
 
 public class MovieRequest {
     private long movieId;

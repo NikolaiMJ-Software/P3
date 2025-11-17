@@ -4,7 +4,7 @@ import com.p3.fkult.business.services.MovieService;
 import com.p3.fkult.persistence.entities.Movie;
 import com.p3.fkult.persistence.repository.MovieRepository;
 
-import com.p3.fkult.presentation.controllers.MovieRequest;
+import com.p3.fkult.presentation.DTOs.MovieRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
