@@ -9,23 +9,11 @@ VALUES
 (5, 'mig', 'mig', 0, 0);
 
 -- Insert dummy theme with a known ID
-INSERT OR IGNORE INTO theme (id, name, user_id, timestamp)
-VALUES (1, 'Pirates Night', 1, '2024-09-11 08:25:59');
 
 -- Associate movies with this theme
-INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
-SELECT 1, 1
-WHERE EXISTS (SELECT 1 FROM movie WHERE id = 1);
-
-INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
-SELECT 1, 2
-WHERE EXISTS (SELECT 1 FROM movie WHERE id = 2);
 
 -- Add drinking rules
-INSERT OR IGNORE INTO drinking_rule (id ,theme_id, rule_text)
-VALUES
-(1,1, 'Drink when someone says "pirate"'),
-(2,1, 'Take a sip whenever a ship appears on screen');
+
 
 -- Dummy sound samples
 INSERT OR IGNORE INTO sound_samples (link, file_path, user_id)
@@ -54,3 +42,73 @@ VALUES
 -- Real startup day
 INSERT OR IGNORE INTO event (event_date, theme_id)
 VALUES ('2025-09-11 16:00:00', NULL);
+
+
+-- test theme/events
+INSERT OR IGNORE INTO theme (id, name, user_id)
+VALUES (1, 'Pirates Night', 1);
+INSERT OR IGNORE INTO theme (id, name, user_id)
+VALUES (2, 'Bad Superhero Movies', 1);
+INSERT OR IGNORE INTO theme (id, name, user_id)
+VALUES (3, '9/11', 1);
+
+INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
+SELECT 1, 1426
+WHERE EXISTS (SELECT 1 FROM movie WHERE id = 1426);
+
+INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
+SELECT 1, 65319
+WHERE EXISTS (SELECT 1 FROM movie WHERE id = 65319);
+
+INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
+SELECT 2, 236549
+WHERE EXISTS (SELECT 1 FROM movie WHERE id = 236549);
+
+INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
+SELECT 2, 173791
+WHERE EXISTS (SELECT 1 FROM movie WHERE id = 173791);
+
+INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
+SELECT 3, 305809
+WHERE EXISTS (SELECT 1 FROM movie WHERE id = 305809);
+
+INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
+SELECT 3, 380580
+WHERE EXISTS (SELECT 1 FROM movie WHERE id = 380580);
+
+INSERT OR IGNORE INTO drinking_rule (id ,theme_id, rule_text)
+VALUES
+(1,1, 'Drink when someone says "pirate"'),
+(2,1, 'Take a sip whenever a ship appears on screen');
+INSERT OR IGNORE INTO drinking_rule (id ,theme_id, rule_text)
+VALUES
+(3,2, 'Drink when someone says "pirate"'),
+(4,2, 'Take a sip whenever a ship appears on screen');
+INSERT OR IGNORE INTO drinking_rule (id ,theme_id, rule_text)
+VALUES
+(5,3, 'Drink when someone says "pirate"'),
+(6,3, 'Take a sip whenever a ship appears on screen');
+
+INSERT INTO event (event_date, theme_id)
+SELECT '2026-02-05 16:45:00', 1
+WHERE NOT EXISTS (
+  SELECT 1 FROM event
+  WHERE event_date = '2026-02-05 16:45:00'
+    AND theme_id   = 1
+);
+
+INSERT INTO event (event_date, theme_id)
+SELECT '2026-02-12 16:45:00', 2
+WHERE NOT EXISTS (
+  SELECT 1 FROM event
+  WHERE event_date = '2026-02-12 16:45:00'
+    AND theme_id   = 2
+);
+
+INSERT INTO event (event_date, theme_id)
+SELECT '2026-02-19 16:45:00', 3
+WHERE NOT EXISTS (
+  SELECT 1 FROM event
+  WHERE event_date = '2026-02-19 16:45:00'
+    AND theme_id   = 3
+);
