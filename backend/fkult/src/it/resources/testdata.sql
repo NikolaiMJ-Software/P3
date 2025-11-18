@@ -10,7 +10,8 @@ INSERT OR IGNORE INTO movie (tconst, movie_name, original_movie_name, year, runt
 
 -- Theme
 INSERT OR IGNORE INTO theme (name, user_id) VALUES
-('Cyber Night', 1);
+('Cyber Night', 1),
+('Horror Night', 2);
 
 -- Theme Movies
 INSERT OR IGNORE INTO theme_movie (theme_id, movie_id) VALUES
