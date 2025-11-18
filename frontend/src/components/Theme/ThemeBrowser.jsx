@@ -6,6 +6,7 @@ import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
 import { useTranslation } from "react-i18next";
 import ThemeToggleButtons from "./Themebrowser/ThemeToggleButtons.jsx";
 import ThemeCollection, {UpcomingThemeCollection} from "./Themebrowser/ThemeCollection.jsx";
+import EditTheme from "./EditTheme.jsx";
 
 
 export default function ThemeBrowser({onCreateTheme}) {
@@ -13,6 +14,7 @@ export default function ThemeBrowser({onCreateTheme}) {
     const [events, setEvents] = useState([]);
     const [selected, setSelected] = useState("your")
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [editingTheme, setEditingTheme] = useState(null);
     const [allThemes, setAllThemes] = useState([]);
     const {t} = useTranslation();
 
@@ -117,7 +119,8 @@ console.log("Merged events:", mergedEvents);
                 {/* Your themes card container */}
                 <div className={"pt-4 flex row-end-5 flex gap-5"}>
                     {/* individual cards */}
-                    {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={onCreateTheme} showActions={true} onDelete={handleDeleteTheme}></ThemeCollection>)}
+                    {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={onCreateTheme} showActions={true} onDelete={handleDeleteTheme} onEdit={(theme) => setEditingTheme(theme)} ></ThemeCollection>)}
+                    {editingTheme && (<EditTheme theme={editingTheme} onClose={() => setEditingTheme(null)}/>)}
                     {selected === "old" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
                     {selected === "new" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
                 </div>

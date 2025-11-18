@@ -91,3 +91,23 @@ export async function updateThemeVotes(id, votes) {
     throw error;
   }
 }
+
+export async function updateTheme(themeId, name, tConsts, drinkingRules) {
+  const body = {
+    name,
+    tConsts,         
+    drinkingRules,
+  };
+
+  const response = await fetch(`${API_URL}/${themeId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to update theme ${themeId}: ${response.status}`);
+  }
+
+  return response.text();
+}

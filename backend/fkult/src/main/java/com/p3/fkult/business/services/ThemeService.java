@@ -120,4 +120,42 @@ public class ThemeService {
         };
         return themeRequests;
     }
+
+
+    @Transactional
+    public void updateThemeWithTConsts(UserController.ThemeRequest themeRequest){
+        Long themeId = themeRequest.getThemeId();
+        System.out.println("Updating themeId = " + themeId + " with request = " + themeRequest);
+
+        // 1) Update core theme
+        themeRepository.updateName(themeId, themeRequest.getName());
+
+        // 2) Replace movies
+        themeMovieRepository.deleteByThemeId(themeId);
+
+        List<Long> movieIds = new ArrayList<>();
+        for (String tConst : themeRequest.gettConsts()) {
+            Movie movie = movieRepository.findByTconst(tConst);
+            if (movie == null) {
+                // Log clearly and fail in a controlled way
+                throw new IllegalArgumentException("No movie found in DB for tConst: " + tConst);
+            }
+            movieIds.add(movie.getId());
+        }
+
+        for (Long movieId : movieIds) {
+            themeMovieRepository.save(new ThemeMovie(themeId, movieId));
+        }
+
+        // 3) Replace drinking rules
+        drinkingRuleRepository.deleteByThemeId(themeId);
+
+        if (themeRequest.getDrinkingRules() != null) {
+            for (String ruleText : themeRequest.getDrinkingRules()) {
+                drinkingRuleRepository.save(new DrinkingRule(themeId, ruleText));
+            }
+        }
+    }
+
+
 }

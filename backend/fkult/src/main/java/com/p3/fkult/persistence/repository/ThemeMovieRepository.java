@@ -33,4 +33,10 @@ public class ThemeMovieRepository {
         jdbcTemplate.update("INSERT INTO theme_movie (theme_id, movie_id) VALUES (?,?)", themeMovie.getThemeid(), themeMovie.getMovieid());
         return themeMovie;
     }
+
+    // delete theme movie
+    public void deleteByThemeId(long themeId) {
+        jdbcTemplate.update("DELETE FROM theme_movie WHERE theme_id = ?", themeId);
+    }
+
 }

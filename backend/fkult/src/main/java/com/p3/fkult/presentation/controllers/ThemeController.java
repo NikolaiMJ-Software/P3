@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/themes")
 public class ThemeController {
@@ -58,5 +59,21 @@ public class ThemeController {
         */
         themeService.createThemeWithTConsts(themeRequest);
         return ResponseEntity.ok("Theme created successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateTheme(@PathVariable long id, @RequestBody UserController.ThemeRequest themeRequest) {
+        themeRequest.setThemeId(id); // make sure themeId matches URL
+        System.out.println("UpdateTheme request: " + themeRequest);
+
+        if (themeRequest.getName() == null || themeRequest.getName().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Name cannot be empty.");
+        }
+        if (themeRequest.gettConsts() == null || themeRequest.gettConsts().isEmpty()) {
+            return ResponseEntity.badRequest().body("Theme must have at least 1 movie.");
+        }
+
+        themeService.updateThemeWithTConsts(themeRequest);
+        return ResponseEntity.ok("Theme updated successfully.");
     }
 }

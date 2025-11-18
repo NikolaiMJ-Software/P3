@@ -129,11 +129,11 @@ export default function ThemeCreationPopup({setSelected}) {
 
 
     return (
-        <div className="p-10 relative">
+        <div className="p-10 relative flex justify-center items-center">
             <div className="w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col gap-3">
 
                 {/* Top content */}
-                <div className={"flex flex-row gap-6 w-full overflow-hidden"}>
+                <div className={"flex flex-row gap-6 w-full justify-center"}>
                     {/* Left Movie searcher*/}
                     <div className="w-[600px] h-[650px]">
                     <ThemeMovieSearcher foundMovies={foundMovies}
