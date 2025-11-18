@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import {addTheme, getThemes, getNewThemes, getOldThemes, deleteTheme} from "../../services/themeService.jsx";
-import { getEvents } from "../../services/eventService.jsx";
+import {getEvents, getFutureEvents} from "../../services/eventService.jsx";
 import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
 import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
 import { useTranslation } from "react-i18next";
@@ -37,19 +37,16 @@ export default function ThemeBrowser({onCreateTheme}) {
                 console.error("Error loading themes:", err);
                 setThemes([]);
             });
-
-        getEvents()
-            .then(data => {
-                console.log("Received events:", data);
-                setEvents(data || []);
-            })
-            .catch(err => {
-                console.error("Error loading events:", err);
-                setEvents([]);
-            });
-
     }, [selected, isPopupOpen]);
 
+    useEffect(() =>{
+        getFutureEvents().then(data => {
+            setEvents(data || []);
+        }).catch(err => {
+            console.error("Failed fetching events: ", err)
+            setEvents([]);
+        });
+    },[]);
 
 
     const handleDeleteTheme = async (id) => {
@@ -69,7 +66,7 @@ export default function ThemeBrowser({onCreateTheme}) {
         const date = today.getDate()
         return (`${year}-${month}-${date}`);
     }
-
+/*
 console.log("Themes:", themes);
 console.log("Events:", events);
 themes.forEach(t => console.log("THEME:", t));
@@ -102,7 +99,7 @@ const mergedEvents = useMemo(() => {
     });
 }, [allThemes, events]);
 console.log("Merged events:", mergedEvents);
-
+*/
 
 
     return (
@@ -111,7 +108,7 @@ console.log("Merged events:", mergedEvents);
 
                 {/* Upcoming themes card container */}
                 <p className={"m-4 font-bold"}>{t("upcoming themes")}</p>
-                <UpcomingThemeCollection events={mergedEvents}/>
+                <UpcomingThemeCollection events={events}/>
 
                 <div className={"border-1 m-8"} ></div>
 

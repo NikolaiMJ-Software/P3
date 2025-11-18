@@ -3,6 +3,7 @@ package com.p3.fkult.presentation.controllers;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.p3.fkult.presentation.DTOs.EventRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,9 +25,14 @@ public class EventController {
     }
 
     @GetMapping("/all")
-public List<Event> getAllEvents() {
+    public List<Event> getAllEvents() {
     return service.getAllEvents();
-}
+    }
+
+    @GetMapping("/future")
+    public List<EventRequest> getFutureEvents(){
+        return service.getFutureEventsFromNow();
+    }
 
     // Delete event from id
     @DeleteMapping("/delete/{id}")

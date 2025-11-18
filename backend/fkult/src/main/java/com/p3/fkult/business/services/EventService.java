@@ -64,6 +64,7 @@ public class EventService {
             return "Event deletion failed: " + e.getMessage();
         }
     }
+
     public List<EventRequest> getFutureEventsFromNow(){
         LocalDateTime now = LocalDateTime.now();
         List<Event> futureEvents = eventRepository.getFutureEventsFromTimeStamp(now);
@@ -71,6 +72,7 @@ public class EventService {
         List<EventRequest> eventRequests = new ArrayList<>();
         for(int i = 0; i < futureEvents.size(); i++){
             eventRequests.add(new EventRequest(
+                    futureEvents.get(i).getId(),
                     //theme name for event
                     eventThemes.get(i).getName(),
                     //username who created theme for the event
@@ -79,7 +81,7 @@ public class EventService {
                     futureEvents.get(i).getEventDate(),
                     //Drinking Rule from theme
                     drinkingRuleRepository.findByThemeId(eventThemes.get(i).getId()).stream().map(drinkingRule -> drinkingRule.getRuleText()).toList(),
-                    //movie tConsts for theme
+                    //movie tConsts for theme, the reason it is so long is We map ThemeMovies -> MovieIds -> Movies -> tConsts
                     themeMovieRepository.findByThemeId(eventThemes.get(i).getId()).stream().map(themeMovie -> themeMovie.getMovieid()).map(movieId -> movieRepository.findById(movieId)).map(movie -> movie.getTconst()).toList()
             ));
         }

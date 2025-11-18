@@ -96,7 +96,7 @@ export function StartupCard({date}){
         </div>
     )
 }
-export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp, isSeries}){
+export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp}){
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
@@ -118,7 +118,7 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp, 
     const minute = () => {
         return timestamp.split("-")[2].split("T")[1].split(":")[1];
     }
-
+    const safeDrinkingRules = Array.isArray(drinkingRules) ? drinkingRules : [];
     const safeMovies = Array.isArray(movies) ? movies : [];
     const {t} = useTranslation();
     return(
@@ -130,7 +130,7 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp, 
                 <h2 className={"font-bold text-sm"}>{day() + "/" + month() + "/" + year()}</h2>
                 <h2 className={"font-bold text-sm"}>{"kl. "+hour() + ":" + minute()}</h2>
                 <h3 className={"mt-2 font-semibold text-sm"}>{t("drinking rules")}</h3>
-                <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16"}>{drinkingRules.map((rule, i) => {return <li key={`${title}-rule-${i}`}>{rule}</li>})}</ul>
+                <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16"}>{safeDrinkingRules.map((rule, i) => {return <li key={`${title}-rule-${i}`}>{rule}</li>})}</ul>
             </div>
 
             <div className={"flex justify-between gap-2 mt-2"}>

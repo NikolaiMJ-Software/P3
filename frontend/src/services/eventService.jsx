@@ -16,6 +16,20 @@ export async function getEvents(){
     }
 }
 
+export async function getFutureEvents(){
+
+    try {
+        const response = await fetch(`${API_URL}/future`);
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+        return await response.json();   // events come as JSON
+    } catch (error) {
+        console.log("Error getting events: ", error);
+        throw error;
+    }
+}
+
 
 // Handles uploading of events
 export async function uploadEvent(LocalDate, themeId){
