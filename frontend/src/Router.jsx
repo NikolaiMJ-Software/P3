@@ -4,7 +4,7 @@ import MessagesPage from "./pages/MessagesPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import ThemeBrowser from "./components/Theme/ThemeBrowser.jsx";
 import SoundSampleBrowser from "./components/SoundSamples/SoundSampleBrowser.jsx";
-import SubmitSSPage from "./components/SubmitSSPage.jsx";
+import SubmitSSPage from "./components/SoundSamples/SubmitSSPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx"
 import ThemeVoting from "./pages/ThemeVoting.jsx"
 import AdminSound from "./pages/AdminSSPage.jsx"
