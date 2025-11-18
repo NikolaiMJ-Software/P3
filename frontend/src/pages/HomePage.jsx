@@ -2,11 +2,12 @@ import {useNavigate, useParams} from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import ThemeBrowser from "../components/Theme/ThemeBrowser.jsx";
-import SoundSampleBrowser from "../components/SoundSampleBrowser.jsx";
+import SoundSampleBrowser from "../components/SoundSamples/SoundSampleBrowser.jsx";
 import SubmitSSPage from "../components/SubmitSSPage.jsx";
 import NextTheme from "../components/Theme/NextTheme";
 import { useTranslation } from "react-i18next";
 import React from "react";
+import ThemeCreationPopup from "../components/Theme/ThemeCreationPopup.jsx";
 
 
 export default function HomePage() {
@@ -39,20 +40,22 @@ export default function HomePage() {
     return <>
         {/* Top toggle buttons */}
         <div className={"flex gap-4 ml-10"}>
-            <button className={`border px-6 py-3 rounded-2xl transition-colors
-            ${selected === "themes" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-300"}`}
+            <button className={`btn-home-page
+            ${selected === "themes" ? "" : "btn-secondary"}`}
                     onClick={() => setSelected("themes")}>{t("themes")}</button>
-            <button className={`border px-6 py-3 rounded-2xl transition-colors
-            ${selected === "samples" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-300"}`}
+            <button className={`btn-home-page
+            ${selected === "samples" ? "" : "btn-secondary"}`}
                     onClick={() => setSelected("samples")}>{t("sound sample")}</button>
         </div>
 
         <div className="grid grid-cols-12 gap-6">
             <div className="col-span-12 lg:col-span-9 min-w-0 overflow-hidden"> {
                 selected === "themes" ? (
-                    <ThemeBrowser />
+                    <ThemeBrowser onCreateTheme={() => setSelected("createTheme")} />
                 ) : selected === "samples" ? (
                     <SoundSampleBrowser />
+                ) : selected === "createTheme" ? (
+                    <ThemeCreationPopup />
                 ) : selected === "submitSample" ? (
                     <SubmitSSPage />
                 ) : null
@@ -60,7 +63,7 @@ export default function HomePage() {
             </div>
             <aside className="col-span-12 lg:col-span-3 lg:ml-2 pt-10">
                 <div className="sticky top-10 flex flex-col gap-4 z-10">
-                    <button className="w-full block rounded-2xl px-6 py-3 bg-white hover:bg-gray-300 border"
+                    <button className="btn-home-page w-full block"
                         onClick={() => {navigate(`/faq/${user}`)}}>
                         Info
                     </button>
@@ -77,12 +80,13 @@ export default function HomePage() {
                     />
 
 
-                    <button className={`w-full block rounded-2xl px-6 py-3
-                        ${selected === "" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-300 border"}`}>
-                        {t("create")} {t("theme")}
+                    <button className={`btn-home-page
+                        ${selected === "createTheme" ? "" : "btn-secondary"}`}
+                            onClick={() => setSelected("createTheme")}> {t("create")} {t("theme")}
+                        
                     </button>
-                    <button className={`w-full block rounded-2xl px-6 py-3
-                        ${selected === "submitSample" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-300 border"}`}
+                    <button className={`btn-home-page
+                        ${selected === "submitSample" ? "" : "btn-secondary"}`}
                             onClick={() => setSelected("submitSample")}> {t("submit")} {t("sound sample")}
                     </button>
                 </div>

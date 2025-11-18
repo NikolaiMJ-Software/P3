@@ -3,9 +3,9 @@ package com.p3.fkult.presentation.controllers;
 import com.p3.fkult.business.services.SoundSampleService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.io.File;
 
+import com.p3.fkult.presentation.DTOs.SoundSampleRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 

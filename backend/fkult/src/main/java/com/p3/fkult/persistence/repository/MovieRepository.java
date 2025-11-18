@@ -40,7 +40,8 @@ public class MovieRepository {
                     rs.getInt("runtime_minutes"),
                     rs.getBoolean("is_active"),
                     rs.getBoolean("is_series"),
-                    rs.getString("poster_url")
+                    rs.getString("poster_url"),
+                    rs.getString("rating")
             );
 
     //database operations
@@ -66,35 +67,57 @@ public class MovieRepository {
         }
     }
 
+    public String findNameById(Long id){
+        return jdbcTemplate.queryForObject("SELECT movie_name FROM movie WHERE id = ?", String.class, id);
+    }
+
+    public String findPosterById(Long id){
+        return jdbcTemplate.queryForObject("SELECT poster_url FROM movie WHERE id = ?", String.class, id);
+    }
+
+    public Long findRatingById(Long id){
+        return jdbcTemplate.queryForObject("SELECT rating FROM movie WHERE id = ?", Long.class, id);
+    }
+
+    public Long findRunTimeById(Long id){
+        return jdbcTemplate.queryForObject("SELECT runtime_minutes FROM movie WHERE id = ?", Long.class, id);
+    }
+
     public void updatePosterURL(Long movieId, String posterURL){
         String sql = "UPDATE movie SET poster_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, posterURL, movieId);
     }
     public List<Movie> searchMovies(String keyword, int page, int limit) {
-        //case insenstive + partial matches
+        int offset = (page - 1) * limit;
+        String likePattern = keyword + "*"; // FTS5 prefix search
+
         String sql = """
-        SELECT * FROM movie 
-        WHERE LOWER(movie_name) LIKE LOWER(?) 
-        AND is_active = 1 
-        AND year > 0
-        AND runtime_minutes > 0 
+        SELECT m.*
+        FROM movie m
+        JOIN movie_fts fts ON fts.rowid = m.id
+        WHERE fts.movie_name MATCH ?
+          AND m.is_active = 1
+          AND m.year > 0
+          AND m.runtime_minutes > 0
         LIMIT ? OFFSET ?
-        """;
-        int offset = (page-1) * limit;
-        String likePattern = "%" + keyword + "%";
+    """;
+
+        // Bind the same FTS keyword to both columns
         return jdbcTemplate.query(sql, rowMapper, likePattern, limit, offset);
     }
 
     public int countMovies(String keyword){
+        String ftsPattern = keyword + "*"; // same prefix search
         String sql = """
-        SELECT COUNT(*) FROM movie 
-        WHERE LOWER(movie_name) LIKE LOWER(?) 
-        AND is_active = 1 
-        AND year > 0
-        AND runtime_minutes > 0 
-        """;
-        String likePattern = "%" + keyword + "%";
-        return jdbcTemplate.queryForObject(sql, Integer.class, likePattern);
+        SELECT COUNT(*)
+        FROM movie m
+        JOIN movie_fts fts ON fts.rowid = m.id
+        WHERE fts.movie_name MATCH ?
+          AND m.is_active = 1
+          AND m.year > 0
+          AND m.runtime_minutes > 0
+    """;
+        return jdbcTemplate.queryForObject(sql, Integer.class, ftsPattern);
     }
 
     //upsert function
@@ -188,5 +211,55 @@ public class MovieRepository {
         if (s == null || s.isEmpty() || "\\N".equals(s)) return null;
         try { return Integer.valueOf(s); } catch (NumberFormatException e) { return null; }
     }
+
+    public void mergeRatingsFromImdbFile(File ratingsTsvGz) throws IOException {
+        jdbcTemplate.execute("PRAGMA foreign_keys = ON");
+
+        // temp table to stage ratings
+        jdbcTemplate.execute("""
+            CREATE TEMP TABLE IF NOT EXISTS tmp_ratings(
+                tconst TEXT PRIMARY KEY,
+                rating TEXT,
+                votes  INTEGER
+            ) WITHOUT ROWID
+        """);
+        jdbcTemplate.update("DELETE FROM tmp_ratings");
+
+        try (GZIPInputStream gzis = new GZIPInputStream(new FileInputStream(ratingsTsvGz));
+            BufferedReader br = new BufferedReader(new InputStreamReader(gzis, StandardCharsets.UTF_8))) {
+
+            String header = br.readLine(); // tconst\taverageRating\tnumVotes
+            if (header == null) return;
+
+            List<Object[]> batch = new ArrayList<>(10_000);
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] c = line.split("\t", -1);
+                if (c.length < 3) continue;
+                String tconst = c[0];
+                String rating = c[1];     // keep as TEXT per your schema
+                Integer votes  = parseIntOrNull(c[2]);
+                batch.add(new Object[]{ tconst, rating, votes });
+                if (batch.size() >= 10_000) {
+                    jdbcTemplate.batchUpdate("INSERT OR REPLACE INTO tmp_ratings(tconst, rating, votes) VALUES (?,?,?)", batch);
+                    batch.clear();
+                }
+            }
+            if (!batch.isEmpty()) {
+                jdbcTemplate.batchUpdate("INSERT OR REPLACE INTO tmp_ratings(tconst, rating, votes) VALUES (?,?,?)", batch);
+            }
+        }
+
+        // single set-based update: update only rows that exist in tmp
+        jdbcTemplate.update("""
+            UPDATE movie
+            SET rating = (SELECT rating FROM tmp_ratings r WHERE r.tconst = movie.tconst)
+            WHERE EXISTS (SELECT 1 FROM tmp_ratings r WHERE r.tconst = movie.tconst)
+        """);
+
+        jdbcTemplate.execute("DROP TABLE IF EXISTS tmp_ratings");
+    }
+
+
 
 }

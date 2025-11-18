@@ -6,8 +6,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ThemeRepository {
@@ -24,7 +27,7 @@ public class ThemeRepository {
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getLong("user_id"),
-                    rs.getTimestamp("timestamp").toLocalDateTime(),
+                    rs.getTimestamp("timestamp").toLocalDateTime().plusHours(1),
                     rs.getObject("vote_count", Integer.class)
             );
 
@@ -33,11 +36,49 @@ public class ThemeRepository {
         return jdbcTemplate.query("SELECT * FROM theme", rowMapper);
     }
 
+    public Theme findById(Long id){
+        return jdbcTemplate.queryForObject("SELECT * FROM theme WHERE id = ?",rowMapper, id);
+    }
+
+    public List<Theme> findAfter(LocalDateTime localDate){
+        //timestamp >= localDate finds themes created on or after localDate
+        List<Theme> themes = jdbcTemplate.query("SELECT * FROM theme WHERE timestamp >= ?", rowMapper, localDate);
+        if (themes == null || themes.isEmpty()){
+            System.out.println("failed to get themes from db");
+        }else{
+            System.out.println("Found requested themes: " +
+                    themes.stream()
+                            .map(Theme::toString)
+                            .collect(Collectors.joining(", "))
+            );
+        }
+        return themes;
+    }
+    public List<Theme> findBefore(LocalDateTime localDate){
+        //timestamp < localDate finds themes created before localDate
+        return jdbcTemplate.query("SELECT * FROM theme WHERE timestamp < ?", rowMapper, localDate);
+    }
+
+    public List<Theme> findFromUser(Long userId){
+        String sql = "SELECT * FROM theme WHERE user_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, userId);
+    }
+
     public Theme save(Theme theme) {
         jdbcTemplate.update("INSERT INTO theme (name, user_id) VALUES (?,?)", theme.getName(), theme.getUserid());
         // Get the last inserted ID
         Long id = jdbcTemplate.queryForObject("SELECT last_insert_rowid()", Long.class);
         theme.setId(id);
         return theme;
+    }
+
+    // Updates the votes of a theme based on the id
+    public void setVote(long id, long votes) {
+        jdbcTemplate.update("UPDATE theme SET vote_count = (?) WHERE id = (?)", votes, id);
+    }
+
+    // Deletes a theme based on the id
+    public void delete(long id) {
+        jdbcTemplate.update("DELETE FROM theme WHERE id = ?", id);
     }
 }

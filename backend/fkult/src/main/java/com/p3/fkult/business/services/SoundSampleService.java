@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.p3.fkult.persistence.entities.SoundSample;
 import com.p3.fkult.persistence.entities.User;
 import com.p3.fkult.persistence.repository.SoundSampleRepository;
-import com.p3.fkult.presentation.controllers.SoundSampleRequest;
+import com.p3.fkult.presentation.DTOs.SoundSampleRequest;
 import com.p3.fkult.business.services.shuffleFilter.*;
 
 import org.springframework.stereotype.Service;
@@ -106,22 +106,31 @@ public class SoundSampleService {
         }
 
         List<User> allUsers = userService.getAllUsers();
-        String name = null;
+        String name = null, username = null;
         for (SoundSample soundSample : allSoundSamples) {
             // Convert userId to username
             for (User user : allUsers) {
                 if (soundSample.getUserId().equals(user.getId())) {
                     name = user.getName();
+                    username = user.getUsername();
                     break;
                 }
             }
 
             // Get the file or link
             if (soundSample.getFilePath() != null) {
-                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(soundSample.getFilePath(), name);
+                String filePath = soundSample.getFilePath();
+                String folder = "soundSampleUploads" + File.separator;
+                int indexFolder = filePath.indexOf(folder);
+                String fileName = filePath;
+                if (indexFolder != -1) {
+                    fileName = filePath.substring(folder.length() + indexFolder, filePath.length());
+                }
+
+                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(fileName, username, name);
                 soundSamplesRequests.add(soundSamplesRequest);
             } else {
-                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(soundSample.getLink(), name);
+                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(soundSample.getLink(), username, name);
                 soundSamplesRequests.add(soundSamplesRequest);
             }
         }

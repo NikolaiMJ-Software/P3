@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS movie (
   is_active           INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0,1)),
   is_series           INTEGER NOT NULL DEFAULT 0 CHECK (is_series IN (0,1)),
   poster_url          TEXT,
-  rating              TEXT
+  rating              TEXT,
+  last_seen           DATE DEFAULT NULL
 );
 
 -- Themes
@@ -72,13 +73,13 @@ CREATE TABLE IF NOT EXISTS sound_samples (
 --event
 CREATE TABLE IF NOT EXISTS event (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  event_date TEXT CHECK (
-  event_date IS NULL OR event_date GLOB '____-__-__'  -- YYYY-MM-DD
-  ),
+  event_date DATETIME,
   theme_id INTEGER,
   FOREIGN KEY (theme_id) REFERENCES theme(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
+CREATE VIRTUAL TABLE IF NOT EXISTS movie_fts
+    USING fts5(movie_name, original_movie_name, content='movie', content_rowid='id');
 -- Helpful indexes
 CREATE INDEX IF NOT EXISTS idx_movie_year            ON movie(year);
 CREATE INDEX IF NOT EXISTS idx_movie_name_nocase     ON movie(movie_name COLLATE NOCASE);

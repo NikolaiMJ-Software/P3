@@ -1,6 +1,7 @@
 package com.p3.fkult.presentation.controllers;
 
 import com.p3.fkult.business.services.ThemeVotingService;
+import com.p3.fkult.presentation.DTOs.ThemeVotingRequest;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -17,7 +18,18 @@ public class ThemeVotingController {
 
     // Get all theme data
     @GetMapping("/getShuffledThemes")
-    public List<ThemeRequest> getShuffledThemes() {
+    public List<ThemeVotingRequest> getShuffledThemes() {
         return themeVotingService.getShuffledThemes();
+    }
+
+    // Update the votes on a theme
+    @GetMapping("/update-vote/{id}/{votes}")
+    public String updateVotes(@PathVariable("id") long id, @PathVariable("votes") long votes) {
+        return themeVotingService.UpdateVote(id, votes);
+    }
+
+    @DeleteMapping("/delete-theme/{id}")
+    public String deleteTheme(@PathVariable("id") long id) {
+        return themeVotingService.DeleteTheme(id);
     }
 }

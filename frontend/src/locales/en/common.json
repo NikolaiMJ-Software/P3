@@ -36,5 +36,15 @@
   "non-watched": "non-watched",
   "search for": "Search for",
   "sort based on": "Sort based on",
-  "filters": "Filters"
+  "filters": "Filters",
+  "become admin": "Become Admin",
+  "unbecome admin": "Unbecome Admin",
+  "come and vote": "Come and vote on themes",
+  "your themes": "Your themes",
+  "new themes": "New themes",
+  "old themes": "Old themes",
+  "uplSS": "All sound samples",
+  "usersSS": "Your sound samples",
+  "nextTheme": "Next Theme",
+  "loadMore": "Load More"
 }

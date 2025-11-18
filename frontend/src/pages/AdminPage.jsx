@@ -30,7 +30,7 @@ export default function AdminPage(){
                 <AdminButton
                     func={unadminUser}
                     username={username}
-                    label={`Unbecome Admin`}
+                    label={t("unbecome admin")}
                 />
                 <div className="flex flex-col">
                     {/* Top Half */}
@@ -62,7 +62,7 @@ export default function AdminPage(){
                 <AdminButton
                     func={adminUser}
                     username={username}
-                    label={`Bliv Admin`}
+                    label={t("become admin")}
                 />
             </div>
         )
@@ -85,7 +85,7 @@ function AdminButton({ func, username, label }){
         }
         buttonclick();
         }}
-        className="border hover:bg-gray-300 transition-colors rounded p-0.5">{label}</button>
+        className="border hover:bg-btn-hover-secondary transition-colors rounded p-0.5">{label}</button>
     )
 }
 

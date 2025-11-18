@@ -1,58 +1,174 @@
-import { useState } from "react";
-import React from "react";
+import Placeholder from "../assets/placeholder.png";
+import { Trans, useTranslation } from "react-i18next";
 
 export default function FAQPage() {
+  const { t } = useTranslation(["faq", "common"]);
+  const ns = "faq";
+  const toArray = (val) => (Array.isArray(val) ? val : []);
+
   return (
-    <main className="px-4 sm:px-6 ">
-      <div className="max-w-3xl ">
-        <h1 className="text-3xl font-semibold">Regler</h1>
+    <main className="px-4 sm:px-6 flex justify-center items-center">
+      <div className="max-w-3xl border rounded-2xl px-12 py-10 w-full">
+        <h1 className="text-3xl font-semibold">{t("title", { ns })}</h1>
         <hr className="my-4" />
 
+        <p className="mt-4">{t("sections.story.p1", { ns })}</p>
+        <p className="mt-4">{t("sections.story.p2", { ns })}</p>
+
+        {/* Øl-matrice + Fiskeroulette */}
         <p className="mt-4">
-          Til F-kult er der nogle regler.
+          <Trans
+            ns={ns}
+            i18nKey="sections.story.p3"
+            components={{
+              root: <span />,
+              ol: (
+                <a
+                  href={t("links.olmatrice", { ns })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-link"
+                />
+              ),
+              fi: (
+                <a
+                  href={t("links.fisk", { ns })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-link"
+                />
+              )
+            }}
+          />
         </p>
 
-        <h2 className="mt-6 text-xl font-medium">Følgende er generelle regler:</h2>
+        <p className="mt-4">
+          <Trans
+            ns={ns}
+            i18nKey="sections.story.p4"
+            components={{
+              root: <span />,
+              po: (
+                <a
+                  href={t("links.poster", { ns })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-link"
+                />
+              ),
+              di: (
+                <a
+                  href={t("links.discord", { ns })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-link"
+                />
+              )
+            }}
+          />
+        </p>
+
+        <hr className="my-4" />
+
+        <h2 className="text-3xl font-semibold">{t("sections.committee.title", { ns })}</h2>
+        <hr className="my-4" />
+        <p className="mt-4">{t("sections.committee.p1", { ns })}</p>
         <ul className="mt-3 list-disc pl-6 space-y-2 leading-relaxed">
           <li>
-            Inden hver film vises der lydprøveforslag, man skal jo sikre at lyden virker
-            (disse foreslås på #lydprøveforslag kanalen på discorden).
-          </li>
-          <li>
-            Der må ikke vælges film som er konsekutive (f.eks. Die Hard 1 og Die Hard 2).
-          </li>
-          <li>
-            Film som foreslås bør dele et tema (f.eks. samme instruktør eller noget mere obskurt).
-          </li>
-          <li>
-            Ved afstemningen må der ikke vælges film som folk, der er til stede ved afstemningen,
-            har set før til F-kult.
-          </li>
-          <li>
-            Ved afstemningen skal personen, der har foreslået filmene, give et kort pitch. Hvis
-            personen ikke er til stede, kan der ikke stemmes på de film.
-          </li>
-          <li>Filmene ses i rækkefølgen af ældste først.</li>
-          <li>
-            Efter afstemningen ses én film valgt ud fra dem, der var tættest på at blive stemt ind.
+            <a
+              href={t("links.topholt", { ns })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-link"
+            >
+              {t("sections.committee.contact.topholt", { ns })}
+            </a>
           </li>
         </ul>
 
-        <h2 className="mt-8 text-xl font-medium">Under filmene skåles der ved følgende:</h2>
+        <hr className="my-4" />
+
+        <h2 className="text-3xl font-semibold">{t("sections.timePlace.title", { ns })}</h2>
+        <hr className="my-4" />
+        <p className="mt-4">{t("sections.timePlace.p1", { ns })}</p>
+        <p className="mt-4">{t("sections.timePlace.p2", { ns })}</p>
+        <p className="mt-4">{t("sections.timePlace.p3", { ns })}</p>
+
+        <hr className="my-4" />
+
+        <h2 className="text-3xl font-semibold">{t("sections.rules.title", { ns })}</h2>
+        <hr className="my-4" />
+        <p className="mt-4">{t("sections.rules.intro", { ns })}</p>
+
+        <h3 className="mt-6 text-xl font-medium">{t("sections.rules.generalTitle", { ns })}</h3>
         <ul className="mt-3 list-disc pl-6 space-y-2 leading-relaxed">
-          <li>Selvreference (filmens titel nævnes i filmen)</li>
-          <li>Sang og dans</li>
-          <li>UI/interface vises</li>
-          <li>Delvis nøgenhed</li>
-          <li>
-            Danny <a href={"https://en.wikipedia.org/wiki/Danny_DeVito"} target="_blank" className="text-green-600">DeVito</a>
-          </li>
-          <li>Åbenlys product placement</li>
-          <li>Åbenlys krom</li>
-          <li>Slow motion</li>
-          <li>Et antal regler bestemt af personen som foreslog filmene</li>
+          {toArray(t("sections.rules.general", { ns, returnObjects: true })).map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
         </ul>
+
+        <h3 className="mt-8 text-xl font-medium">{t("sections.rules.cheersTitle", { ns })}</h3>
+        <ul className="mt-3 list-disc pl-6 space-y-2 leading-relaxed">
+          {toArray(t("sections.rules.cheers", { ns, returnObjects: true })).map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
+          <li>
+            <a
+              href="https://en.wikipedia.org/wiki/Danny_DeVito"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-link"
+            >
+              {t("sections.rules.cheersDannyLabel", { ns, defaultValue: "Danny DeVito" })}
+            </a>
+          </li>
+        </ul>
+
+        <hr className="my-4" />
+
+        <h2 className="text-3xl font-semibold">{t("sections.story.title", { ns })}</h2>
+        <hr className="my-4" />
+        <p className="mt-4">{t("sections.story.dev1", { ns })}</p>
+        <p className="mt-4">{t("sections.story.dev2", { ns })}</p>
+        <p className="mt-4">{t("sections.story.dev3", { ns })}</p>
+
+        {/* Credits links */}
+        <p className="mt-4">
+          <Trans
+            ns={ns}
+            i18nKey="sections.story.credits"
+            components={{
+              root: <span />,
+              to: (
+                <a
+                  href={t("links.topholt", { ns })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-link"
+                />
+              ),
+              kr: (
+                <a
+                  href={t("links.kresten", { ns })}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-link"
+                />
+              )
+            }}
+          />
+        </p>
+
+        <div className="mt-6">
+          <img
+            src={Placeholder}
+            alt={t("sections.story.title", { ns })}
+            className="mx-auto rounded-xl shadow-md w-3/4"
+          />
+          <p className="mt-2 text-center text-sm text-gray-500">{t("sections.story.caption", { ns })}</p>
+        </div>
       </div>
     </main>
   );
 }
+

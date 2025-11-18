@@ -1,11 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { addSoundSample, deleteSoundSample, getSoundSamples, getSoundsampleFile } from "../services/soundSampleService";
+import { addSoundSample, getSoundSamples, getSoundsampleFile } from "../services/soundSampleService";
 import { getIdByUser } from "../services/adminService.jsx"
 import { useTranslation } from "react-i18next";
 
 // This is a page to showcase the functionality of submitting a sound sample via file upload or URL input.
-export default function SubmitSSTestPage() {
+export default function SubmitSSPage() {
     const {t} = useTranslation();
 
     // Setup variables
@@ -23,6 +23,11 @@ export default function SubmitSSTestPage() {
 
         // Sanitize input
         const trimmedLink = link?.trim();
+        if (trimmedLink && !trimmedLink.includes("https://")) {
+            console.error("Not a link: " + trimmedLink);
+            setMessage("Not a link: " + trimmedLink);
+            return;
+        }
 
         // Get the user ID from the backend
         let userId;
@@ -35,42 +40,18 @@ export default function SubmitSSTestPage() {
             return;
         }
 
-        // Submit sound sample
-        try {
-            const resText = await addSoundSample(trimmedLink, file, userId);
-            setMessage(resText);
-        } catch (error) {
-            console.error("Upload failed:", error);
-            setMessage("Upload failed: " + error.message);
-        }
-    }
-
-    // Handles sound sample deletion
-    const handleDelete = async () => {
-        // Remove whitespace from inputs
-        const trimmedLink = link?.trim();
-        const trimmedFileName = fileName?.trim();
-
-        // Validate input
-        if (!trimmedLink && !trimmedFileName) {
-            setMessage("Please provide a link or file name for deletion.");
-            return;
-        }
-
-        // Delete sound sample
-        try {
-            const resText = await deleteSoundSample(trimmedLink, trimmedFileName);
-            setMessage(resText);
-        } catch (error) {
-            console.error("Deletion failed:", error);
-            setMessage("Deletion failed: " + error.message);
-        }
+        // Submit sound sample and reset input
+        const resText = await addSoundSample(trimmedLink, file, userId);
+        setMessage(resText);
+        setFile(null);
+        setUrl("");
+        document.getElementById("textField").value = "";
     }
 
     const playSoundSamples = async () => {
         let quickShuffle = false;
         let weightedShuffle = false;
-        let soundSample;
+
         // Get sound sample
         try {
         const res = await getSoundSamples(quickShuffle, weightedShuffle);
@@ -89,14 +70,24 @@ export default function SubmitSSTestPage() {
         return file;
     }
 
+    const sendMessage = () => {
+        if(!message) {
+            return null;
+        } else if(message.includes("Upload complete!")){
+            return <div className="text-center text-text-primary">{message}</div>;
+        }
+        return <div className="text-center text-text-error">{message}</div>;
+    }
+
     // HTML of the page
     return (
         <div className={"p-10 relative"}>
-            <form className={"w-full max-w-full h-fit border-2 border-black p-8 flex flex-col items-center gap-3"}>
+            <form className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col items-center gap-3"}>
                 {/* URL input */}
                 <div className="flex justify-center">
                     <label>
                         <input
+                            id="textField"
                             className="border px-2 py-1 rounded w-64"
                             type="text" 
                             placeholder={t("insertLink")}
@@ -111,21 +102,21 @@ export default function SubmitSSTestPage() {
 
                 {/* File picker */}
                 <div className="flex justify-center">
-                    <label className="px-4 py-1 transition-colors cursor-pointer bg-white hover:bg-gray-300 border">
+                    <label className="px-4 py-1 transition-colors cursor-pointer bg-white hover:bg-btn-hover-secondary border">
                         {t("browse")}
                         <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }}
                         />
                     </label>
                 </div>
-                <div className="flex justify-center items-center min-h-4">
-                    {file && <div className="flex items-center text-sm text-gray-600">{t("file")}: {file.name}</div>}
+                <div className="flex justify-center items-center min-h-5">
+                    {file && <div className="flex items-center text-sm text-text-secondary">{t("file")}: {file.name}</div>}
                 </div>
 
                 {/* Buttons */}
                 <div className="flex justify-center gap-6">
-                    <button className="px-6 py-2 rounded-2xl text-white bg-blue-500 hover:bg-blue-600"
-                    type="button"
-                    onClick={handleSubmit}>
+                    <button className="btn-primary"
+                        type="button"
+                        onClick={(e) => handleSubmit(e)}>
                         {t("submit")}
                     </button>
                     {/*<button className="px-6 py-2 rounded-2xl text-white bg-red-500 hover:bg-red-700"
@@ -151,7 +142,7 @@ export default function SubmitSSTestPage() {
 
                 {/* Message */}
                 <div className="flex justify-center items-center min-h-6">
-                    {message && <div className="text-center text-gray-700">{message}</div>}
+                    {sendMessage()}
                 </div>
 
 {/* Jonas insert media player here */}
@@ -247,15 +238,15 @@ export default function SubmitSSTestPage() {
 </div>
 
                 <div className="flex justify-center gap-6">
-                    <button className="px-6 py-2 rounded-2xl text-white bg-blue-500 hover:bg-blue-600"
-                    type="button"
-                    onClick={playSoundSamples}>
+                    <button className="px-6 py-2 rounded-2xl text-white bg-text-error"
+                        type="button"
+                        onClick={playSoundSamples}>
                         Get all soundSample
                     </button>
                 </div>
 
                 <div className="flex justify-center gap-6">
-                    <button className="px-6 py-2 rounded-2xl text-white bg-blue-500 hover:bg-blue-600"
+                    <button className="px-6 py-2 rounded-2xl text-white bg-text-error"
                         type="button"
                         onClick={() => getSSFile("Grass.jpg")}>
                         Get file

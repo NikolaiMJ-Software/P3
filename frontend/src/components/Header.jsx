@@ -52,13 +52,13 @@ export default function Header(){
     }, []);
 
     return (
-        <header className="pb-10 flex justify-between top-0 inset-x-0">
+        <header className="relative pb-10 flex justify-between top-0 inset-x-0">
             <NavButton
                 icon={logoPNG}
                 onClick={() => {navigate(`/${username}`)}}
             />
 
-            <h1 className="relative top-2 left-0 right-0 text-center text-3xl bold">F-Kult</h1>
+            <h1 className="absolute left-1/2 -translate-x-1/2 top-2 text-center text-3xl">F-Kult</h1>
 
             <div className="flex">
                 <NavButton
@@ -81,7 +81,7 @@ export default function Header(){
 
                 <div className="relative flex-col pr-1" ref={menuRef}>
                      <button
-                        className="flex transition-colors hover:bg-gray-300 cursor-pointer rounded-4xl border size-12 items-center justify-center"
+                        className="flex transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-12 items-center justify-center"
                         onClick={()=> setOpen(prev => !prev)}
                         title={username}
                         >
@@ -92,7 +92,7 @@ export default function Header(){
                      {open && (
                         <div className="absolute right-0 top-14 w-36 bg-white border rounded-xl shadow-lg z-50">
                             <button
-                                className="block w-full text-left px-4 py-2 hover:bg-gray-200 rounded-t-xl"
+                                className="cursor-pointer block w-full text-left px-4 py-2 hover:bg-btn-hover-secondary rounded-t-xl"
                                 onClick={()=>{
                                     setOpen(false);
                                     navigate(`/admin/${username}`);
@@ -101,7 +101,7 @@ export default function Header(){
                                 {t("Admin")}
                             </button>
                             <button
-                                className="block w-full text-left px-4 py-2 hover:bg-gray-200 text-red-500 rounded-b-xl"
+                                className="cursor-pointer block w-full text-left px-4 py-2 hover:bg-btn-hover-secondary text-text-error rounded-b-xl"
                                 onClick={logout}
                                 >
                                 {t("logout")}
@@ -117,7 +117,7 @@ export default function Header(){
 function NavButton({ icon, label, onClick }) {
     if (icon === logoPNG){
         return (
-            <button className="flex transition-colors hover:bg-gray-300 cursor-pointer rounded-4xl size-20 items-center justify-center" onClick={onClick} title={label}>
+            <button className="flex transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl size-20 items-center justify-center" onClick={onClick} title={label}>
                 <img src={icon} alt={label}/>
             </button>
 
@@ -126,7 +126,7 @@ function NavButton({ icon, label, onClick }) {
 
     return (
         <div className="flex-col pr-1">
-            <button className="flex transition-colors hover:bg-gray-300 cursor-pointer rounded-4xl border size-12 items-center justify-center" onClick={onClick} title={label}>
+            <button className="flex transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-12 items-center justify-center" onClick={onClick} title={label}>
                 <img className="w-9 h-9" src={icon} alt={label}/>
             </button>
             <p className="text-center align-top text-sm ">{label}</p>

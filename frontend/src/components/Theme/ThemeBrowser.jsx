@@ -1,70 +1,129 @@
-import { useEffect, useState } from "react";
-import {addTheme, getThemes} from "../../services/themeService.jsx";
+import { useEffect, useState, useMemo } from "react";
+import {addTheme, getThemes, getNewThemes, getOldThemes, deleteTheme} from "../../services/themeService.jsx";
+import { getEvents } from "../../services/eventService.jsx";
 import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
-import SoundSampleBrowser from "../SoundSampleBrowser.jsx";
 import ThemeCreationPopup from "./ThemeCreationPopup.jsx";
 import { useTranslation } from "react-i18next";
 import ThemeToggleButtons from "./Themebrowser/ThemeToggleButtons.jsx";
 import ThemeCollection, {UpcomingThemeCollection} from "./Themebrowser/ThemeCollection.jsx";
 
-export default function ThemeBrowser() {
+
+export default function ThemeBrowser({onCreateTheme}) {
     const [themes, setThemes] = useState([]);
+    const [events, setEvents] = useState([]);
     const [selected, setSelected] = useState("your")
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [allThemes, setAllThemes] = useState([]);
     const {t} = useTranslation();
 
+    // Load ALL themes once
     useEffect(() => {
-        getThemes().then(setThemes)
-    },[])
+        getThemes("all")
+            .then(data => {
+                console.log("Loaded ALL themes:", data);
+                setAllThemes(data || []);
+            })
+            .catch(err => console.error("Error loading ALL themes:", err));
+    }, []);
 
-    const handleCreateTheme = async (themeData) => {
+    // Load filtered themes + events whenever selection or popup changes
+    useEffect(() => {
+        getThemes(selected)
+            .then(data => {
+                console.log("Received themes:", data);
+                setThemes(data || []);
+            })
+            .catch(err => {
+                console.error("Error loading themes:", err);
+                setThemes([]);
+            });
+
+        getEvents()
+            .then(data => {
+                console.log("Received events:", data);
+                setEvents(data || []);
+            })
+            .catch(err => {
+                console.error("Error loading events:", err);
+                setEvents([]);
+            });
+
+    }, [selected, isPopupOpen]);
+
+
+
+    const handleDeleteTheme = async (id) => {
         try {
-            //extract data
-            const name = themeData.title;
-            const username = themeData.userId;
-            const tConsts = themeData.movies.map(m=> m.tConsts);
-            const drinkingRules = themeData.rules || "";
-
-            await addTheme(name, username, tConsts, drinkingRules);
-
-            //refresh the list
-            const updatedThemes = await getThemes();
-            setThemes(updatedThemes);
-
-            setIsPopupOpen(false);
-            alert("Theme created sucessfully! ");
-        } catch (error) {
-            console.error("Error creating theme:", error);
-            alert("failed to create theme");
+        await deleteTheme(id);
+        // update UI locally (optional but nice)
+        setThemes((prev) => prev.filter((t) => t.themeId !== id));
+        } catch (e) {
+        console.error("Failed to delete theme", e);
         }
+    };
+
+    const getTodaysDate = () =>{
+        const today = new Date()
+        const year = today.getFullYear()
+        const month = today.getMonth() + 1 //getMonth apparently gets 0-11, so we add 1
+        const date = today.getDate()
+        return (`${year}-${month}-${date}`);
     }
+
+console.log("Themes:", themes);
+console.log("Events:", events);
+themes.forEach(t => console.log("THEME:", t));
+events.forEach(e => console.log("EVENT:", e));
+
+const mergedEvents = useMemo(() => {
+    if (!events.length) return [];
+
+    return events.map(ev => {
+        const theme = allThemes.find(t => t.themeId === ev.themeId);
+
+        if (!theme) {
+            console.warn("No theme for event:", ev);
+            return {
+                ...ev,
+                timestamp: ev.eventDate,
+                drinkingRules: [],
+                tConsts: [],
+                name: "(Unknown Theme)",
+                username: "Unknown",
+                isSeries: false
+            };
+        }
+
+        return {
+            ...ev,
+            ...theme,
+            timestamp: ev.eventDate
+        };
+    });
+}, [allThemes, events]);
+console.log("Merged events:", mergedEvents);
+
+
 
     return (
         <div className={"p-10"}>
-            <ThemeCreationPopup
-                isOpen={isPopupOpen}
-                onClose={() => setIsPopupOpen(false)}
-                onSubmit={handleCreateTheme}
-            />
-            <div className={"w-full max-w-full h-fit border-2 border-black rounded-3xl p-8"}>
+            <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8"}>
 
                 {/* Upcoming themes card container */}
                 <p className={"m-4 font-bold"}>{t("upcoming themes")}</p>
-                <UpcomingThemeCollection themes={themes}/>
+                <UpcomingThemeCollection events={mergedEvents}/>
 
                 <div className={"border-1 m-8"} ></div>
 
                 {/* Top toggle buttons */}
                 <ThemeToggleButtons selected={selected} onSelect={setSelected}/>
-                <div>
-                    {selected === "your" ? <h1>{t("your themes")}</h1> : selected === "new" ? <h1>{t("new themes")}</h1> : <h1>{t("old themes")}</h1>}
-                </div>
                 {/* Your themes card container */}
-                <div className={"pt-4 pl-6 flex row-end-5 flex gap-5"}>
+                <div className={"pt-4 flex row-end-5 flex gap-5"}>
                     {/* individual cards */}
-                    <ThemeCollection isCreator={true} onClick={() => setIsPopupOpen(true)} themes={themes}></ThemeCollection>
+                    {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={onCreateTheme} showActions={true} onDelete={handleDeleteTheme}></ThemeCollection>)}
+                    {selected === "old" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
+                    {selected === "new" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
                 </div>
-
             </div>
         </div>
     )
