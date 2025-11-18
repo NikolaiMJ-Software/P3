@@ -5,7 +5,7 @@ import { getEvents } from "../../services/eventService.jsx";
 import {useTranslation} from "react-i18next";
 import logo from "../../assets/logo.png"
 
-export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries, timestamp, showActions = false, onDelete}){
+export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries, timestamp, showActions = false, onDelete, onEdit}){
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
@@ -23,6 +23,7 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
                 <button
                     type="button"
                     className="btn-primary w-6 h-6 flex items-center justify-center rounded-full border border-text-secondary text-xs"
+                    onClick={onEdit}
                     >
                     ✎
                     </button>

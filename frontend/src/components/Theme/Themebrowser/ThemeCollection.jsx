@@ -1,6 +1,6 @@
 import ThemeCard, {EventStartup, EventThemeCard, ThemeCreationCard} from "../ThemeCard.jsx";
 
-export default function ThemeCollection({isCreator, onClick, themes, showActions, onDelete}){
+export default function ThemeCollection({isCreator, onClick, themes, showActions, onDelete, onEdit}){
     const safeThemes = Array.isArray(themes) ? themes : [];
 
     return(
@@ -20,6 +20,7 @@ export default function ThemeCollection({isCreator, onClick, themes, showActions
                         timestamp={theme.timestamp}
                         showActions={showActions}
                         onDelete={() => onDelete && onDelete(theme.themeId)}
+                        onEdit={() => onEdit && onEdit(theme)}
                         >
                     </ThemeCard>
                 })}

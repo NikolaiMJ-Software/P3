@@ -81,4 +81,13 @@ public class ThemeRepository {
     public void delete(long id) {
         jdbcTemplate.update("DELETE FROM theme WHERE id = ?", id);
     }
+
+    // Update theme name
+    public void updateName(long id, String name) {
+        jdbcTemplate.update(
+            "UPDATE theme SET name = ? WHERE id = ?",
+            name, id
+        );
+    }
+
 }
