@@ -23,6 +23,7 @@ public class ThemeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+
     private final RowMapper<Theme> rowMapper = (rs, rowNum) ->
             new Theme(
                     rs.getLong("id"),
@@ -31,7 +32,10 @@ public class ThemeRepository {
                     rs.getTimestamp("timestamp").toLocalDateTime().plusHours(1),
                     rs.getObject("vote_count", Integer.class)
             );
-
+    //for testing purposes
+    public RowMapper<Theme> getRowMapper() {
+    return rowMapper;
+}
     //database operations
     public List<Theme> findAll(){
         return jdbcTemplate.query("SELECT * FROM theme", rowMapper);
