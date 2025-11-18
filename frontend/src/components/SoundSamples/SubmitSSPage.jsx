@@ -1,0 +1,158 @@
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { addSoundSample, getSoundSamples, getSoundsampleFile } from "../../services/soundSampleService";
+import { getIdByUser } from "../../services/adminService.jsx"
+import { useTranslation } from "react-i18next";
+
+// This is a page to showcase the functionality of submitting a sound sample via file upload or URL input.
+export default function SubmitSSPage() {
+    const {t} = useTranslation();
+
+    // Setup variables
+    const [link, setUrl] = useState("");
+    const [fileName, setFileName] = useState("");
+    const [file, setFile] = useState(null);
+    const [message, setMessage] = useState("");
+    const { username } = useParams();
+
+    // Handles sound sample submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Sanitize input
+        const trimmedLink = link?.trim();
+        if (trimmedLink && !trimmedLink.includes("https://")) {
+            console.error("Not a link: " + trimmedLink);
+            setMessage("Not a link: " + trimmedLink);
+            return;
+        }
+
+        // Get the user ID from the backend
+        let userId;
+        try {
+            userId = await getIdByUser(username);
+            console.log('userID: ',userId)
+        } catch (error) { 
+            console.error("Failed to fetch user ID:", error);
+            setMessage("Failed to fetch user ID: " + error.message);
+            return;
+        }
+
+        // Submit sound sample and reset input
+        const resText = await addSoundSample(trimmedLink, file, userId);
+        setMessage(resText);
+        setFile(null);
+        setUrl("");
+        document.getElementById("textField").value = "";
+    }
+
+    const playSoundSamples = async () => {
+        let quickShuffle = false;
+        let weightedShuffle = false;
+
+        // Get sound sample
+        const res = await getSoundSamples(quickShuffle, weightedShuffle);
+        console.log(res);
+    }
+
+    const getSSFile = async (filePath) => {
+        let file = await getSoundsampleFile(filePath);
+        console.log(file);
+        return file;
+    }
+
+    const sendMessage = () => {
+        if(!message) {
+            return null;
+        } else if(message.includes("Upload complete!")){
+            return <div className="text-center text-text-primary">{message}</div>;
+        }
+        return <div className="text-center text-text-error">{message}</div>;
+    }
+
+    // HTML of the page
+    return (
+        <div className={"p-10 relative"}>
+            <form className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col items-center gap-3"}>
+                {/* URL input */}
+                <div className="flex justify-center">
+                    <label>
+                        <input
+                            id="textField"
+                            className="border px-2 py-1 rounded w-64"
+                            type="text" 
+                            placeholder={t("insertLink")}
+                            onChange={(e) => setUrl(e.target.value)}
+                        />
+                    </label>
+                </div>
+
+                <div className="flex justify-center">
+                    {t("or")}
+                </div>
+
+                {/* File picker */}
+                <div className="flex justify-center">
+                    <label className="px-4 py-1 transition-colors cursor-pointer bg-white hover:bg-btn-hover-secondary border">
+                        {t("browse")}
+                        <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }}
+                        />
+                    </label>
+                </div>
+                <div className="flex justify-center items-center min-h-5">
+                    {file && <div className="flex items-center text-sm text-text-secondary">{t("file")}: {file.name}</div>}
+                </div>
+
+                {/* Buttons */}
+                <div className="flex justify-center gap-6">
+                    <button className="btn-primary"
+                        type="button"
+                        onClick={(e) => handleSubmit(e)}>
+                        {t("submit")}
+                    </button>
+                    {/*<button className="px-6 py-2 rounded-2xl text-white bg-red-500 hover:bg-red-700"
+                    type="button"
+                    onClick={handleDelete}
+                    >
+                    Delete
+                    </button>*/}
+                </div>
+
+                {/* 
+                // File name for deletion
+                <div className="w-full flex flex-col items-center">
+                    <label className="flex flex-col items-center">
+                    <input
+                        className="border px-2 py-1 rounded w-64"
+                        type="text"
+                        placeholder="File name for deletion..."
+                        onChange={(e) => setFileName(e.target.value)}
+                    />
+                    </label>
+                </div>*/}
+
+                {/* Message */}
+                <div className="flex justify-center items-center min-h-6">
+                    {sendMessage()}
+                </div>
+
+                {/* JONAS insert media player here */}
+                <div className="flex justify-center gap-6">
+                    <button className="px-6 py-2 rounded-2xl text-white bg-text-error"
+                        type="button"
+                        onClick={playSoundSamples}>
+                        Get all soundSample
+                    </button>
+                </div>
+
+                <div className="flex justify-center gap-6">
+                    <button className="px-6 py-2 rounded-2xl text-white bg-text-error"
+                        type="button"
+                        onClick={() => getSSFile("Grass.jpg")}>
+                        Get file
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+}
