@@ -47,7 +47,7 @@ export function UpcomingThemeCollection({events}){
                         drinkingRules={event.drinkingRules}
                         timestamp={event.eventDate}
                         isSeries={event.isSeries}
-                        showActions={showActions}>
+                        >
                     </EventThemeCard>
                 })}
                 <EventThemeCard key="hardcodedpirate-1" drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]} timestamp={"2025-09-11T16:00:00"}></EventThemeCard>
