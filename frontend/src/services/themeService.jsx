@@ -38,14 +38,15 @@ export async function getOldThemes(){
 }
 
 
-export async function addTheme(name, username, tConsts, drinkingRules) {
+export async function addTheme(name, username, tConsts, drinkingRules, rating) {
     console.log(`creating theme with username: ${username}`);
     const body =
     {
         name: name,
         username: username,
         tConsts: tConsts,
-        drinkingRules: drinkingRules
+        drinkingRules: drinkingRules,
+        rating: rating
     };
 
     const response = await fetch(API_URL, {

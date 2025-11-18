@@ -5,7 +5,7 @@ import { getEvents } from "../../services/eventService.jsx";
 import {useTranslation} from "react-i18next";
 import logo from "../../assets/logo.png"
 
-export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries, timestamp, showActions = false, onDelete}){
+export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries, rating, timestamp, showActions = false, onDelete}){
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
@@ -69,6 +69,7 @@ export function ThemeCardSmall({title, name, tConsts}){
                     name={movie.username}
                     moviePosterURL={movie.moviePosterURL}
                     runtimeMinutes={movie.runtimeMinutes}
+                    rating={movie.rating}
                 ></MovieCardSmall>
             })}
         </div>
