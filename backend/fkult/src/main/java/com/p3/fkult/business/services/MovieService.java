@@ -35,6 +35,7 @@ public class MovieService {
                     movie.getMovieName(),
                     movie.getRuntimeMinutes(),
                     movie.getYear(),
+                    movie.getRating(),
                     movie.getPosterURL(),
                     movie.getIsSeries()
                     );
@@ -61,6 +62,7 @@ public class MovieService {
                     movie.getId(),
                     movie.getMovieName(),
                     posterURL,
+                    movie.getRating(),
                     movie.getRuntimeMinutes(),
                     movie.getYear()
             );
@@ -82,6 +84,7 @@ public class MovieService {
                     movie.getId(),
                     movie.getMovieName(),
                     posterURL,
+                    movie.getRating(),
                     movie.getRuntimeMinutes(),
                     movie.getYear()
             );

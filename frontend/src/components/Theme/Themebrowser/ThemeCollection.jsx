@@ -12,6 +12,7 @@ export default function ThemeCollection({isCreator, onClick, themes, showActions
                     console.log("theme object:", theme);
                     console.log(`theme username: ${theme.username}`)
                     return <ThemeCard
+                        key={theme.themeId || theme.id || `${theme.username}-${theme.name}`}
                         drinkingRules={theme.drinkingRules}
                         name={theme.username}
                         title={theme.name}
@@ -36,20 +37,21 @@ export function UpcomingThemeCollection({events}){
                 {/* individual cards */}
                 {safeEvents.map(event =>  {
                     if (event.name === null){
-                        return <EventStartup name={event.username} timestamp={event.timestamp}></EventStartup>
+                        return <EventStartup key={`startup-${event.id}`} name={event.username} timestamp={event.timestamp}></EventStartup>
                     }
                     return <EventThemeCard
                         name={event.username}
+                        key={`event-${event.id}`}
                         tConsts={event.tConsts}
                         title={event.name}
                         drinkingRules={event.drinkingRules}
-                        timestamp={event.timestamp}
+                        timestamp={event.eventDate}
                         isSeries={event.isSeries}
                         showActions={showActions}>
                     </EventThemeCard>
                 })}
-                <EventThemeCard drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]} timestamp={"2025-09-11T16:00:00"}></EventThemeCard>
-                <EventStartup name={"Kabuum"} timestamp={"2026-01-11T16:00:00"}></EventStartup>
+                <EventThemeCard key="hardcodedpirate-1" drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]} timestamp={"2025-09-11T16:00:00"}></EventThemeCard>
+                <EventStartup key="hardcoded-startup" name={"Kabuum"} timestamp={"2026-01-11T16:00:00"}></EventStartup>
             </div>
         </>
     )
