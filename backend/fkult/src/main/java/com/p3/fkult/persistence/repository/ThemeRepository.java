@@ -36,6 +36,10 @@ public class ThemeRepository {
         return jdbcTemplate.query("SELECT * FROM theme", rowMapper);
     }
 
+    public Theme findById(Long id){
+        return jdbcTemplate.queryForObject("SELECT * FROM theme WHERE id = ?",rowMapper, id);
+    }
+
     public List<Theme> findAfter(LocalDateTime localDate){
         //timestamp >= localDate finds themes created on or after localDate
         List<Theme> themes = jdbcTemplate.query("SELECT * FROM theme WHERE timestamp >= ?", rowMapper, localDate);

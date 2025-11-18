@@ -32,6 +32,15 @@ public class EventRepository {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public List<Event> getFutureEventsFromTimeStamp(LocalDateTime localDateTime){
+        String sql = "SELECT * FROM event WHERE event_date > ? ORDER BY event_date ASC";
+        return jdbcTemplate.query(sql,rowMapper, localDateTime);
+    }
+    public List<Event> getPastEventsFromTimeStamp(LocalDateTime localDateTime){
+        String sql = "SELECT * FROM event WHERE event_date < ? ORDER BY event_date ASC";
+        return jdbcTemplate.query(sql,rowMapper, localDateTime);
+    }
+
     // Save an Event to the database
     public void save(LocalDateTime eventDate, long themeId){
         String sql = "INSERT INTO event (event_date, theme_id) VALUES (?,?)";
