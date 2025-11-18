@@ -55,7 +55,7 @@ export default function HomePage() {
                 ) : selected === "samples" ? (
                     <SoundSampleBrowser />
                 ) : selected === "createTheme" ? (
-                    <ThemeCreationPopup />
+                    <ThemeCreationPopup setSelected={setSelected}/>
                 ) : selected === "submitSample" ? (
                     <SubmitSSPage />
                 ) : null

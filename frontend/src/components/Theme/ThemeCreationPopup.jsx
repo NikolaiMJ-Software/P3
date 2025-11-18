@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import logo from "../../assets/logo.png"
 import {ThemeMovieCard} from "./MovieCard.jsx";
 import DrinkingRuleCreator from "./DrinkingRuleCreator.jsx";
@@ -7,9 +7,10 @@ import ThemeCreatorTopcontent from "./ThemeCreatorTopcontent.jsx";
 import ThemeMovieSearcher from "./ThemeMovieSearcher.jsx";
 import ThemeCreator from "./ThemeCreator.jsx";
 import {addTheme, getThemes} from "../../services/themeService.jsx";
+import ThemeBrowser from "./ThemeBrowser.jsx";
 const MOVIE_LIMIT = 6;
 
-export default function ThemeCreationPopup() {
+export default function ThemeCreationPopup({setSelected}) {
     const [title, setTitle] = useState("");
     const [movies, setMovies] = useState([]);
     const [rules, setRules] = useState([]);
@@ -99,8 +100,9 @@ export default function ThemeCreationPopup() {
             const drinkingRules = rules || "";
             console.log("Sending theme:", { title, username, movies, drinkingRules });
             await addTheme(title, username, movies.map(movie => movie.tConst), drinkingRules);
-            
+            setSelected("themes")
             alert("Theme created sucessfully! ");
+
         } catch (error) {
             console.error("Error creating theme:", error);
             alert("failed to create theme" + error);

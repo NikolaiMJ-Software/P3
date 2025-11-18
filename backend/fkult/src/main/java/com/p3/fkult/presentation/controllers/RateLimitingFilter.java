@@ -27,9 +27,9 @@ public class RateLimitingFilter implements Filter {
 
         // Maximum requests allowed per minute
         int limit = switch (httpReq.getRequestURI()) {
-            case "/api/themes" -> 101;      // 101 requests/min
+            case "/api/themes" -> 1010;      // 101 requests/min
             case "/api/sound-sample" -> 90; // 90 req/min
-            default -> 100;                 // All other endpoints
+            default -> 10000;                 // All other endpoints
         };
 
         // Initialize request count for the client IP address, and then increment it
