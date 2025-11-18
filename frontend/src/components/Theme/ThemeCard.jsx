@@ -21,13 +21,13 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
             <div className="absolute top-2 right-2 flex gap-1">
                 <button
                     type="button"
-                    className="btn-primary w-6 h-6 flex items-center justify-center rounded-full border border-gray-400 text-xs"
+                    className="btn-primary w-6 h-6 flex items-center justify-center rounded-full border border-text-secondary text-xs"
                     >
                     ✎
                     </button>
                     <button
                     type="button"
-                    className="btn-primary w-6 h-6 flex items-center justify-center rounded-full border border-gray-400 text-xs"
+                    className="btn-primary w-6 h-6 flex items-center justify-center rounded-full border border-text-secondary text-xs bg-btn-red hover:bg-btn-red-hover"
                     onClick={onDelete}
                     >
                     ✕
