@@ -9,8 +9,8 @@ VALUES
 (5, 'mig', 'mig', 0, 0);
 
 -- Insert dummy theme with a known ID
-INSERT OR IGNORE INTO theme (id, name, user_id, timestamp)
-VALUES (1, 'Pirates Night', 1, '2024-09-11 08:25:59');
+INSERT OR IGNORE INTO theme (id, name, user_id, timestamp, vote_count)
+VALUES (1, 'Pirates Night', 1, '2024-09-11 08:25:59', 10);
 
 -- Associate movies with this theme
 INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
@@ -61,12 +61,10 @@ VALUES (2,'2026-09-11 16:00:00', NULL);
 
 
 -- test theme/events
-INSERT OR IGNORE INTO theme (id, name, user_id)
-VALUES (1, 'Pirates Night', 1);
-INSERT OR IGNORE INTO theme (id, name, user_id)
-VALUES (2, 'Bad Superhero Movies', 1);
-INSERT OR IGNORE INTO theme (id, name, user_id)
-VALUES (3, '9/11', 1);
+INSERT OR IGNORE INTO theme (id, name, user_id, vote_count)
+VALUES (2, 'Bad Superhero Movies', 1, 5);
+INSERT OR IGNORE INTO theme (id, name, user_id, vote_count)
+VALUES (3, '9/11', 1, 3);
 
 INSERT OR IGNORE INTO theme_movie (theme_id, movie_id)
 SELECT 1, 1426

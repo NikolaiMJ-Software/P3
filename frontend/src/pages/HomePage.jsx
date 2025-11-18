@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import ThemeBrowser from "../components/Theme/ThemeBrowser.jsx";
 import SoundSampleBrowser from "../components/SoundSamples/SoundSampleBrowser.jsx";
-import SubmitSSPage from "../components/SubmitSSPage.jsx";
+import SubmitSSPage from "../components/SoundSamples/SubmitSSPage.jsx";
 import NextTheme from "../components/Theme/NextTheme";
 import { useTranslation } from "react-i18next";
 import React from "react";
@@ -53,7 +53,7 @@ export default function HomePage() {
                 selected === "themes" ? (
                     <ThemeBrowser onCreateTheme={() => setSelected("createTheme")} />
                 ) : selected === "samples" ? (
-                    <SoundSampleBrowser />
+                    <SoundSampleBrowser onCreateSS={() => setSelected("submitSample")}/>
                 ) : selected === "createTheme" ? (
                     <ThemeCreationPopup setSelected={setSelected}/>
                 ) : selected === "submitSample" ? (

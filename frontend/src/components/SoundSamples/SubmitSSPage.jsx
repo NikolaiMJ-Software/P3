@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { addSoundSample, getSoundSamples, getSoundsampleFile } from "../services/soundSampleService";
-import { getIdByUser } from "../services/adminService.jsx"
+import { addSoundSample, getSoundSamples, getSoundsampleFile } from "../../services/soundSampleService";
+import { getIdByUser } from "../../services/adminService.jsx"
 import { useTranslation } from "react-i18next";
 
 // This is a page to showcase the functionality of submitting a sound sample via file upload or URL input.

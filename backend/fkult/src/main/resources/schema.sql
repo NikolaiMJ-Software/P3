@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS theme (
   name         TEXT NOT NULL CHECK (length(trim(name)) > 0),
   user_id      INTEGER,
   timestamp    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  vote_count   INTEGER NOT NULL DEFAULT 0,
+  vote_count   INTEGER,
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 

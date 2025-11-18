@@ -5,14 +5,13 @@ import { I18nextProvider } from "react-i18next";
 import baseI18n from "../i18n";
 import { expect, describe, it, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, waitFor, cleanup } from "@testing-library/react";
-import SubmitSSPage from "../components/SubmitSSPage";
+import SubmitSSPage from "../components/SoundSamples/SubmitSSPage";
 
 expect.extend(matchers);
 
 //mock use navigate
 vi.mock("../services/soundSampleService", () => ({
   addSoundSample: vi.fn().mockResolvedValue("uploadMsg"),
-  deleteSoundSample: vi.fn(),
   getSoundSamples: vi.fn(),
   getSoundsampleFile: vi.fn(),
 }));

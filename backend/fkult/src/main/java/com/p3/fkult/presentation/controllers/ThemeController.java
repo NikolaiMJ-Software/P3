@@ -49,7 +49,7 @@ public class ThemeController {
             return ResponseEntity.badRequest().body("Theme data not accepted please ensure there is a title, username and at least one movie");
         }
         if (userService.getIfUserBanned(username)){
-            ResponseEntity.badRequest().body("Theme data not accepted as user is banned");
+            return ResponseEntity.badRequest().body("Theme data not accepted as user is banned");
         }
         /*
         //check if user even exists and fail them if they do not exist
