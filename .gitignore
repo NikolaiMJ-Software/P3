@@ -23,7 +23,8 @@ backend/database/*.tsv.gz
 /backend/fkult/database/title.basics.tsv.gz
 /backend/fkult/database/title.ratings.tsv.gz
 /backend/fkult/database/F-Kult.db-journal
-/backend/fkult/database/title.basics-1470140994653455941.tsv.gz.tmp
+/backend/fkult/database/
 
 # Sound samples Files
 backend/fkult/soundSampleUploads/
+/backend/fkult/database/title.basics-1672141010547192243.tsv.gz.tmp
