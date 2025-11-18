@@ -246,7 +246,7 @@ public class ThemeRepositoryTest {
         Timestamp dbTs = Timestamp.valueOf(ts);
 
         when(rs.getTimestamp("timestamp")).thenReturn(dbTs);
-        when(rs.getObject("vote_count", Integer.class)).thenReturn(5);
+        when(rs.getObject("vote_count")).thenReturn(5);
 
         // Act
         Theme result = mapper.mapRow(rs, 0);
@@ -259,7 +259,22 @@ public class ThemeRepositoryTest {
         assertThat(result.getVotecount()).isEqualTo(5);
     }
 
+// find votes by id
+@Test
+void findVotesById_returnsVoteCount() {
+    // Arrange
+    long id = 5L;
+    long expectedVotes = 12L;
 
+    when(jdbcTemplate.queryForObject("SELECT vote_count FROM theme WHERE id = ?", Long.class, id)).thenReturn(expectedVotes);
+
+    // Act
+    Long result = themeRepository.findVotesById(id);
+
+    // Assert
+    assertThat(result).isEqualTo(expectedVotes);
+    verify(jdbcTemplate).queryForObject("SELECT vote_count FROM theme WHERE id = ?", Long.class, id);
+}
 
 }
 
