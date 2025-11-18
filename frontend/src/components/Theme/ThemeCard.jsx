@@ -44,7 +44,7 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
 
             <div className={"flex justify-between gap-2"}>
                 {safeMovies.slice(0,2).map((movie, i) => (
-                    <MovieCardSmall key={movie.id || i} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes}/>
+                    <MovieCardSmall key={movie.id || i} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes} rating={movie.rating}/>
                 ))}
             </div>
         </div>
@@ -136,7 +136,7 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp})
 
             <div className={"flex justify-between gap-2 mt-2"}>
                 {safeMovies.slice(0,2).map((movie, i) => (
-                    <MovieCardUpcoming key={movie.id ?? `${title}-movie-${i}`} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes}/>
+                    <MovieCardUpcoming key={movie.id ?? `${title}-movie-${i}`} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes} rating={movie.rating}/>
                 ))}
             </div>
         </div>

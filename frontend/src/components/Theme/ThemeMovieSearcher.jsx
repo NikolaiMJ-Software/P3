@@ -34,7 +34,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
 
     const runtimeHours = Math.floor(runtime / 60)
     const runtimeMinutesLeft = runtime % 60;
-    const safeRating = (rating) ? "Rating: " + rating : "No Ratings Available";
+    const safeRating = (rating) ? "Rating: " + rating+"⭐" : "No Ratings Available";
 
     //different layout for shows, series and such.
     if(isSeries){
