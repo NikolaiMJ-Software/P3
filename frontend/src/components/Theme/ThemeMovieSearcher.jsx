@@ -15,7 +15,9 @@ export default function ThemeMovieSearcher({foundMovies, setSearchQuery, pageCou
                     runtime={movie.runtimeMinutes}
                     tConst={movie.tConst}
                     onAdd={() => handleAddMovies(movie)}
-                    isSeries={movie.isSeries}>
+                    isSeries={movie.isSeries}
+                    rating={movie.rating}
+                >
                 </MovieSuggestion>
             })}
             <div className="absolute bottom-2 flex flex-row gap-4">
@@ -28,11 +30,11 @@ export default function ThemeMovieSearcher({foundMovies, setSearchQuery, pageCou
     )
 }
 
-export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, onAdd, isSeries}) {
+export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, onAdd, isSeries, rating}) {
 
     const runtimeHours = Math.floor(runtime / 60)
     const runtimeMinutesLeft = runtime % 60;
-
+    const safeRating = (rating) ? "Rating: " + rating+"⭐" : "No Ratings Available";
 
     //different layout for shows, series and such.
     if(isSeries){
@@ -43,8 +45,9 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
                 </div>
                 <div className={"flex flex-col"}>
                     <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
-                        <p className="font-bold truncate overflow-hidden text-ellipsis max-w-[350px] text-blue-400">{movieName}</p><p className={"font-bold"}>Series</p>
+                        <p className="font-bold truncate overflow-hidden text-ellipsis max-w-[350px] text-blue-400">{movieName} </p><p className={""}>{safeRating} - Series</p>
                     </a>
+
                     <p>{year}</p>
                 </div>
                 <button onClick={onAdd} className="px-3 py-1 rounded-lg hover:bg-btn-hover-secondary cursor-pointer transition  ml-auto">
@@ -64,8 +67,9 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
                 <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
                     <p className="font-bold truncate overflow-hidden text-ellipsis max-w-[350px] text-blue-400">{movieName}</p>
                 </a>
+                <p className={""}>{safeRating} -{" Runtime: " + runtimeHours + "h " + runtimeMinutesLeft + "m "}</p>
                 <p>{year}</p>
-                <p>{runtimeHours + "h " + runtimeMinutesLeft + "m "}</p>
+                <p></p>
 
             </div>
             <button onClick={onAdd} className="px-3 py-1 rounded-lg hover:bg-btn-hover-secondary cursor-pointer transition  ml-auto">

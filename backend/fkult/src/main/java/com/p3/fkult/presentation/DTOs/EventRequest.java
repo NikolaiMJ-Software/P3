@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class EventRequest {
+    private Long id;
     private String name;
     private String username;
     private LocalDateTime timestamp;
@@ -15,13 +16,18 @@ public class EventRequest {
     //default constructor
     public EventRequest(){}
     //Constructor for getting events
-    public EventRequest(String name, String username, LocalDateTime timestamp, List<String> drinkingRules, List<String> tConsts){
+    public EventRequest(Long id, String name, String username, LocalDateTime timestamp, List<String> drinkingRules, List<String> tConsts){
+        this.id = id;
         this.name = name;
         this.username = username;
         this.timestamp = timestamp;
         this.drinkingRules = drinkingRules;
         this.tConsts = tConsts;
     }
+    public EventRequest(Long id, LocalDateTime timestamp){
+        this.timestamp = timestamp;
+    }
+
 
     //getters
     public void setName(String name) {
@@ -39,6 +45,7 @@ public class EventRequest {
     public void setUsername(String username) {
         this.username = username;
     }
+    public void setId(Long id){this.id = id;}
 
     //setters
     public List<String> getDrinkingRules() {
@@ -56,4 +63,5 @@ public class EventRequest {
     public String getUsername() {
         return username;
     }
+    public Long getId() {return id;}
 }

@@ -64,24 +64,33 @@ public class EventService {
             return "Event deletion failed: " + e.getMessage();
         }
     }
+
     public List<EventRequest> getFutureEventsFromNow(){
         LocalDateTime now = LocalDateTime.now();
         List<Event> futureEvents = eventRepository.getFutureEventsFromTimeStamp(now);
         List<Theme> eventThemes = futureEvents.stream().map(event -> themeRepository.findById(event.getThemeId())).toList();
         List<EventRequest> eventRequests = new ArrayList<>();
         for(int i = 0; i < futureEvents.size(); i++){
-            eventRequests.add(new EventRequest(
-                    //theme name for event
-                    eventThemes.get(i).getName(),
-                    //username who created theme for the event
-                    userRepository.findUserNameById(eventThemes.get(i).getUserid()),
-                    //event date and start time
-                    futureEvents.get(i).getEventDate(),
-                    //Drinking Rule from theme
-                    drinkingRuleRepository.findByThemeId(eventThemes.get(i).getId()).stream().map(drinkingRule -> drinkingRule.getRuleText()).toList(),
-                    //movie tConsts for theme
-                    themeMovieRepository.findByThemeId(eventThemes.get(i).getId()).stream().map(themeMovie -> themeMovie.getMovieid()).map(movieId -> movieRepository.findById(movieId)).map(movie -> movie.getTconst()).toList()
-            ));
+            if (eventThemes.get(i)== null){
+                eventRequests.add(new EventRequest(
+                        futureEvents.get(i).getId(),
+                        futureEvents.get(i).getEventDate()
+                ));
+            }else{
+                eventRequests.add(new EventRequest(
+                        futureEvents.get(i).getId(),
+                        //theme name for event
+                        eventThemes.get(i).getName(),
+                        //username who created theme for the event
+                        userRepository.findUserNameById(eventThemes.get(i).getUserid()),
+                        //event date and start time
+                        futureEvents.get(i).getEventDate(),
+                        //Drinking Rule from theme
+                        drinkingRuleRepository.findByThemeId(eventThemes.get(i).getId()).stream().map(drinkingRule -> drinkingRule.getRuleText()).toList(),
+                        //movie tConsts for theme, the reason it is so long is We map ThemeMovies -> MovieIds -> Movies -> tConsts
+                        themeMovieRepository.findByThemeId(eventThemes.get(i).getId()).stream().map(themeMovie -> themeMovie.getMovieid()).map(movieId -> movieRepository.findById(movieId)).map(movie -> movie.getTconst()).toList()
+                ));
+            }
         }
         return eventRequests;
     }

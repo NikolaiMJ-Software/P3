@@ -2,6 +2,7 @@ package com.p3.fkult.persistence.repository;
 
 import com.p3.fkult.persistence.entities.ExampleMessage;
 import com.p3.fkult.persistence.entities.Theme;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -37,7 +38,11 @@ public class ThemeRepository {
     }
 
     public Theme findById(Long id){
-        return jdbcTemplate.queryForObject("SELECT * FROM theme WHERE id = ?",rowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM theme WHERE id = ?",rowMapper, id);
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
     public List<Theme> findAfter(LocalDateTime localDate){

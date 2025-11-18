@@ -5,7 +5,7 @@ import { getEvents } from "../../services/eventService.jsx";
 import {useTranslation} from "react-i18next";
 import logo from "../../assets/logo.png"
 
-export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries, timestamp, showActions = false, onDelete, onEdit}){
+export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries, rating, timestamp, showActions = false, onDelete, onEdit}){
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
@@ -45,7 +45,7 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
 
             <div className={"flex justify-between gap-2"}>
                 {safeMovies.slice(0,2).map((movie, i) => (
-                    <MovieCardSmall key={movie.id || i} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes}/>
+                    <MovieCardSmall key={movie.id || i} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes} rating={movie.rating}/>
                 ))}
             </div>
         </div>
@@ -70,6 +70,7 @@ export function ThemeCardSmall({title, name, tConsts}){
                     name={movie.username}
                     moviePosterURL={movie.moviePosterURL}
                     runtimeMinutes={movie.runtimeMinutes}
+                    rating={movie.rating}
                 ></MovieCardSmall>
             })}
         </div>
@@ -97,7 +98,7 @@ export function StartupCard({date}){
         </div>
     )
 }
-export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp, isSeries}){
+export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp}){
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
@@ -119,7 +120,7 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp, 
     const minute = () => {
         return timestamp.split("-")[2].split("T")[1].split(":")[1];
     }
-
+    const safeDrinkingRules = Array.isArray(drinkingRules) ? drinkingRules : [];
     const safeMovies = Array.isArray(movies) ? movies : [];
     const {t} = useTranslation();
     return(
@@ -129,14 +130,14 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp, 
                 <h1 className={"text-xl font-bold"}>{title}</h1>
                 <h2 className={"text-sm text-gray-600"}>{name}</h2>
                 <h2 className={"font-bold text-sm"}>{day() + "/" + month() + "/" + year()}</h2>
-                <h2 className={"font-bold text-sm"}>{"kl. "+hour() + ":" + minute()}</h2>
+                <h2 className={"font-bold text-sm"}>{t("at")} {hour()}:{minute()}</h2>
                 <h3 className={"mt-2 font-semibold text-sm"}>{t("drinking rules")}</h3>
-                <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16"}>{drinkingRules.map((rule, i) => {return <li key={`${title}-rule-${i}`}>{rule}</li>})}</ul>
+                <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16"}>{safeDrinkingRules.map((rule, i) => {return <li key={`${title}-rule-${i}`}>{rule}</li>})}</ul>
             </div>
 
             <div className={"flex justify-between gap-2 mt-2"}>
                 {safeMovies.slice(0,2).map((movie, i) => (
-                    <MovieCardUpcoming key={movie.id ?? `${title}-movie-${i}`} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes}/>
+                    <MovieCardUpcoming key={movie.id ?? `${title}-movie-${i}`} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes} rating={movie.rating}/>
                 ))}
             </div>
         </div>
@@ -167,7 +168,7 @@ export function EventStartup({timestamp, onClick}){
             <div>
                 <h1 className={"text-xl font-bold"}>F-Kult Start</h1>
                 <h2 className={"font-bold text-sm"}>{day() + "/" + month() + "/" + year()}</h2>
-                <h2 className={"font-bold text-sm"}>{"kl. "+hour() + ":" + minute()}</h2>
+                <h2 className={"font-bold text-sm"}>{t("at") + " "+ hour() + ":" + minute()}</h2>
                 <h3 className={"font-bold text-lg"}>{t("come and vote")}</h3>
                 <img src={logo}/>
             </div>

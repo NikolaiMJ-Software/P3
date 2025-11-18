@@ -37,22 +37,23 @@ export function UpcomingThemeCollection({events}){
             <div className={"flex gap-5 p-4 overflow-x-auto"}>
                 {/* individual cards */}
                 {safeEvents.map(event =>  {
+                    if(event){
                     if (event.name === null){
                         return <EventStartup key={`startup-${event.id}`} name={event.username} timestamp={event.timestamp}></EventStartup>
                     }
                     return <EventThemeCard
                         name={event.username}
-                        key={`event-${event.id}`}
+                        key={`event-${event.timestamp}`}
                         tConsts={event.tConsts}
                         title={event.name}
                         drinkingRules={event.drinkingRules}
-                        timestamp={event.eventDate}
-                        isSeries={event.isSeries}
-                        >
+                        timestamp={event.timestamp}>
                     </EventThemeCard>
-                })}
-                <EventThemeCard key="hardcodedpirate-1" drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]} timestamp={"2025-09-11T16:00:00"}></EventThemeCard>
-                <EventStartup key="hardcoded-startup" name={"Kabuum"} timestamp={"2026-01-11T16:00:00"}></EventStartup>
+                }})}
+                {/*
+                    <EventThemeCard key="hardcodedpirate-1" drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]} timestamp={"2025-09-11T16:00:00"}></EventThemeCard>
+                    <EventStartup key="hardcoded-startup" name={"Kabuum"} timestamp={"2026-01-11T16:00:00"}></EventStartup>
+                */}
             </div>
         </>
     )

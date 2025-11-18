@@ -52,11 +52,13 @@ VALUES
 (NULL, '/nature/waterfall', 3);
 
 -- Real startup day
-INSERT OR IGNORE INTO event (event_date, theme_id)
-VALUES ('2025-09-11 16:00:00', NULL);
+INSERT OR IGNORE INTO event (id,event_date, theme_id)
+VALUES (1,'2025-09-11 16:00:00', NULL);
+INSERT OR IGNORE INTO event (id,event_date, theme_id)
+VALUES (2,'2026-09-11 16:00:00', NULL);
 
 
-/*
+
 
 -- test theme/events
 INSERT OR IGNORE INTO theme (id, name, user_id)
@@ -126,4 +128,3 @@ WHERE NOT EXISTS (
   WHERE event_date = '2026-02-19 16:45:00'
     AND theme_id   = 3
 );
-*/

@@ -21,7 +21,7 @@ export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie, se
             <div className={"w-full max-w-[500px] overflow-x-auto overflow-y-hidden gap-"}>
                 <div className={"flex flex-row gap-4 items-center"}>
                     {movies.map(movie =>{
-                        return<ThemeMovieCard title={movie.title} runtimeMinutes={movie.runtimeMinutes} moviePosterURL={movie.moviePosterURL} onRemove={() => handleRemoveMovie(movie.tConst)} isSeries={movie.isSeries}></ThemeMovieCard>
+                        return<ThemeMovieCard title={movie.title} runtimeMinutes={movie.runtimeMinutes} moviePosterURL={movie.moviePosterURL} onRemove={() => handleRemoveMovie(movie.tConst)} isSeries={movie.isSeries} rating={movie.rating}></ThemeMovieCard>
                     })}
 
                 </div>
