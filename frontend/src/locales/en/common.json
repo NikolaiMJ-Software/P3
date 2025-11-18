@@ -21,7 +21,7 @@
   "voted": "voted",
   "shuffle entries": "Shuffle Entries",
   "one entry per line": "One entry per line",
-  "upcoming themes": "Upcoming themes",
+  "upcoming events": "Upcoming Events",
   "drinking rules": "Drinking Rules",
   "create theme": "Create Theme",
   "insertLink": "Insert URL...",
@@ -46,5 +46,8 @@
   "uplSS": "All sound samples",
   "usersSS": "Your sound samples",
   "nextTheme": "Next Theme",
-  "loadMore": "Load More"
+  "loadMore": "Load More",
+  "at": "at:",
+  "editTheme": "Edit Theme",
+  "update": "Update"
 }

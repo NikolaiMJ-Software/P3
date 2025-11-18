@@ -39,4 +39,10 @@ public class DrinkingRuleRepository {
         drinkingRule.setId(id);
         return drinkingRule;
     }
+
+    //delete drinking rules
+    public void deleteByThemeId(long themeId) {
+        jdbcTemplate.update("DELETE FROM drinking_rule WHERE theme_id = ?", themeId);
+    }
+
 }

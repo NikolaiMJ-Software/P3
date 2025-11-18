@@ -5,7 +5,7 @@ import com.p3.fkult.business.services.UserService;
 import com.p3.fkult.persistence.entities.SoundSample;
 import com.p3.fkult.persistence.entities.User;
 import com.p3.fkult.persistence.repository.SoundSampleRepository;
-import com.p3.fkult.presentation.controllers.SoundSampleRequest;
+import com.p3.fkult.presentation.DTOs.SoundSampleRequest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,5 +1,35 @@
 import { API } from './api.jsx'
-const API_URL = `${API}/event`; //backend address
+const API_URL = `${API}/event`;
+ //backend address
+
+export async function getEvents(){
+
+    try {
+        const response = await fetch(`${API_URL}/all`);
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+        return await response.json();   // events come as JSON
+    } catch (error) {
+        console.log("Error getting events: ", error);
+        throw error;
+    }
+}
+
+export async function getFutureEvents(){
+
+    try {
+        const response = await fetch(`${API_URL}/future`);
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+        return await response.json();   // events come as JSON
+    } catch (error) {
+        console.log("Error getting events: ", error);
+        throw error;
+    }
+}
+
 
 // Handles uploading of events
 export async function uploadEvent(LocalDate, themeId){
@@ -18,7 +48,7 @@ export async function uploadEvent(LocalDate, themeId){
 // Handles deletion of events
 export async function deleteEvent(id) {
     try {
-        const response = fetch(`${API_URL}/delete/${id}`);
+        const response = await fetch(`${API_URL}/delete/${id}`);
         if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
         }

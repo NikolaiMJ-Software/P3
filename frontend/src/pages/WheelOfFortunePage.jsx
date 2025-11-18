@@ -3,10 +3,12 @@ import { useState } from "react";
 import WheelOfFortune from "../components/WheelOfFortune.jsx";
 import { useTranslation } from "react-i18next";
 
-export default function WheelOfFortunePage() {
-  const [entriesText, setEntriesText] = useState(
-    "Pirates\nThe Squad\nGruppe 6"
-  );
+export default function WheelOfFortunePage({entries = []}) {
+  const initialText = entries.length
+    ? entries.join("\n")
+    : "Pirates\nThe Squad\nGruppe 6";
+
+  const [entriesText, setEntriesText] = useState(initialText);
   const {t} = useTranslation();
 
   const inputs = entriesText

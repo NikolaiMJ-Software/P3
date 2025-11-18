@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS movie (
   is_active           INTEGER NOT NULL DEFAULT 1 CHECK (is_active IN (0,1)),
   is_series           INTEGER NOT NULL DEFAULT 0 CHECK (is_series IN (0,1)),
   poster_url          TEXT,
-  rating              TEXT
+  rating              TEXT,
+  last_seen           DATE DEFAULT NULL
 );
 
 -- Themes
@@ -34,7 +35,7 @@ CREATE TABLE IF NOT EXISTS theme (
   name         TEXT NOT NULL CHECK (length(trim(name)) > 0),
   user_id      INTEGER,
   timestamp    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  vote_count   INTEGER NOT NULL DEFAULT 0,
+  vote_count   INTEGER,
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 

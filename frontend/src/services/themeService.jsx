@@ -12,7 +12,9 @@ export async function getThemes(selected) {
         }else if (selected === "new"){
             const response = await fetch(`${API_URL}/New`);
             return response.json();
-        }
+        } else {
+            const response = await fetch(`${API_URL}`);
+            return response.json();}
     }catch (e){
         throw new Error(`Failed to fetch themes, error: ${e}`)
     }
@@ -36,14 +38,15 @@ export async function getOldThemes(){
 }
 
 
-export async function addTheme(name, username, tConsts, drinkingRules) {
+export async function addTheme(name, username, tConsts, drinkingRules, rating) {
     console.log(`creating theme with username: ${username}`);
     const body =
     {
         name: name,
         username: username,
         tConsts: tConsts,
-        drinkingRules: drinkingRules
+        drinkingRules: drinkingRules,
+        rating: rating
     };
 
     const response = await fetch(API_URL, {
@@ -60,7 +63,7 @@ export async function addTheme(name, username, tConsts, drinkingRules) {
 }
 
 export async function deleteTheme(id) {
-    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    await fetch(`${API}/vote/delete-theme/${id}`, { method: "DELETE" });
 }
 
 export async function fetchShuffledThemes() {
@@ -87,4 +90,24 @@ export async function updateThemeVotes(id, votes) {
     console.log("Error updating theme votes: ", error);
     throw error;
   }
+}
+
+export async function updateTheme(themeId, name, tConsts, drinkingRules) {
+  const body = {
+    name,
+    tConsts,         
+    drinkingRules,
+  };
+
+  const response = await fetch(`${API_URL}/${themeId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to update theme ${themeId}: ${response.status}`);
+  }
+
+  return response.text();
 }

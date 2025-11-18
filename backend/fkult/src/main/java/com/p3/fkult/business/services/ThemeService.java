@@ -5,16 +5,13 @@ import com.p3.fkult.persistence.entities.Movie;
 import com.p3.fkult.persistence.entities.Theme;
 import com.p3.fkult.persistence.entities.ThemeMovie;
 import com.p3.fkult.persistence.repository.*;
-import com.p3.fkult.presentation.controllers.ThemeRequest;
+import com.p3.fkult.presentation.controllers.UserController;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class ThemeService {
@@ -33,13 +30,13 @@ public class ThemeService {
         this.userRepository = userRepository;
         this.eventService = eventService;
     }
-    public List<ThemeRequest> getAllThemes() {
+    public List<UserController.ThemeRequest> getAllThemes() {
         List<Theme> themes =  themeRepository.findAll();
         System.out.println("Found themes: " + themes.size());
         return convertThemesToThemeRequests(themes);
     }
 
-    public List<ThemeRequest> getNewThemes() {
+    public List<UserController.ThemeRequest> getNewThemes() {
         LocalDateTime lastStartUpDate = eventService.getLastStartupDate();
         if (lastStartUpDate == null) {
             return convertThemesToThemeRequests(new ArrayList<>());
@@ -48,7 +45,7 @@ public class ThemeService {
         return convertThemesToThemeRequests(newThemes);
     }
 
-    public List<ThemeRequest> getOldThemes() {
+    public List<UserController.ThemeRequest> getOldThemes() {
         LocalDateTime lastStartUpDate = eventService.getLastStartupDate();
         if (lastStartUpDate == null) {
             return convertThemesToThemeRequests(new ArrayList<>());
@@ -57,13 +54,13 @@ public class ThemeService {
         return convertThemesToThemeRequests(oldThemes);
     }
 
-    public List<ThemeRequest> getUserThemes(String username) {
+    public List<UserController.ThemeRequest> getUserThemes(String username) {
         List<Theme> userThemes = themeRepository.findFromUser(userRepository.findIdByUsername(username));
         return convertThemesToThemeRequests(userThemes);
     }
 
     @Transactional
-    public void createTheme(ThemeRequest themeRequest){
+    public void createTheme(UserController.ThemeRequest themeRequest){
         //two birds one stone ahh line. assigns themeid AND saves theme to database
         long themeId = themeRepository.save(new Theme(themeRequest.getName(), themeRequest.getUserId())).getId();
 
@@ -76,7 +73,7 @@ public class ThemeService {
     }
 
     @Transactional
-    public void createThemeWithTConsts(ThemeRequest themeRequest){
+    public void createThemeWithTConsts(UserController.ThemeRequest themeRequest){
         Long userId = userRepository.findUser(themeRequest.getUsername()).getId();
         long themeId = themeRepository.save(new Theme(themeRequest.getName(), userId)).getId();
 
@@ -95,8 +92,8 @@ public class ThemeService {
         }
     }
     
-    private List<ThemeRequest> convertThemesToThemeRequests(List<Theme> themes) {
-        List<ThemeRequest> themeRequests =  new ArrayList<>();
+    private List<UserController.ThemeRequest> convertThemesToThemeRequests(List<Theme> themes) {
+        List<UserController.ThemeRequest> themeRequests =  new ArrayList<>();
         for(Theme theme : themes) {
             //constructing a themeRequest one by one
             String name = theme.getName();
@@ -117,10 +114,48 @@ public class ThemeService {
                     .stream()
                     .map(DrinkingRule::getRuleText)
                     .toList();
-            ThemeRequest themeRequest = new ThemeRequest(theme.getId(),  name, username, userId, movieIds, drinkingRules, theme.getTimestamp());
+            UserController.ThemeRequest themeRequest = new UserController.ThemeRequest(theme.getId(),  name, username, userId, movieIds, drinkingRules, theme.getTimestamp());
             themeRequest.settConsts(tconsts);
             themeRequests.add(themeRequest);
         };
         return themeRequests;
     }
+
+
+    @Transactional
+    public void updateThemeWithTConsts(UserController.ThemeRequest themeRequest){
+        Long themeId = themeRequest.getThemeId();
+        System.out.println("Updating themeId = " + themeId + " with request = " + themeRequest);
+
+        // 1) Update core theme
+        themeRepository.updateName(themeId, themeRequest.getName());
+
+        // 2) Replace movies
+        themeMovieRepository.deleteByThemeId(themeId);
+
+        List<Long> movieIds = new ArrayList<>();
+        for (String tConst : themeRequest.gettConsts()) {
+            Movie movie = movieRepository.findByTconst(tConst);
+            if (movie == null) {
+                // Log clearly and fail in a controlled way
+                throw new IllegalArgumentException("No movie found in DB for tConst: " + tConst);
+            }
+            movieIds.add(movie.getId());
+        }
+
+        for (Long movieId : movieIds) {
+            themeMovieRepository.save(new ThemeMovie(themeId, movieId));
+        }
+
+        // 3) Replace drinking rules
+        drinkingRuleRepository.deleteByThemeId(themeId);
+
+        if (themeRequest.getDrinkingRules() != null) {
+            for (String ruleText : themeRequest.getDrinkingRules()) {
+                drinkingRuleRepository.save(new DrinkingRule(themeId, ruleText));
+            }
+        }
+    }
+
+
 }

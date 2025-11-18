@@ -2,6 +2,7 @@ package com.p3.fkult.persistence.repository;
 
 import com.p3.fkult.persistence.entities.ExampleMessage;
 import com.p3.fkult.persistence.entities.Theme;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -28,12 +29,24 @@ public class ThemeRepository {
                     rs.getString("name"),
                     rs.getLong("user_id"),
                     rs.getTimestamp("timestamp").toLocalDateTime().plusHours(1),
-                    rs.getObject("vote_count", Integer.class)
+
+                    // Handle possible null for vote_count
+                    rs.getObject("vote_count") == null 
+                        ? null 
+                        : ((Number) rs.getObject("vote_count")).intValue()
             );
 
     //database operations
     public List<Theme> findAll(){
         return jdbcTemplate.query("SELECT * FROM theme", rowMapper);
+    }
+
+    public Theme findById(Long id){
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM theme WHERE id = ?",rowMapper, id);
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
     public List<Theme> findAfter(LocalDateTime localDate){
@@ -71,5 +84,23 @@ public class ThemeRepository {
     // Updates the votes of a theme based on the id
     public void setVote(long id, long votes) {
         jdbcTemplate.update("UPDATE theme SET vote_count = (?) WHERE id = (?)", votes, id);
+    }
+
+    // Deletes a theme based on the id
+    public void delete(long id) {
+        jdbcTemplate.update("DELETE FROM theme WHERE id = ?", id);
+    }
+
+    // Update theme name
+    public void updateName(long id, String name) {
+        jdbcTemplate.update(
+            "UPDATE theme SET name = ? WHERE id = ?",
+            name, id
+        );
+    }
+
+    // Find votes for a theme based on the id
+    public Long findVotesById(Long id) {
+        return jdbcTemplate.queryForObject("SELECT vote_count FROM theme WHERE id = ?", Long.class, id);
     }
 }

@@ -1,19 +1,12 @@
 package com.p3.fkult.presentation.controllers;
 
-import com.p3.fkult.business.services.ExampleMessageService;
 import com.p3.fkult.business.services.ThemeService;
 import com.p3.fkult.business.services.UserService;
-import com.p3.fkult.persistence.entities.ExampleMessage;
-import com.p3.fkult.persistence.entities.Theme;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/themes")
@@ -28,25 +21,25 @@ public class ThemeController {
     }
 
     @GetMapping
-    public List<ThemeRequest> getThemes(){
+    public List<UserController.ThemeRequest> getThemes(){
         return themeService.getAllThemes();
     }
 
     @GetMapping("/New")
-    public List<ThemeRequest> getNewThemes(){
+    public List<UserController.ThemeRequest> getNewThemes(){
         return themeService.getNewThemes();
     }
     @GetMapping("/Old")
-    public List<ThemeRequest> getOldThemes(){
+    public List<UserController.ThemeRequest> getOldThemes(){
         return themeService.getOldThemes();
     }
     @GetMapping("/User")
-    public List<ThemeRequest> getUserThemes(@RequestParam String username){
+    public List<UserController.ThemeRequest> getUserThemes(@RequestParam String username){
         return themeService.getUserThemes(username);
     }
 
     @PostMapping
-    public ResponseEntity<String> createTheme(@RequestBody ThemeRequest themeRequest){
+    public ResponseEntity<String> createTheme(@RequestBody UserController.ThemeRequest themeRequest){
         String name = themeRequest.getName();
         String username = themeRequest.getUsername();
         List<String> tConsts = themeRequest.gettConsts();
@@ -56,7 +49,7 @@ public class ThemeController {
             return ResponseEntity.badRequest().body("Theme data not accepted please ensure there is a title, username and at least one movie");
         }
         if (userService.getIfUserBanned(username)){
-            ResponseEntity.badRequest().body("Theme data not accepted as user is banned");
+            return ResponseEntity.badRequest().body("Theme data not accepted as user is banned");
         }
         /*
         //check if user even exists and fail them if they do not exist
@@ -66,5 +59,21 @@ public class ThemeController {
         */
         themeService.createThemeWithTConsts(themeRequest);
         return ResponseEntity.ok("Theme created successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateTheme(@PathVariable long id, @RequestBody UserController.ThemeRequest themeRequest) {
+        themeRequest.setThemeId(id); // make sure themeId matches URL
+        System.out.println("UpdateTheme request: " + themeRequest);
+
+        if (themeRequest.getName() == null || themeRequest.getName().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Name cannot be empty.");
+        }
+        if (themeRequest.gettConsts() == null || themeRequest.gettConsts().isEmpty()) {
+            return ResponseEntity.badRequest().body("Theme must have at least 1 movie.");
+        }
+
+        themeService.updateThemeWithTConsts(themeRequest);
+        return ResponseEntity.ok("Theme updated successfully.");
     }
 }
