@@ -30,7 +30,7 @@ public class ThemeVotingService {
         // Get default theme info and setup theme data array
         List<UserController.ThemeRequest> themeInfo = themeService.getAllThemes();
         List<ThemeVotingRequest> themeData = new ArrayList<>();
-        
+
         // Run a for-loop to input all data themeData needs
         for (int i = 0; i < themeInfo.size(); i++){
 
@@ -41,6 +41,9 @@ public class ThemeVotingService {
             singularTheme.setThemeId(themeInfo.get(i).getThemeId());
             singularTheme.setThemeName(themeInfo.get(i).getName());
             singularTheme.setDrinkingRules(themeInfo.get(i).getDrinkingRules());
+
+            // Set the votes for the theme
+            singularTheme.setVotes(themeRepository.findVotesById(themeInfo.get(i).getThemeId()));
 
             // Set the name of the submitter
             singularTheme.setSubmitterName(userRepository.findUserNameById(themeInfo.get(i).getUserId()));
@@ -68,6 +71,9 @@ public class ThemeVotingService {
             // Add the singularTheme to the themeData list
             themeData.add(singularTheme);
         }
+
+        // Remove themes from themeData where votes != null
+        themeData.removeIf(theme -> theme.getVotes() != null);
 
         // Shuffle the list of theme data
         Collections.shuffle(themeData);

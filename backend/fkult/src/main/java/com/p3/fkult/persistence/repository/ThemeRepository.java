@@ -29,7 +29,11 @@ public class ThemeRepository {
                     rs.getString("name"),
                     rs.getLong("user_id"),
                     rs.getTimestamp("timestamp").toLocalDateTime().plusHours(1),
-                    rs.getObject("vote_count", Integer.class)
+
+                    // Handle possible null for vote_count
+                    rs.getObject("vote_count") == null 
+                        ? null 
+                        : ((Number) rs.getObject("vote_count")).intValue()
             );
 
     //database operations
@@ -95,4 +99,8 @@ public class ThemeRepository {
         );
     }
 
+    // Find votes for a theme based on the id
+    public Long findVotesById(Long id) {
+        return jdbcTemplate.queryForObject("SELECT vote_count FROM theme WHERE id = ?", Long.class, id);
+    }
 }
