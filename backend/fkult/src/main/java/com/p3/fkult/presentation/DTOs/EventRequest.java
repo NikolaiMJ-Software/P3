@@ -24,6 +24,10 @@ public class EventRequest {
         this.drinkingRules = drinkingRules;
         this.tConsts = tConsts;
     }
+    public EventRequest(Long id, LocalDateTime timestamp){
+        this.timestamp = timestamp;
+    }
+
 
     //getters
     public void setName(String name) {

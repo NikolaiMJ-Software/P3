@@ -30,7 +30,7 @@ export function MovieCardUpcoming({moviePosterURL, title, runtimeMinutes, rating
     const safeRating = rating ? `${rating}/10⭐` : "No Ratings Available";
     return(
         <div className={"w-[150px] flex flex-col items-center"}>
-            <p className={"text-[10px] text-center mt-1 w-full"}>{title}</p>
+            <p className={"text-[10px] text-center mt-1 w-full h-[24px] overflow-hidden leading-tight"}>{title}</p>
             <p className="text-[10px] text-center font-semibold">{safeRating} </p>
 
             <div className="w-[150px] h-[225px] overflow-hidden rounded-md shadow-sm border border-gray-300 bg-white">
@@ -51,7 +51,7 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove,
         return (
             <div className={"w-full flex flex-col items-center border-2 rounded-2xl"}>
                 <p className={"text-[15px] text-center mt-1 truncate w-full text-lg"}>{title}</p>
-                <p className={"text-[10px] text-center mt-1 truncate w-full text-xs"}>{safeRating} ⭐</p>
+                <p className={"text-[10px] text-center truncate w-full text-xs"}>{safeRating} ⭐</p>
                 <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-white">
                     <img
                         src={moviePosterURL}

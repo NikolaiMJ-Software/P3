@@ -52,8 +52,10 @@ VALUES
 (NULL, '/nature/waterfall', 3);
 
 -- Real startup day
-INSERT OR IGNORE INTO event (event_date, theme_id)
-VALUES ('2025-09-11 16:00:00', NULL);
+INSERT OR IGNORE INTO event (id,event_date, theme_id)
+VALUES (1,'2025-09-11 16:00:00', NULL);
+INSERT OR IGNORE INTO event (id,event_date, theme_id)
+VALUES (2,'2026-09-11 16:00:00', NULL);
 
 
 

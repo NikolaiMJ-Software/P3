@@ -129,7 +129,7 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp})
                 <h1 className={"text-xl font-bold"}>{title}</h1>
                 <h2 className={"text-sm text-gray-600"}>{name}</h2>
                 <h2 className={"font-bold text-sm"}>{day() + "/" + month() + "/" + year()}</h2>
-                <h2 className={"font-bold text-sm"}>{"kl. "+hour() + ":" + minute()}</h2>
+                <h2 className={"font-bold text-sm"}>{t("at")} {hour()}:{minute()}</h2>
                 <h3 className={"mt-2 font-semibold text-sm"}>{t("drinking rules")}</h3>
                 <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16"}>{safeDrinkingRules.map((rule, i) => {return <li key={`${title}-rule-${i}`}>{rule}</li>})}</ul>
             </div>
@@ -167,7 +167,7 @@ export function EventStartup({timestamp, onClick}){
             <div>
                 <h1 className={"text-xl font-bold"}>F-Kult Start</h1>
                 <h2 className={"font-bold text-sm"}>{day() + "/" + month() + "/" + year()}</h2>
-                <h2 className={"font-bold text-sm"}>{"kl. "+hour() + ":" + minute()}</h2>
+                <h2 className={"font-bold text-sm"}>{t("at") + " "+ hour() + ":" + minute()}</h2>
                 <h3 className={"font-bold text-lg"}>{t("come and vote")}</h3>
                 <img src={logo}/>
             </div>
