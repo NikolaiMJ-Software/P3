@@ -4,10 +4,17 @@ import com.p3.fkult.business.services.SoundSampleService;
 
 import java.util.List;
 import java.io.File;
+import java.net.MalformedURLException;
 
 import com.p3.fkult.presentation.DTOs.SoundSampleRequest;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/sound-sample")
@@ -45,7 +52,11 @@ public class SoundSampleController {
 
     // Fetch function to get all sound samples 
     @GetMapping("/download")
-    public File getSoundSamples(@RequestParam String filePath) {
-        return service.getSoundSampleFile(filePath);
+    public ResponseEntity<Resource> download(@RequestParam String filePath) throws MalformedURLException {
+        Resource file = service.getSoundSampleFile(filePath);
+
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(file);
     }
 }

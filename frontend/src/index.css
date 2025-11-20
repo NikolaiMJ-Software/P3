@@ -154,3 +154,12 @@
 .animate-flash {
   animation: flash 0.8s infinite ease-in-out;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
