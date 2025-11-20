@@ -49,5 +49,9 @@
   "loadMore": "Vis mere",
   "at": "kl.",
   "editTheme": "Redigere Tema",
-  "update": "Opdater"
+  "update": "Opdater",
+  "prev": "Tilbage",
+  "next": "Næste",
+  "noUpcomingEvent": "Ingen Opkommende Events",
+  "loading": "Indlæser"
 }

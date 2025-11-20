@@ -58,3 +58,18 @@ export async function deleteEvent(id) {
         throw error;
     }
 }
+
+
+// Handles getting next event
+export async function getNextEvent() {
+  try {
+    const response = await fetch(`${API_URL}/next`);
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.log("Error getting next event: ", error);
+    throw error;
+  }
+}

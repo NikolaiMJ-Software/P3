@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.p3.fkult.presentation.DTOs.EventRequest;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.p3.fkult.business.services.EventService;
 import com.p3.fkult.persistence.entities.Event;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/event")
@@ -45,4 +49,17 @@ public class EventController {
     public String UploadEvent(@PathVariable("LocalDate") LocalDateTime eventDate, @PathVariable("themeId") long themeId) {
         return service.UploadEvent(eventDate, themeId);
     }
+
+    //gotta set this up
+    @GetMapping("/next")
+    public ResponseEntity<EventRequest> getNextEvent() {
+        EventRequest next = service.getNextEvent();
+        if (next == null) {
+            return ResponseEntity.noContent().build(); // 204
+        }
+        return ResponseEntity.ok(next);
+    }
+
+
+    
 }

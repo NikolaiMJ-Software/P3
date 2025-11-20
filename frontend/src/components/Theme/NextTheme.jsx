@@ -1,32 +1,85 @@
 import { useTranslation } from "react-i18next";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getNextEvent } from "../../services/eventService.jsx";
+import { getMoviesByTconsts } from "../../services/movieService.jsx";
 
-export default function NextTheme({ dateLabel, date, title = "", posters = [] }) {
-  const label =
-    dateLabel ??
-    (() => {
-      if (!date) return "";
-      const d = new Date(date);
-      if (isNaN(d)) return "";
-      const dd = String(d.getDate()).padStart(2, "0");
-      const mm = String(d.getMonth() + 1).padStart(2, "0");
-      return `${dd}/${mm}`;
-    })();
+export default function NextTheme() {
+  const {t} = useTranslation();
 
-    const {t} = useTranslation();
+  const [loading, setLoading] = useState(true);
+  const [event, setEvent] = useState(null);
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    const loadEvent = async () => {
+      try{
+        const next = await getNextEvent();
+
+        if(!next){
+          setEvent(null);
+          setLoading(false);
+          return;
+        }
+
+        setEvent(next);
+
+        const moviesData = await getMoviesByTconsts(next.tConsts || []);
+        setMovies(moviesData || []);
+
+      } catch (err) {
+        console.error("Error loading next event: ", err);
+        setEvent(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+      loadEvent();
+    }, []
+  );
+
+  const formatDate = (dateString) => {
+    const d = new Date(dateString);
+    if (isNaN(d)) return "";
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    return `${dd}/${mm}`;
+  };
+
+
+  if (loading) {
+    return (
+      <div className="rounded-2xl border px-4 py-4 bg-white">
+        <p className="text-center text-sm text-text-secondary">
+          {t("loading")}...
+        </p>
+      </div>
+    );
+  }
+
+  if (!event) {
+    return (
+      <div className="rounded-2xl border px-4 py-4 bg-white">
+        <p className="text-center text-sm text-text-secondary">
+          {t("noUpcomingEvent")}
+        </p>
+      </div>
+    );
+  }
+
 
   return (
     <div className="rounded-2xl border px-4 py-4 bg-white [container-type:inline-size]">
       {/* header/date */}
       <div className="flex items-center justify-between">
         <span className="text-sm text-text-secondary">{t('nextTheme')}</span>
-        <span className="text-sm font-medium text-text-secondary">{label}</span>
+        <span className="text-sm font-medium text-text-secondary">{formatDate(event.timestamp)}</span>
       </div>
 
       {/* title */}
       <div className="mt-4 w-full rounded-md border px-3 py-2">
-        <p className="text-lg font-bold text-center truncate" title={title}>
-          {title}
+        <p className="text-lg font-bold text-center truncate" title={event.name}>
+          {event.name}
         </p>
       </div>
 
@@ -36,10 +89,10 @@ export default function NextTheme({ dateLabel, date, title = "", posters = [] })
         style={{ scrollbarGutter: "stable both-edges" }}
       >
         <div className="flex w-full gap-3 px-2 snap-x snap-mandatory">
-          {posters.length > 0 ? (
-            posters.map((src, i) => (
+          {movies.length > 0 ? (
+            movies.map((movie, i) => (
               <div
-                key={`${src}-${i}`}
+                key={movie.id ?? `${movie.tConst}-${i}`}
                 className="
                   shrink-0 snap-start aspect-[2/3]
                   w-[46%]
@@ -49,12 +102,24 @@ export default function NextTheme({ dateLabel, date, title = "", posters = [] })
                   @[720px]:w-[24%]
                 "
               >
-                <img
-                  src={src}
-                  alt={`Poster ${i + 1}`}
-                  className="w-full h-full rounded-md object-cover border bg-text-secondary"
-                  loading="lazy"
-                />
+                {/* movie name */}
+                <p className="text-sm font-medium text-center truncate w-full">
+                  {movie.title}
+                </p>
+                {/* rating */}
+                {movie.rating && (<p className="text-xs text-center text-text-secondary mb-1">
+                    {movie.rating}/10 <span>⭐</span>
+                </p>)}
+
+                {/* poster */}
+                <div className="aspect-[2/3] w-full max-h-[18rem] overflow-hidden rounded-md shadow-sm border bg-text-secondary/10">
+                  <img
+                    src={movie.moviePosterURL}
+                    alt={`Poster ${i + 1}`}
+                    className="w-full h-full rounded-md object-cover border bg-text-secondary"
+                    loading="lazy"
+                  />
+                </div>
               </div>
             ))
           ) : (

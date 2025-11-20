@@ -95,9 +95,22 @@ public class EventService {
         return eventRequests;
     }
 
+
+
     public LocalDateTime getLastStartupDate(){
         Event event = eventRepository.getLastStartupEvent();
         return event.getEventDate();
         // NOT SURE HERE
     }
+
+
+    public EventRequest getNextEvent() {
+        List<EventRequest> futureEvents = getFutureEventsFromNow();
+        if (futureEvents == null || futureEvents.isEmpty()) {
+            return null;  // no upcoming events
+        }
+
+        return futureEvents.get(0);
+    }
+
 }

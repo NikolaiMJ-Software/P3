@@ -49,5 +49,9 @@
   "loadMore": "Load More",
   "at": "at:",
   "editTheme": "Edit Theme",
-  "update": "Update"
+  "update": "Update",
+  "prev": "Previous",
+  "next": "Next",
+  "noUpcomingEvent": "No Upcoming Events",
+  "loading": "Loading"
 }

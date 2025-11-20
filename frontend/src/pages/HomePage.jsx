@@ -69,15 +69,7 @@ export default function HomePage() {
                     </button>
 
                     {/* Next Theme — placeholder card */}
-                    <NextTheme
-                    dateLabel="13/11"
-                    title="Comical Horror Movies"
-                    posters={[
-                        "https://m.media-amazon.com/images/M/MV5BNTBhNWJjZWItYzY3NS00M2NkLThmOWYtYTlmNzBmN2UxZWFjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-                        "https://m.media-amazon.com/images/M/MV5BMTAxNGQwMjEtNjdjNy00NmQwLTkwYTEtNGIwZWJjZjU5M2FmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-                        "https://m.media-amazon.com/images/M/MV5BNzJjZTg0ZmMtMTg0Ny00NzYxLWFjMWMtMWFiYmNkMTNjZGMyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-                    ]}
-                    />
+                    <NextTheme/>
 
 
                     <button className={`btn-home-page
