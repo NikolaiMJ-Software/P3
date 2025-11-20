@@ -38,6 +38,9 @@ public class SoundSampleRepository {
         if(soundSample.getFilePath() != null && soundSample.getFilePath().isEmpty()){
             soundSample.setFilePath(null);
         }
+
+        System.out.println(">>> REPO SAVE, filePath = " + soundSample.getFilePath());
+
         String sql = "INSERT INTO sound_samples (link, file_path, user_id) VALUES (?,?,?)";
         jdbcTemplate.update(sql, soundSample.getLink(), soundSample.getFilePath(), soundSample.getUserId());
     }

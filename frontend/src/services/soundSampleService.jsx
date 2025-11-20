@@ -77,13 +77,8 @@ async function deleteSoundSample(soundSample) {
     }
 }
 
-async function getSoundsampleFile(filePath) {
-    try {
-        const res = await fetch(`${API_URL}/download?filePath=${filePath}`);
-        return res.json();
-    } catch (error) {
-        console.error(`Failed to get file: ${filePath} `, error);
-    }
+function getSoundsampleFile(fileName) {
+    return `${API_URL}/download?filePath=${encodeURIComponent(fileName)}`;
 }
 
 export { getSoundSamples, addSoundSample, deleteSoundSample, getSoundsampleFile };
