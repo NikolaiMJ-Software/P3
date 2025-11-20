@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { addSoundSample, getSoundSamples, getSoundsampleFile } from "../../services/soundSampleService";
 import { getIdByUser } from "../../services/adminService.jsx"
 import { useTranslation } from "react-i18next";
+import MediaPlayer from "./MediaPlayer.jsx"
 
 // This is a page to showcase the functionality of submitting a sound sample via file upload or URL input.
 export default function SubmitSSPage() {
@@ -10,12 +11,10 @@ export default function SubmitSSPage() {
 
     // Setup variables
     const [link, setUrl] = useState("");
-    const [fileName, setFileName] = useState("");
     const [file, setFile] = useState(null);
     const [message, setMessage] = useState("");
     const { username } = useParams();
-    const [samples, setSamples] = useState([]);
-
+    const [validSS, setValidSS] = useState(null);
 
     // Handles sound sample submission
     const handleSubmit = async (e) => {
@@ -43,31 +42,13 @@ export default function SubmitSSPage() {
         // Submit sound sample and reset input
         const resText = await addSoundSample(trimmedLink, file, userId);
         setMessage(resText);
+        if (resText === "Upload complete!") {
+            let soundSample = file !== null ? file.name : trimmedLink
+            setValidSS(soundSample);
+        }
         setFile(null);
         setUrl("");
         document.getElementById("textField").value = "";
-    }
-
-    const playSoundSamples = async () => {
-        let quickShuffle = false;
-        let weightedShuffle = false;
-
-        // Get sound sample
-        try {
-        const res = await getSoundSamples(quickShuffle, weightedShuffle);
-        const list = Array.isArray(res) ? res : res.soundSamples;
-        console.log("Samples returned:", list);
-        setSamples(list || []);
-    } catch (err) {
-        console.error(err);
-    }
-        console.log(soundSample);
-    }
-
-    const getSSFile = async (filePath) => {
-        let file = await getSoundsampleFile(filePath);
-        console.log(file);
-        return file;
     }
 
     const sendMessage = () => {
@@ -119,33 +100,22 @@ export default function SubmitSSPage() {
                         onClick={(e) => handleSubmit(e)}>
                         {t("submit")}
                     </button>
-                    {/*<button className="px-6 py-2 rounded-2xl text-white bg-red-500 hover:bg-red-700"
-                    type="button"
-                    onClick={handleDelete}
-                    >
-                    Delete
-                    </button>*/}
                 </div>
-
-                {/* 
-                // File name for deletion
-                <div className="w-full flex flex-col items-center">
-                    <label className="flex flex-col items-center">
-                    <input
-                        className="border px-2 py-1 rounded w-64"
-                        type="text"
-                        placeholder="File name for deletion..."
-                        onChange={(e) => setFileName(e.target.value)}
-                    />
-                    </label>
-                </div>*/}
 
                 {/* Message */}
                 <div className="flex justify-center items-center min-h-6">
                     {sendMessage()}
                 </div>
 
-{/* Jonas insert media player here */}
+                <div className="flex justify-center gap-6">
+                    <MediaPlayer soundSample={validSS}/>
+                </div>
+            </form>
+        </div>
+    );
+}
+/*
+
 <div className="w-full mt-6 flex flex-col items-center gap-6">
   {samples.map(function (s, i) {
     // If there is a soundSample, convert it to a string and remove extra spaces.
@@ -237,22 +207,4 @@ export default function SubmitSSPage() {
   })}
 </div>
 
-                <div className="flex justify-center gap-6">
-                    <button className="px-6 py-2 rounded-2xl text-white bg-text-error"
-                        type="button"
-                        onClick={playSoundSamples}>
-                        Get all soundSample
-                    </button>
-                </div>
-
-                <div className="flex justify-center gap-6">
-                    <button className="px-6 py-2 rounded-2xl text-white bg-text-error"
-                        type="button"
-                        onClick={() => getSSFile("Grass.jpg")}>
-                        Get file
-                    </button>
-                </div>
-            </form>
-        </div>
-    );
-}
+*/
