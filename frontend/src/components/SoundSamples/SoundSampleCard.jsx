@@ -1,6 +1,7 @@
 import React from "react";
 import trashPNG from '../../assets/trashCan.png';
 import { deleteSoundSample } from "../../services/soundSampleService.jsx";
+import MediaPlayer from "./MediaPlayer.jsx";
 
 export default function SoundSampleCard({ soundSamples, witch, onDeleted, showenCard}) {
     // Choose the necessary card design
@@ -27,7 +28,8 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
                             <h2 className={"text-sm text-text-secondary"}>{soundSample.usersFullName}</h2>
                             <div className="w-5 h-5 cursor-pointer hover:bg-btn-hover-secondary" onClick={() => deleteSS(soundSample.soundSample)}>{deleteBtn}</div>
                         </div>
-                        <div className="overflow-x-auto">{soundSample.soundSample}</div>
+                        < MediaPlayer soundSample={soundSample.soundSample} size={""}/>
+                        <div className="overflow-x-auto">{soundSample.soundSample.includes("https://") ? "" : soundSample.soundSample}</div>
                     </div>
                 </div>
             })}
