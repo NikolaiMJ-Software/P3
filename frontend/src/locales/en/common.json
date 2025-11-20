@@ -51,5 +51,7 @@
   "editTheme": "Edit Theme",
   "update": "Update",
   "prev": "Previous",
-  "next": "Next"
+  "next": "Next",
+  "noUpcomingEvent": "No Upcoming Events",
+  "loading": "Loading"
 }

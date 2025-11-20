@@ -51,5 +51,7 @@
   "editTheme": "Redigere Tema",
   "update": "Opdater",
   "prev": "Tilbage",
-  "next": "Næste"
+  "next": "Næste",
+  "noUpcomingEvent": "Ingen Opkommende Events",
+  "loading": "Indlæser"
 }
