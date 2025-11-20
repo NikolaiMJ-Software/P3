@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { getSoundsampleFile } from "../../services/soundSampleService";
 
-export default function MediaPlayer({soundSample}){
+export default function MediaPlayer({soundSample, size}){
     if (soundSample === null) {
         return null;
     }
@@ -14,7 +14,7 @@ console.log("dette er en fil: ", soundSample)
             // If it's a YouTube video, show it using an iframe player.
             return (
                 <iframe
-                    className="w-96 h-56"
+                    className={size}
                     src={"https://www.youtube.com/embed/" + yt}
                     title="YouTube sample"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
