@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import Timer from "../components/Timer.jsx";
 import { addSoundSample, deleteSoundSample, getSoundSamples, getSoundsampleFile } from "../services/soundSampleService.jsx";
 import { useNavigate } from "react-router-dom";
+import MediaPlayer from "../components/SoundSamples/MediaPlayer.jsx";
 
 
 export default function AdminSSPage(){
@@ -127,19 +128,7 @@ export default function AdminSSPage(){
                     </div>
                     
                     {/* Mediaplayer Placeholder */}
-                    <div className="w-full max-w-xl h-40 border border rounded-md flex items-center justify-center">
-                        {hasSamples ? (
-                            <span className="text-sm text-center px-4">
-                                Placeholder for media player
-                                <br/>
-                                <code className="break-all">{currentSample.soundSample}</code>
-                            </span>
-                        ) : (
-                            <span className="text-sm text-gray-500">
-                                Waiting for sound samples...
-                            </span>
-                        )}
-                    </div>
+                    < MediaPlayer soundSample={currentSample.soundSample} size={"h-154 w-274"}/>
 
                     {/* Next and Back buttons */}
                     <div className="flex gap-85 mt-2">
