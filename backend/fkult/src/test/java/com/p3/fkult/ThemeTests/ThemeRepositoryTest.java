@@ -259,22 +259,20 @@ public class ThemeRepositoryTest {
         assertThat(result.getVotecount()).isEqualTo(5);
     }
 
-// find votes by id
-@Test
-void findVotesById_returnsVoteCount() {
-    // Arrange
-    long id = 5L;
-    long expectedVotes = 12L;
+    // find votes by id
+    @Test
+    void findVotesById_returnsVoteCount() {
+        // Arrange
+        long id = 5L;
+        long expectedVotes = 12L;
 
-    when(jdbcTemplate.queryForObject("SELECT vote_count FROM theme WHERE id = ?", Long.class, id)).thenReturn(expectedVotes);
+        when(jdbcTemplate.queryForObject("SELECT vote_count FROM theme WHERE id = ?", Long.class, id)).thenReturn(expectedVotes);
 
-    // Act
-    Long result = themeRepository.findVotesById(id);
+        // Act
+        Long result = themeRepository.findVotesById(id);
 
-    // Assert
-    assertThat(result).isEqualTo(expectedVotes);
-    verify(jdbcTemplate).queryForObject("SELECT vote_count FROM theme WHERE id = ?", Long.class, id);
+        // Assert
+        assertThat(result).isEqualTo(expectedVotes);
+        verify(jdbcTemplate).queryForObject("SELECT vote_count FROM theme WHERE id = ?", Long.class, id);
+    }
 }
-
-}
-

@@ -265,6 +265,8 @@ describe("submit sound sample page Test", () => {
 
         const reverseBtn = await screen.findByTestId("revUsersSS");
         
+        expect(reverseBtn).toHaveClass("invisible");
+        expect(reverseBtn).not.toHaveClass("visibel");
         // This should not throw an error
         expect(() => {
             fireEvent.click(reverseBtn);
@@ -277,6 +279,8 @@ describe("submit sound sample page Test", () => {
 
         const reverseBtn = await screen.findByTestId("revAllSS");
         
+        expect(reverseBtn).toHaveClass("invisible");
+        expect(reverseBtn).not.toHaveClass("visibel");
         // This should not throw an error
         expect(() => {
             fireEvent.click(reverseBtn);
@@ -287,7 +291,9 @@ describe("submit sound sample page Test", () => {
         renderBrowserWithData(null);
 
         const reverseBtn = await screen.findByTestId("revUsersSS");
-        
+
+        expect(reverseBtn).toHaveClass("invisible");
+        expect(reverseBtn).not.toHaveClass("visibel");
         // This should not throw an error
         expect(() => {
             fireEvent.click(reverseBtn);

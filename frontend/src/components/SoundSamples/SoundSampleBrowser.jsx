@@ -68,7 +68,7 @@ export default function SoundSampleBrowser({onCreateSS}) {
             {/* Users sound sample card container */}
             <div className="flex justify-between items-center m-4">
                 <div className={"m-4 font-bold"}>{t("usersSS")}</div>
-                <button className="btn-primary"
+                <button className={"btn-primary" + (usersSS.length > 1 ? " visibel" : " invisible")}
                     data-testid="revUsersSS"
                     type="button"
                     onClick={() => sortSS("usersSS")}>
@@ -98,7 +98,7 @@ export default function SoundSampleBrowser({onCreateSS}) {
             {/* All sound samples card container */}
             <div className="flex justify-between items-center m-4">
                 <div className={"m-4 font-bold"}>{t("uplSS")}</div>
-                <button className="btn-primary"
+                <button className={"btn-primary" + (soundSamples.length > 1 ? " visibel" : " invisible")}
                     data-testid="revAllSS"
                     type="button"
                     onClick={() => sortSS("allSS")}>
