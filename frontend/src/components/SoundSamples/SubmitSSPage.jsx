@@ -108,7 +108,7 @@ export default function SubmitSSPage() {
                 </div>
 
                 <div className="flex justify-center gap-6">
-                    <MediaPlayer soundSample={validSS} size="w-230 h-140"/>
+                    <MediaPlayer soundSample={validSS} size="w-240 h-135"/>
                 </div>
             </form>
         </div>
