@@ -49,5 +49,7 @@
   "loadMore": "Vis mere",
   "at": "kl.",
   "editTheme": "Redigere Tema",
-  "update": "Opdater"
+  "update": "Opdater",
+  "prev": "Tilbage",
+  "next": "Næste"
 }

@@ -148,14 +148,14 @@ export default function AdminSSPage(){
                             disabled={!hasSamples || currentIndex === 0}
                             className="btn-primary w-32 text-center disabled:opacity-40"
                         >
-                            ← Previous
+                            ← {t("prev")}
                         </button>
                         <button
                             onClick={handleNext}
                             disabled={!hasSamples || currentIndex === soundSamples.length - 1}
                             className="btn-primary w-32 text-center disabled:opacity-40"
                         >
-                            Next →
+                            {t("next")} →
                         </button>
                     </div>
                 </div>
