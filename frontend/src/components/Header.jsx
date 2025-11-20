@@ -70,13 +70,13 @@ export default function Header(){
                 <NavButton
                     label={t("Pizza")}
                     icon={pizzaWEBP}
-                    onClick={() => {window.location.href = "https://f-kult-pizza-bestiller.vercel.app/"}}
+                    onClick={() => {window.open("https://f-kult-pizza-bestiller.vercel.app/", "_blank")}}
                 />
 
                 <NavButton
                     label={t("Discord")}
                     icon={discordWEBP}
-                    onClick={() => {window.location.href = "https://discord.gg/zV3GEZyY6z"}}
+                    onClick={() => {window.open("https://discord.gg/zV3GEZyY6z", "_blank")}}
                 />
 
                 <div className="relative flex-col pr-1" ref={menuRef}>

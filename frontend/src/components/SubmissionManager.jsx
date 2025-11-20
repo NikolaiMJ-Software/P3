@@ -60,6 +60,7 @@ function ThemeSubmissions(){
 
     useEffect(() => {
         loadThemes();
+        //console.log(themes)
     }, []);
 
     async function themeDelete(id) {
@@ -134,7 +135,7 @@ function Theme({ item, onToggle, isExpanded, onDelete }){
                 <SubmissionPart label={t("Uploaded by")} content={item.username}/>
                 <SubmissionPart label={t("Submitted on")} content={"6-7"}/>
                 <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-4xl font-thin"}>
-                    <img className={"cursor-pointe size-10"} src={trashCan} alt={"Delete"} onClick={onDelete}/>
+                    <img className={"cursor-pointe size-10 hover:bg-gray-300 rounded p-1"} src={trashCan} alt={"Delete"} onClick={onDelete}/>
                 </div>
             </div>
             {isExpanded && (
@@ -142,7 +143,7 @@ function Theme({ item, onToggle, isExpanded, onDelete }){
                     {movies.map((movie) => (
                         <div className="flex justify-between items-center rounded border m-2 p-1">
                             <div className={"flex flex-col items-center min-w-40"}>
-                                <p className="font-bold text-center">{movie.title}</p>
+                                <p className="font-bold text-center max-w-80">{movie.title}</p>
                                 <img src={movie.moviePosterURL} className={"h-60 w-40"}/>
                             </div>
                         </div>
@@ -232,7 +233,7 @@ function SoundSampleSubmissions() {
                     </select>
                 </div>
                 <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-4xl font-thin"}>
-                    <img className={"cursor-pointer size-10"} onClick={batchDelete} src={trashCan} alt={"Delete Selected"}/>
+                    <img className={"cursor-pointer size-12 hover:bg-gray-300 rounded p-1"} onClick={batchDelete} src={trashCan} alt={"Delete Selected"}/>
                 </div>
             </div>
             <div className={"border-t h-135 overflow-auto"}>
