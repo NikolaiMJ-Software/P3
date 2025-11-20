@@ -83,7 +83,7 @@ export default function NextTheme() {
         </p>
       </div>
 
-      {/* posters */}
+      {/* movies */}
       <div
         className="mt-4 overflow-x-auto pb-2 pr-2"
         style={{ scrollbarGutter: "stable both-edges" }}
@@ -129,6 +129,12 @@ export default function NextTheme() {
           )}
         </div>
       </div>
+      {/* scroll hint overlay */}
+      {movies.length > 2 && (
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-10 flex items-center justify-end pr-1">
+          <span className="text-xl text-text-secondary">›</span>
+        </div>
+      )}
     </div>
   );
 }
