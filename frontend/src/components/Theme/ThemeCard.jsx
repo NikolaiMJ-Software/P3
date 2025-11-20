@@ -40,11 +40,11 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
                 <h1 className={"text-xl font-bold"}>{title}</h1>
                 <h2 className={"text-sm text-text-secondary"}>{name}</h2>
                 <h3 className={"mt-1 font-semibold text-sm"}>{t("drinking rules")}</h3>
-                <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16"}>{drinkingRules.map((rule) => {return (<li key={rule} >{rule}</li>)})}</ul>
+                <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16 scrollbar-hide"}>{drinkingRules.map((rule) => {return (<li key={rule} >{rule}</li>)})}</ul>
             </div>
 
-            <div className={"flex justify-between gap-2"}>
-                {safeMovies.slice(0,2).map((movie, i) => (
+            <div className={"flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth whitespace-nowrap h-fit"}>
+                {safeMovies.map((movie, i) => (
                     <MovieCardSmall key={movie.id || i} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes} rating={movie.rating}/>
                 ))}
             </div>
@@ -132,11 +132,11 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp})
                 <h2 className={"font-bold text-sm"}>{day() + "/" + month() + "/" + year()}</h2>
                 <h2 className={"font-bold text-sm"}>{t("at")} {hour()}:{minute()}</h2>
                 <h3 className={"mt-2 font-semibold text-sm"}>{t("drinking rules")}</h3>
-                <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16"}>{safeDrinkingRules.map((rule, i) => {return <li key={`${title}-rule-${i}`}>{rule}</li>})}</ul>
+                <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-8"}>{safeDrinkingRules.map((rule, i) => {return <li key={`${title}-rule-${i}`}>{rule}</li>})}</ul>
             </div>
 
-            <div className={"flex justify-between gap-2 mt-2"}>
-                {safeMovies.slice(0,2).map((movie, i) => (
+            <div className={"flex justify-between gap-2 mt-2 overflow-x-auto scrollbar-hide scroll-smooth"}>
+                {safeMovies.map((movie, i) => (
                     <MovieCardUpcoming key={movie.id ?? `${title}-movie-${i}`} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes} rating={movie.rating}/>
                 ))}
             </div>
