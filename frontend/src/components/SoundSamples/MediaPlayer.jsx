@@ -5,7 +5,7 @@ export default function MediaPlayer({soundSample, size}){
     if (soundSample === null) {
         return null;
     }
-console.log("dette er en fil: ", soundSample)
+
     // Check if link or file
     if (soundSample.includes("https://")){
         // Find the type of link: (YouTube, Instagram, X, Facebook, TikTok)
