@@ -133,9 +133,9 @@ export default function ThemeCreationPopup({setSelected}) {
             <div className="w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col gap-3">
 
                 {/* Top content */}
-                <div className={"flex flex-row gap-6 w-full justify-center"}>
+                <div className={"flex flex-row gap-10 w-full justify-center"}>
                     {/* Left Movie searcher*/}
-                    <div className="w-[600px] h-[650px]">
+                    <div className="flex-1 min-w-[400px] max-w-[600px] h-[700px]">
                     <ThemeMovieSearcher foundMovies={foundMovies}
                                         handleAddMovies={handleAddMovies}
                                         movieCount={movieCount}
@@ -146,7 +146,7 @@ export default function ThemeCreationPopup({setSelected}) {
                     </ThemeMovieSearcher>
                     </div>
                     {/* Right Theme Creator */}
-                    <div className="w-[600px] h-[650px]">
+                    <div className="flex-1 min-w-[400px] max-w-[600px] h-[700px]">
                     <ThemeCreator
                         handleSubmit={handleSubmit}
                         movies={movies}
@@ -159,7 +159,7 @@ export default function ThemeCreationPopup({setSelected}) {
                     </div>
 
                 </div>
-                <div className="w-full flex justify-center mt-6">
+                <div className="w-full flex justify-center mt-3">
                 <button
                     onClick={handleSubmit}
                     className="px-7 py-3 rounded-xl border-2 border-text-primary hover:bg-btn-hover-secondary"

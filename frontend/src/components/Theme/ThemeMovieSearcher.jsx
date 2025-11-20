@@ -3,9 +3,19 @@ export default function ThemeMovieSearcher({foundMovies, setSearchQuery, pageCou
 
     return(
         <div className={"items-center relative flex-col flex gap-1 border-text-primary border-1 m-2 p-2 w-full h-[640px] overflow-hidden" }>
-            <div className={"flex flex-row"}>
-                <input onKeyDown={event => event.key === "Enter" && (event.preventDefault(), setSearchQuery(event.target.value))} type="text" placeholder="Search Movie or enter IMDb link..." className="w-100 text-center text-text-primary border-1 m-2 p-2 rounded-2xl overflow-y-auto overflow-x-hidden max-h-[200px]" />
-                <button onClick={event => setSearchQuery(event.target.previousSibling.value)} className="text-center text-text-primary border-1 m-2 p-2 rounded-2xl overflow-y-auto overflow-x-hidden hover:cursor-pointer hover:bg-btn-hover-secondary">Search</button>
+            <div className="flex flex-row w-full items-center gap-2 px-2">
+                <input
+                    onKeyDown={event => event.key === "Enter" && (event.preventDefault(), setSearchQuery(event.target.value))}
+                    type="text"
+                    placeholder="Search Movie or Series..."
+                    className="flex-grow text-center text-text-primary border-1 p-2 rounded-2xl"
+                />
+                <button
+                    onClick={(event) => setSearchQuery(event.target.previousSibling.value)}
+                    className="px-4 py-2 border-1 rounded-2xl hover:bg-btn-hover-secondary"
+                >
+                    Search
+                </button>
             </div>
             {foundMovies.map((movie) => {
                 return <MovieSuggestion
@@ -39,13 +49,13 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
     //different layout for shows, series and such.
     if(isSeries){
         return (
-            <div className={"flex-row flex items-center gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full0"}>
+            <div className={"flex-row flex items-center gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full"}>
                 <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
                     <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
                 </div>
-                <div className={"flex flex-col"}>
+                <div className={"flex flex-col max-w-[430px] overflow-hidden"}>
                     <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
-                        <p className="font-bold truncate overflow-hidden text-ellipsis max-w-[350px] text-blue-400">{movieName} </p><p className={""}>{safeRating} - Series</p>
+                        <p className="font-bold truncate overflow-hidden text-ellipsis max-w-[423px] text-blue-400">{movieName} </p><p className={""}>{safeRating} - Series</p>
                     </a>
 
                     <p>{year}</p>
@@ -63,7 +73,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
                 <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
             </div>
 
-            <div className={"flex flex-col"}>
+            <div className={"flex flex-col max-w-[430px] overflow-hidden"}>
                 <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
                     <p className="font-bold truncate overflow-hidden text-ellipsis max-w-[350px] text-blue-400">{movieName}</p>
                 </a>
