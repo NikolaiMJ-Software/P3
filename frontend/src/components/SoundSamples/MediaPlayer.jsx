@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { getSoundsampleFile } from "../../services/soundSampleService";
 
 export default function MediaPlayer({soundSample, size}){
@@ -8,25 +9,43 @@ export default function MediaPlayer({soundSample, size}){
 
     // Check if link or file
     if (soundSample.includes("https://")){
-        // Find the type of link: (YouTube, Instagram, X, Facebook, TikTok)
-        let yt = getYtId(soundSample); // Try to get a YouTube video ID
-        if (yt) {
-            // If it's a YouTube video, show it using an iframe player.
-            return (
-                <iframe
-                    className={size}
-                    src={"https://www.youtube.com/embed/" + yt}
-                    title="YouTube sample"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    loading="lazy"
-                />
-            );
-        }
+        return <FindLinkType link={soundSample} size={size}/>
     } else {
         // Find the type of file: (mp4, mov, webm)
-        return <FindFileType fileName={soundSample} />;
+        return <FindFileType fileName={soundSample} size={size}/>;
     }
+}
+
+// Find the type of link: (YouTube, Instagram, X, Facebook, TikTok)
+function FindLinkType({link, size}){
+    const {t} = useTranslation();
+    if (link.includes("youtu")) {
+        const ytLink = getYtId(link);
+        if (!ytLink) {
+            return <p className="text-sm text-text-error">YouTube link not found.</p>;
+        }
+        return (
+            <iframe
+                className={size}
+                src={"https://www.youtube.com/embed/" + ytLink}
+                title="YouTube sample"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+            />
+        );
+    } else if (link.includes("instagram.com")) {
+        
+    } else if (link.includes("x.com")) {
+
+    } else if (link.includes("facebook.com")) {
+
+    } else if (link.includes("tiktok.com")) {
+
+    }
+
+    // If sound sample is not found -> return not found 
+    return <p className="text-sm text-text-error">{t("sound sample") + t("not found")}</p>;
 }
 
 // --- Function to check if the URL is a YouTube link and get the video ID ---
@@ -49,7 +68,7 @@ function getYtId(u) {
     return null; // If no ID is found, return null.
 }
 
-function FindFileType({ fileName }) {
+function FindFileType({ fileName, size }) {
     const [filePath, setFilePath] = useState(null);
     const [fileType, setFileType] = useState(null); // "video" | "audio" | "link" | null
     const [error, setError] = useState(null);
@@ -102,7 +121,7 @@ function FindFileType({ fileName }) {
     if (fileType === "video") {
         return (
             <video
-                className="w-96"
+                className={size}
                 src={filePath}
                 controls
                 preload="metadata"
@@ -115,7 +134,7 @@ function FindFileType({ fileName }) {
     if (fileType === "audio") {
         return (
             <audio
-                className="w-96"
+                className={size}
                 src={filePath}
                 controls
                 preload="metadata"
