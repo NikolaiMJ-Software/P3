@@ -45,14 +45,15 @@ function FindLinkType({link, size}){
                 className={size}
                 src={instaURL}
                 title="Instagram sample"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share autoplay; encrypted-media; picture-in-picture"
                 allowFullScreen
                 loading="lazy"
             />
         )
         
-    } else if (link.includes("x.com")) {
-
+    } else if (link.includes("x.com") || link.includes("twitter.com")) {
+        console.log("Rendering X embed for:", link);
+        return <XEmbed url={link} size={size} />;
     } else if (link.includes("facebook.com")) {
 
     } else if (link.includes("tiktok.com")) {
@@ -107,6 +108,65 @@ function getInstaEmbedUrl(u) {
         return null;
     }
 }
+
+//sets up X embeds
+function XEmbed({ url, size }) {
+    // make x and twitter urls the same so x becomes twitter
+    let normalizedUrl = url;
+    try {
+        const u = new URL(url);
+        if (u.hostname === "x.com" || u.hostname === "www.x.com") {
+            u.hostname = "twitter.com";
+            normalizedUrl = u.toString();
+        }
+    } catch (e) {
+        console.warn("Invalid X/Twitter URL:", url, e);
+    }
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        //define twitter/X embed widget
+        const scriptSrc = "https://platform.twitter.com/widgets.js";
+
+        function loadWidgets() {
+            if (window.twttr && window.twttr.widgets) {
+                window.twttr.widgets.load();
+            }
+        }
+
+        // Check if imdb widget script is already in the link:
+        const existingScript = document.querySelector(`script[src="${scriptSrc}"]`);
+
+        //if the script is not included, then append the script or else just load the original
+        if (!existingScript) {
+            const script = document.createElement("script");
+            script.src = scriptSrc;
+            script.async = true;
+            script.charset = "utf-8";
+            script.onload = loadWidgets;
+            document.body.appendChild(script);
+        } else {
+            loadWidgets();
+        }
+    }, [normalizedUrl]);
+
+    //return the media player for X
+    return (
+        <div className={`${size} overflow-hidden rounded-lg`}>
+            <div className="w-full max-w-full overflow-hidden">
+                <blockquote 
+                    className="twitter-tweet" 
+                    data-media-max-width="400"
+                    style={{maxWidth:"100%"}}
+                >
+                    <a href={normalizedUrl}>Loading tweet…</a>
+                </blockquote>
+            </div>
+        </div>
+    );
+}
+
 
 function FindFileType({ fileName, size }) {
     const [filePath, setFilePath] = useState(null);
