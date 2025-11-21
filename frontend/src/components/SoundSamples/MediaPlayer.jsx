@@ -34,7 +34,22 @@ function FindLinkType({link, size}){
                 loading="lazy"
             />
         );
-    } else if (link.includes("instagram.com")) {
+    } else if (link.includes("instagram.com")) { //Somewhat functional instagram viewer
+        const instaURL = getInstaEmbedUrl(link);
+        if(!instaURL){
+            return <p className="text-sm text-text-error">Instagram link not supported.</p>;
+        }
+
+        return(
+            <iframe
+                className={size}
+                src={instaURL}
+                title="Instagram sample"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+            />
+        )
         
     } else if (link.includes("x.com")) {
 
@@ -66,6 +81,31 @@ function getYtId(u) {
         }
     } catch (e) {} // If something goes wrong, just ignore it.
     return null; // If no ID is found, return null.
+}
+
+//sets up instagram embed url
+function getInstaEmbedUrl(u) {
+    try{
+        //defines the url
+        const url = new URL(u);
+
+        //makes sure it is an instagram url
+        if (url.hostname.indexOf("instagram.com")=== -1) return null;
+
+        //removes and replaces any values from the url so make it a proper embed link
+        let pathname = url.pathname.split("?")[0].split("#")[0].replace(/\/$/, "");
+
+        //if pathname already has /embed in the end then return it
+        if (pathname.endsWith("/embed")){
+            return url.origin + pathname;
+        }
+
+        //return the link with /embed at the end
+        return url.origin + pathname + "/embed";
+    } catch (e) {
+        console.error("Invalid Instagram URL", e);
+        return null;
+    }
 }
 
 function FindFileType({ fileName, size }) {
