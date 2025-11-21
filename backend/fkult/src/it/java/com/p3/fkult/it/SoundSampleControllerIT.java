@@ -112,8 +112,8 @@ public class SoundSampleControllerIT {
         Files.write(Path.of(UPLOAD_DIR, UPLOAD_FILENAME), "beep".getBytes());
 
         mvc.perform(get("/api/sound-sample/download").param("filePath", UPLOAD_FILENAME))
-        .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-        .andExpect(content().string(containsString(UPLOAD_FILENAME)));
+        .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_OCTET_STREAM))
+        .andExpect(content().bytes("beep".getBytes()));
 
     }
 }

@@ -16,7 +16,7 @@ export default function SoundSampleBrowser({onCreateSS}) {
 
     useEffect(() => {
         load();
-    }, [username]);
+    }, []);
 
     // Get all sound samples
     async function load(){

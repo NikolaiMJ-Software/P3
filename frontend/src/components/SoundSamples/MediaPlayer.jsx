@@ -1,32 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { getSoundsampleFile } from "../../services/soundSampleService";
 
 export default function MediaPlayer({soundSample, size}){
     if (soundSample === null) {
         return null;
     }
-console.log("dette er en fil: ", soundSample)
+
     // Check if link or file
     if (soundSample.includes("https://")){
-        // Find the type of link: (YouTube, Instagram, X, Facebook, TikTok)
-        let yt = getYtId(soundSample); // Try to get a YouTube video ID
-        if (yt) {
-            // If it's a YouTube video, show it using an iframe player.
-            return (
-                <iframe
-                    className={size}
-                    src={"https://www.youtube.com/embed/" + yt}
-                    title="YouTube sample"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    loading="lazy"
-                />
-            );
-        }
+        return <FindLinkType link={soundSample} size={size}/>
     } else {
         // Find the type of file: (mp4, mov, webm)
-        //return findFileType(soundSample);
+        return <FindFileType fileName={soundSample} size={size}/>;
     }
+}
+
+// Find the type of link: (YouTube, Instagram, X, Facebook, TikTok)
+function FindLinkType({link, size}){
+    const {t} = useTranslation();
+    if (link.includes("youtu")) {
+        const ytLink = getYtId(link);
+        if (!ytLink) {
+            return <p className="text-sm text-text-error">YouTube link not found.</p>;
+        }
+        return (
+            <iframe
+                className={size}
+                src={"https://www.youtube.com/embed/" + ytLink}
+                title="YouTube sample"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+            />
+        );
+    } else if (link.includes("instagram.com")) { //Somewhat functional instagram viewer
+        const instaURL = getInstaEmbedUrl(link);
+        if(!instaURL){
+            return <p className="text-sm text-text-error">Instagram link not supported.</p>;
+        }
+
+        return(
+            <iframe
+                className={size}
+                src={instaURL}
+                title="Instagram sample"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+            />
+        )
+        
+    } else if (link.includes("x.com")) {
+
+    } else if (link.includes("facebook.com")) {
+
+    } else if (link.includes("tiktok.com")) {
+
+    }
+
+    // If sound sample is not found -> return not found 
+    return <p className="text-sm text-text-error">{t("sound sample") + t("not found")}</p>;
 }
 
 // --- Function to check if the URL is a YouTube link and get the video ID ---
@@ -49,45 +83,106 @@ function getYtId(u) {
     return null; // If no ID is found, return null.
 }
 
-async function findFileType(fileName) {
-    // Get the file path
-    let filePath = await getSoundsampleFile(fileName);
+//sets up instagram embed url
+function getInstaEmbedUrl(u) {
+    try{
+        //defines the url
+        const url = new URL(u);
+
+        //makes sure it is an instagram url
+        if (url.hostname.indexOf("instagram.com")=== -1) return null;
+
+        //removes and replaces any values from the url so make it a proper embed link
+        let pathname = url.pathname.split("?")[0].split("#")[0].replace(/\/$/, "");
+
+        //if pathname already has /embed in the end then return it
+        if (pathname.endsWith("/embed")){
+            return url.origin + pathname;
+        }
+
+        //return the link with /embed at the end
+        return url.origin + pathname + "/embed";
+    } catch (e) {
+        console.error("Invalid Instagram URL", e);
+        return null;
+    }
+}
+
+function FindFileType({ fileName, size }) {
+    const [filePath, setFilePath] = useState(null);
+    const [fileType, setFileType] = useState(null); // "video" | "audio" | "link" | null
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        async function load() {
+            try{
+                setError(null);
+                setFilePath(null);
+                setFileType(null);
+
+                const path = await getSoundsampleFile(fileName);
+                if (cancelled) return;
+
+                let type = "other";
+                if (/\.(mp4|webm|mov|m4v)(\?.*)?$/.test(path)) {
+                    type = "video";
+                } else if (/\.(mp3|wav|ogg|m4a|flac)(\?.*)?$/.test(path)) {
+                    type = "audio";
+                }
+
+                setFilePath(path);
+                setFileType(type);
+            } catch (err) {
+                if(!cancelled) {
+                    console.error(err);
+                    setError("Kunne ikke indlæse filen.")
+                }
+            }
+        }
+
+        load();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [fileName]);
+
+    if(error) {
+        return <p className="text-red-600 text-sm">{error}</p>;
+    }
+
+    if (!filePath || !fileType){
+        return <p className="text-sm text-gray-500">Indlæser fil…</p>;
+    }
     
     // --- Check if it's a video file by seeing if the URL ends in .mp4, .webm, .mov, etc ---
-    if (/\.(mp4|webm|mov|m4v)(\?.*)?$/.test(filePath)) { // RegEx to test the file type
+    if (fileType === "video") {
         return (
             <video
-                className="w-96"
-                src={fileName}
+                className={size}
+                src={filePath}
                 controls
                 preload="metadata"
-                onError={function(){ console.error("Video failed:", fileName); }} // Logs error if video can't play
+                onError={function(){ console.error("Video failed:", filePath); }} // Logs error if video can't play
             />
         );
     }
 
     // --- Check if it's an audio file like .mp3, .wav, .ogg, etc ---
-    if (/\.(mp3|wav|ogg|m4a|flac)(\?.*)?$/.test(filePath)) {
+    if (fileType === "audio") {
         return (
             <audio
-                className="w-96"
-                src={fileName}
+                className={size}
+                src={filePath}
                 controls
                 preload="metadata"
-                onError={function(){ console.error("Audio failed:", fileName); }} // Logs error if audio can't play
+                onError={function(){ console.error("Audio failed:", filePath); }} // Logs error if audio can't play
             />
         );
     }
 
-    // --- If it's not YouTube, not a video, and not audio — just show a clickable link ---
-    return (
-      <a
-        className="text-blue-600 underline break-all"
-        href={filePath}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {fileName}
-      </a>
-    );
+    // if its not a file return not supported
+    return <p className="text-sm text-gray-700">Denne filtype understøttes ikke.</p>;
 }

@@ -7,11 +7,21 @@ import com.p3.fkult.persistence.repository.SoundSampleRepository;
 import com.p3.fkult.presentation.DTOs.SoundSampleRequest;
 import com.p3.fkult.business.services.shuffleFilter.*;
 
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.nio.file.Paths;
 import java.util.*;
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class SoundSampleService {
@@ -38,15 +48,17 @@ public class SoundSampleService {
 
             // If there is a file, upload it to the server
             String path = null;
+            String sqlPath = null;
             if (file != null) {
                 File uploadDir = new File("soundSampleUploads");
                 if (!uploadDir.exists()) uploadDir.mkdirs();
                 path = uploadDir.getAbsolutePath() + File.separator + file.getOriginalFilename();
+                sqlPath = "soundSampleUploads" + File.separator + file.getOriginalFilename();
                 file.transferTo(new File(path));
             }
 
             // Save to the sound sample to the database
-            soundSample.setFilePath(path);
+            soundSample.setFilePath(sqlPath);
             repository.save(soundSample);
             return "Upload complete!";
 
@@ -138,19 +150,14 @@ public class SoundSampleService {
         return soundSamplesRequests;
     }
 
-    public File getSoundSampleFile(String fileName) {
-        try {
-            String filePath = null;
-            filePath = new File("soundSampleUploads" + File.separator + fileName).getAbsolutePath();
-            File file = new File(filePath).getAbsoluteFile();
-            if (!file.exists()) {
-                return null;
-            }
-            return file;
+    public Resource getSoundSampleFile(String fileName) throws MalformedURLException {
+        Path path = Paths.get("soundSampleUploads").resolve(fileName).normalize();
+        Resource resource = new UrlResource(path.toUri());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        if (!resource.exists()) {
+            throw new RuntimeException("File not found: " + fileName);
         }
+
+        return resource;
     }
 }
