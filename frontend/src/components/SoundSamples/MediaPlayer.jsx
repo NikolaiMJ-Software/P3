@@ -55,7 +55,30 @@ function FindLinkType({link, size}){
         console.log("Rendering X embed for:", link);
         return <XEmbed url={link} size={size} />;
     } else if (link.includes("facebook.com")) {
-
+        const fbEmbed = getFbEmbedUrl(link);
+        if(!fbEmbed){
+            return <p className="text-sm text-text-error">Facebook link not supported.</p>;
+        }
+        return (
+            <div className={`${size} relative overflow-hidden rounded-lg`}>
+                <iframe
+                    src={fbEmbed}
+                    title="Facebook sample"
+                    className="absolute inset-0 w-full h-full"
+                    style={{
+                        border: "none",
+                        width: "100%",
+                        height: "400px",
+                        overflow: "hidden"
+                    }}
+                    scrolling="no"
+                    frameBorder="0"
+                    allow="encrypted-media; picture-in-picture"
+                    allowFullScreen
+                    loading="lazy"
+                />
+            </div>
+        )
     } else if (link.includes("tiktok.com")) {
 
     }
@@ -119,8 +142,8 @@ function XEmbed({ url, size }) {
             u.hostname = "twitter.com";
             normalizedUrl = u.toString();
         }
-    } catch (e) {
-        console.warn("Invalid X/Twitter URL:", url, e);
+    } catch (err) {
+        console.warn("Invalid X/Twitter URL:", url, err);
     }
 
     useEffect(() => {
@@ -165,6 +188,31 @@ function XEmbed({ url, size }) {
             </div>
         </div>
     );
+}
+
+//function to get fb embed
+function getFbEmbedUrl(u){
+    try{
+        //create new url using u
+        const url = new URL(u);
+
+        //check if url is a facebook url if not return null
+        if(!url.hostname.includes("facebook.com")) return null;
+
+        //collect the encoded part of the url
+        const encoded = encodeURIComponent(url.toString());
+
+        //insert the encoded part into links including video
+        if(url.pathname.includes("/videos/") || url.searchParams.get("v")){
+            return `https://www.facebook.com/plugins/video.php?href=${encoded}&show_text=0&width=560&height=400`;
+        }
+
+        //insert the encoded part into posts (mainly shorts)
+        return `https://www.facebook.com/plugins/post.php?href=${encoded}&show_text=0&width=560&height=400`;
+    } catch (err) {
+        console.error("Invalid FB URL", err);
+        return null;
+    }
 }
 
 
