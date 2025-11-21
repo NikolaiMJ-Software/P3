@@ -42,6 +42,7 @@ function BanManager() {
 function AdminManager() {
     const [user, setUser] = useState("")
     const [message, setMessage] = useState("")
+    const {username} = useParams();
     return (
         <div className={"p-5 border border-t-0 flex flex-row justify-between content-center flex-1 overflow-auto"}>
             <div className={"flex flex-col justify-center"}>
@@ -50,8 +51,8 @@ function AdminManager() {
                 <p className={"text-text-secondary"}>{message}</p>
             </div>
             <div className={"flex flex-col "}>
-                <ManagerButton onClick={() => setMessage(unadminUser(user))} label={"Unadmin"}/>
-                <ManagerButton onClick={() => setMessage(adminUser(user))} label={"Admin"}/>
+                <ManagerButton onClick={() => setMessage(unadminUser(username, user.toLowerCase()))} label={"Unadmin"}/>
+                <ManagerButton onClick={() => setMessage(adminUser(username, user.toLowerCase()))} label={"Admin"}/>
             </div>
         </div>
     )

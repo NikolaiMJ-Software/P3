@@ -3,8 +3,8 @@
 INSERT OR IGNORE INTO user (id, name, username, is_banned, is_admin)
 VALUES
     (1, 'John Test', 'tester', 0, 1 ),
-(2, 'Mig', 'Mig1', 0, 0),
-(3, 'Mig', 'mig2', 0, 0),
+(2, 'Jakob Topholt Jensen', 'Topholt', 0, 1),
+(3, 'Kresten Laust', 'root', 0, 1),
 (4, 'test', 'test', 0, 0),
 (5, 'mig', 'mig', 0, 0);
 

@@ -53,5 +53,6 @@
   "prev": "Tilbage",
   "next": "Næste",
   "noUpcomingEvent": "Ingen Opkommende Events",
-  "loading": "Indlæser"
+  "loading": "Indlæser",
+  "not_admin": "Du har ikke adgang til denne resurse"
 }
