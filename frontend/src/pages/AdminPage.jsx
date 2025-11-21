@@ -1,11 +1,10 @@
-import {useParams} from "react-router-dom";
-import {adminUser, isAdmin, unadminUser} from "../services/adminService.jsx"
+import {useNavigate, useParams} from "react-router-dom";
+import {isAdmin} from "../services/adminService.jsx"
 import {useEffect, useState} from "react";
 import UserManager from "../components/UserManager.jsx";
 import EventManager from "../components/EventManager.jsx";
 import SubmissionManager from "../components/SubmissionManager.jsx";
 import { useTranslation } from "react-i18next";
-
 
 export default function AdminPage(){
     const {username} = useParams();
@@ -25,45 +24,33 @@ export default function AdminPage(){
 
     if(isAdminUser === 1){
         return (
-            <div>
-                <p>Hello {username}</p>
-                <AdminButton
-                    func={unadminUser}
-                    username={username}
-                    label={t("unbecome admin")}
-                />
-                <div className="flex flex-col">
-                    {/* Top Half */}
-                    <div className="flex flex-row justify-between w-full">
-                        {/* Event Manager */}
-                        <EventManager className={"flex flex-col p-5 w-1/2"}/>
-                        {/* Upper Right */}
-                        <div className="flex flex-col justify-between w-1/2">
-                            {/* Intro Text */}
-                            <div className="mt-20 text-center text-xl">
-                                <h1>{t("welcome")} Admin!</h1>
-                                <br/>
-                                <h1>{t("welcome message")}</h1>
-                            </div>
-                            {/* User Manager */}
-                            <UserManager className={"p-5 flex flex-col mr-20 ml-20"}/>
+            <div className="flex flex-col">
+                {/* Top Half */}
+                <div className="flex flex-row justify-between w-full">
+                    {/* Event Manager */}
+                    <EventManager className={"flex flex-col p-5 w-1/2"}/>
+                    {/* Upper Right */}
+                    <div className="flex flex-col justify-between w-1/2">
+                        {/* Intro Text */}
+                        <div className="mt-20 text-center text-xl">
+                            <h1>{t("welcome")} Admin!</h1>
+                            <br/>
+                            <h1>{t("welcome message")}</h1>
                         </div>
+                        {/* User Manager */}
+                        <UserManager className={"p-5 flex flex-col mr-20 ml-20"}/>
                     </div>
-                    {/* Bottom Half */}
-                    <SubmissionManager/>
                 </div>
+                {/* Bottom Half */}
+                <SubmissionManager/>
             </div>
         )
     }
     else if (isAdminUser === 0){
         return (
             <div>
-                <p>GET OUT!</p>
-                <AdminButton
-                    func={adminUser}
-                    username={username}
-                    label={t("become admin")}
-                />
+                <p>{t("not_admin")}</p>
+
             </div>
         )
     }

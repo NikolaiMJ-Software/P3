@@ -28,16 +28,16 @@ export async function fullName(id){
 
 // POSTS
 
-export async function adminUser(username){
-    const response = await fetch(`${API_URL}/admin/${username}?status=1`, {
+export async function adminUser(username, newAdmin){
+    const response = await fetch(`${API_URL}/admin/${username}?newAdmin=${newAdmin}&status=1`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
     });
     return response.text();
 }
 
-export async function unadminUser(username){
-    const response = await fetch(`${API_URL}/admin/${username}?status=0`, {
+export async function unadminUser(username, newAdmin){
+    const response = await fetch(`${API_URL}/admin/${username}?newAdmin=${newAdmin}&status=0`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
     });

@@ -6,7 +6,9 @@ VALUES
 (2, 'Mig Nielsen', 'Mig1', 0, 0),
 (3, 'Mig Jensen', 'mig2', 0, 0),
 (4, 'test Testsen', 'test', 0, 0),
-(5, 'mig Larsen', 'mig', 0, 0);
+(5, 'mig Larsen', 'mig', 0, 0),
+(6, 'Jakob Topholt Jensen', 'Topholt', 0, 1),
+(7, 'Kresten Laust', 'root', 0, 1);
 
 -- Insert dummy theme with a known ID
 INSERT OR IGNORE INTO theme (id, name, user_id, timestamp, vote_count)
@@ -30,16 +32,26 @@ VALUES
 -- Dummy sound samples
 INSERT OR IGNORE INTO sound_samples (link, file_path, user_id)
 VALUES 
-('https://www.youtube.com/watch?v=lrb7ZLmvzQQ', Null, 2),
-('https://www.youtube.com/watch?v=wS0Q__itaoQ', Null, 3),
-(NULL, 'rock.mp3', 2),
-('https://www.youtube.com/watch?v=U7m_twP45c4', Null, 5),
-('https://www.youtube.com/watch?v=jNQXAC9IVRw', NULL, 3),
-('https://www.youtube.com/watch?v=jqw7B8RtxRk', NULL, 1),
-(NULL, 'explosion.mp4', 5),
-('https://www.youtube.com/watch?v=HZ8VF0EdITk', NULL, 5),
-('https://www.youtube.com/watch?v=n_y2rayU_y8', NULL, 1),
-('https://www.youtube.com/watch?v=lrb7ZLmvzQQ', NULL, 5);
+(NULL, '/film/starwars', 1),
+('https://www.example.com/audio/intro.mp3', Null, 2),
+(NULL, '/nature/rain', 3),
+('https://cdn.example.com/sound/birds.mp3', Null, 3),
+(NULL, '/music/rock_guitar', 2),
+(Null, '/studio/drums', 4),
+(NULL, '/mix/testtrack', 5),
+('https://sound.example.com/mixdown/final', Null, 5),
+('https://www.example.com/effects/laser.mp3', NULL, 3),
+(NULL, '/ambient/forest', 3),
+('https://cdn.example.com/sound/wind.mp3', NULL, 1),
+(NULL, '/sfx/explosion', 5),
+('https://media.example.com/sample/piano', NULL, 5),
+(NULL, '/music/classic', 1),
+('https://www.google.dk/tik-tok.com/1', NULL, 1),
+(NULL, '/studio/bass', 4),
+('https://cdn.example.com/sound/drums_loop.mp3', NULL, 5),
+(NULL, '/mix/track1', 5),
+('https://media.example.com/sample/guitar', NULL, 2),
+(NULL, '/nature/waterfall', 3);
 
 -- Real startup day
 INSERT OR IGNORE INTO event (id,event_date, theme_id)
