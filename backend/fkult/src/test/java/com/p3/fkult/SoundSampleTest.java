@@ -22,12 +22,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-/* 
 public class SoundSampleTest {
 
     @Mock
@@ -288,10 +283,10 @@ public class SoundSampleTest {
             // Assert getting the sound sample file
             String fileName = "sample.mp3";
             Resource resFile = service.getSoundSampleFile(fileName);
-            int resLength = resFile.getAbsolutePath().length();
-            String resFileName = resFile.getAbsolutePath().substring(resLength - fileName.length(), resLength);
-            assertEquals(fileName, resFileName);
-
+            // Assert the resource
+            assertNotNull(resFile, "Resource should not be null");
+            assertTrue(resFile.exists(), "Resource should point to an existing file");
+            assertEquals(fileName, resFile.getFilename(), "Resource filename should match requested filename");
         } finally {
             // Cleanup
             if (uploadedFile.exists()) {
@@ -303,8 +298,8 @@ public class SoundSampleTest {
     @Test
     // Try to get an non-existing sound sample file
     void getNonExistingSoundSampleFile() throws Exception {
-        Resource file = service.getSoundSampleFile("/notAFile.mp3");
-
-        assertEquals(null, file);
+        assertThrows(RuntimeException.class, () -> {
+            service.getSoundSampleFile("notAFile.mp3");
+        });
     }
-}*/
+}
