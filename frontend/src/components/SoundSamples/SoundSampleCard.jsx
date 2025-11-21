@@ -19,9 +19,10 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
 
     // Creating individual toggle to a card
     const onToggel = (SSName) => {
+        const mediaDesign = SSName.includes("tiktok.com") ? " " : "aspect-video";
         setallSSMediaPlayer(arr => ({
             ...arr,
-            [SSName]: arr[SSName] === "aspect-video" ? "h-15" : "aspect-video"
+            [SSName]: arr[SSName] === mediaDesign ? "h-15" : mediaDesign
         }));
     }
 

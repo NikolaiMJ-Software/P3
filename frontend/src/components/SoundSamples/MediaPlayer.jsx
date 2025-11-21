@@ -80,7 +80,8 @@ function FindLinkType({link, size}){
             </div>
         )
     } else if (link.includes("tiktok.com")) {
-
+        const url = link.slice(0, link.indexOf("?"));
+        return <TikTokEmbed url={url} size={size}/>;
     }
 
     // If sound sample is not found -> return not found 
@@ -187,6 +188,24 @@ function XEmbed({ url, size }) {
                 </blockquote>
             </div>
         </div>
+    );
+}
+
+// Setup TikTok embeds
+function TikTokEmbed({ url, size }) {
+    const script = document.createElement('script');
+    script.src = 'https://www.tiktok.com/embed.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return (
+        <blockquote 
+            className={`${size} tiktok-embed transform -translate-y-5`}
+            cite={url}
+            data-video-id={url.split('/').pop()}
+        >
+            <a href={url}>Loading TikTok...</a>
+        </blockquote>
     );
 }
 
