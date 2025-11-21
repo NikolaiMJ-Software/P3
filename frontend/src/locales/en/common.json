@@ -53,5 +53,6 @@
   "prev": "Previous",
   "next": "Next",
   "noUpcomingEvent": "No Upcoming Events",
-  "loading": "Loading"
+  "loading": "Loading",
+  "not found": "not found"
 }

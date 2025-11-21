@@ -4,7 +4,7 @@ import { deleteSoundSample } from "../../services/soundSampleService.jsx";
 import MediaPlayer from "./MediaPlayer.jsx";
 
 export default function SoundSampleCard({ soundSamples, witch, onDeleted, showenCard}) {
-    const [allSSMediaPlayer, setallSSMediaPlayer] = useState("");
+    const [allSSMediaPlayer, setallSSMediaPlayer] = useState("h-15");
     // Choose the necessary card design
     const cardDesign = witch === "users" ? "card-primary" : "card-secondary";
     const SSid = witch === "users" ? "usersSS" : "allSS";
@@ -19,7 +19,7 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
 
     const onToggel = (state) => {
         if(state === "aspect-video"){
-            setallSSMediaPlayer("");
+            setallSSMediaPlayer("h-15");
         } else {
             setallSSMediaPlayer("aspect-video");
         }
@@ -43,7 +43,6 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
                             )}
                         </div>
                         <MediaPlayer soundSample={soundSample.soundSample} size={witch === "users" ? "aspect-video" : allSSMediaPlayer}/>
-                        <div className="overflow-x-auto">{soundSample.soundSample.includes("https://") ? "" : soundSample.soundSample}</div>
                     </div>
                 </div>
             })}
