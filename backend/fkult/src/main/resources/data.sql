@@ -6,9 +6,9 @@ VALUES
 (2, 'Mig Nielsen', 'Mig1', 0, 0),
 (3, 'Mig Jensen', 'mig2', 0, 0),
 (4, 'test Testsen', 'test', 0, 0),
-(5, 'mig Larsen', 'mig', 0, 0);
+(5, 'mig Larsen', 'mig', 0, 0),
 (6, 'Jakob Topholt Jensen', 'Topholt', 0, 1),
-(7, 'Kresten Laust', 'root', 0, 1),
+(7, 'Kresten Laust', 'root', 0, 1);
 
 -- Insert dummy theme with a known ID
 INSERT OR IGNORE INTO theme (id, name, user_id, timestamp, vote_count)
