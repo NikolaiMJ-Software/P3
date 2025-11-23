@@ -4,9 +4,10 @@ INSERT OR IGNORE INTO user (name, username, is_banned, is_admin) VALUES
 ('Tester2', 'test2',   0, 0);
 
 -- Movies
-INSERT OR IGNORE INTO movie (tconst, movie_name, original_movie_name, year, runtime_minutes, is_active, is_series, poster_url, rating) VALUES
-('tt0133093', 'The Matrix', 'The Matrix', 1999, 136, 1, 0, NULL, '8.7'),
-('tt0083658', 'Blade Runner', 'Blade Runner', 1982, 117, 1, 0, NULL, '8.1');
+-- Movies
+INSERT OR REPLACE INTO movie (tconst, movie_name, original_movie_name, year, runtime_minutes, is_active, is_series, poster_url, rating) VALUES
+('tt0133093', 'The Matrix', 'The Matrix', 1999, 136, 1, 0, 'https://example.com/matrix.jpg', '8.7'),
+('tt0083658', 'Blade Runner', 'Blade Runner', 1982, 117, 1, 0, 'https://example.com/blade.jpg', '8.1');
 
 -- Theme
 INSERT OR IGNORE INTO theme (name, user_id) VALUES
@@ -40,5 +41,9 @@ INSERT OR IGNORE INTO user (name, username, is_banned, is_admin) VALUES
 INSERT OR IGNORE INTO user (name, username, is_banned, is_admin) VALUES
  ('Admin Person', 'admin_user', 0, 1),
  ('Normal User', 'normal_user', 0, 0),
- ('Not Admin',   'not_admin_user', 0, 0)
+ ('Not Admin',   'not_admin_user', 0, 0);
+
+-- Populate FTS index for tests
+INSERT INTO movie_fts(rowid, movie_name)
+SELECT id, movie_name FROM movie;
 

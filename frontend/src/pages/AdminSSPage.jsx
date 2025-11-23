@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {adminUser, isAdmin, unadminUser} from "../services/adminService.jsx"
+import {isAdmin} from "../services/adminService.jsx"
 import {useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 import Timer from "../components/Timer.jsx";

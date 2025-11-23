@@ -34,14 +34,54 @@ function FindLinkType({link, size}){
                 loading="lazy"
             />
         );
-    } else if (link.includes("instagram.com")) {
+    } else if (link.includes("instagram.com")) { //Somewhat functional instagram viewer
+        const instaURL = getInstaEmbedUrl(link);
+        if(!instaURL){
+            return <p className="text-sm text-text-error">Instagram link not supported.</p>;
+        }
+
+        return(
+            <iframe
+                className={size}
+                src={instaURL}
+                title="Instagram sample"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share autoplay; encrypted-media; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+            />
+        )
         
-    } else if (link.includes("x.com")) {
-
+    } else if (link.includes("x.com") || link.includes("twitter.com")) {
+        console.log("Rendering X embed for:", link);
+        return <XEmbed url={link} size={size} />;
     } else if (link.includes("facebook.com")) {
-
+        const fbEmbed = getFbEmbedUrl(link);
+        if(!fbEmbed){
+            return <p className="text-sm text-text-error">Facebook link not supported.</p>;
+        }
+        return (
+            <div className={`${size} relative overflow-hidden rounded-lg`}>
+                <iframe
+                    src={fbEmbed}
+                    title="Facebook sample"
+                    className="absolute inset-0 w-full h-full"
+                    style={{
+                        border: "none",
+                        width: "100%",
+                        height: "400px",
+                        overflow: "hidden"
+                    }}
+                    scrolling="no"
+                    frameBorder="0"
+                    allow="encrypted-media; picture-in-picture"
+                    allowFullScreen
+                    loading="lazy"
+                />
+            </div>
+        )
     } else if (link.includes("tiktok.com")) {
-
+        const url = link.slice(0, link.indexOf("?"));
+        return <TikTokEmbed url={url} size={size}/>;
     }
 
     // If sound sample is not found -> return not found 
@@ -67,6 +107,133 @@ function getYtId(u) {
     } catch (e) {} // If something goes wrong, just ignore it.
     return null; // If no ID is found, return null.
 }
+
+//sets up instagram embed url
+function getInstaEmbedUrl(u) {
+    try{
+        //defines the url
+        const url = new URL(u);
+
+        //makes sure it is an instagram url
+        if (url.hostname.indexOf("instagram.com")=== -1) return null;
+
+        //removes and replaces any values from the url so make it a proper embed link
+        let pathname = url.pathname.split("?")[0].split("#")[0].replace(/\/$/, "");
+
+        //if pathname already has /embed in the end then return it
+        if (pathname.endsWith("/embed")){
+            return url.origin + pathname;
+        }
+
+        //return the link with /embed at the end
+        return url.origin + pathname + "/embed";
+    } catch (e) {
+        console.error("Invalid Instagram URL", e);
+        return null;
+    }
+}
+
+//sets up X embeds
+function XEmbed({ url, size }) {
+    // make x and twitter urls the same so x becomes twitter
+    let normalizedUrl = url;
+    try {
+        const u = new URL(url);
+        if (u.hostname === "x.com" || u.hostname === "www.x.com") {
+            u.hostname = "twitter.com";
+            normalizedUrl = u.toString();
+        }
+    } catch (err) {
+        console.warn("Invalid X/Twitter URL:", url, err);
+    }
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        //define twitter/X embed widget
+        const scriptSrc = "https://platform.twitter.com/widgets.js";
+
+        function loadWidgets() {
+            if (window.twttr && window.twttr.widgets) {
+                window.twttr.widgets.load();
+            }
+        }
+
+        // Check if imdb widget script is already in the link:
+        const existingScript = document.querySelector(`script[src="${scriptSrc}"]`);
+
+        //if the script is not included, then append the script or else just load the original
+        if (!existingScript) {
+            const script = document.createElement("script");
+            script.src = scriptSrc;
+            script.async = true;
+            script.charset = "utf-8";
+            script.onload = loadWidgets;
+            document.body.appendChild(script);
+        } else {
+            loadWidgets();
+        }
+    }, [normalizedUrl]);
+
+    //return the media player for X
+    return (
+        <div className={`${size} overflow-hidden rounded-lg`}>
+            <div className="w-full max-w-full overflow-hidden">
+                <blockquote 
+                    className="twitter-tweet" 
+                    data-media-max-width="400"
+                    style={{maxWidth:"100%"}}
+                >
+                    <a href={normalizedUrl}>Loading tweet…</a>
+                </blockquote>
+            </div>
+        </div>
+    );
+}
+
+// Setup TikTok embeds
+function TikTokEmbed({ url, size }) {
+    const script = document.createElement('script');
+    script.src = 'https://www.tiktok.com/embed.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return (
+        <blockquote 
+            className={`${size} tiktok-embed transform -translate-y-5`}
+            cite={url}
+            data-video-id={url.split('/').pop()}
+        >
+            <a href={url}>Loading TikTok...</a>
+        </blockquote>
+    );
+}
+
+//function to get fb embed
+function getFbEmbedUrl(u){
+    try{
+        //create new url using u
+        const url = new URL(u);
+
+        //check if url is a facebook url if not return null
+        if(!url.hostname.includes("facebook.com")) return null;
+
+        //collect the encoded part of the url
+        const encoded = encodeURIComponent(url.toString());
+
+        //insert the encoded part into links including video
+        if(url.pathname.includes("/videos/") || url.searchParams.get("v")){
+            return `https://www.facebook.com/plugins/video.php?href=${encoded}&show_text=0&width=560&height=400`;
+        }
+
+        //insert the encoded part into posts (mainly shorts)
+        return `https://www.facebook.com/plugins/post.php?href=${encoded}&show_text=0&width=560&height=400`;
+    } catch (err) {
+        console.error("Invalid FB URL", err);
+        return null;
+    }
+}
+
 
 function FindFileType({ fileName, size }) {
     const [filePath, setFilePath] = useState(null);

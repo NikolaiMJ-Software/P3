@@ -83,7 +83,7 @@ public class SoundSampleService {
         // If deletion is based on file name, find and delete file
         String filePath = null;
         if (fileName != null) {
-            filePath = new File("soundSampleUploads" + File.separator + fileName).getAbsolutePath();
+            filePath = "soundSampleUploads" + File.separator + fileName;
             File file = new File(filePath).getAbsoluteFile();
             if (file.exists()) {
                 if (file.delete()) {

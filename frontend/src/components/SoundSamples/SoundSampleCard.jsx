@@ -4,7 +4,7 @@ import { deleteSoundSample } from "../../services/soundSampleService.jsx";
 import MediaPlayer from "./MediaPlayer.jsx";
 
 export default function SoundSampleCard({ soundSamples, witch, onDeleted, showenCard}) {
-    const [allSSMediaPlayer, setallSSMediaPlayer] = useState("h-15");
+    const [allSSMediaPlayer, setallSSMediaPlayer] = useState({});
     // Choose the necessary card design
     const cardDesign = witch === "users" ? "card-primary" : "card-secondary";
     const SSid = witch === "users" ? "usersSS" : "allSS";
@@ -17,12 +17,13 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
         onDeleted();
     }
 
-    const onToggel = (state) => {
-        if(state === "aspect-video"){
-            setallSSMediaPlayer("h-15");
-        } else {
-            setallSSMediaPlayer("aspect-video");
-        }
+    // Creating individual toggle to a card
+    const onToggel = (SSName) => {
+        const mediaDesign = SSName.includes("tiktok.com") ? " " : "aspect-video";
+        setallSSMediaPlayer(arr => ({
+            ...arr,
+            [SSName]: arr[SSName] === mediaDesign ? "h-15" : mediaDesign
+        }));
     }
 
     // Return sound sample cards
@@ -33,7 +34,7 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
                 const deleteBtn = witch === "users" ? <img src={trashPNG} alt={`Delete sound sample: ${soundSample.soundSample}`}/> : "";
 
                 return <div className={cardDesign + visibility} data-testid={`${SSid}-${soundSample.soundSample}`}>
-                    <div className={"flex flex-col" + pointer} onClick={() => onToggel(allSSMediaPlayer)}>
+                    <div className={"flex flex-col" + pointer} onClick={() => onToggel(soundSample.soundSample)}>
                         <div className="flex justify-between items-center m-4">
                             <h2 className={"text-sm text-text-secondary"}>{soundSample.usersFullName}</h2>
                             {witch === "users" && (
@@ -42,7 +43,7 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
                                 </div>
                             )}
                         </div>
-                        <MediaPlayer soundSample={soundSample.soundSample} size={witch === "users" ? "aspect-video" : allSSMediaPlayer}/>
+                        <MediaPlayer soundSample={soundSample.soundSample} size={witch === "users" ? "aspect-video" : (allSSMediaPlayer[soundSample.soundSample] || "h-15")}/>
                     </div>
                 </div>
             })}

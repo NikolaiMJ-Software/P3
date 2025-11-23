@@ -107,7 +107,9 @@ export default function SubmitSSPage() {
                     {sendMessage()}
                 </div>
 
-                <MediaPlayer soundSample={validSS} size="w-240 h-135"/>
+                <div className="w-full flex justify-center">
+                    <MediaPlayer soundSample={validSS} size="w-full max-w-[560px] aspect-video" />
+                </div>
 
             </form>
         </div>

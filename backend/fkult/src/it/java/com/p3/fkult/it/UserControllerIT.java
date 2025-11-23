@@ -58,13 +58,13 @@ public class UserControllerIT {
         when(auth.receiveUsername("normal_user")).thenReturn(true);
 
         //promote
-        mvc.perform(post("/api/user/admin/{username}", "normal_user").param("status", "1")).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("User successfully admin")));
+        mvc.perform(post("/api/user/admin/{username}", "admin_user").param("newAdmin", "normal_user").param("status", "1")).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("User successfully admin")));
 
         User isPromoted = userRepo.findUser("normal_user");
         assertThat(isPromoted.getAdmin()).isEqualTo(1);
 
         //demote
-        mvc.perform(post("/api/user/admin/{username}", "normal_user").param("status", "0")).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("unadmin")));
+        mvc.perform(post("/api/user/admin/{username}", "admin_user").param("newAdmin", "normal_user").param("status", "0")).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("User successfully unadmin")));
 
         User afterDemote = userRepo.findUser("normal_user");
         assertThat(afterDemote.getAdmin()).isEqualTo(0);
@@ -93,7 +93,7 @@ public class UserControllerIT {
 
         when(auth.receiveUsername("normal_user")).thenReturn(true);
 
-        mvc.perform(post("/api/user/admin/ban_user").contentType(MediaType.APPLICATION_JSON).content(json(body))).andExpect(status().isForbidden()).andExpect(content().string(org.hamcrest.Matchers.containsString("user not admin")));
+        mvc.perform(post("/api/user/admin/ban_user").contentType(MediaType.APPLICATION_JSON).content(json(body))).andExpect(status().isForbidden()).andExpect(content().string(org.hamcrest.Matchers.containsString("User not admin")));
     }
 
     //find id and name using username
