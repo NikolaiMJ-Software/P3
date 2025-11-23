@@ -82,6 +82,7 @@ export default function ThemeVoting() {
         return;
       }
       setNumberOfWinners(numberOfWinners);
+      return; // Exit to allow re-clicking "End voting"
     }
 
     // Sort and select n winners
@@ -103,6 +104,7 @@ export default function ThemeVoting() {
       } else {
         // Too many tied to fill the remaining slots → trigger tie-break
         setUnVotedThemes(tiedThemes);
+        setCurrentIndex(0);
         alert("There is a tie among the top themes. Please re-vote to break the tie.");
         return;
       }
