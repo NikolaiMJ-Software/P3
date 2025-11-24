@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getSoundsampleFile } from "../../services/soundSampleService";
 
-
-export default function MediaPlayer({soundSample, size}){
+export default function MediaPlayer({soundSample}){
     
     if (soundSample === null) {
         return null;
@@ -11,24 +10,24 @@ export default function MediaPlayer({soundSample, size}){
 
     // Check if link or file
     if (soundSample.includes("https://")){
-        return <FindLinkType link={soundSample} size={size}/>
+        return <FindLinkType link={soundSample}/>
     } else {
         // Find the type of file: (mp4, mov, webm)
-        return <FindFileType fileName={soundSample} size={size}/>;
+        return <FindFileType fileName={soundSample}/>;
     }
 }
 
 // Find the type of link: (YouTube, Instagram, X, Facebook, TikTok)
-function FindLinkType({link, size}){
+function FindLinkType({link}){
     const {t} = useTranslation();
     if (link.includes("youtu")) {
         const ytLink = getYtId(link);
         if (!ytLink) {
-            return <p className="text-sm text-text-error">YouTube link not found.</p>;
+            return <p className="text-sm text-text-error">{"YouTube " + t("link not supported")}</p>;
         }
         return (
             <iframe
-                className={size}
+                className="w-full aspect-video"
                 src={"https://www.youtube.com/embed/" + ytLink}
                 title="YouTube sample"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -36,15 +35,16 @@ function FindLinkType({link, size}){
                 loading="lazy"
             />
         );
+        
     } else if (link.includes("instagram.com")) { //Somewhat functional instagram viewer
         const instaURL = getInstaEmbedUrl(link);
         if(!instaURL){
-            return <p className="text-sm text-text-error">Instagram link not supported.</p>;
+            return <p className="text-sm text-text-error">{"Instagram " + t("link not supported")}</p>;
         }
 
         return(
             <iframe
-                className={size}
+                className={`h-190 w-full max-w-[560px]`}
                 src={instaURL}
                 title="Instagram sample"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share autoplay; encrypted-media; picture-in-picture"
@@ -55,39 +55,32 @@ function FindLinkType({link, size}){
         
     } else if (link.includes("x.com") || link.includes("twitter.com")) {
         console.log("Rendering X embed for:", link);
-        return <XEmbed url={link} size={size} />;
+        //return <XEmbed url={link}/>;
+        return <p className="text-sm text-text-error">{"X " + t("link not supported")}</p>;
+
     } else if (link.includes("facebook.com")) {
         const fbEmbed = getFbEmbedUrl(link);
         if(!fbEmbed){
-            return <p className="text-sm text-text-error">Facebook link not supported.</p>;
+            return <p className="text-sm text-text-error">{"Facebook " + t("link not supported")}</p>;
         }
         return (
-            <div className={`${size} relative overflow-hidden rounded-lg`}>
-                <iframe
-                    src={fbEmbed}
-                    title="Facebook sample"
-                    className="absolute inset-0 w-full h-full"
-                    style={{
-                        border: "none",
-                        width: "100%",
-                        height: "400px",
-                        overflow: "hidden"
-                    }}
-                    scrolling="no"
-                    frameBorder="0"
-                    allow="encrypted-media; picture-in-picture"
-                    allowFullScreen
-                    loading="lazy"
-                />
-            </div>
+            <iframe
+                src={fbEmbed}
+                title="Facebook sample"
+                className="w-full h-175"
+                allow="encrypted-media; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+            />
         )
+
     } else if (link.includes("tiktok.com")) {
         const url = link.slice(0, link.indexOf("?"));
-        return <TikTokEmbed url={url} size={size}/>;
+        return <TikTokEmbed url={url}/>;
     }
 
     // If sound sample is not found -> return not found 
-    return <p className="text-sm text-text-error">{t("sound sample") + t("not found")}</p>;
+    return <p className="text-sm text-text-error">{t("sound sample") + " " + t("not found")}</p>;
 }
 
 // --- Function to check if the URL is a YouTube link and get the video ID ---
@@ -136,7 +129,7 @@ function getInstaEmbedUrl(u) {
 }
 
 //sets up X embeds
-function XEmbed({ url, size }) {
+function XEmbed({ url }) {
     // make x and twitter urls the same so x becomes twitter
     let normalizedUrl = url;
     try {
@@ -179,22 +172,18 @@ function XEmbed({ url, size }) {
 
     //return the media player for X
     return (
-        <div className={`${size} overflow-hidden rounded-lg`}>
-            <div className="w-full max-w-full overflow-hidden">
-                <blockquote 
-                    className="twitter-tweet" 
-                    data-media-max-width="400"
-                    style={{maxWidth:"100%"}}
-                >
-                    <a href={normalizedUrl}>Loading tweet…</a>
-                </blockquote>
-            </div>
-        </div>
+        <blockquote 
+            className="twitter-tweet"
+            data-media-max-width="400"
+            style={{maxWidth:"100%"}}
+        >
+            <a href={normalizedUrl}>Loading tweet…</a>
+        </blockquote>
     );
 }
 
 // Setup TikTok embeds
-function TikTokEmbed({ url, size }) {
+function TikTokEmbed({ url }) {
     const script = document.createElement('script');
     script.src = 'https://www.tiktok.com/embed.js';
     script.async = true;
@@ -202,7 +191,7 @@ function TikTokEmbed({ url, size }) {
 
     return (
         <blockquote 
-            className={`${size} tiktok-embed transform -translate-y-5`}
+            className="tiktok-embed transform -translate-y-5"
             cite={url}
             data-video-id={url.split('/').pop()}
         >
@@ -237,7 +226,7 @@ function getFbEmbedUrl(u){
 }
 
 
-function FindFileType({ fileName, size }) {
+function FindFileType({ fileName }) {
     const [filePath, setFilePath] = useState(null);
     const [fileType, setFileType] = useState(null); // "video" | "audio" | "link" | null
     const [error, setError] = useState(null);
@@ -290,7 +279,7 @@ function FindFileType({ fileName, size }) {
     if (fileType === "video") {
         return (
             <video
-                className={size}
+                className="aspect-video"
                 src={filePath}
                 controls
                 preload="metadata"
@@ -303,7 +292,7 @@ function FindFileType({ fileName, size }) {
     if (fileType === "audio") {
         return (
             <audio
-                className={size}
+                className="aspect-video"
                 src={filePath}
                 controls
                 preload="metadata"

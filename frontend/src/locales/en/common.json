@@ -55,5 +55,6 @@
   "noUpcomingEvent": "No Upcoming Events",
   "loading": "Loading",
   "not_admin": "You do not have access to this resource",
-  "not found": "not found"
+  "not found": "not found",
+  "link not supported": "link not supported"
 }
