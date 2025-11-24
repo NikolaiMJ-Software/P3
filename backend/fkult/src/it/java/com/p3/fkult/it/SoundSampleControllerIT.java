@@ -52,7 +52,7 @@ public class SoundSampleControllerIT {
     @Order(2)
     void uploadLink() throws Exception{
         String json = """
-            {"link":"https://example.com/random.mp3", "userId":2}
+            {"link":"https://youtube.com/random.mp3", "userId":2}
         """;
 
         MockMultipartFile soundSampleJson = new MockMultipartFile("soundSample", "", "application/json", json.getBytes());
