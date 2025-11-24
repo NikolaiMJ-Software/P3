@@ -31,12 +31,14 @@ async function addSoundSample(link, file, userId) {
             method: "POST",
             body: formData,
         });
+
+        const text = await response.text();
     
         if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
+            throw new Error(text);
         }
     
-        return response.text();
+        return text;
 
     } catch (error) {
         console.error("Upload failed:", error);
@@ -45,7 +47,7 @@ async function addSoundSample(link, file, userId) {
 }
 
 // Create data form for sound sample deletion (with either link or file name)
-async function deleteSoundSample(soundSample) {
+async function deleteSoundSample(soundSample, id) {
     let link, fileName;
     if (soundSample.includes("https://")){
         link = soundSample;
@@ -59,6 +61,8 @@ async function deleteSoundSample(soundSample) {
         } else if (fileName) {
             formData.append("fileName", fileName);
         }
+        //add id to formData
+        formData.append("id", id.toString());
     
         // Send DELETE request to backend
         const response = await fetch(`${API_URL}/delete`, {

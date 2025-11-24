@@ -115,12 +115,12 @@ public class SoundSampleTest {
         Files.writeString(testFile.toPath(), "dummy data");
 
         // Act
-        String response = service.delete(null, fileName);
+        String response = service.delete(null, fileName, "1");
 
         // Assert
         assertNull(response, "Service should return null since repository mock returns null");
         assertFalse(testFile.exists(), "File should have been deleted");
-        verify(repository, times(1)).delete(isNull(), contains(fileName));
+        verify(repository, times(1)).delete(isNull(), contains(fileName), eq("1"));
     }
 
     @Test
@@ -129,14 +129,15 @@ public class SoundSampleTest {
 
         // Arrange
         String link = "http://example.com/test-sample.mp3";
-        when(repository.delete(eq(link), isNull())).thenReturn("Reached database succesfully");
+        String id ="1";
+        when(repository.delete(eq(link), isNull(), eq(id))).thenReturn("Reached database succesfully");
 
         // Act
-        String response = service.delete(link, null);
+        String response = service.delete(link, null, id);
 
         // Assert
         assertEquals("Reached database succesfully", response);
-        verify(repository, times(1)).delete(eq(link), isNull());
+        verify(repository, times(1)).delete(eq(link), isNull(), eq(id));
     }
 
     @Test
@@ -147,11 +148,11 @@ public class SoundSampleTest {
         String invalidFileName = "nonexistent.wav";
 
         // Act
-        String response = service.delete(null, invalidFileName);
+        String response = service.delete(null, invalidFileName, "1");
 
         // Assert
         assertTrue(response.contains(invalidFileName + ". Aborting database deletion.")); // Checks last part of string
-        verify(repository, times(0)).delete(isNull(), eq(invalidFileName));
+        verify(repository, times(0)).delete(isNull(), eq(invalidFileName), eq("2"));
     }
 
     private List<SoundSample> createTargetSamples() {

@@ -55,5 +55,6 @@
   "noUpcomingEvent": "Ingen Opkommende Events",
   "loading": "Indlæser",
   "not_admin": "Du har ikke adgang til denne resurse",
-  "not found": "ikke fundet"
+  "not found": "ikke fundet",
+  "link not supported": "linket understøttes ikke"
 }

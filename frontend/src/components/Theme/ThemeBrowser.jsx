@@ -121,8 +121,8 @@ console.log("Merged events:", mergedEvents);
                     {/* individual cards */}
                     {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={onCreateTheme} showActions={true} onDelete={handleDeleteTheme} onEdit={(theme) => setEditingTheme(theme)} ></ThemeCollection>)}
                     {editingTheme && (<EditTheme theme={editingTheme} onClose={() => setEditingTheme(null)}/>)}
-                    {selected === "old" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
-                    {selected === "new" && (<ThemeCollection isCreator={true} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
+                    {selected === "old" && (<ThemeCollection isCreator={false} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
+                    {selected === "new" && (<ThemeCollection isCreator={false} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
                 </div>
             </div>
         </div>

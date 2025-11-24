@@ -26,7 +26,9 @@ export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie, se
 
                 </div>
             </div>
-            <DrinkingRuleCreator  rules={rules} setRules={setRules}></DrinkingRuleCreator>
+            <div className="w-full max-w-full overflow-x-hidden">
+                <DrinkingRuleCreator rules={rules} setRules={setRules}/>
+            </div>
         </div>
     )
 }
