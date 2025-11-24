@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { getNextEvent } from "../../services/eventService.jsx";
 import { getMoviesByTconsts } from "../../services/movieService.jsx";
+import logoPNG from '../../assets/logo.png';
 
 export default function NextTheme() {
   const {t} = useTranslation();
@@ -67,6 +68,47 @@ export default function NextTheme() {
     );
   }
 
+  if(event.name === null){
+    return (
+      <div className="rounded-2xl border px-4 py-4 bg-white [container-type:inline-size]">
+        {/* header/date */}
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-text-secondary">{t('nextTheme')}</span>
+          <span className="text-sm font-medium text-text-secondary">{formatDate(event.timestamp)}</span>
+        </div>
+
+        {/* title */}
+        <div className="mt-4 w-full rounded-md border px-3 py-2">
+          <p className="text-lg font-bold text-center truncate" title="start date">
+            F-Kult Start
+          </p>
+        </div>
+
+        {/* movies */}
+        <div
+          className="mt-4 overflow-x-auto pb-2 pr-2"
+        >
+          <div className="flex w-full gap-3 px-2 snap-x snap-mandatory">
+              <div
+                className="
+                aspect-[2/3] w-full max-h-[18rem]
+                overflow-hidden rounded-md
+                "
+              >
+                {/* poster */}
+                <div className="w-full max-h overflow-hidden align-items: center;">
+                  <img
+                    src={logoPNG}
+                    alt="logo for f-kult"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-2xl border px-4 py-4 bg-white [container-type:inline-size]">
