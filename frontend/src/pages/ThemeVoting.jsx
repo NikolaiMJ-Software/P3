@@ -13,7 +13,7 @@ export default function ThemeVoting() {
   const [inputValue, setInputValue] = useState("");
   const [timerStart] = useState(60);
   const [timerResetKey, setTimerResetKey] = useState(0);
-  const [votingPhase, setVotingPhase] = useState("initial"); // "initial", "ongoing"
+  const [isVotingOngoing, setIsVotingOngoing] = useState(false);
 
   // Fetch all themes on page load
   useEffect(() => {
@@ -30,10 +30,10 @@ export default function ThemeVoting() {
   }, []);
 
   useEffect(() => {
-    if (votingPhase === "ongoing" && numberOfWinners > 0) {
+    if (isVotingOngoing === true && numberOfWinners > 0) {
       finishVoting();
     }
-  }, [votingPhase]);
+  }, [isVotingOngoing]);
 
   // Function to updates votes for the current theme
   const submitVote = (votes) => {
@@ -69,6 +69,11 @@ export default function ThemeVoting() {
   // Function to end voting and schedule events
   const endVoting = async () => {
     
+    if (isVotingOngoing) {
+      finishVoting();
+      return;
+    }
+
     // Check if all themes have been voted on
     const unvotedThemes = unVotedThemes.filter(
       (t) => t.votes === null || t.votes === undefined
@@ -89,7 +94,7 @@ export default function ThemeVoting() {
         return;
       }
       setNumberOfWinners(numberOfWinners);
-      setVotingPhase("ongoing");
+      setIsVotingOngoing(true);
       return; // Exit to allow re-clicking "End voting"
     }
   };
@@ -132,44 +137,98 @@ export default function ThemeVoting() {
     const startDate = new Date(`${firstEvent}T16:30:00`);
 
     // Schedule events for each winner (2 weeks apart)
-    for (let i = 0; i < winningThemes.length; i++) {
+    for (let i = 0; i < winners.length; i++) {
 
       const eventDate = new Date(startDate);
       eventDate.setDate(startDate.getDate() + i * 14);
       const formattedDate = eventDate.toISOString().slice(0, 19);
 
       try {
-        const result = await uploadEvent(formattedDate, winningThemes[i].themeId);
+        const result = await uploadEvent(formattedDate, winners[i].themeId);
         console.log(`Event uploaded for ${formattedDate}:`, result);
       } catch (err) {
         console.error("Failed to upload event:", formattedDate, err);
       }
     }
-    setVotingPhase("initial")
+    deleteAllThemesExcept(winners);
+    updateWinningThemes(winners);
+    alert("Voting concluded and events scheduled!");
+    setIsVotingOngoing(false);
+    window.open("/admin/events", "_self");
   };
 
-// Buttons to navigate themes
-const handleNext = () => {
-  setCurrentIndex((prev) => (prev + 1) % unVotedThemes.length);
-  resetTimer();
-};
-const handlePrevious = () => {
-  setCurrentIndex((prev) => (prev === 0 ? unVotedThemes.length - 1 : prev - 1));
-  resetTimer();
-};
+  const updateWinningThemes = async (winners) => {
+    try {
+      for (const theme of winners) {
+        await updateThemeVotes(theme.themeId, theme.votes, true);
+      }
+    } catch (err) {
+      console.error("Failed to update winning themes:", err);
+    }
+  }
 
-// Reset the timer to the current timerStart value
-const resetTimer = () => {
-  // Increment a dummy state to trigger useEffect in ThemeVotingDisplay
-  setTimerResetKey((prev) => prev + 1);
-};
+  const deleteAllThemesExcept = async (keptThemes) => {
+    try {
+      // Normalize kept IDs to numbers for reliable comparisons
+      const winningIds = keptThemes.map(t => Number(t.themeId));
+
+      // Identify which themes we will delete (client-side)
+      const toDelete = themes.filter(t => !winningIds.includes(Number(t.themeId)));
+
+      if (toDelete.length === 0) {
+        console.log("No themes to delete.");
+        return { deleted: [], failed: [] };
+      }
+
+      const deleted = [];
+      const failed = [];
+
+      // Delete sequentially — this helps server-side clarity and logging
+      for (const t of toDelete) {
+        const id = Number(t.themeId);
+        try {
+          await deleteTheme(id); // make sure deleteTheme expects a numeric id
+          deleted.push(id);
+          console.log(`Deleted theme with ID: ${id}`);
+        } catch (err) {
+          console.error(`Failed to delete theme with ID: ${id}`, err);
+          failed.push({ id, err });
+        }
+      }
+
+      // Update client state to remove deleted themes
+      setThemes(prev => prev.filter(t => !deleted.includes(Number(t.themeId))));
+      setUnVotedThemes(prev => prev.filter(t => !deleted.includes(Number(t.themeId))));
+
+      return { deleted, failed };
+    } catch (err) {
+      console.error("Unexpected error in deleteAllThemesExcept:", err);
+      return { deleted: [], failed: [{ err }] };
+    }
+  };
+
+  // Buttons to navigate themes
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % unVotedThemes.length);
+    resetTimer();
+  };
+  const handlePrevious = () => {
+    setCurrentIndex((prev) => (prev === 0 ? unVotedThemes.length - 1 : prev - 1));
+    resetTimer();
+  };
+
+  // Reset the timer to the current timerStart value
+  const resetTimer = () => {
+    // Increment a dummy state to trigger useEffect in ThemeVotingDisplay
+    setTimerResetKey((prev) => prev + 1);
+  };
 
 
-if (unVotedThemes.length === 0) return <p>Loading themes...</p>;
+  if (unVotedThemes.length === 0) return <p>Loading themes...</p>;
 
-const currentTheme = unVotedThemes[currentIndex];
+  const currentTheme = unVotedThemes[currentIndex];
 
-return (
+  return (
     <div className="flex flex-col h-screen">
 
       {/* Timer at the top right corner */ }

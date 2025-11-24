@@ -70,10 +70,10 @@ public class SoundSampleService {
     }
 
     // Handles deletion of existing sound sample from given link or file name
-    public String delete(String link, String fileName) {
+    public String delete(String link, String fileName, String id) {
 
         // Input validation
-        if (link == null && fileName == null) {
+        if (link == null && fileName == null && id == null) {
             return "No link or file path provided for deletion.";
         }
         if (link != null && fileName != null) {
@@ -97,7 +97,7 @@ public class SoundSampleService {
         }
 
         // Delete sound sample object in the database
-        return repository.delete(link, filePath);
+        return repository.delete(link, filePath, id);
     }
 
     // Get all sound samples
@@ -120,6 +120,7 @@ public class SoundSampleService {
         List<User> allUsers = userService.getAllUsers();
         String name = null, username = null;
         for (SoundSample soundSample : allSoundSamples) {
+            Long id = soundSample.getId();
             // Convert userId to username
             for (User user : allUsers) {
                 if (soundSample.getUserId().equals(user.getId())) {
@@ -139,10 +140,10 @@ public class SoundSampleService {
                     fileName = filePath.substring(folder.length() + indexFolder, filePath.length());
                 }
 
-                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(fileName, username, name);
+                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(fileName, username, name, id);
                 soundSamplesRequests.add(soundSamplesRequest);
             } else {
-                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(soundSample.getLink(), username, name);
+                SoundSampleRequest soundSamplesRequest = new SoundSampleRequest(soundSample.getLink(), username, name, id);
                 soundSamplesRequests.add(soundSamplesRequest);
             }
         }

@@ -84,8 +84,10 @@ public class SoundSampleControllerIT {
     @Order(4)
     void deleteByFileName() throws Exception {
         MockMultipartFile fileName = new MockMultipartFile("fileName", "", "text/plain", UPLOAD_FILENAME.getBytes());
+        MockMultipartFile id = new MockMultipartFile("id", "", "text/plain", "1".getBytes()
+    );
 
-        mvc.perform(multipart("/api/sound-sample/delete").file(fileName).with(req -> {req.setMethod("DELETE"); return req;}))
+        mvc.perform(multipart("/api/sound-sample/delete").file(fileName).file(id).with(req -> {req.setMethod("DELETE"); return req;}))
         .andExpect(status().isOk()).andExpect(content().string(notNullValue()));
 
         Assertions.assertFalse(Files.exists(Path.of(UPLOAD_DIR, UPLOAD_FILENAME)), "File should be deleted by the service before DB deletion");
@@ -94,7 +96,8 @@ public class SoundSampleControllerIT {
     @Test
     @Order(5)
     void deleteMissingValue() throws Exception {
-        mvc.perform(multipart("/api/sound-sample/delete").with(req -> {req.setMethod("DELETE"); return req;}))
+        MockMultipartFile id = new MockMultipartFile("id", "", "text/plain", "1".getBytes());
+        mvc.perform(multipart("/api/sound-sample/delete").file(id).with(req -> {req.setMethod("DELETE"); return req;}))
         .andExpect(status().isOk()).andExpect(content().string(containsString("No link or file")));
     }
 
