@@ -11,6 +11,7 @@ public class SoundSample implements HasUserId{
     private Integer userCount;
     private double userWeight;
     private File file;
+    private long id;
 
     public SoundSample() {}
 
@@ -32,6 +33,10 @@ public class SoundSample implements HasUserId{
     }
     public File getFile() {
         return this.file;
+    }
+
+    public long getId(){
+        return this.id;
     }
 
     @Override
@@ -56,6 +61,9 @@ public class SoundSample implements HasUserId{
     }
     public void setUserId(Long userId){
         this.userId = userId;
+    }
+    public void setId(long id){
+        this.id = id;
     }
 
     @Override

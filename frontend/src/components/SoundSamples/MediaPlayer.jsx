@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { getSoundsampleFile } from "../../services/soundSampleService";
 
 export default function MediaPlayer({soundSample}){
+    
     if (soundSample === null) {
         return null;
     }
