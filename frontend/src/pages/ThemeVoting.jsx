@@ -3,6 +3,7 @@ import { fetchShuffledThemes, updateThemeVotes, deleteTheme } from "../services/
 import { uploadEvent } from "../services/eventService";
 import ThemeVotingDisplay from "../components/Theme/ThemeVotingDisplay";
 import Timer from "../components/Timer";
+import WheelOfFortunePage from "./WheelOfFortunePage.jsx";
 
 export default function ThemeVoting() {
   const [themes, setThemes] = useState([]);
@@ -14,6 +15,8 @@ export default function ThemeVoting() {
   const [timerStart] = useState(60);
   const [timerResetKey, setTimerResetKey] = useState(0);
   const [isVotingOngoing, setIsVotingOngoing] = useState(false);
+  const [showWheelPopup, setShowWheelPopup] = useState(false);
+  const [wheelNames, setWheelNames] = useState([]);
 
   // Fetch all themes on page load
   useEffect(() => {
@@ -116,6 +119,16 @@ export default function ThemeVoting() {
 
         // Remove them from sorted
         sorted = sorted.filter(t => t.votes !== currentVotes);
+
+        if (winners.length === numberOfWinners) {
+          const highestVotesRemaining = sorted[0]?.votes;
+          const runnerUps = sorted.filter(t => t.votes === highestVotesRemaining);
+          const runnerUpNames = runnerUps.flatMap(t => t.movieNames);
+          setWheelNames(runnerUpNames);
+          setShowWheelPopup(true);
+          return;
+        }
+
       } else {
         // Too many tied to fill the remaining slots → trigger tie-break
         setUnVotedThemes(tiedThemes);
@@ -288,6 +301,22 @@ export default function ThemeVoting() {
           </button>
         </div>
       </div>
+      {showWheelPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg w-11/12 max-w-4xl relative">
+
+            {/* Close button */}
+            <button
+              onClick={() => setShowWheelPopup(false)}
+              className="absolute top-4 right-4 text-black text-xl font-bold"
+            >
+              ×
+            </button>
+
+            <WheelOfFortunePage entries={wheelNames} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
