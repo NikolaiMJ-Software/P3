@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getSoundsampleFile } from "../../services/soundSampleService";
 
+
 export default function MediaPlayer({soundSample, size}){
+    
     if (soundSample === null) {
         return null;
     }

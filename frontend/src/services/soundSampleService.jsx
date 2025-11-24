@@ -31,12 +31,14 @@ async function addSoundSample(link, file, userId) {
             method: "POST",
             body: formData,
         });
+
+        const text = await response.text();
     
         if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
+            throw new Error(text);
         }
     
-        return response.text();
+        return text;
 
     } catch (error) {
         console.error("Upload failed:", error);
