@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import trashPNG from '../../assets/trashCan.png';
+import arrowPNG from '../../assets/down-arrow.png';
 import { deleteSoundSample } from "../../services/soundSampleService.jsx";
 import MediaPlayer from "./MediaPlayer.jsx";
 
@@ -30,17 +31,15 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
         <>
             {soundSamples.map((soundSample, i) =>  {
                 const visibility = (showenCard - 1 < i) ? " hidden" : " block";
-                const deleteBtn = witch === "users" ? <img src={trashPNG} alt={`Delete sound sample: ${soundSample.soundSample}`}/> : "";
+                const eventBtn = witch === "users" ? <img src={trashPNG} alt={`Delete sound sample: ${soundSample.soundSample}`}/> : <img src={arrowPNG} alt={`Drobdown sound sample: ${soundSample.soundSample}`}/>;
 
                 return <div key={soundSample.id} className={cardDesign + visibility} data-testid={`${SSid}-${soundSample.soundSample}`}>
                     <div className={"flex flex-col" + pointer} onClick={() => onToggel(soundSample.soundSample)}>
                         <div className="flex justify-between items-center m-4">
                             <h2 className={"text-sm text-text-secondary"}>{soundSample.usersFullName}</h2>
-                            {witch === "users" && (
-                                <div className="w-5 h-5 cursor-pointer hover:bg-btn-hover-secondary" onClick={() => deleteSS(soundSample.soundSample, soundSample.id)}>
-                                    {deleteBtn}
-                                </div>
-                            )}
+                            <div className="w-5 h-5 cursor-pointer hover:bg-btn-hover-secondary" onClick={witch === "users" ? () => deleteSS(soundSample.soundSample, soundSample.id) : ""}>
+                                {eventBtn}
+                            </div>
                         </div>
                         <div className={witch === "users" ? "h-32 overflow-y-auto" : (allSSMediaPlayer[soundSample.soundSample] || "h-15 overflow-hidden")}>
                             <MediaPlayer soundSample={soundSample.soundSample}/>
