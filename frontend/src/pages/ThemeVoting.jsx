@@ -13,6 +13,7 @@ export default function ThemeVoting() {
   const [inputValue, setInputValue] = useState("");
   const [timerStart] = useState(60);
   const [timerResetKey, setTimerResetKey] = useState(0);
+  const [votingPhase, setVotingPhase] = useState("initial"); // "initial", "ongoing"
 
   // Fetch all themes on page load
   useEffect(() => {
@@ -27,6 +28,12 @@ export default function ThemeVoting() {
     }
     loadThemes();
   }, []);
+
+  useEffect(() => {
+    if (votingPhase === "ongoing" && numberOfWinners > 0) {
+      finishVoting();
+    }
+  }, [votingPhase]);
 
   // Function to updates votes for the current theme
   const submitVote = (votes) => {
@@ -82,9 +89,12 @@ export default function ThemeVoting() {
         return;
       }
       setNumberOfWinners(numberOfWinners);
+      setVotingPhase("ongoing");
       return; // Exit to allow re-clicking "End voting"
     }
+  };
 
+  const finishVoting = async () => {
     // Sort and select n winners
     let sorted = [...unVotedThemes].sort((a, b) => (b.votes || 0) - (a.votes || 0));
     let winners = [... winningThemes];
@@ -105,7 +115,7 @@ export default function ThemeVoting() {
         // Too many tied to fill the remaining slots → trigger tie-break
         setUnVotedThemes(tiedThemes);
         setCurrentIndex(0);
-        alert("There is a tie among the top themes. Please re-vote to break the tie.");
+        alert("There is a tie among some themes. Please re-vote to break the tie.");
         return;
       }
     }
@@ -135,6 +145,7 @@ export default function ThemeVoting() {
         console.error("Failed to upload event:", formattedDate, err);
       }
     }
+    setVotingPhase("initial")
   };
 
 // Buttons to navigate themes
