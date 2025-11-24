@@ -38,8 +38,9 @@ public class SoundSampleController {
     @DeleteMapping("/delete")
     public String delete(
             @RequestPart(value = "link", required = false) String link,
-            @RequestPart(value = "fileName", required = false) String fileName) {
-        return service.delete(link, fileName);
+            @RequestPart(value = "fileName", required = false) String fileName,
+            @RequestPart(value = "id", required = true) String id) {
+        return service.delete(link, fileName, id);
     }
 
     // Fetch function to get all sound samples 

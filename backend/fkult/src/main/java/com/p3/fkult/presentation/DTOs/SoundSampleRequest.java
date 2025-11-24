@@ -4,11 +4,13 @@ public class SoundSampleRequest {
     private String usersFullName;
     private String username;
     private String soundSample;
+    private long id;
     
-    public SoundSampleRequest(String soundSample, String username, String usersFullName) {
+    public SoundSampleRequest(String soundSample, String username, String usersFullName, long id) {
         this.soundSample = soundSample;
         this.username = username;
         this.usersFullName = usersFullName;
+        this.id = id;
     }
 
     // Getters
@@ -21,6 +23,9 @@ public class SoundSampleRequest {
     public String getUsersFullName() {
         return usersFullName;
     }
+    public Long getId(){
+        return id;
+    }
 
     // Setters
     public void setSoundSample(String soundSample) {
@@ -28,5 +33,8 @@ public class SoundSampleRequest {
     }
     public void setUsername(String username) {
         this.username = username;
+    }
+    public void setId(long id){
+        this.id = id;
     }
 }
