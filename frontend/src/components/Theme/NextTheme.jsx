@@ -89,21 +89,17 @@ export default function NextTheme() {
           className="mt-4 overflow-x-auto pb-2 pr-2"
         >
           <div className="flex w-full gap-3 px-2 snap-x snap-mandatory">
-              <div
-                className="
-                aspect-[2/3] w-full max-h-[18rem]
-                overflow-hidden rounded-md
-                "
-              >
                 {/* poster */}
-                <div className="w-full max-h overflow-hidden align-items: center;">
+                <div
+                  className="aspect-[2/3] max-h-[18rem] w-full overflow-hidden rounded-md 
+                            flex items-center justify-center bg-white"
+                >
                   <img
                     src={logoPNG}
                     alt="logo for f-kult"
-                    className="w-full h-full object-cover"
+                    className="max-h-full max-w-full object-contain"
                   />
                 </div>
-              </div>
           </div>
         </div>
       </div>
