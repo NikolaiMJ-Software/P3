@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getSoundsampleFile } from "../../services/soundSampleService";
 
@@ -55,8 +55,8 @@ function FindLinkType({link}){
         
     } else if (link.includes("x.com") || link.includes("twitter.com")) {
         console.log("Rendering X embed for:", link);
-        //return <XEmbed url={link}/>;
-        return <XEmbed url={link}/>;;
+        return <XEmbed url={link}/>;
+        //return <p className="text-sm text-text-error">{"X " + t("link not supported")}</p>;
 
     } else if (link.includes("facebook.com")) {
         const fbEmbed = getFbEmbedUrl(link);
@@ -130,78 +130,34 @@ function getInstaEmbedUrl(u) {
 
 //sets up X embeds
 function XEmbed({ url }) {
-  const containerRef = useRef(null);
-
-  //normalize the url so x urls become twitter urls
-  let normalizedUrl = url;
-  try {
-    const u = new URL(url);
-    if (u.hostname === "x.com" || u.hostname === "www.x.com") {
-      u.hostname = "twitter.com";
-      normalizedUrl = u.toString();
-    }
-  } catch (err) {
-    console.warn("Invalid X/Twitter URL:", url, err);
-  }
-
-  //useEffect to set of media container
-  useEffect(() => {
-    if (typeof window === "undefined" || !containerRef.current) return;
-
-    //X embed widget path
-    const scriptSrc = "https://platform.twitter.com/widgets.js";
-
-    //function to load the widget
-    function loadWidget() {
-      if (!window.twttr || !window.twttr.widgets || !containerRef.current) return;
-
-      // if mediaplayer is already loaded, dont reload it
-      if (containerRef.current.getAttribute("data-tweet-rendered") === "true") {
-        return;
-      }
-      containerRef.current.setAttribute("data-tweet-rendered", "true");
-
-      //define the link id from the normalized url
-      const linkId = normalizedUrl.split("/").pop().split("?")[0];
-
-      //set up the media player widget using the linkId and the container
-      window.twttr.widgets.createTweet(linkId, containerRef.current, {
-        align: "center",
-      });
+    let normalizedUrl = url;
+    // make x and twitter urls the same so x becomes twitter
+    try {
+        const u = new URL(url);
+        if (u.hostname === "x.com" || u.hostname === "www.x.com") {
+            u.hostname = "twitter.com";
+            normalizedUrl = u.toString();
+        }
+    } catch (err) {
+        console.warn("Invalid X/Twitter URL:", url, err);
+        return <p className="text-sm text-text-error">{"X " + t("link not supported")}</p>;
     }
 
-    //test if the widget script is inserted, if not insert it, else just load the widget
-    const existingScript = document.querySelector(`script[src="${scriptSrc}"]`);
-    if (!existingScript) {
-      const script = document.createElement("script");
-      script.src = scriptSrc;
-      script.async = true;
-      script.charset = "utf-8";
-      script.onload = loadWidget;
-      document.body.appendChild(script);
-    } else {
-      loadWidget();
-    }
+    const script = document.createElement('script');
+    script.src = 'https://platform.twitter.com/widgets.js';
+    script.async = true;
+    document.body.appendChild(script);
 
-    //end out with removing the attributes from the container, so its reset for future link inserstions which are not X
-    return () => {
-      if (containerRef.current) {
-        containerRef.current.removeAttribute("data-tweet-rendered");
-      }
-    };
-  }, [normalizedUrl]);
-
-  //return the widget
-  return (
-    <div
-      ref={containerRef}
-      style={{ maxWidth: "100%" }}
-      data-media-max-width="400"
-    />
-  );
+    return (
+        <blockquote 
+            className="twitter-tweet"
+            cite={normalizedUrl}
+            data-video-id={url.split('/').pop()}
+        >
+            <a href={normalizedUrl}>Loading X...</a>
+        </blockquote>
+    );
 }
-
-
 
 // Setup TikTok embeds
 function TikTokEmbed({ url }) {

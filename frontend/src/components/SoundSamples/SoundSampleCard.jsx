@@ -30,7 +30,7 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
 
         setallSSMediaPlayer(arr => ({
             ...arr,
-            [id]: arr[id] === " " ? "h-15 overflow-hidden" : " "
+            [id]: arr[id] === "flex justify-center" ? "h-15 overflow-hidden flex justify-center" : "flex justify-center"
         }));
     }
 
@@ -49,7 +49,7 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
                                 {eventBtn}
                             </div>
                         </div>
-                        <div className={witch === "users" ? "h-32 overflow-y-auto" : (allSSMediaPlayer[soundSample.id] || "h-15 overflow-hidden")}>
+                        <div className={witch === "users" ? "h-32 overflow-y-auto" : (allSSMediaPlayer[soundSample.id] || "h-15 overflow-hidden flex justify-center")}>
                             <MediaPlayer soundSample={soundSample.soundSample}/>
                         </div>
                     </div>
