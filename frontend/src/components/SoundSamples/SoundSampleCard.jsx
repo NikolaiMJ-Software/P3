@@ -7,7 +7,7 @@ import MediaPlayer from "./MediaPlayer.jsx";
 
 export default function SoundSampleCard({ soundSamples, witch, onDeleted, showenCard}) {
     const [allSSMediaPlayer, setallSSMediaPlayer] = useState({});
-    const [arrowPNG, setArrowPNG] = useState(rightArrowPNG);
+    const [arrowPNG, setArrowPNG] = useState({});
     
     // Choose the necessary card design
     const cardDesign = witch === "users" ? "card-primary" : "card-secondary";
@@ -22,14 +22,15 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
     }
 
     // Creating individual toggle to a card
-    const onToggel = (SSName) => {
-        setArrowPNG(
-            arrowPNG === rightArrowPNG ? downArrowPNG : rightArrowPNG
-        );
+    const onToggel = (id) => {
+        setArrowPNG(arr => ({
+            ...arr,
+            [id]: arr[id] === downArrowPNG ? rightArrowPNG : downArrowPNG
+        }));
 
         setallSSMediaPlayer(arr => ({
             ...arr,
-            [SSName]: arr[SSName] === " " ? "h-15 overflow-hidden" : " "
+            [id]: arr[id] === " " ? "h-15 overflow-hidden" : " "
         }));
     }
 
@@ -38,17 +39,17 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
         <>
             {soundSamples.map((soundSample, i) =>  {
                 const visibility = (showenCard - 1 < i) ? " hidden" : " block";
-                const eventBtn = witch === "users" ? <img src={trashPNG} alt={`Delete sound sample: ${soundSample.soundSample}`}/> : <img src={arrowPNG} alt={`Drobdown sound sample: ${soundSample.soundSample}`}/>;
+                const eventBtn = witch === "users" ? <img src={trashPNG} alt={`Delete sound sample: ${soundSample.soundSample}`}/> : <img src={(arrowPNG[soundSample.id] || rightArrowPNG)} alt={`Drobdown sound sample: ${soundSample.soundSample}`}/>;
 
                 return <div key={soundSample.id} className={cardDesign + visibility} data-testid={`${SSid}-${soundSample.soundSample}`}>
-                    <div className={"flex flex-col" + pointer} onClick={() => onToggel(soundSample.soundSample)}>
+                    <div className={"flex flex-col" + pointer} onClick={() => onToggel(soundSample.id)}>
                         <div className="flex justify-between items-center m-4">
                             <h2 className={"text-sm text-text-secondary"}>{soundSample.usersFullName}</h2>
                             <div className="w-5 h-5 cursor-pointer hover:bg-btn-hover-secondary" onClick={witch === "users" ? () => deleteSS(soundSample.soundSample, soundSample.id) : ""}>
                                 {eventBtn}
                             </div>
                         </div>
-                        <div className={witch === "users" ? "h-32 overflow-y-auto" : (allSSMediaPlayer[soundSample.soundSample] || "h-15 overflow-hidden")}>
+                        <div className={witch === "users" ? "h-32 overflow-y-auto" : (allSSMediaPlayer[soundSample.id] || "h-15 overflow-hidden")}>
                             <MediaPlayer soundSample={soundSample.soundSample}/>
                         </div>
                     </div>
