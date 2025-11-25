@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import trashPNG from '../../assets/trashCan.png';
-import arrowPNG from '../../assets/down-arrow.png';
+import downArrowPNG from '../../assets/down-arrow.png';
+import rightArrowPNG from '../../assets/left-arrow.png';
 import { deleteSoundSample } from "../../services/soundSampleService.jsx";
 import MediaPlayer from "./MediaPlayer.jsx";
 
 export default function SoundSampleCard({ soundSamples, witch, onDeleted, showenCard}) {
     const [allSSMediaPlayer, setallSSMediaPlayer] = useState({});
+    const [arrowPNG, setArrowPNG] = useState(rightArrowPNG);
+    
     // Choose the necessary card design
     const cardDesign = witch === "users" ? "card-primary" : "card-secondary";
     const SSid = witch === "users" ? "usersSS" : "allSS";
@@ -20,6 +23,10 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
 
     // Creating individual toggle to a card
     const onToggel = (SSName) => {
+        setArrowPNG(
+            arrowPNG === rightArrowPNG ? downArrowPNG : rightArrowPNG
+        );
+
         setallSSMediaPlayer(arr => ({
             ...arr,
             [SSName]: arr[SSName] === " " ? "h-15 overflow-hidden" : " "
