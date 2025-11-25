@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import WheelOfFortune from "../components/WheelOfFortune.jsx";
 import { useTranslation } from "react-i18next";
 
