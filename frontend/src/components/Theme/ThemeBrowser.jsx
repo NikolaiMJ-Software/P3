@@ -52,6 +52,8 @@ export default function ThemeBrowser({onCreateTheme}) {
 
 
     const handleDeleteTheme = async (id) => {
+        const youSureQuestionmark = window.confirm(t("youSure"));
+        if (!youSureQuestionmark) return;
         try {
         await deleteTheme(id);
         // update UI locally (optional but nice)
