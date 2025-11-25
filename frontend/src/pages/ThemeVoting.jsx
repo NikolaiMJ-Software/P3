@@ -154,7 +154,15 @@ export default function ThemeVoting() {
 
       const eventDate = new Date(startDate);
       eventDate.setDate(startDate.getDate() + i * 14);
-      const formattedDate = eventDate.toISOString().slice(0, 19);
+      const pad = (num) => String(num).padStart(2, "0");
+
+      const formattedDate =
+        `${eventDate.getFullYear()}-` +
+        `${pad(eventDate.getMonth() + 1)}-` +
+        `${pad(eventDate.getDate())}T` +
+        `${pad(eventDate.getHours())}:` +
+        `${pad(eventDate.getMinutes())}:` +
+        `00`;
 
       try {
         const result = await uploadEvent(formattedDate, winners[i].themeId);

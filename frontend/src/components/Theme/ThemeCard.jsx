@@ -140,6 +140,11 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp})
                     <MovieCardUpcoming key={movie.id ?? `${title}-movie-${i}`} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes} rating={movie.rating}/>
                 ))}
             </div>
+            {movies.length > 2 && (
+                <div className="pointer-events-none absolute right-0 top-1/2 h-[30%] w-10 flex items-center justify-end pr-1">
+                    <span className="text-xl text-text-secondary">›</span>
+                </div>
+            )}
         </div>
     )
 }
