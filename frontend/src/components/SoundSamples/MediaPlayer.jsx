@@ -30,6 +30,7 @@ function FindLinkType({link}){
                 className="w-full aspect-video"
                 src={"https://www.youtube.com/embed/" + ytLink}
                 title="YouTube sample"
+                frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 loading="lazy"
@@ -93,6 +94,10 @@ function getYtId(u) {
             // Split after the "/" and get the video ID part.
             var parts = x.pathname.split("/").filter(Boolean);
             return parts[0] || null;
+        }
+
+        if (u.includes("youtube.com/shorts")) {
+            return u.slice(u.lastIndexOf("/") + 1);
         }
 
         // If it's a normal YouTube link like youtube.com/watch?v=abcd
