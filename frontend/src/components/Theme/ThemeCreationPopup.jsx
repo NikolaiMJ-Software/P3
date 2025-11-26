@@ -19,6 +19,9 @@ export default function ThemeCreationPopup({setSelected}) {
     const [searchQuery, setSearchQuery] = useState("");
     const [foundMovies, setFoundMovies] = useState([]);
     const [movieCount, setMovieCount] = useState(0);
+    const [sortBy, setSortBy] = useState("rating");
+    const [sortDirection, setSortDirection] = useState("desc"); // "asc" | "desc"
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,7 +42,7 @@ export default function ThemeCreationPopup({setSelected}) {
             setTotalPageCount(Math.ceil(count / MOVIE_LIMIT));
 
             //fetch first page
-            const movies = await searchMovies(searchQuery, 1, MOVIE_LIMIT)
+            const movies = await searchMovies(searchQuery, 1, MOVIE_LIMIT, sortBy, sortDirection)
             setFoundMovies(movies);
         } catch (error){
             console.error("Error fetching data:", error);
@@ -47,13 +50,13 @@ export default function ThemeCreationPopup({setSelected}) {
         }
         }
         fetchData();
-    }, [searchQuery]);
+    }, [searchQuery, sortBy, sortDirection]);
 
     useEffect(() => {
         if (!searchQuery || searchQuery.trim() === "") return;
             const switchPage = async () => {
                 try {
-                    const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT)
+                    const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection)
                     setFoundMovies(movies);
                 }catch (error){
                     console.error("Error fetching data:",error);
@@ -61,7 +64,7 @@ export default function ThemeCreationPopup({setSelected}) {
                 }
         }
         switchPage();
-    }, [pageCount]);
+    }, [pageCount, sortBy, sortDirection]);
 
     useEffect(() => {
         const fetchMissingPosters = async () => {
@@ -142,11 +145,15 @@ export default function ThemeCreationPopup({setSelected}) {
                                         pageCount={pageCount}
                                         setPageCount={setPageCount}
                                         totalPageCount={totalPageCount}
-                                        setSearchQuery={setSearchQuery}>
+                                        setSearchQuery={setSearchQuery}
+                                        sortBy={sortBy}
+                                        setSortBy={setSortBy}
+                                        sortDirection={sortDirection}
+                                        setSortDirection={setSortDirection}>
                     </ThemeMovieSearcher>
                     </div>
                     {/* Right Theme Creator */}
-                    <div className="flex-1 min-w-[400px] max-w-[600px] h-[700px]">
+                    <div className="flex-1 min-w-[400px] max-w-[600px] h-[700px] overflow-y-auto">
                     <ThemeCreator
                         handleSubmit={handleSubmit}
                         movies={movies}

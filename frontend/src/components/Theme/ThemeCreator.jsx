@@ -17,13 +17,14 @@ export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie, se
                     </p>
                 );
             })()}
+            <div className="w-full max-w-[500px] overflow-x-auto overflow-y-hidden gap-">
+                <div className={"flex flex-row gap-4 items-center flex-nowrap"}>
+                    <div className={"flex flex-row gap-4 items-center"}>
+                        {movies.map(movie =>{
+                            return<ThemeMovieCard className="flex-shrink-0" title={movie.title} runtimeMinutes={movie.runtimeMinutes} moviePosterURL={movie.moviePosterURL} onRemove={() => handleRemoveMovie(movie.tConst)} isSeries={movie.isSeries} rating={movie.rating}></ThemeMovieCard>
+                        })}
 
-            <div className={"w-full max-w-[500px] overflow-x-auto overflow-y-hidden gap-"}>
-                <div className={"flex flex-row gap-4 items-center"}>
-                    {movies.map(movie =>{
-                        return<ThemeMovieCard title={movie.title} runtimeMinutes={movie.runtimeMinutes} moviePosterURL={movie.moviePosterURL} onRemove={() => handleRemoveMovie(movie.tConst)} isSeries={movie.isSeries} rating={movie.rating}></ThemeMovieCard>
-                    })}
-
+                    </div>
                 </div>
             </div>
             <div className="w-full max-w-full overflow-x-hidden">

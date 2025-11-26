@@ -87,9 +87,25 @@ public class MovieRepository {
         String sql = "UPDATE movie SET poster_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, posterURL, movieId);
     }
-    public List<Movie> searchMovies(String keyword, int page, int limit) {
+    public List<Movie> searchMovies(String keyword, int page, int limit, String sortBy, String direction) {
         int offset = (page - 1) * limit;
         String likePattern = keyword + "*"; // FTS5 prefix search
+
+        String column;
+
+        switch (sortBy == null ? "" : sortBy) {
+            case "year":        column = "m.year"; break;
+            case "runtime":     column = "m.runtime_minutes"; break;
+            case "alphabetical":column = "m.movie_name"; break;
+            case "rating":
+            default:            column = "m.rating"; break;
+        }
+        // Validate ASC / DESC 
+        String dir = (direction != null && direction.equalsIgnoreCase("asc")) ? "ASC" : "DESC";
+
+        // Build full ORDER BY clause
+        String sortColumn = column + " " + dir;
+
 
         String sql = """
         SELECT m.*
@@ -99,8 +115,9 @@ public class MovieRepository {
           AND m.is_active = 1
           AND m.year > 0
           AND m.runtime_minutes > 0
+        ORDER BY %s
         LIMIT ? OFFSET ?
-    """;
+    """.formatted(sortColumn);
 
         // Bind the same FTS keyword to both columns
         return jdbcTemplate.query(sql, rowMapper, likePattern, limit, offset);
