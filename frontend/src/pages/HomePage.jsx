@@ -63,7 +63,7 @@ export default function HomePage() {
             </div>
             <aside className="col-span-12 lg:col-span-3 lg:ml-2 pt-10">
                 <div className="sticky top-10 flex flex-col gap-4 z-10">
-                    <button className="btn-home-page w-full block"
+                    <button className="btn-secondary w-full block"
                         onClick={() => {navigate(`/faq/${user}`)}}>
                         Info
                     </button>
