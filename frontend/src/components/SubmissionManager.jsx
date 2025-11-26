@@ -72,7 +72,7 @@ function ThemeSubmissions(){
 
     //Filter time
     const filteredThemes = themes.filter(theme =>
-        theme.username.toLowerCase().includes(searchName.toLowerCase())
+        (theme.username.toLowerCase().includes(searchName.toLowerCase()) || theme.name.toLowerCase().includes(searchName.toLowerCase()))
     );
     const toggleTheme = (id) => {
         setExpandedTheme(expandedTheme === id ? null : id);
