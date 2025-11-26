@@ -3,6 +3,7 @@ import {useParams, useNavigate} from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {useEffect, useState} from "react";
 import {getFutureEvents, updateDate} from "../services/eventService.jsx";
+import CreateEvent from "./CreateEvent.jsx";
 
 export default function EventManager({ className }) {
     //get all the events
@@ -10,6 +11,7 @@ export default function EventManager({ className }) {
     const navigate = useNavigate();
     const {username} = useParams();
     const {t} = useTranslation();
+    const [createEvent, setCreateEvent] = useState(false);
 
     async function loadEvents() {
         const a = await getFutureEvents()
@@ -39,10 +41,14 @@ export default function EventManager({ className }) {
                         ))}
                     </div>
                     <div className={"m-2 w-1/5"}>
-                        <EventButton label={`${t("create")} ${t("event")}`}/>
+                        <EventButton label={`${t("create")} ${t("event")}`} onClick={()=> setCreateEvent(true)}/>
                     </div>
                 </div>
             </div>
+                {createEvent && (
+                    <CreateEvent onClose={()=> setCreateEvent(false)} />
+                )
+                }
         </div>
     )
 }
