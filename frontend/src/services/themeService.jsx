@@ -111,3 +111,12 @@ export async function updateTheme(themeId, name, tConsts, drinkingRules) {
 
   return response.text();
 }
+
+export async function getThemeById(themeId){
+    const response = await fetch(`${API_URL}/${themeId}`)
+    if (!response.ok){
+        throw new Error(`Failed to get theme ${themeId}: ${response.status}`)
+    }
+
+    return response.json()
+}
