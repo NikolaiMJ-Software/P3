@@ -11,12 +11,13 @@ export default function EventManager({ className }) {
     const {username} = useParams();
     const {t} = useTranslation();
 
+    async function loadEvents() {
+        const a = await getFutureEvents()
+        setEvents(a)
+        console.log(a)
+    }
     useEffect(() => {
-        async function loadEvents() {
-            const a = await getFutureEvents()
-            setEvents(a)
-            console.log(a)
-        }
+
         loadEvents()
     }, []);
 
@@ -34,7 +35,7 @@ export default function EventManager({ className }) {
                 <div className={"flex flex-row justify-between"}>
                     <div className={"flex-grow-1 border overflow-auto max-h-70"}>
                         {currentEvents.map(ev => (
-                            <Event id={ev.id} themeName={ev.name} date={ev.timestamp}/>
+                            <Event id={ev.id} themeName={ev.name} date={ev.timestamp} loadEvents={loadEvents}/>
                         ))}
                     </div>
                     <div className={"m-2 w-1/5"}>
@@ -54,17 +55,21 @@ function EventButton({ onClick, label }){
     )
 }
 
-function Event ({ id, themeName, date }){
+function Event ({ id, themeName, date, loadEvents }){
     const originalDate = date.split("T")[0]; // yyyy-mm-dd
     const [editing, setEditing] = useState(false);
     const [newDate, setNewDate] = useState(originalDate);
 
     async function changeDate() {
         try {
+            if (newDate === originalDate){
+                setEditing(false);
+                return
+            }
             console.log(`Updating date of event with id ${id} from ${originalDate} to ${newDate + " 16:45:00"}`)
             await updateDate(id, newDate+"T16:45:00")
             setEditing(false);
-
+            loadEvents()
         } catch (err) {
             console.error(err);
         }
