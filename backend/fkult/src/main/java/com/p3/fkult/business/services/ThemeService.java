@@ -5,6 +5,7 @@ import com.p3.fkult.persistence.entities.Movie;
 import com.p3.fkult.persistence.entities.Theme;
 import com.p3.fkult.persistence.entities.ThemeMovie;
 import com.p3.fkult.persistence.repository.*;
+import com.p3.fkult.presentation.DTOs.ThemeRequest;
 import com.p3.fkult.presentation.controllers.UserController;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,13 +31,13 @@ public class ThemeService {
         this.userRepository = userRepository;
         this.eventService = eventService;
     }
-    public List<UserController.ThemeRequest> getAllThemes() {
+    public List<ThemeRequest> getAllThemes() {
         List<Theme> themes =  themeRepository.findAll();
         System.out.println("Found themes: " + themes.size());
         return convertThemesToThemeRequests(themes);
     }
 
-    public List<UserController.ThemeRequest> getNewThemes() {
+    public List<ThemeRequest> getNewThemes() {
         LocalDateTime lastStartUpDate = eventService.getLastStartupDate();
         if (lastStartUpDate == null) {
             return convertThemesToThemeRequests(new ArrayList<>());
@@ -45,7 +46,7 @@ public class ThemeService {
         return convertThemesToThemeRequests(newThemes);
     }
 
-    public List<UserController.ThemeRequest> getOldThemes() {
+    public List<ThemeRequest> getOldThemes() {
         LocalDateTime lastStartUpDate = eventService.getLastStartupDate();
         if (lastStartUpDate == null) {
             return convertThemesToThemeRequests(new ArrayList<>());
@@ -54,13 +55,13 @@ public class ThemeService {
         return convertThemesToThemeRequests(oldThemes);
     }
 
-    public List<UserController.ThemeRequest> getUserThemes(String username) {
+    public List<ThemeRequest> getUserThemes(String username) {
         List<Theme> userThemes = themeRepository.findFromUser(userRepository.findIdByUsername(username));
         return convertThemesToThemeRequests(userThemes);
     }
 
     @Transactional
-    public void createTheme(UserController.ThemeRequest themeRequest){
+    public void createTheme(ThemeRequest themeRequest){
         //two birds one stone ahh line. assigns themeid AND saves theme to database
         long themeId = themeRepository.save(new Theme(themeRequest.getName(), themeRequest.getUserId())).getId();
 
@@ -73,7 +74,7 @@ public class ThemeService {
     }
 
     @Transactional
-    public void createThemeWithTConsts(UserController.ThemeRequest themeRequest){
+    public void createThemeWithTConsts(ThemeRequest themeRequest){
         Long userId = userRepository.findUser(themeRequest.getUsername()).getId();
         long themeId = themeRepository.save(new Theme(themeRequest.getName(), userId)).getId();
 
@@ -92,8 +93,8 @@ public class ThemeService {
         }
     }
     
-    private List<UserController.ThemeRequest> convertThemesToThemeRequests(List<Theme> themes) {
-        List<UserController.ThemeRequest> themeRequests =  new ArrayList<>();
+    private List<ThemeRequest> convertThemesToThemeRequests(List<Theme> themes) {
+        List<ThemeRequest> themeRequests =  new ArrayList<>();
         for(Theme theme : themes) {
             //constructing a themeRequest one by one
             String name = theme.getName();
@@ -114,7 +115,7 @@ public class ThemeService {
                     .stream()
                     .map(DrinkingRule::getRuleText)
                     .toList();
-            UserController.ThemeRequest themeRequest = new UserController.ThemeRequest(theme.getId(),  name, username, userId, movieIds, drinkingRules, theme.getTimestamp());
+            ThemeRequest themeRequest = new ThemeRequest(theme.getId(),  name, username, userId, movieIds, drinkingRules, theme.getTimestamp());
             themeRequest.settConsts(tconsts);
             themeRequests.add(themeRequest);
         };
@@ -123,7 +124,7 @@ public class ThemeService {
 
 
     @Transactional
-    public void updateThemeWithTConsts(UserController.ThemeRequest themeRequest){
+    public void updateThemeWithTConsts(ThemeRequest themeRequest){
         Long themeId = themeRequest.getThemeId();
         System.out.println("Updating themeId = " + themeId + " with request = " + themeRequest);
 

@@ -7,6 +7,7 @@ import com.p3.fkult.persistence.entities.Movie;
 import com.p3.fkult.persistence.entities.Theme;
 import com.p3.fkult.persistence.entities.ThemeMovie;
 import com.p3.fkult.persistence.repository.*;
+import com.p3.fkult.presentation.DTOs.ThemeRequest;
 import com.p3.fkult.presentation.controllers.UserController;
 import com.p3.fkult.persistence.entities.User;
 
@@ -72,7 +73,7 @@ public class ThemeServiceTest {
         when(drinkingRuleRepository.findByThemeId(2L)).thenReturn(List.of());
 
         // Act
-        List<UserController.ThemeRequest> result = service.getAllThemes();
+        List<ThemeRequest> result = service.getAllThemes();
 
         // Assert
         assertEquals(2, result.size());
@@ -100,7 +101,7 @@ public class ThemeServiceTest {
         when(drinkingRuleRepository.findByThemeId(5L)).thenReturn(List.of());
 
         // Act
-        List<UserController.ThemeRequest> result = service.getNewThemes();
+        List<ThemeRequest> result = service.getNewThemes();
 
         // Assert
         assertEquals(1, result.size());
@@ -111,7 +112,7 @@ public class ThemeServiceTest {
     void getNewThemes_WhenNoStartupEvent_ReturnsEmptyList() {
         when(eventService.getLastStartupDate()).thenReturn(null);
 
-        List<UserController.ThemeRequest> result = service.getNewThemes();
+        List<ThemeRequest> result = service.getNewThemes();
 
         assertTrue(result.isEmpty());
     }
@@ -132,7 +133,7 @@ public class ThemeServiceTest {
         when(drinkingRuleRepository.findByThemeId(1L)).thenReturn(List.of());
 
         // Act
-        List<UserController.ThemeRequest> result = service.getUserThemes("alice");
+        List<ThemeRequest> result = service.getUserThemes("alice");
 
         // Assert
         assertEquals(1, result.size());
@@ -147,8 +148,8 @@ public class ThemeServiceTest {
         List<Long> movieIds = List.of(100L, 200L);
         List<String> rules = List.of("Rule 1", "Rule 2");
 
-        UserController.ThemeRequest req =
-                new UserController.ThemeRequest(null, "Party", "test", 50L, movieIds, rules, null);
+        ThemeRequest req =
+                new ThemeRequest(null, "Party", "test", 50L, movieIds, rules, null);
 
         Theme saved = new Theme("Party", 50L);
         saved.setId(99L);
@@ -178,7 +179,7 @@ public class ThemeServiceTest {
         when(themeMovieRepository.findByThemeId(3L)).thenReturn(List.of());
         when(drinkingRuleRepository.findByThemeId(3L)).thenReturn(List.of());
 
-        List<UserController.ThemeRequest> result = service.getOldThemes();
+        List<ThemeRequest> result = service.getOldThemes();
 
         assertEquals(1, result.size());
         assertEquals("Old Theme", result.get(0).getName());
@@ -188,7 +189,7 @@ public class ThemeServiceTest {
     void getOldThemes_WhenNoStartupEvent_ReturnsEmptyList() {
         when(eventService.getLastStartupDate()).thenReturn(null);
 
-        List<UserController.ThemeRequest> result = service.getOldThemes();
+        List<ThemeRequest> result = service.getOldThemes();
 
         assertTrue(result.isEmpty());
     }
@@ -198,8 +199,8 @@ public class ThemeServiceTest {
     @Test
     void createThemeWithTConsts_SavesThemeMoviesAndRules() {
         // Arrange
-        UserController.ThemeRequest req =
-                new UserController.ThemeRequest(1L, "Horror Night", "alice", 10L,
+        ThemeRequest req =
+                new ThemeRequest(1L, "Horror Night", "alice", 10L,
                         List.of(), List.of("Sip every scream"), LocalDateTime.now());
         req.settConsts(List.of("tt001", "tt002"));
 
@@ -235,8 +236,8 @@ public class ThemeServiceTest {
     // updateThemeWithTConsts()
     @Test
     void updateThemeWithTConsts_UpdatesCorrectly() {
-        UserController.ThemeRequest req =
-                new UserController.ThemeRequest(5L, "Updated Theme", "alice", 10L,
+        ThemeRequest req =
+                new ThemeRequest(5L, "Updated Theme", "alice", 10L,
                         List.of(), List.of("Updated Rule"), LocalDateTime.now());
         req.settConsts(List.of("tt100"));
 
@@ -260,8 +261,8 @@ public class ThemeServiceTest {
     // updateThemeWithTConsts(): missing movie throws
     @Test
     void updateThemeWithTConsts_WhenMovieMissing_ThrowsException() {
-        UserController.ThemeRequest req =
-                new UserController.ThemeRequest(9L, "ThemeX", "Jens", 20L,
+        ThemeRequest req =
+                new ThemeRequest(9L, "ThemeX", "Jens", 20L,
                         List.of(), List.of("Rule X"), LocalDateTime.now());
         req.settConsts(List.of("ttMissing"));
 
