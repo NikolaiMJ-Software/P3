@@ -27,8 +27,10 @@ export default function SoundSampleBrowser({onCreateSS}) {
                 SS => SS.username.toLowerCase() === username.toLowerCase()
             );
             
-            setSoundSample([...SS].reverse());
-            setUsersSoundSample(usersSoundSample);
+            setSortAllText(sortAllSSText);
+            setSoundSample(sortAllSSText === "latest" ? SS : [...SS].reverse());
+            setSortUsersText(sortUsersSSText);
+            setUsersSoundSample(sortUsersSSText === "latest" ? usersSoundSample : [...usersSoundSample].reverse());
             console.log("All SS: ", SS);
             console.log("Users SS: ", usersSoundSample);
         } catch (error) {

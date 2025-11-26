@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { getSoundsampleFile } from "../../services/soundSampleService";
 
@@ -30,6 +30,7 @@ function FindLinkType({link}){
                 className="w-full aspect-video"
                 src={"https://www.youtube.com/embed/" + ytLink}
                 title="YouTube sample"
+                frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 loading="lazy"
@@ -56,7 +57,7 @@ function FindLinkType({link}){
     } else if (link.includes("x.com") || link.includes("twitter.com")) {
         console.log("Rendering X embed for:", link);
         //return <XEmbed url={link}/>;
-        return <p className="text-sm text-text-error">{"X " + t("link not supported")}</p>;
+        return <XEmbed url={link}/>;;
 
     } else if (link.includes("facebook.com")) {
         const fbEmbed = getFbEmbedUrl(link);
@@ -95,6 +96,10 @@ function getYtId(u) {
             return parts[0] || null;
         }
 
+        if (u.includes("youtube.com/shorts")) {
+            return u.slice(u.lastIndexOf("/") + 1);
+        }
+
         // If it's a normal YouTube link like youtube.com/watch?v=abcd
         if (x.hostname.indexOf("youtube.com") !== -1) {
             return x.searchParams.get("v"); // Get the value of the "v" parameter (the video ID).
@@ -130,57 +135,78 @@ function getInstaEmbedUrl(u) {
 
 //sets up X embeds
 function XEmbed({ url }) {
-    // make x and twitter urls the same so x becomes twitter
-    let normalizedUrl = url;
-    try {
-        const u = new URL(url);
-        if (u.hostname === "x.com" || u.hostname === "www.x.com") {
-            u.hostname = "twitter.com";
-            normalizedUrl = u.toString();
-        }
-    } catch (err) {
-        console.warn("Invalid X/Twitter URL:", url, err);
+  const containerRef = useRef(null);
+
+  //normalize the url so x urls become twitter urls
+  let normalizedUrl = url;
+  try {
+    const u = new URL(url);
+    if (u.hostname === "x.com" || u.hostname === "www.x.com") {
+      u.hostname = "twitter.com";
+      normalizedUrl = u.toString();
+    }
+  } catch (err) {
+    console.warn("Invalid X/Twitter URL:", url, err);
+  }
+
+  //useEffect to set of media container
+  useEffect(() => {
+    if (typeof window === "undefined" || !containerRef.current) return;
+
+    //X embed widget path
+    const scriptSrc = "https://platform.twitter.com/widgets.js";
+
+    //function to load the widget
+    function loadWidget() {
+      if (!window.twttr || !window.twttr.widgets || !containerRef.current) return;
+
+      // if mediaplayer is already loaded, dont reload it
+      if (containerRef.current.getAttribute("data-tweet-rendered") === "true") {
+        return;
+      }
+      containerRef.current.setAttribute("data-tweet-rendered", "true");
+
+      //define the link id from the normalized url
+      const linkId = normalizedUrl.split("/").pop().split("?")[0];
+
+      //set up the media player widget using the linkId and the container
+      window.twttr.widgets.createTweet(linkId, containerRef.current, {
+        align: "center",
+      });
     }
 
-    useEffect(() => {
-        if (typeof window === "undefined") return;
+    //test if the widget script is inserted, if not insert it, else just load the widget
+    const existingScript = document.querySelector(`script[src="${scriptSrc}"]`);
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = scriptSrc;
+      script.async = true;
+      script.charset = "utf-8";
+      script.onload = loadWidget;
+      document.body.appendChild(script);
+    } else {
+      loadWidget();
+    }
 
-        //define twitter/X embed widget
-        const scriptSrc = "https://platform.twitter.com/widgets.js";
+    //end out with removing the attributes from the container, so its reset for future link inserstions which are not X
+    return () => {
+      if (containerRef.current) {
+        containerRef.current.removeAttribute("data-tweet-rendered");
+      }
+    };
+  }, [normalizedUrl]);
 
-        function loadWidgets() {
-            if (window.twttr && window.twttr.widgets) {
-                window.twttr.widgets.load();
-            }
-        }
-
-        // Check if imdb widget script is already in the link:
-        const existingScript = document.querySelector(`script[src="${scriptSrc}"]`);
-
-        //if the script is not included, then append the script or else just load the original
-        if (!existingScript) {
-            const script = document.createElement("script");
-            script.src = scriptSrc;
-            script.async = true;
-            script.charset = "utf-8";
-            script.onload = loadWidgets;
-            document.body.appendChild(script);
-        } else {
-            loadWidgets();
-        }
-    }, [normalizedUrl]);
-
-    //return the media player for X
-    return (
-        <blockquote 
-            className="twitter-tweet"
-            data-media-max-width="400"
-            style={{maxWidth:"100%"}}
-        >
-            <a href={normalizedUrl}>Loading tweet…</a>
-        </blockquote>
-    );
+  //return the widget
+  return (
+    <div
+      ref={containerRef}
+      style={{ maxWidth: "100%" }}
+      data-media-max-width="400"
+    />
+  );
 }
+
+
 
 // Setup TikTok embeds
 function TikTokEmbed({ url }) {
