@@ -32,4 +32,9 @@ public class ThemeVotingController {
     public String deleteTheme(@PathVariable("id") long id) {
         return themeVotingService.DeleteTheme(id);
     }
+
+    @RequestMapping("/add-wheel-winner/{winningThemeId}/{movieId}")
+    public String addWheelWinner(@PathVariable long winningThemeId, @PathVariable Long movieId) {
+        return themeVotingService.AddWheelWinner(winningThemeId, movieId);
+    }
 }

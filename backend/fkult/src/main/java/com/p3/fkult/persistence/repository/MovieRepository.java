@@ -67,6 +67,10 @@ public class MovieRepository {
         }
     }
 
+    public Long findIdByName(String name){
+        return jdbcTemplate.queryForObject("SELECT id FROM movie WHERE movie_name = ?", Long.class, name);
+    }
+
     public String findNameById(Long id){
         return jdbcTemplate.queryForObject("SELECT movie_name FROM movie WHERE id = ?", String.class, id);
     }

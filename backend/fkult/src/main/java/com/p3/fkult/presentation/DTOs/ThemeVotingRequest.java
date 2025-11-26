@@ -11,12 +11,13 @@ public class ThemeVotingRequest {
     private List<String> movieNames;
     private List<String> moviePosters;
     private List<String> drinkingRules;
+    private List<Long> movieIds;
     private List<Long> ratings;
     private List<Long> runTimes;
 
     public ThemeVotingRequest() {}
 
-    public ThemeVotingRequest(Long themeId, Long votes, String themeName, String submitterName, List<String> movieNames, List<String> moviePosters, List<String> drinkingRules, List<Long> ratings, List<Long> runTimes) {
+    public ThemeVotingRequest(Long themeId, Long votes, String themeName, String submitterName, List<String> movieNames, List<String> moviePosters, List<String> drinkingRules, List<Long> movieIds, List<Long> ratings, List<Long> runTimes) {
         this.themeId = themeId;
         this.votes = votes;
         this.themeName = themeName;
@@ -24,6 +25,7 @@ public class ThemeVotingRequest {
         this.movieNames = movieNames;
         this.moviePosters = moviePosters;
         this.drinkingRules = drinkingRules;
+        this.movieIds = movieIds;
         this.ratings = ratings;
         this.runTimes = runTimes;
     }
@@ -36,6 +38,7 @@ public class ThemeVotingRequest {
     public List<String> getMovieNames(){return this.movieNames;}
     public List<String> getMoviePosters(){return this.moviePosters;}
     public List<String> getDrinkingRules(){return this.drinkingRules;}
+    public List<Long> getMovieIds(){return this.movieIds;}
     public List<Long> getRatings(){return this.ratings;}
     public List<Long> getRunTimes(){return this.runTimes;}
 
@@ -47,6 +50,7 @@ public class ThemeVotingRequest {
     public void setMovieNames(List<String> movieNames){this.movieNames = movieNames;}
     public void setMoviePosters(List<String> moviePosters){this.moviePosters = moviePosters;}
     public void setDrinkingRules(List<String> drinkingRules){this.drinkingRules = drinkingRules;}
+    public void setMovieIds(List<Long> movieIds){this.movieIds = movieIds;}
     public void setRatings(List<Long> ratings){this.ratings = ratings;}
     public void setRunTimes(List<Long> runTimes){this.runTimes = runTimes;}
 }

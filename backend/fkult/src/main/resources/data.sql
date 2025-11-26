@@ -55,9 +55,9 @@ VALUES
 
 -- Real startup day
 INSERT OR IGNORE INTO event (id,event_date, theme_id)
-VALUES (1,'2025-09-11 16:00:00', NULL);
+VALUES (1,'2025-09-11T16:00:00', NULL);
 INSERT OR IGNORE INTO event (id,event_date, theme_id)
-VALUES (2,'2026-09-11 16:00:00', NULL);
+VALUES (2,'2026-09-11T16:00:00', NULL);
 
 
 
@@ -106,25 +106,25 @@ VALUES
 (6,3, 'Take a sip whenever a ship appears on screen');
 
 INSERT INTO event (event_date, theme_id)
-SELECT '2026-02-05 16:45:00', 1
+SELECT '2026-02-05T16:45:00', 1
 WHERE NOT EXISTS (
   SELECT 1 FROM event
-  WHERE event_date = '2026-02-05 16:45:00'
+  WHERE event_date = '2026-02-05T16:45:00'
     AND theme_id   = 1
 );
 
 INSERT INTO event (event_date, theme_id)
-SELECT '2026-02-12 16:45:00', 2
+SELECT '2026-02-12T16:45:00', 2
 WHERE NOT EXISTS (
   SELECT 1 FROM event
-  WHERE event_date = '2026-02-12 16:45:00'
+  WHERE event_date = '2026-02-12T16:45:00'
     AND theme_id   = 2
 );
 
 INSERT INTO event (event_date, theme_id)
-SELECT '2026-02-19 16:45:00', 3
+SELECT '2026-02-19T16:45:00', 3
 WHERE NOT EXISTS (
   SELECT 1 FROM event
-  WHERE event_date = '2026-02-19 16:45:00'
+  WHERE event_date = '2026-02-19T16:45:00'
     AND theme_id   = 3
 );

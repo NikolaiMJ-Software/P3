@@ -111,3 +111,11 @@ export async function updateTheme(themeId, name, tConsts, drinkingRules) {
 
   return response.text();
 }
+
+export async function addWheelWinner(movieId, winningThemeId) {
+  const response = await fetch(`${API}/vote/add-wheel-winner/${winningThemeId}/${movieId}`);
+  if (!response.ok) {
+    throw new Error(`Failed to add wheel winner: ${response.status}`);
+  }
+  return response.text();
+}

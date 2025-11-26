@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import WheelOfFortune from "../components/WheelOfFortune.jsx";
 import { useTranslation } from "react-i18next";
 
-export default function WheelOfFortunePage({entries = []}) {
+export default function WheelOfFortunePage({entries = [], resultFunction}) {
   const initialText = entries.length
     ? entries.join("\n")
     : "Pirates\nThe Squad\nGruppe 6";
@@ -16,7 +16,7 @@ export default function WheelOfFortunePage({entries = []}) {
     .filter(Boolean);
 
   const handleResult = (value, index) => {
-    
+    resultFunction(value, index);
   };
   const handleRemove = (index) => {
    setEntriesText(prev => {
