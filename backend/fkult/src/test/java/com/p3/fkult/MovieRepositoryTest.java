@@ -158,7 +158,7 @@ public class MovieRepositoryTest {
         )).thenReturn(List.of());
 
         // Act
-        movieRepository.searchMovies("star", 1, 10);
+        movieRepository.searchMovies("star", 1, 10, null, null);
 
         // Assert
         verify(jdbcTemplate).query(

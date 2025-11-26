@@ -55,11 +55,16 @@ public class MovieController {
     @GetMapping("/search")
     public ResponseEntity<List<MovieRequest>> searchMovies(@RequestParam String q,
                                                            @RequestParam(defaultValue = "1") int page,
-                                                           @RequestParam(defaultValue = "6") int limit) {
+                                                           @RequestParam(defaultValue = "6") int limit,
+                                                           @RequestParam(defaultValue = "rating") String sortBy, 
+                                                           @RequestParam(defaultValue = "desc") String direction){
         if (limit > 40) limit = 40;
         if (limit < 0) limit = 0;
-        List<MovieRequest> results = movieService.searchMovies(q, page, limit);
-        if(results.size() <= 0) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        List<MovieRequest> results = movieService.searchMovies(q, page, limit, sortBy, direction);
+
+        if(results.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.ok(results);
     } // to test the search: GET http://localhost:8080/api/movies/search?q=MovieTitle&page=1
 

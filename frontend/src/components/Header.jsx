@@ -58,7 +58,7 @@ export default function Header(){
                 onClick={() => {navigate(`/${username}`)}}
             />
 
-            <h1 className="absolute left-1/2 -translate-x-1/2 top-2 text-center text-3xl">F-Kult</h1>
+            <h1 className="absolute left-1/2 -translate-x-1/2 top-2 text-center text-3xl hover:cursor-pointer" onClick={() => navigate(`/${username}`)}>F-Kult</h1>
 
             <div className="flex">
                 <NavButton
