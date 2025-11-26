@@ -2,16 +2,20 @@ package com.p3.fkult.business.services;
 
 import com.p3.fkult.persistence.entities.Theme;
 import com.p3.fkult.persistence.repository.*;
+import org.apache.coyote.Response;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.p3.fkult.persistence.entities.Event;
 import com.p3.fkult.persistence.entities.Theme;
 import com.p3.fkult.persistence.repository.*;
 import com.p3.fkult.presentation.DTOs.EventRequest;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +53,10 @@ public class EventService {
             e.printStackTrace();
             return "Event upload failed: " + e.getMessage();
         }
+    }
+
+    private String formatDate(LocalDateTime date){
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(date);
     }
 
     public List<Event> getAllEvents() {
@@ -95,14 +103,11 @@ public class EventService {
         return eventRequests;
     }
 
-
-
     public LocalDateTime getLastStartupDate(){
         Event event = eventRepository.getLastStartupEvent();
         return event.getEventDate();
         // NOT SURE HERE
     }
-
 
     public EventRequest getNextEvent() {
         List<EventRequest> futureEvents = getFutureEventsFromNow();
@@ -113,4 +118,13 @@ public class EventService {
         return futureEvents.get(0);
     }
 
+    public ResponseEntity<?> updateEventDate(long id, LocalDateTime date) {
+        try {
+            eventRepository.updateEventDate(id, formatDate(date));
+            return ResponseEntity.ok("Event upload complete!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Event upload failed: " + e.getMessage());
+        }
+    }
 }

@@ -2,7 +2,7 @@ import settingsPNG from "../assets/settings.png"
 import {useParams, useNavigate} from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {useEffect, useState} from "react";
-import {getFutureEvents} from "../services/eventService.jsx";
+import {getFutureEvents, updateDate} from "../services/eventService.jsx";
 
 export default function EventManager({ className }) {
     //get all the events
@@ -55,51 +55,43 @@ function EventButton({ onClick, label }){
 }
 
 function Event ({ id, themeName, date }){
-    const newDate = date.split("T")[0].split("-")
-    console.log(id)
+    const originalDate = date.split("T")[0]; // yyyy-mm-dd
+    const [editing, setEditing] = useState(false);
+    const [newDate, setNewDate] = useState(originalDate);
+
+    async function changeDate() {
+        try {
+            console.log(`Updating date of event with id ${id} from ${originalDate} to ${newDate + " 16:45:00"}`)
+            await updateDate(id, newDate+"T16:45:00")
+            setEditing(false);
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     return (
         <div className={"m-1 p-1.5 flex flex-row justify-between border rounded"}>
             <div className={"m-1 grow-1 text-center border"}>
-                {themeName === null ? "Startup Day" : themeName}
+                {themeName ?? "Startup Day"}
             </div>
-            <div className={"p-1 m-1 border w-32 text-center"}>
-                {`${newDate[2]}-${newDate[1]}/${newDate[0]}`}
+            <div className="p-1 m-1 border w-40 text-center">
+                {!editing ? (
+                    originalDate.split("-").reverse().join("-")
+                ) : (
+                    <input
+                        type="date"
+                        className="border p-1"
+                        value={newDate}
+                        onChange={(e) => setNewDate(e.target.value)}
+                        onBlur={changeDate}
+                        autoFocus
+                    />
+                )}
             </div>
             <div className={"m-1 content-center"}>
-                <img onClick={() => console.log("hi")} className={"h-6 w-6 cursor-pointer"} src={settingsPNG} alt={"settings"}/>
+                <img onClick={() => setEditing(!editing)} className={"h-6 w-6 cursor-pointer"} src={settingsPNG} alt={"settings"}/>
             </div>
         </div>
     )
-}
-
-function DatePopup({ x, y, date, onClose, onChange }) {
-    return (
-        <div
-            style={{
-                position: "fixed",
-                top: y,
-                left: x,
-                background: "white",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-                padding: "8px",
-                zIndex: 9999,
-            }}
-        >
-            <input
-                type="date"
-                defaultValue={date}
-                onChange={(e) => onChange(e.target.value)}
-                autoFocus
-            />
-
-            <button
-                onClick={onClose}
-                style={{ marginLeft: "8px" }}
-            >
-                Close
-            </button>
-        </div>
-    );
 }

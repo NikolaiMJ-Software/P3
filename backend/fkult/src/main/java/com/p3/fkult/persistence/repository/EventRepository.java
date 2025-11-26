@@ -100,4 +100,8 @@ public class EventRepository {
     public void updateThemeId(Long eventId, Long themeId) {
         jdbcTemplate.update("UPDATE event SET theme_id = ? WHERE id = ?", themeId, eventId);
     }
+
+    public void updateEventDate(long id, String date){
+        jdbcTemplate.update("UPDATE event SET event_date = ? WHERE id = ? ", date, id);
+    }
 }
