@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.List;
 
 @Repository
@@ -65,5 +66,42 @@ public class EventRepository {
 
     private static LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return (timestamp != null) ? timestamp.toLocalDateTime() : null;
+    }
+
+    // Find the id of the event happening today (within 24 hours of now)
+    public Long findIdOfStartupDayToday() {
+        String sql = "SELECT id, event_date, theme_id " +
+        "FROM event " +
+        "WHERE event_date > DATETIME('now', '-24 hours') " +
+        "AND theme_id IS NULL " +
+        "ORDER BY " +
+        "ABS(strftime('%s', event_date) - strftime('%s','now')) ASC, " +
+        "id ASC " +
+        "LIMIT 1";
+        List<Event> events = jdbcTemplate.query(sql, rowMapper);
+        if (events.isEmpty()){
+            return null;
+        }
+        Event event = events.get(0);
+        /*
+        LocalDateTime eventDate = event.getEventDate();
+        LocalDateTime now = LocalDateTime.parse("2026-09-11T00:00:00");
+        
+        long hoursBetween = Duration.between(now, eventDate).abs().toHours();
+
+        if (hoursBetween > 24) {
+            return null;
+        }
+        */ // Removed time check since it doesn't handle dummy data well
+        return event.getId();
+    }
+
+    // Update the theme_id of an event
+    public void updateThemeId(Long eventId, Long themeId) {
+        jdbcTemplate.update("UPDATE event SET theme_id = ? WHERE id = ?", themeId, eventId);
+    }
+
+    public void updateEventDate(long id, String date){
+        jdbcTemplate.update("UPDATE event SET event_date = ? WHERE id = ? ", date, id);
     }
 }

@@ -8,6 +8,9 @@ import com.p3.fkult.presentation.DTOs.ThemeVotingRequest;
 import com.p3.fkult.persistence.repository.ThemeRepository;
 import com.p3.fkult.persistence.repository.UserRepository;
 import com.p3.fkult.persistence.repository.MovieRepository;
+import com.p3.fkult.persistence.repository.EventRepository;
+import com.p3.fkult.persistence.repository.ThemeMovieRepository;
+import com.p3.fkult.persistence.entities.ThemeMovie;
 
 @Service
 public class ThemeVotingService {
@@ -17,11 +20,16 @@ public class ThemeVotingService {
     private final ThemeService themeService;
     private final UserRepository userRepository;
     private final MovieRepository movieRepository;
-    public ThemeVotingService(ThemeService themeService, ThemeRepository themeRepository, UserRepository userRepository, MovieRepository movieRepository) {
+    private final EventRepository eventRepository;
+    private final ThemeMovieRepository themeMovieRepository;
+
+    public ThemeVotingService(ThemeService themeService, ThemeRepository themeRepository, UserRepository userRepository, MovieRepository movieRepository, EventRepository eventRepository, ThemeMovieRepository themeMovieRepository) {
         this.themeService = themeService;
         this.themeRepository = themeRepository;
         this.userRepository = userRepository;
         this.movieRepository = movieRepository;
+        this.eventRepository = eventRepository;
+        this.themeMovieRepository = themeMovieRepository;
     }
 
     // Get shuffled list of themes that avoid repeated user ids
@@ -53,11 +61,13 @@ public class ThemeVotingService {
             List<String> moviePosters = new ArrayList<>();
             List<Long> ratings = new ArrayList<>();
             List<Long> runTime = new ArrayList<>();
+            List<Long> movieIds = new ArrayList<>();
 
             for (int j = 0; j < themeInfo.get(i).getMovieIds().size(); j++){
 
                 Long movieId = themeInfo.get(i).getMovieIds().get(j);
 
+                movieIds.add(movieId);
                 movieNames.add(movieRepository.findNameById(movieId));
                 moviePosters.add(movieRepository.findPosterById(movieId));
                 ratings.add(movieRepository.findRatingById(movieId));
@@ -67,6 +77,7 @@ public class ThemeVotingService {
             singularTheme.setMoviePosters(moviePosters);
             singularTheme.setRatings(ratings);
             singularTheme.setRunTimes(runTime);
+            singularTheme.setMovieIds(movieIds);
 
             // Add the singularTheme to the themeData list
             themeData.add(singularTheme);
@@ -116,6 +127,26 @@ public class ThemeVotingService {
             return "Deleted theme with id: " + id;
         } catch (Exception error) {
             return "failed to delete theme for id " + id + " due to error: " + error;
+        }
+    }
+
+    public String AddWheelWinner(Long winningThemeId, Long movieId) {
+        try{
+            Long eventId = eventRepository.findIdOfStartupDayToday();
+            if (eventId == null) {
+                return "Could not find an event happening today to add the wheel winner to.";
+            }
+
+            // Edit the theme to only have the winning movie
+            themeMovieRepository.deleteByThemeId(winningThemeId);
+            themeMovieRepository.save(new ThemeMovie(winningThemeId, movieId));
+
+            // Update the event to have the winning theme
+            eventRepository.updateThemeId(eventId, winningThemeId);
+
+            return "Added wheel winner with movie ID: " + movieId + " to todays startup day!";
+        } catch (Exception error) {
+            return "failed to add wheel winner with movie ID: " + movieId + " due to error: " + error;
         }
     }
 }

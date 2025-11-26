@@ -64,6 +64,8 @@ function ThemeSubmissions(){
     }, []);
 
     async function themeDelete(id) {
+        const youSureQuestionmark = window.confirm(t("youSure"));
+        if (!youSureQuestionmark) return;
         await deleteTheme(id).then(loadThemes)
     }
 
@@ -199,6 +201,8 @@ function SoundSampleSubmissions() {
     }
 
     async function batchDelete() {
+        const youSureQuestionmark = window.confirm(t("youSure"));
+        if (!youSureQuestionmark) return;
         console.log(toBeDeleted)
         if (!toBeDeleted.length) return;
 

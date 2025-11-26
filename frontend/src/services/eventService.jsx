@@ -73,3 +73,20 @@ export async function getNextEvent() {
     throw error;
   }
 }
+
+export async function updateDate(id, date) {
+    try {
+        const response = await fetch(`${API_URL}/changeDate/${id}`,{
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(date),
+        });
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`)
+        }
+        return await response.text()
+    } catch (error) {
+        console.log("Error updating event date", error);
+        throw error;
+    }
+}

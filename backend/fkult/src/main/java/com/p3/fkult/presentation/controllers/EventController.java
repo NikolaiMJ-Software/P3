@@ -6,16 +6,10 @@ import java.util.List;
 import com.p3.fkult.presentation.DTOs.EventRequest;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.p3.fkult.business.services.EventService;
 import com.p3.fkult.persistence.entities.Event;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -60,6 +54,15 @@ public class EventController {
         return ResponseEntity.ok(next);
     }
 
+    // Change date of event
+    @PutMapping("/changeDate/{id}")
+    public ResponseEntity<?> putNewDate(@PathVariable long id,  @RequestBody LocalDateTime date) {
+        if (date == null) {
+            return ResponseEntity.status(400).body("No body received");
+        }
+        return service.updateEventDate(id, date);
+
+    }
 
     
 }

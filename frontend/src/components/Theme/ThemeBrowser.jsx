@@ -39,7 +39,7 @@ export default function ThemeBrowser({onCreateTheme}) {
                 console.error("Error loading themes:", err);
                 setThemes([]);
             });
-    }, [selected, isPopupOpen]);
+    }, [selected, isPopupOpen, editingTheme]);
 
     useEffect(() =>{
         getFutureEvents().then(data => {
@@ -52,6 +52,8 @@ export default function ThemeBrowser({onCreateTheme}) {
 
 
     const handleDeleteTheme = async (id) => {
+        const youSureQuestionmark = window.confirm(t("youSure"));
+        if (!youSureQuestionmark) return;
         try {
         await deleteTheme(id);
         // update UI locally (optional but nice)

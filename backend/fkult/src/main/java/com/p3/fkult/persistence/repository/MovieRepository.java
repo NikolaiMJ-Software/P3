@@ -67,6 +67,10 @@ public class MovieRepository {
         }
     }
 
+    public Long findIdByName(String name){
+        return jdbcTemplate.queryForObject("SELECT id FROM movie WHERE movie_name = ?", Long.class, name);
+    }
+
     public String findNameById(Long id){
         return jdbcTemplate.queryForObject("SELECT movie_name FROM movie WHERE id = ?", String.class, id);
     }
@@ -177,7 +181,7 @@ public class MovieRepository {
 
             String tconst = c[0];
             String titleType = c[1];
-            if (onlyMovies && !( "movie".equals(titleType) || "tvSeries".equals(titleType) )) {continue;}
+            if (onlyMovies && !( "movie".equals(titleType) || "tvSeries".equals(titleType) || "short".equals(titleType) )) {continue;}
 
             Integer seriesType;
             if ("tvSeries".equals(titleType)){seriesType = 1;}else{seriesType = 0;}
@@ -191,6 +195,7 @@ public class MovieRepository {
             Integer startYear = parseIntOrNull(c[5]);
             Integer runtime   = parseIntOrNull(c[7]);
             if (startYear != null && (startYear < 1888 || startYear > currentYear)) continue;
+            if (runtime == null || runtime <= 0) continue;
 
             upserts.add(new Object[]{ tconst, movieName, originalTitle, startYear, runtime, seriesType });
             if (markInactiveMissing) seen.add(new Object[]{ tconst });

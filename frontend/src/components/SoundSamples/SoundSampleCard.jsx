@@ -4,10 +4,12 @@ import downArrowPNG from '../../assets/down-arrow.png';
 import rightArrowPNG from '../../assets/left-arrow.png';
 import { deleteSoundSample } from "../../services/soundSampleService.jsx";
 import MediaPlayer from "./MediaPlayer.jsx";
+import { useTranslation } from "react-i18next";
 
 export default function SoundSampleCard({ soundSamples, witch, onDeleted, showenCard}) {
     const [allSSMediaPlayer, setallSSMediaPlayer] = useState({});
     const [arrowPNG, setArrowPNG] = useState({});
+    const { t } = useTranslation();
     
     // Choose the necessary card design
     const cardDesign = witch === "users" ? "card-primary" : "card-secondary";
@@ -16,6 +18,8 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
 
     // Delete a spesafic sound sample
     const deleteSS = async (soundSample, id) => {
+        const youSureQuestionmark = window.confirm(t("youSure"));
+        if (!youSureQuestionmark) return;
         const resText = await deleteSoundSample(soundSample, id);
         console.log(resText);
         onDeleted();

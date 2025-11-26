@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { fetchShuffledThemes, updateThemeVotes, deleteTheme } from "../services/themeService";
+import { useState, useEffect, use } from "react";
+import { fetchShuffledThemes, updateThemeVotes, deleteTheme, addWheelWinner } from "../services/themeService";
 import { uploadEvent } from "../services/eventService";
 import ThemeVotingDisplay from "../components/Theme/ThemeVotingDisplay";
 import Timer from "../components/Timer";
@@ -17,6 +17,9 @@ export default function ThemeVoting() {
   const [isVotingOngoing, setIsVotingOngoing] = useState(false);
   const [showWheelPopup, setShowWheelPopup] = useState(false);
   const [wheelNames, setWheelNames] = useState([]);
+  const [runnerUpDetermined, setRunnerUpDetermined] = useState(false);
+  const [runnerUpMeta, setRunnerUpMeta] = useState([]);
+  const [runnerUpWinnerId, setRunnerUpWinnerId] = useState(null);
 
   // Fetch all themes on page load
   useEffect(() => {
@@ -33,10 +36,10 @@ export default function ThemeVoting() {
   }, []);
 
   useEffect(() => {
-    if (isVotingOngoing === true && numberOfWinners > 0) {
+    if ((isVotingOngoing === true && numberOfWinners > 0) || (runnerUpWinnerId !== null)) {
       finishVoting();
     }
-  }, [isVotingOngoing]);
+  }, [isVotingOngoing, runnerUpWinnerId]);
 
   // Function to updates votes for the current theme
   const submitVote = (votes) => {
@@ -120,12 +123,20 @@ export default function ThemeVoting() {
         // Remove them from sorted
         sorted = sorted.filter(t => t.votes !== currentVotes);
 
-        if (winners.length === numberOfWinners) {
-          const highestVotesRemaining = sorted[0]?.votes;
-          const runnerUps = sorted.filter(t => t.votes === highestVotesRemaining);
-          const runnerUpNames = runnerUps.flatMap(t => t.movieNames);
-          setWheelNames(runnerUpNames);
+        if (winners.length === numberOfWinners && runnerUpDetermined === false) {
+          const runnerUpThemes = sorted.filter(t => t.votes === sorted[0]?.votes);
+          const runnerUpMovies = runnerUpThemes.flatMap(t => t.movieNames);
+
+          setRunnerUpMeta(runnerUpThemes.flatMap(theme =>
+            theme.movieNames.map((title, index) => ({
+              themeId: theme.themeId,
+              movieId: theme.movieIds[index],
+            }))
+          ));
+
+          setWheelNames(runnerUpMovies);
           setShowWheelPopup(true);
+          setRunnerUpDetermined(true);
           return;
         }
 
@@ -171,10 +182,9 @@ export default function ThemeVoting() {
         console.error("Failed to upload event:", formattedDate, err);
       }
     }
-    deleteAllThemesExcept(winners);
+    deleteAllThemesExcept([...winners, runnerUpWinnerId]);
     updateWinningThemes(winners);
     alert("Voting concluded and events scheduled!");
-    setIsVotingOngoing(false);
     window.open("/admin/events", "_self");
   };
 
@@ -226,6 +236,15 @@ export default function ThemeVoting() {
       console.error("Unexpected error in deleteAllThemesExcept:", err);
       return { deleted: [], failed: [{ err }] };
     }
+  };
+
+  const handleWheelResult = async (value, index) => {
+    setShowWheelPopup(false);
+    const winningThemeId = runnerUpMeta[index].themeId;
+    const winningMovieId = runnerUpMeta[index].movieId;
+    const response = await addWheelWinner(winningMovieId, winningThemeId);
+    setRunnerUpWinnerId(winningMovieId);
+    console.log(response);
   };
 
   // Buttons to navigate themes
@@ -321,7 +340,7 @@ export default function ThemeVoting() {
               ×
             </button>
 
-            <WheelOfFortunePage entries={wheelNames} />
+            <WheelOfFortunePage entries={wheelNames} resultFunction={handleWheelResult}/>
           </div>
         </div>
       )}
