@@ -25,6 +25,7 @@ public class EventRequest {
         this.tConsts = tConsts;
     }
     public EventRequest(Long id, LocalDateTime timestamp){
+        this.id = id;
         this.timestamp = timestamp;
     }
 

@@ -34,7 +34,7 @@ export default function EventManager({ className }) {
                 <div className={"flex flex-row justify-between"}>
                     <div className={"flex-grow-1 border overflow-auto max-h-70"}>
                         {currentEvents.map(ev => (
-                            <Event themeId={ev.id} themeName={ev.name} date={ev.timestamp}/>
+                            <Event id={ev.id} themeName={ev.name} date={ev.timestamp}/>
                         ))}
                     </div>
                     <div className={"m-2 w-1/5"}>
@@ -54,9 +54,9 @@ function EventButton({ onClick, label }){
     )
 }
 
-function Event ({ themeId, themeName, date }){
+function Event ({ id, themeName, date }){
     const newDate = date.split("T")[0].split("-")
-    console.log(themeId)
+    console.log(id)
 
     return (
         <div className={"m-1 p-1.5 flex flex-row justify-between border rounded"}>
