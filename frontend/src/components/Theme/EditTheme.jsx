@@ -175,6 +175,7 @@ useEffect(() => {
               movies={movies}
               handleRemoveMovie={handleRemoveMovie}
               setTitle={setTitle}
+              title={title}
               rules={rules}
               setRules={setRules}
             />

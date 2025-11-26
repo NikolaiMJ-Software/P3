@@ -10,6 +10,7 @@ export default function AdminPage(){
     const {username} = useParams();
     const [isAdminUser, setIsAdminUser] = useState(undefined);
     const {t} = useTranslation();
+    const navigate = useNavigate();
 
     //check if {username} is admin
     useEffect(() => {
@@ -48,10 +49,7 @@ export default function AdminPage(){
     }
     else if (isAdminUser === 0){
         return (
-            <div>
-                <p>{t("not_admin")}</p>
-
-            </div>
+            navigate(`/${username}`)
         )
     }
 

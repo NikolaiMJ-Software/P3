@@ -17,8 +17,7 @@ export default function SubmitSSPage() {
     const [validSS, setValidSS] = useState(null);
 
     // Handles sound sample submission
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
 
         // Sanitize input
         const trimmedLink = link?.trim();
@@ -63,18 +62,17 @@ export default function SubmitSSPage() {
     // HTML of the page
     return (
         <div className={"p-10 relative"}>
-            <form className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col items-center gap-3"}>
+            <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col items-center gap-3"}>
                 {/* URL input */}
                 <div className="flex justify-center">
-                    <label>
-                        <input
-                            id="textField"
-                            className="border px-2 py-1 rounded w-64"
-                            type="text" 
-                            placeholder={t("insertLink")}
-                            onChange={(e) => setUrl(e.target.value)}
-                        />
-                    </label>
+                    <input
+                        id="textField"
+                        className="border px-2 py-1 rounded w-64"
+                        type="text" 
+                        placeholder={t("insertLink")}
+                        onChange={(e) => setUrl(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" && (e.preventDefault(), handleSubmit())}
+                    />
                 </div>
 
                 <div className="flex justify-center">
@@ -97,7 +95,7 @@ export default function SubmitSSPage() {
                 <div className="flex justify-center gap-6">
                     <button className="btn-primary"
                         type="button"
-                        onClick={(e) => handleSubmit(e)}>
+                        onClick={() => handleSubmit()}>
                         {t("submit")}
                     </button>
                 </div>
@@ -108,7 +106,7 @@ export default function SubmitSSPage() {
                 </div>
 
                 <MediaPlayer soundSample={validSS}/>
-            </form>
+            </div>
         </div>
     );
 }

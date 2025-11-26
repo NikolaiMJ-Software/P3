@@ -29,7 +29,7 @@ public class SoundSampleController {
     );
 
     private static final Set<String> ALLOWED_LINK_DOMAINS = Set.of(
-        "youtube.com", "youtu.be", "x.com", "twitter.com", "instagram.com", "facebook.com"
+        "youtube.com", "youtu.be", "x.com", "twitter.com", "instagram.com", "facebook.com", "tiktok.com"
     );
 
     // Download copy of soundsampleservice to use its functions
