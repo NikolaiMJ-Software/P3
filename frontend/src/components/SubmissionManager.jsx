@@ -175,7 +175,6 @@ function SoundSampleSubmissions() {
     async function loadSamples() {
         const items = await getSoundSamples();
         console.log(items)
-
         //return the array
         setSamples(items);
     }
@@ -189,26 +188,25 @@ function SoundSampleSubmissions() {
         sample.usersFullName.toLowerCase().includes(searchName.toLowerCase())
     );
 
-    const addToDelete = (soundSample) => {
-        console.log(toBeDeleted)
+    const addToDelete = (object) => {
+        console.log(object)
         if (toBeDeleted === undefined) return
-        console.log(soundSample)
         setDeletion(arr => {
-            return arr.includes(soundSample)
-                ? arr.filter(item => item !== soundSample)
-                : [...arr, soundSample]
+            return arr.some(({ id }) => id === object.id)
+                ? arr.filter(item => item.id !== object.id)
+                : [...arr, object]
         })
+        console.log(toBeDeleted)
     }
 
     async function batchDelete() {
-        const youSureQuestionmark = window.confirm(t("youSure"));
-        if (!youSureQuestionmark) return;
         console.log(toBeDeleted)
         if (!toBeDeleted.length) return;
+        const youSureQuestionmark = window.confirm(t("youSure"));
+        if (!youSureQuestionmark) return;
 
         // Create an array of promises
-        const deletePromises = toBeDeleted.map(sample =>
-            deleteSoundSample(sample)
+        const deletePromises = toBeDeleted.map(sample => deleteSoundSample(sample.soundSample, sample.id)
         );
 
         // Wait until all deletions are finished
@@ -259,7 +257,7 @@ function SoundSample({ item, onCheck }) {
             {/* User */}
             <SubmissionPart content={item.usersFullName}/>
             {/* Checkbox */}
-            <input className={"m-2 size-6"} type={"checkbox"} onChange={() => onCheck(item.soundSample)}/>
+            <input className={"m-2 size-6"} type={"checkbox"} onChange={() => onCheck({ id: item.id, soundSample: item.soundSample})}/>
         </div>
     )
 }

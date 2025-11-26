@@ -48,6 +48,7 @@ async function addSoundSample(link, file, userId) {
 
 // Create data form for sound sample deletion (with either link or file name)
 async function deleteSoundSample(soundSample, id) {
+    console.log(soundSample, id)
     let link, fileName;
     if (soundSample.includes("https://")){
         link = soundSample;
