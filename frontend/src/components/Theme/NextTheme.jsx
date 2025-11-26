@@ -145,9 +145,15 @@ export default function NextTheme() {
                   {movie.title}
                 </p>
                 {/* rating */}
-                {movie.rating && (<p className="text-xs text-center text-text-secondary mb-1">
-                    {movie.rating}/10 <span>⭐</span>
-                </p>)}
+                <p className="text-xs text-center text-text-secondary mb-1">
+                    {movie.rating ? (
+                        <>
+                            {movie.rating}/10 <span>⭐</span>
+                        </>
+                    ) : (
+                        <>No rating available</>
+                    )}
+                </p>
 
                 {/* poster */}
                 <div className="aspect-[2/3] w-full max-h-[18rem] overflow-hidden rounded-md shadow-sm border bg-text-secondary/10">
