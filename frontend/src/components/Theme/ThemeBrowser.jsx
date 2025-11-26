@@ -39,7 +39,7 @@ export default function ThemeBrowser({onCreateTheme}) {
                 console.error("Error loading themes:", err);
                 setThemes([]);
             });
-    }, [selected, isPopupOpen]);
+    }, [selected, isPopupOpen, editingTheme]);
 
     useEffect(() =>{
         getFutureEvents().then(data => {
