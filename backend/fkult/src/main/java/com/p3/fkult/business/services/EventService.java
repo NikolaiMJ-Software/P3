@@ -46,8 +46,9 @@ public class EventService {
             ZoneId systemZone = ZoneId.systemDefault();
             ZonedDateTime utcTime = eventDate.atZone(ZoneOffset.UTC);
             LocalDateTime localDateTime = utcTime.withZoneSameInstant(systemZone).toLocalDateTime();
+            String formattedDate = formatDate(localDateTime);
 
-            eventRepository.save(localDateTime, themeId);
+            eventRepository.save(formattedDate, themeId);
             return "Event upload complete!";
         } catch (Exception e) {
             e.printStackTrace();
