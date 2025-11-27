@@ -25,7 +25,8 @@ import java.nio.file.Paths;
 
 @Service
 public class SoundSampleService {
-
+    //Upload dir path which fits with the backend filepath
+    private static final String UPLOAD_DIR = java.nio.file.Paths.get("").toAbsolutePath().resolve("soundSampleUploads").toString();
     // Download copy of repository to run its code
     private final SoundSampleRepository repository;
     private final UserService userService;
@@ -46,20 +47,48 @@ public class SoundSampleService {
                 return "Upload failed: either link or file must be provided for upload.";
             }
 
-            // If there is a file, upload it to the server
-            String path = null;
-            String sqlPath = null;
+            //path which gets inserted into db
+            String sqlPath = null; 
+
+            // Checks if its a file that got uploaded
             if (file != null) {
-                File uploadDir = new File("soundSampleUploads");
+                //create a new upload directory
+                File uploadDir = new File(UPLOAD_DIR);
                 if (!uploadDir.exists()) uploadDir.mkdirs();
-                path = uploadDir.getAbsolutePath() + File.separator + file.getOriginalFilename();
-                sqlPath = "soundSampleUploads" + File.separator + file.getOriginalFilename();
-                file.transferTo(new File(path));
+
+                //find the files original name
+                String orgFilename = file.getOriginalFilename();
+                String fileName = orgFilename;
+
+                // Split into filename and file type
+                String splitName = fileName;
+                String fileType = "";
+                int dotIndex = fileName.lastIndexOf(".");
+
+                //checks if there is any . and if there is split the filename and filetype from each other
+                if (dotIndex != -1) {
+                    splitName = fileName.substring(0, dotIndex);
+                    fileType = fileName.substring(dotIndex);
+                }
+
+                // rename if filename already exists with a _1, _2, ...
+                File destFile = new File(uploadDir, fileName);
+                int counter = 1;
+                while (destFile.exists()) {
+                    String newFilename = splitName + "_" + counter + fileType;
+                    destFile = new File(uploadDir, newFilename);
+                    counter++;
+                }
+
+                // Build paths
+                file.transferTo(destFile);
+                sqlPath = "soundSampleUploads" + File.separator + destFile.getName();
             }
 
-            // Save to the sound sample to the database
+            // Save path to database (null if link-only)
             soundSample.setFilePath(sqlPath);
             repository.save(soundSample);
+
             return "Upload complete!";
 
         } catch (Exception e) {
@@ -68,6 +97,7 @@ public class SoundSampleService {
             return "Upload failed: " + e.getMessage();
         }
     }
+
 
     // Handles deletion of existing sound sample from given link or file name
     public String delete(String link, String fileName, String id) {
@@ -84,7 +114,7 @@ public class SoundSampleService {
         String filePath = null;
         if (fileName != null) {
             filePath = "soundSampleUploads" + File.separator + fileName;
-            File file = new File(filePath).getAbsoluteFile();
+            File file = new File(UPLOAD_DIR + File.separator + fileName).getAbsoluteFile();
             if (file.exists()) {
                 if (file.delete()) {
                     System.out.println("Deleted file: " + file.getPath());
@@ -152,7 +182,7 @@ public class SoundSampleService {
     }
 
     public Resource getSoundSampleFile(String fileName) throws MalformedURLException {
-        Path path = Paths.get("soundSampleUploads").resolve(fileName).normalize();
+        Path path = java.nio.file.Paths.get(UPLOAD_DIR).resolve(fileName).normalize();
         Resource resource = new UrlResource(path.toUri());
 
         if (!resource.exists()) {

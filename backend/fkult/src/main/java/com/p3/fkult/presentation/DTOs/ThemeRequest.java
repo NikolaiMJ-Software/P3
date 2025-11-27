@@ -75,6 +75,7 @@ public class ThemeRequest {
     public void settConsts(List<String> tConsts) {this.tConsts = tConsts;}
     public void setUsername(String username){this.username = username;}
     public void setTimestamp(LocalDateTime timestamp){this.timestamp = timestamp;}
+    public void setThemeId(Long themeId) {this.themeId = themeId;}
 
     @Override
     public String toString() {

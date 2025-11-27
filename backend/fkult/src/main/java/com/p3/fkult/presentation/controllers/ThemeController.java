@@ -2,6 +2,7 @@ package com.p3.fkult.presentation.controllers;
 
 import com.p3.fkult.business.services.ThemeService;
 import com.p3.fkult.business.services.UserService;
+import com.p3.fkult.presentation.DTOs.ThemeRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,25 +22,25 @@ public class ThemeController {
     }
 
     @GetMapping
-    public List<UserController.ThemeRequest> getThemes(){
+    public List<ThemeRequest> getThemes(){
         return themeService.getAllThemes();
     }
 
     @GetMapping("/New")
-    public List<UserController.ThemeRequest> getNewThemes(){
+    public List<ThemeRequest> getNewThemes(){
         return themeService.getNewThemes();
     }
     @GetMapping("/Old")
-    public List<UserController.ThemeRequest> getOldThemes(){
+    public List<ThemeRequest> getOldThemes(){
         return themeService.getOldThemes();
     }
     @GetMapping("/User")
-    public List<UserController.ThemeRequest> getUserThemes(@RequestParam String username){
+    public List<ThemeRequest> getUserThemes(@RequestParam String username){
         return themeService.getUserThemes(username);
     }
 
     @PostMapping
-    public ResponseEntity<String> createTheme(@RequestBody UserController.ThemeRequest themeRequest){
+    public ResponseEntity<String> createTheme(@RequestBody ThemeRequest themeRequest){
         String name = themeRequest.getName();
         String username = themeRequest.getUsername();
         List<String> tConsts = themeRequest.gettConsts();
@@ -62,7 +63,7 @@ public class ThemeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateTheme(@PathVariable long id, @RequestBody UserController.ThemeRequest themeRequest) {
+    public ResponseEntity<String> updateTheme(@PathVariable long id, @RequestBody ThemeRequest themeRequest) {
         themeRequest.setThemeId(id); // make sure themeId matches URL
         System.out.println("UpdateTheme request: " + themeRequest);
 

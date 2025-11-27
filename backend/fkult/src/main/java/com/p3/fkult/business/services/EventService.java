@@ -30,6 +30,10 @@ public class EventService {
     private final MovieRepository movieRepository;
     private final ThemeMovieRepository themeMovieRepository;
 
+    private String formatDate(LocalDateTime date){
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(date);
+    }
+
     public EventService(EventRepository eventRepository, ThemeRepository themeRepository, UserRepository userRepository, DrinkingRuleRepository drinkingRuleRepository, MovieRepository movieRepository, ThemeMovieRepository themeMovieRepository) {
         this.eventRepository = eventRepository;
         this.themeRepository = themeRepository;
@@ -54,10 +58,6 @@ public class EventService {
             e.printStackTrace();
             return "Event upload failed: " + e.getMessage();
         }
-    }
-
-    private String formatDate(LocalDateTime date){
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(date);
     }
 
     public List<Event> getAllEvents() {

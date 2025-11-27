@@ -57,5 +57,6 @@
   "not_admin": "Du har ikke adgang til denne resurse",
   "not found": "ikke fundet",
   "link not supported": "linket understøttes ikke",
-  "youSure": "Er du helt sikker?"
+  "youSure": "Er du helt sikker?",
+  "createEvent": "Skab Event:"
 }

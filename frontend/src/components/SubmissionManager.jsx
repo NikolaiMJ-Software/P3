@@ -72,7 +72,7 @@ function ThemeSubmissions(){
 
     //Filter time
     const filteredThemes = themes.filter(theme =>
-        theme.username.toLowerCase().includes(searchName.toLowerCase())
+        (theme.username.toLowerCase().includes(searchName.toLowerCase()) || theme.name.toLowerCase().includes(searchName.toLowerCase()))
     );
     const toggleTheme = (id) => {
         setExpandedTheme(expandedTheme === id ? null : id);
@@ -128,6 +128,8 @@ function Theme({ item, onToggle, isExpanded, onDelete }){
         onToggle();
     }
 
+    const timestamp = item.timestamp.split("T")[0]
+
     return (
         <div className={"m-10 mt-3 mb-3 border rounded flex flex-col"}>
             <div className={"flex flex-row justify-between cursor-pointer"} onClick={handleClick}>
@@ -135,7 +137,7 @@ function Theme({ item, onToggle, isExpanded, onDelete }){
                     {item.name}
                 </div>
                 <SubmissionPart label={t("Uploaded by")} content={item.username}/>
-                <SubmissionPart label={t("Submitted on")} content={"6-7"}/>
+                <SubmissionPart label={t("Submitted on")} content={timestamp.split("-").reverse().join("-")}/>
                 <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-4xl font-thin"}>
                     <img className={"cursor-pointe size-10 hover:bg-gray-300 rounded p-1"} src={trashCan} alt={"Delete"} onClick={onDelete}/>
                 </div>
@@ -175,7 +177,6 @@ function SoundSampleSubmissions() {
     async function loadSamples() {
         const items = await getSoundSamples();
         console.log(items)
-
         //return the array
         setSamples(items);
     }
@@ -189,26 +190,25 @@ function SoundSampleSubmissions() {
         sample.usersFullName.toLowerCase().includes(searchName.toLowerCase())
     );
 
-    const addToDelete = (soundSample) => {
-        console.log(toBeDeleted)
+    const addToDelete = (object) => {
+        console.log(object)
         if (toBeDeleted === undefined) return
-        console.log(soundSample)
         setDeletion(arr => {
-            return arr.includes(soundSample)
-                ? arr.filter(item => item !== soundSample)
-                : [...arr, soundSample]
+            return arr.some(({ id }) => id === object.id)
+                ? arr.filter(item => item.id !== object.id)
+                : [...arr, object]
         })
+        console.log(toBeDeleted)
     }
 
     async function batchDelete() {
-        const youSureQuestionmark = window.confirm(t("youSure"));
-        if (!youSureQuestionmark) return;
         console.log(toBeDeleted)
         if (!toBeDeleted.length) return;
+        const youSureQuestionmark = window.confirm(t("youSure"));
+        if (!youSureQuestionmark) return;
 
         // Create an array of promises
-        const deletePromises = toBeDeleted.map(sample =>
-            deleteSoundSample(sample)
+        const deletePromises = toBeDeleted.map(sample => deleteSoundSample(sample.soundSample, sample.id)
         );
 
         // Wait until all deletions are finished
@@ -259,7 +259,7 @@ function SoundSample({ item, onCheck }) {
             {/* User */}
             <SubmissionPart content={item.usersFullName}/>
             {/* Checkbox */}
-            <input className={"m-2 size-6"} type={"checkbox"} onChange={() => onCheck(item.soundSample)}/>
+            <input className={"m-2 size-6"} type={"checkbox"} onChange={() => onCheck({ id: item.id, soundSample: item.soundSample})}/>
         </div>
     )
 }
