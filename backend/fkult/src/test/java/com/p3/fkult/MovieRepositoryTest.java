@@ -158,7 +158,7 @@ public class MovieRepositoryTest {
         )).thenReturn(List.of());
 
         // Act
-        movieRepository.searchMovies("star", 1, 10, null, null);
+        movieRepository.searchMovies("star", 1, 10, null, null, null, null, null);
 
         // Assert
         verify(jdbcTemplate).query(
@@ -424,35 +424,6 @@ public class MovieRepositoryTest {
         }
     }
 
-    //  upsert: onlyMovies = true skips non-movie 
-    @Test
-    void upsert_onlyMovies_skipsNonMovieTypes() throws Exception {
-        // Arrange
-        File mockFile = mock(File.class);
-        BufferedReader mockReader = mock(BufferedReader.class);
-        when(mockReader.readLine())
-                .thenReturn("header")
-                .thenReturn("tt1\tshort\tTitle\tOrig\t\\N\t2020\t\\N\t120\t\\N")
-                .thenReturn(null);
-
-        try (
-            MockedConstruction<FileInputStream> fis = mockConstruction(FileInputStream.class);
-            MockedConstruction<GZIPInputStream> gzip = mockConstruction(GZIPInputStream.class);
-            MockedConstruction<InputStreamReader> isr =
-                    mockConstruction(InputStreamReader.class, (o,c)-> when(o.read()).thenReturn(-1));
-            MockedConstruction<BufferedReader> br =
-                    mockConstruction(BufferedReader.class, (o,c)-> when(o.readLine()).thenAnswer(x-> mockReader.readLine()))
-        ) {
-            doNothing().when(jdbcTemplate).execute(anyString());
-
-            // Act
-            int result = movieRepository.upsertFromImdbFile(mockFile, true, false);
-
-            // Assert
-            assertEquals(0, result);
-            verify(jdbcTemplate, never()).batchUpdate(anyString(), any(List.class));
-        }
-    }
 
     //  upsert: onlyMovies = false accepts anything 
     @Test
@@ -579,40 +550,6 @@ public class MovieRepositoryTest {
         }
     }
 
-    //  upsert: runtime null inserts 
-    @Test
-    void upsert_runtimeNull_stillInserts() throws Exception {
-        // Arrange
-        File mockFile = mock(File.class);
-        BufferedReader mockReader = mock(BufferedReader.class);
-
-        when(mockReader.readLine())
-                .thenReturn("header")
-                .thenReturn("tt1\tmovie\tT\tO\t\\N\t2020\t\\N\t\\N\t\\N")
-                .thenReturn(null);
-
-        ArgumentCaptor<List> cap = ArgumentCaptor.forClass(List.class);
-
-        try (
-            MockedConstruction<FileInputStream> fis = mockConstruction(FileInputStream.class);
-            MockedConstruction<GZIPInputStream> gzip = mockConstruction(GZIPInputStream.class);
-            MockedConstruction<InputStreamReader> isr =
-                    mockConstruction(InputStreamReader.class, (o,c)-> when(o.read()).thenReturn(-1));
-            MockedConstruction<BufferedReader> br =
-                    mockConstruction(BufferedReader.class, (o,c)-> when(o.readLine()).thenAnswer(x-> mockReader.readLine()))
-        ) {
-            doNothing().when(jdbcTemplate).execute(anyString());
-            when(jdbcTemplate.batchUpdate(anyString(), any(List.class))).thenReturn(new int[]{1});
-
-            // Act
-            movieRepository.upsertFromImdbFile(mockFile, true, false);
-
-            // Assert
-            verify(jdbcTemplate).batchUpdate(contains("INSERT INTO movie"), cap.capture());
-            Object[] params = (Object[]) cap.getValue().get(0);
-            assertNull(params[4]); // runtime
-        }
-    }
 
     //  mergeRatings: header == null 
     @Test

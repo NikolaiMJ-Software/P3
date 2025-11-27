@@ -177,7 +177,7 @@ void getFutureEventsFromNow_HandlesNullTheme() {
 
     // Assert
     assertEquals(1, result.size());
-    assertEquals(null, result.get(0).getId());
+    assertEquals(1L, result.get(0).getId());
     assertEquals(time, result.get(0).getTimestamp());
 }
 

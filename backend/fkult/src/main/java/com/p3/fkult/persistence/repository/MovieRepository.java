@@ -91,7 +91,7 @@ public class MovieRepository {
         String sql = "UPDATE movie SET poster_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, posterURL, movieId);
     }
-    public List<Movie> searchMovies(String keyword, int page, int limit, String sortBy, String direction) {
+    public List<Movie> searchMovies(String keyword, int page, int limit, String sortBy, String direction, Boolean movie, Boolean series, Boolean rated ) {
         int offset = (page - 1) * limit;
         String likePattern = keyword + "*"; // FTS5 prefix search
 
@@ -101,7 +101,7 @@ public class MovieRepository {
             case "year":        column = "m.year"; break;
             case "runtime":     column = "m.runtime_minutes"; break;
             case "alphabetical":column = "m.movie_name"; break;
-            case "rating":
+            case "rating":      column = "m.rating"; break;
             default:            column = "m.rating"; break;
         }
         // Validate ASC / DESC 
@@ -111,7 +111,7 @@ public class MovieRepository {
         String sortColumn = column + " " + dir;
 
 
-        String sql = """
+        StringBuilder sql = new StringBuilder("""
         SELECT m.*
         FROM movie m
         JOIN movie_fts fts ON fts.rowid = m.id
@@ -119,12 +119,32 @@ public class MovieRepository {
           AND m.is_active = 1
           AND m.year > 0
           AND m.runtime_minutes > 0
-        ORDER BY %s
-        LIMIT ? OFFSET ?
-    """.formatted(sortColumn);
+    """);
+
+
+    List<Object> params = new ArrayList<>();
+    params.add(likePattern);
+    // Checkbox logic:
+    boolean movieChecked = Boolean.TRUE.equals(movie);   // m.is_series = 0
+    boolean seriesChecked = Boolean.TRUE.equals(series); // m.is_series = 1
+
+    // If *exactly one* is selected then filter
+    if (movieChecked ^ seriesChecked) {
+        sql.append(" AND m.is_series = ? ");
+        params.add(seriesChecked ? 1 : 0);
+    }
+    // Rating filter
+    if (Boolean.TRUE.equals(rated)) {
+        sql.append(" AND m.rating IS NOT NULL AND m.rating != '' ");
+    }
+    sql.append(" ORDER BY ").append(sortColumn)
+       .append(" LIMIT ? OFFSET ?");
+
+    params.add(limit);
+    params.add(offset);
 
         // Bind the same FTS keyword to both columns
-        return jdbcTemplate.query(sql, rowMapper, likePattern, limit, offset);
+        return jdbcTemplate.query(sql.toString(), rowMapper, params.toArray());
     }
 
     public int countMovies(String keyword){

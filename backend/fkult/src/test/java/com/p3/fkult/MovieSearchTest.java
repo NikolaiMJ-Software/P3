@@ -44,14 +44,14 @@ public class MovieSearchTest {
         null,
         null
         );
-        when(movieRepository.searchMovies("test", 1, 6, null, null)).thenReturn(List.of(testMovie));
+        when(movieRepository.searchMovies("test", 1, 6, null, null, null, null, null)).thenReturn(List.of(testMovie));
 
         // act
-        List<MovieRequest> result = movieService.searchMovies("test", 1, 6, null, null);
+        List<MovieRequest> result = movieService.searchMovies("test", 1, 6,null, null, null, null, null);
 
         // assert
         assertEquals(1, result.size());
         assertEquals("Test Movie", result.get(0).getTitle());
-        verify(movieRepository, times(1)).searchMovies("test", 1, 6, null, null);
+        verify(movieRepository, times(1)).searchMovies("test", 1, 6, null, null, null, null, null);
     }
 }
