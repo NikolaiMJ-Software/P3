@@ -30,7 +30,7 @@ public class EventService {
     private final MovieRepository movieRepository;
     private final ThemeMovieRepository themeMovieRepository;
 
-    private String formatDate(LocalDateTime date){
+    public String formatDate(LocalDateTime date){
         return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(date);
     }
 

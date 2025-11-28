@@ -63,7 +63,7 @@ class EventServiceTest {
 
         // Assert
         assertEquals("Event upload complete!", result);
-        verify(eventRepository).save(any(LocalDateTime.class), eq(5L));
+        verify(eventRepository).save(any(String.class), eq(5L));
     }
 
     @Test
