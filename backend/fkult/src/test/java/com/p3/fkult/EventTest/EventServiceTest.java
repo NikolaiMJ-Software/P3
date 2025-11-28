@@ -9,6 +9,7 @@ import com.p3.fkult.presentation.DTOs.EventRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -228,5 +229,34 @@ void getFutureEventsFromNow_HandlesNullTheme() {
 
         // Assert
         assertNull(result);
+    }
+
+    @Test
+    void updateEventDate_UploadComplete(){
+        // Arrange
+        ResponseEntity<?> expected = ResponseEntity.ok("Event upload complete!");
+        LocalDateTime date = LocalDateTime.of(2026, 2, 6, 16, 45);
+
+        // Act
+        ResponseEntity<?> result = service.updateEventDate(1, date);
+
+        // Assert
+        assertEquals(result, expected);
+
+    }
+
+    @Test
+    void updateEventDate_UploadFailed(){
+        // Arrange
+        LocalDateTime date = LocalDateTime.of(2026, 2, 6, 16, 45);
+        doThrow(new RuntimeException("Error changing date")).when(eventRepository).updateEventDate(1, service.formatDate(date));
+
+        // Act
+        ResponseEntity<?> result = service.updateEventDate(1, date);
+        ResponseEntity<?> expected = ResponseEntity.status(500).body("Event upload failed: Error changing date");
+
+        // Assert
+        assertEquals(result, expected);
+
     }
 }

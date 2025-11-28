@@ -60,10 +60,11 @@ public class MovieController {
                                                            @RequestParam(defaultValue = "desc") String direction,
                                                            @RequestParam(required = false) Boolean movie,
                                                            @RequestParam(required = false) Boolean series,
+                                                           @RequestParam(required = false) Boolean shorts,
                                                            @RequestParam(required = false) Boolean rated ){
         if (limit > 40) limit = 40;
         if (limit < 0) limit = 0;
-        List<MovieRequest> results = movieService.searchMovies(q, page, limit, sortBy, direction, movie, series, rated);
+        List<MovieRequest> results = movieService.searchMovies(q, page, limit, sortBy, direction, movie, series, shorts, rated);
 
         if(results.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

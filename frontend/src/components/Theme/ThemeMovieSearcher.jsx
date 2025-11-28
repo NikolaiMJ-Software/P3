@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-export default function ThemeMovieSearcher({foundMovies, setSearchQuery, pageCount, setPageCount, totalPageCount, movieCount, handleAddMovies, sortBy, setSortBy, sortDirection, setSortDirection, movieFilter, setMovieFilter, seriesFilter, setSeriesFilter, hideUnrated, setHideUnrated}){
+export default function ThemeMovieSearcher({foundMovies, setSearchQuery, pageCount, setPageCount, totalPageCount, movieCount, handleAddMovies, sortBy, setSortBy, sortDirection, setSortDirection, movieFilter, setMovieFilter, seriesFilter, setSeriesFilter, shortsFilter, setShortsFilter, hideUnrated, setHideUnrated}){
     const searchInputRef = useRef();
 const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -89,6 +89,11 @@ function refresh() {
                             Series
                         </label>
 
+                        <label className="flex items-center gap-2 cursor-pointer mt-1">
+                            <input type="checkbox" checked={shortsFilter} onChange={(e) => (setShortsFilter(e.target.checked), refresh())}/>
+                            Shorts
+                        </label>
+
                         <p className="text-sm font-bold mt-3 mb-1 text-text-primary">Other Filters</p>
                         <label className="flex items-center gap-2 cursor-pointer mt-1">
                             <input
@@ -105,6 +110,7 @@ function refresh() {
 
             </div>
             {foundMovies.map((movie) => {
+                console.log("MOVIE:", movie);
                 return <MovieSuggestion
                     movieName={movie.title}
                     year={movie.year}
@@ -113,6 +119,7 @@ function refresh() {
                     tConst={movie.tConst}
                     onAdd={() => handleAddMovies(movie)}
                     isSeries={movie.isSeries}
+                    isShorts={movie.isShorts}
                     rating={movie.rating}
                 >
                 </MovieSuggestion>
@@ -127,7 +134,7 @@ function refresh() {
     )
 }
 
-export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, onAdd, isSeries, rating}) {
+export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, onAdd, isSeries, isShorts, rating}) {
 
     const runtimeHours = Math.floor(runtime / 60)
     const runtimeMinutesLeft = runtime % 60;
@@ -143,6 +150,26 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
                 <div className={"flex flex-col max-w-[430px] overflow-hidden"}>
                     <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
                         <p className="font-bold truncate overflow-hidden text-ellipsis max-w-[423px] text-blue-400">{movieName} </p><p className={""}>{safeRating} - Series</p>
+                    </a>
+
+                    <p>{year}</p>
+                </div>
+                <button onClick={onAdd} className="px-3 py-1 rounded-lg hover:bg-btn-hover-secondary cursor-pointer transition  ml-auto">
+                    Add
+                </button>
+            </div>
+        )
+    }
+
+    if(isShorts){
+        return (
+            <div onClick={onAdd} className="flex-row flex items-center gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]">
+                <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
+                    <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
+                </div>
+                <div className={"flex flex-col max-w-[430px] overflow-hidden"}>
+                    <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
+                        <p className="font-bold truncate overflow-hidden text-ellipsis max-w-[423px] text-blue-400">{movieName} </p><p className={""}>{safeRating} - Shorts</p>
                     </a>
 
                     <p>{year}</p>
