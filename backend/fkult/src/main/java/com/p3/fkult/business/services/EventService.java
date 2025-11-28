@@ -30,10 +30,6 @@ public class EventService {
     private final MovieRepository movieRepository;
     private final ThemeMovieRepository themeMovieRepository;
 
-    public String formatDate(LocalDateTime date){
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(date);
-    }
-
     public EventService(EventRepository eventRepository, ThemeRepository themeRepository, UserRepository userRepository, DrinkingRuleRepository drinkingRuleRepository, MovieRepository movieRepository, ThemeMovieRepository themeMovieRepository) {
         this.eventRepository = eventRepository;
         this.themeRepository = themeRepository;
@@ -41,6 +37,10 @@ public class EventService {
         this.drinkingRuleRepository = drinkingRuleRepository;
         this.movieRepository = movieRepository;
         this.themeMovieRepository = themeMovieRepository;
+    }
+
+    public String formatDate(LocalDateTime date){
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(date);
     }
 
     // Handles event uploads

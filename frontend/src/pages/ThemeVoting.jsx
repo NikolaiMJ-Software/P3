@@ -19,7 +19,8 @@ export default function ThemeVoting() {
   const [wheelNames, setWheelNames] = useState([]);
   const [runnerUpDetermined, setRunnerUpDetermined] = useState(false);
   const [runnerUpMeta, setRunnerUpMeta] = useState([]);
-  const [runnerUpWinnerId, setRunnerUpWinnerId] = useState(null);
+  const [runnerUpWinnerMovieId, setRunnerUpWinnerMovieId] = useState(null);
+  const [runnerUpWinnerThemeId, setRunnerUpWinnerThemeId] = useState(null);
 
   // Fetch all themes on page load
   useEffect(() => {
@@ -36,10 +37,10 @@ export default function ThemeVoting() {
   }, []);
 
   useEffect(() => {
-    if ((isVotingOngoing === true && numberOfWinners > 0) || (runnerUpWinnerId !== null)) {
+    if ((isVotingOngoing === true && numberOfWinners > 0) || (runnerUpWinnerMovieId !== null)) {
       finishVoting();
     }
-  }, [isVotingOngoing, runnerUpWinnerId]);
+  }, [isVotingOngoing, runnerUpWinnerMovieId]);
 
   useEffect(() => {
     if (wheelNames.length > 0) {
@@ -117,6 +118,7 @@ export default function ThemeVoting() {
     let winners = [... winningThemes];
 
     while (winners.length < numberOfWinners) {
+      console.log("Voting has found " + winners.length + " out of " + numberOfWinners + " winners so far.");
       const currentVotes = sorted[0].votes;
       const tiedThemes = sorted.filter(t => t.votes === currentVotes);
 
@@ -127,9 +129,7 @@ export default function ThemeVoting() {
         winners = [...winners, ...tiedThemes];
 
         // Remove them from sorted
-        console.log(sorted);
         sorted = sorted.filter(t => t.votes !== currentVotes);
-        console.log(sorted);
 
         if (winners.length === numberOfWinners && runnerUpDetermined === false) {
           const runnerUpThemes = sorted.filter(t => t.votes === sorted[0]?.votes);
@@ -144,15 +144,17 @@ export default function ThemeVoting() {
           ));
 
           setWheelNames(runnerUpMovies);
-          console.log("Runner-up movies for wheel:", runnerUpMovies);
           setRunnerUpDetermined(true);
+          setWinningThemes(winners);
           return;
         }
 
       } else {
         // Too many tied to fill the remaining slots → trigger tie-break
+        console.log("Tie detected among themes:", tiedThemes);
         setUnVotedThemes(tiedThemes);
         setCurrentIndex(0);
+        setWinningThemes(winners);
         alert("There is a tie among some themes. Please re-vote to break the tie.");
         return;
       }
@@ -187,12 +189,14 @@ export default function ThemeVoting() {
       try {
         const result = await uploadEvent(formattedDate, winners[i].themeId);
         console.log(`Event uploaded for ${formattedDate}:`, result);
+        const response = await addWheelWinner(runnerUpWinnerMovieId, runnerUpWinnerThemeId);
+        console.log(response);
       } catch (err) {
         console.error("Failed to upload event:", formattedDate, err);
       }
     }
     const runnerUpTheme = unVotedThemes.find(
-      t => t.movieIds.includes(runnerUpWinnerId)
+      t => t.movieIds.includes(runnerUpWinnerMovieId)
     );
     deleteAllThemesExcept([...winners, runnerUpTheme]);
     updateWinningThemes([...winners, runnerUpTheme]);
@@ -250,15 +254,12 @@ export default function ThemeVoting() {
     }
   };
 
-  const handleWheelResult = async (value, index) => {
+  const handleWheelResult = (value, index) => {
     setTimeout( async () => {
       setShowWheelPopup(false);
-      const winningThemeId = runnerUpMeta[index].themeId;
-      const winningMovieId = runnerUpMeta[index].movieId;
-      const response = await addWheelWinner(winningMovieId, winningThemeId);
-      setRunnerUpWinnerId(winningMovieId);
-      console.log(response);
-    }, 3000);
+      setRunnerUpWinnerThemeId(runnerUpMeta[index].themeId)
+      setRunnerUpWinnerMovieId(runnerUpMeta[index].movieId);
+    }, 2000);
   };
 
   // Buttons to navigate themes

@@ -13,7 +13,6 @@ import java.util.List;
 
 import com.p3.fkult.persistence.entities.Event;
 import com.p3.fkult.persistence.repository.EventRepository;
-import com.p3.fkult.business.services.EventService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,6 @@ public class EventRepositoryTest {
 
     @InjectMocks
     private EventRepository eventRepository;
-    private EventService eventService;
 
     @Captor
     private ArgumentCaptor<String> sqlCaptor;
@@ -97,15 +95,14 @@ public class EventRepositoryTest {
     @Test
     void testSave() {
         // Arrange
-        LocalDateTime date = LocalDateTime.now();
-        String dateString = eventService.formatDate(date);
+        String date = "2024-06-01 16:30:00";
         long themeId = 10L;
 
         // Act
-        eventRepository.save(dateString, themeId);
+        eventRepository.save(date, themeId);
 
         // Assert
-        verify(jdbcTemplate).update(eq("INSERT INTO event (event_date, theme_id) VALUES (?,?)"), eq(dateString), eq(themeId));
+        verify(jdbcTemplate).update(eq("INSERT INTO event (event_date, theme_id) VALUES (?,?)"), eq(date), eq(themeId));
     }
 
 
