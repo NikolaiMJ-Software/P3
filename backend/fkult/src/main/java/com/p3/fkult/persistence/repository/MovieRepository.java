@@ -40,6 +40,7 @@ public class MovieRepository {
                     rs.getInt("runtime_minutes"),
                     rs.getBoolean("is_active"),
                     rs.getBoolean("is_series"),
+                    rs.getBoolean("is_shorts"),
                     rs.getString("poster_url"),
                     rs.getString("rating")
             );
@@ -91,7 +92,7 @@ public class MovieRepository {
         String sql = "UPDATE movie SET poster_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, posterURL, movieId);
     }
-    public List<Movie> searchMovies(String keyword, int page, int limit, String sortBy, String direction, Boolean movie, Boolean series, Boolean rated ) {
+    public List<Movie> searchMovies(String keyword, int page, int limit, String sortBy, String direction, Boolean movie, Boolean series, Boolean shorts, Boolean rated ) {
         int offset = (page - 1) * limit;
         String likePattern = keyword + "*"; // FTS5 prefix search
 
@@ -167,15 +168,16 @@ public class MovieRepository {
     jdbcTemplate.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_movie_tconst ON movie(tconst)");
 
     final String upsertSql =
-        "INSERT INTO movie (tconst, movie_name, original_movie_name, year, runtime_minutes, is_active, is_series) " +
-        "VALUES (?, ?, ?, ?, ?, 1, ?) " +
+        "INSERT INTO movie (tconst, movie_name, original_movie_name, year, runtime_minutes, is_active, is_series, is_shorts) " +
+        "VALUES (?, ?, ?, ?, ?, 1, ?, ?) " +
         "ON CONFLICT(tconst) DO UPDATE SET " +
         "  movie_name=excluded.movie_name, " +
         "  original_movie_name=excluded.original_movie_name, " +
         "  year=excluded.year, " +
         "  runtime_minutes=excluded.runtime_minutes, " +
         "  is_active=1, " +
-        "  is_series=excluded.is_series";
+        "  is_series=excluded.is_series, "+
+        "  is_shorts=excluded.is_shorts";
 
     if (markInactiveMissing) {
         jdbcTemplate.execute("CREATE TEMP TABLE IF NOT EXISTS tmp_seen(tconst TEXT PRIMARY KEY) WITHOUT ROWID");
@@ -204,7 +206,9 @@ public class MovieRepository {
             if (onlyMovies && !( "movie".equals(titleType) || "tvSeries".equals(titleType) || "short".equals(titleType) )) {continue;}
 
             Integer seriesType;
+            Integer shortsType;
             if ("tvSeries".equals(titleType)){seriesType = 1;}else{seriesType = 0;}
+            if ("short".equals(titleType)){shortsType = 1;}else{shortsType = 0;}
 
             String primaryTitle  = normalize(c[2]);
             String originalTitle = normalize(c[3]);
@@ -217,7 +221,7 @@ public class MovieRepository {
             if (startYear != null && (startYear < 1888 || startYear > currentYear)) continue;
             if (runtime == null || runtime <= 0) continue;
 
-            upserts.add(new Object[]{ tconst, movieName, originalTitle, startYear, runtime, seriesType });
+            upserts.add(new Object[]{ tconst, movieName, originalTitle, startYear, runtime, seriesType, shortsType });
             if (markInactiveMissing) seen.add(new Object[]{ tconst });
             processed++;
 

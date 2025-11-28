@@ -44,7 +44,7 @@ public class MovieRepositoryTest {
     @Test
     void findAll_returnsListOfMovies() {
         // Arrange
-        Movie m = new Movie(1L, "tt001", "Test", "Test", 2020, 120, true, false, "poster", "7.5");
+        Movie m = new Movie(1L, "tt001", "Test", "Test", 2020, 120, true, false, false, "poster", "7.5");
         when(jdbcTemplate.query(anyString(), any(RowMapper.class)))
                 .thenReturn(List.of(m));
 
@@ -61,7 +61,7 @@ public class MovieRepositoryTest {
     @Test
     void findById_returnsMovie() {
         // Arrange
-        Movie m = new Movie(1L, "tt001", "Test", "Test", 2020, 120, true, false, "poster", "7.5");
+        Movie m = new Movie(1L, "tt001", "Test", "Test", 2020, 120, true, false, false, "poster", "7.5");
 
         when(jdbcTemplate.queryForObject(
                 anyString(),
@@ -100,7 +100,7 @@ public class MovieRepositoryTest {
     @Test
     void findByTconst_returnsMovie() {
         // Arrange
-        Movie m = new Movie(1L, "tt001", "Test", "Test", 2020, 120, true, false, "poster", "7.5");
+        Movie m = new Movie(1L, "tt001", "Test", "Test", 2020, 120, true, false, false, "poster", "7.5");
 
         when(jdbcTemplate.queryForObject(
                 anyString(),
@@ -158,7 +158,7 @@ public class MovieRepositoryTest {
         )).thenReturn(List.of());
 
         // Act
-        movieRepository.searchMovies("star", 1, 10, null, null, null, null, null);
+        movieRepository.searchMovies("star", 1, 10, null, null, null, null, null, null);
 
         // Assert
         verify(jdbcTemplate).query(

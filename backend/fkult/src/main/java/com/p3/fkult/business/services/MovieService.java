@@ -26,10 +26,10 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<MovieRequest> searchMovies(String query, int page, int limit, String sortBy, String direction, Boolean movie, Boolean series, Boolean rated) {
+    public List<MovieRequest> searchMovies(String query, int page, int limit, String sortBy, String direction, Boolean movie, Boolean series, Boolean shorts, Boolean rated) {
         //partial matches (case-insensitive)
         List<MovieRequest> movieRequests = new ArrayList<MovieRequest>();
-        movieRepository.searchMovies(query, page, limit, sortBy, direction, movie, series, rated).forEach(m -> {
+        movieRepository.searchMovies(query, page, limit, sortBy, direction, movie, series, shorts, rated).forEach(m -> {
             MovieRequest movieRequest = new MovieRequest(
                     m.getTconst(),
                     m.getMovieName(),
