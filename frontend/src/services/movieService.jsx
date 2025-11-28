@@ -39,8 +39,9 @@ export async function getMoviesByTconsts(movieTconsts) {
     }
 }
 
-export async function searchMovies(query, page, limit, sortBy = "rating", direction = "desc"){
-    const response = await fetch(`${API_URL}/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}&sortBy=${sortBy}&direction=${direction}`, {
+export async function searchMovies(query, page, limit, sortBy = "rating", direction = "desc", movie, series, hideUnrated){
+    const ratedParam = hideUnrated !== undefined ? `&rated=${hideUnrated}` : "";
+    const response = await fetch(`${API_URL}/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}&sortBy=${sortBy}&direction=${direction}&movie=${movie}&series=${series}${ratedParam}`, {
         method: "GET",
         headers: {"Content-Type": "application/json"}
     });

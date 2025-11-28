@@ -21,6 +21,9 @@ export default function ThemeCreationPopup({setSelected}) {
     const [movieCount, setMovieCount] = useState(0);
     const [sortBy, setSortBy] = useState("rating");
     const [sortDirection, setSortDirection] = useState("desc"); // "asc" | "desc"
+    const [movieFilter, setMovieFilter] = useState(false);
+    const [seriesFilter, setSeriesFilter] = useState(false);
+    const [hideUnrated, setHideUnrated] = useState(false);
 
 
     useEffect(() => {
@@ -42,7 +45,7 @@ export default function ThemeCreationPopup({setSelected}) {
             setTotalPageCount(Math.ceil(count / MOVIE_LIMIT));
 
             //fetch first page
-            const movies = await searchMovies(searchQuery, 1, MOVIE_LIMIT, sortBy, sortDirection)
+            const movies = await searchMovies(searchQuery, 1, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated)
             setFoundMovies(movies);
         } catch (error){
             console.error("Error fetching data:", error);
@@ -50,13 +53,13 @@ export default function ThemeCreationPopup({setSelected}) {
         }
         }
         fetchData();
-    }, [searchQuery, sortBy, sortDirection]);
+    }, [searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated]);
 
     useEffect(() => {
         if (!searchQuery || searchQuery.trim() === "") return;
             const switchPage = async () => {
                 try {
-                    const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection)
+                    const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated)
                     setFoundMovies(movies);
                 }catch (error){
                     console.error("Error fetching data:",error);
@@ -64,7 +67,7 @@ export default function ThemeCreationPopup({setSelected}) {
                 }
         }
         switchPage();
-    }, [pageCount, sortBy, sortDirection]);
+    }, [pageCount, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated]);
 
     useEffect(() => {
         const fetchMissingPosters = async () => {
@@ -149,7 +152,13 @@ export default function ThemeCreationPopup({setSelected}) {
                                         sortBy={sortBy}
                                         setSortBy={setSortBy}
                                         sortDirection={sortDirection}
-                                        setSortDirection={setSortDirection}>
+                                        setSortDirection={setSortDirection}
+                                        movieFilter={movieFilter}
+                                        setMovieFilter={setMovieFilter}
+                                        seriesFilter={seriesFilter}
+                                        setSeriesFilter={setSeriesFilter}
+                                        hideUnrated={hideUnrated}
+                                        setHideUnrated={setHideUnrated}>
                     </ThemeMovieSearcher>
                     </div>
                     {/* Right Theme Creator */}

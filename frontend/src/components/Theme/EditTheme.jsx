@@ -16,6 +16,11 @@ export default function EditTheme({ theme, onClose }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [foundMovies, setFoundMovies] = useState([]);
   const [movieCount, setMovieCount] = useState(0);
+  const [sortBy, setSortBy] = useState("rating");
+  const [sortDirection, setSortDirection] = useState("desc"); // "asc" | "desc"
+  const [movieFilter, setMovieFilter] = useState(false);
+  const [seriesFilter, setSeriesFilter] = useState(false);
+  const [hideUnrated, setHideUnrated] = useState(false);
   const {t} = useTranslation();
 
   // collect theme movie data based on tConst
@@ -54,7 +59,7 @@ useEffect(() => {
         setMovieCount(count);
         setTotalPageCount(Math.ceil(count / MOVIE_LIMIT));
 
-        const movies = await searchMovies(searchQuery, 1, MOVIE_LIMIT);
+        const movies = await searchMovies(searchQuery, 1, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated);
         setFoundMovies(movies);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -62,13 +67,13 @@ useEffect(() => {
       }
     };
     fetchData();
-  }, [searchQuery]);
+  }, [searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated]);
 
   useEffect(() => {
     if (!searchQuery || searchQuery.trim() === "") return;
     const switchPage = async () => {
       try {
-        const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT);
+        const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated);
         setFoundMovies(movies);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -76,7 +81,7 @@ useEffect(() => {
       }
     };
     switchPage();
-  }, [pageCount, searchQuery]);
+  }, [pageCount, searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated]);
 
   useEffect(() => {
     const fetchMissingPosters = async () => {
@@ -165,6 +170,16 @@ useEffect(() => {
               setPageCount={setPageCount}
               totalPageCount={totalPageCount}
               setSearchQuery={setSearchQuery}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              sortDirection={sortDirection}
+              setSortDirection={setSortDirection}
+              movieFilter={movieFilter}
+              setMovieFilter={setMovieFilter}
+              seriesFilter={seriesFilter}
+              setSeriesFilter={setSeriesFilter}
+              hideUnrated={hideUnrated}
+              setHideUnrated={setHideUnrated}
             />
           </div>
 

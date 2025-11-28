@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { fetchShuffledThemes, updateThemeVotes, deleteTheme, addWheelWinner } from "../services/themeService";
 import { uploadEvent } from "../services/eventService";
 import ThemeVotingDisplay from "../components/Theme/ThemeVotingDisplay";
@@ -40,6 +40,12 @@ export default function ThemeVoting() {
       finishVoting();
     }
   }, [isVotingOngoing, runnerUpWinnerId]);
+
+  useEffect(() => {
+    if (wheelNames.length > 0) {
+        setShowWheelPopup(true);
+    }
+  }, [wheelNames]);
 
   // Function to updates votes for the current theme
   const submitVote = (votes) => {
@@ -121,10 +127,13 @@ export default function ThemeVoting() {
         winners = [...winners, ...tiedThemes];
 
         // Remove them from sorted
+        console.log(sorted);
         sorted = sorted.filter(t => t.votes !== currentVotes);
+        console.log(sorted);
 
         if (winners.length === numberOfWinners && runnerUpDetermined === false) {
           const runnerUpThemes = sorted.filter(t => t.votes === sorted[0]?.votes);
+          console.log("Runner-up themes:", runnerUpThemes);
           const runnerUpMovies = runnerUpThemes.flatMap(t => t.movieNames);
 
           setRunnerUpMeta(runnerUpThemes.flatMap(theme =>
@@ -135,7 +144,7 @@ export default function ThemeVoting() {
           ));
 
           setWheelNames(runnerUpMovies);
-          setShowWheelPopup(true);
+          console.log("Runner-up movies for wheel:", runnerUpMovies);
           setRunnerUpDetermined(true);
           return;
         }
@@ -182,8 +191,11 @@ export default function ThemeVoting() {
         console.error("Failed to upload event:", formattedDate, err);
       }
     }
-    deleteAllThemesExcept([...winners, runnerUpWinnerId]);
-    updateWinningThemes(winners);
+    const runnerUpTheme = unVotedThemes.find(
+      t => t.movieIds.includes(runnerUpWinnerId)
+    );
+    deleteAllThemesExcept([...winners, runnerUpTheme]);
+    updateWinningThemes([...winners, runnerUpTheme]);
     alert("Voting concluded and events scheduled!");
     window.open("/admin/events", "_self");
   };
@@ -239,12 +251,14 @@ export default function ThemeVoting() {
   };
 
   const handleWheelResult = async (value, index) => {
-    setShowWheelPopup(false);
-    const winningThemeId = runnerUpMeta[index].themeId;
-    const winningMovieId = runnerUpMeta[index].movieId;
-    const response = await addWheelWinner(winningMovieId, winningThemeId);
-    setRunnerUpWinnerId(winningMovieId);
-    console.log(response);
+    setTimeout( async () => {
+      setShowWheelPopup(false);
+      const winningThemeId = runnerUpMeta[index].themeId;
+      const winningMovieId = runnerUpMeta[index].movieId;
+      const response = await addWheelWinner(winningMovieId, winningThemeId);
+      setRunnerUpWinnerId(winningMovieId);
+      console.log(response);
+    }, 3000);
   };
 
   // Buttons to navigate themes

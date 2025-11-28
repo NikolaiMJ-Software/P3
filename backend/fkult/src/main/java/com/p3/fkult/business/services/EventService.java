@@ -30,7 +30,7 @@ public class EventService {
     private final MovieRepository movieRepository;
     private final ThemeMovieRepository themeMovieRepository;
 
-    private String formatDate(LocalDateTime date){
+    public String formatDate(LocalDateTime date){
         return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(date);
     }
 
@@ -50,8 +50,9 @@ public class EventService {
             ZoneId systemZone = ZoneId.systemDefault();
             ZonedDateTime utcTime = eventDate.atZone(ZoneOffset.UTC);
             LocalDateTime localDateTime = utcTime.withZoneSameInstant(systemZone).toLocalDateTime();
+            String formattedDate = formatDate(localDateTime);
 
-            eventRepository.save(localDateTime, themeId);
+            eventRepository.save(formattedDate, themeId);
             return "Event upload complete!";
         } catch (Exception e) {
             e.printStackTrace();
