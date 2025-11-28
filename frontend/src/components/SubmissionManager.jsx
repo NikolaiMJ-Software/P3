@@ -81,9 +81,8 @@ function ThemeSubmissions(){
         console.log(newThemes)
         console.log(oldThemes)
         // Check if theme is old
-        if (hideOld){
-            if (oldThemes.some(t => t.themeId === theme.themeId)) return false
-        }
+        if (hideOld) if (oldThemes.some(t => t.themeId === theme.themeId)) return false
+
 
         // Check if theme is an event
         if (hideEvents){
@@ -93,6 +92,7 @@ function ThemeSubmissions(){
         return theme.username.toLowerCase().includes(searchName.toLowerCase()) || theme.name.toLowerCase().includes(searchName.toLowerCase());
         }
     );
+
     const toggleTheme = (id) => {
         setExpandedTheme(expandedTheme === id ? null : id);
     };
