@@ -37,7 +37,8 @@ public class MovieService {
                     m.getYear(),
                     m.getRating(),
                     m.getPosterURL(),
-                    m.getIsSeries()
+                    m.getIsSeries(),
+                    m.getIsShorts()
                     );
             movieRequests.add(movieRequest);
         });
