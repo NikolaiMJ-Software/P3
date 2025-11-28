@@ -24,7 +24,7 @@
   "old themes": "Gamle temaer",
   "shuffle entries": "Bland Input",
   "one entry per line": "Et input per linje",
-  "upcoming events": "Opkommende begivenheder",
+  "upcoming events": "Opkommende Begivenheder",
   "drinking rules": "Drikke regler",
   "create theme": "Skab Tema",
   "insertLink": "Indtast URL...",
@@ -58,5 +58,7 @@
   "not found": "ikke fundet",
   "link not supported": "linket understøttes ikke",
   "youSure": "Er du helt sikker?",
-  "createEvent": "Skab Event:"
+  "createEvent": "Skab Event:",
+  "hide": "Skjul",
+  "watched": "Sete"
 }
