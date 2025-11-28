@@ -18,8 +18,9 @@ export default function EditTheme({ theme, onClose }) {
   const [movieCount, setMovieCount] = useState(0);
   const [sortBy, setSortBy] = useState("rating");
   const [sortDirection, setSortDirection] = useState("desc"); // "asc" | "desc"
-  const [movieFilter, setMovieFilter] = useState(false);
+  const [movieFilter, setMovieFilter] = useState(true);
   const [seriesFilter, setSeriesFilter] = useState(false);
+  const [shortsFilter, setShortsFilter] = useState(false);
   const [hideUnrated, setHideUnrated] = useState(false);
   const {t} = useTranslation();
 
@@ -59,7 +60,7 @@ useEffect(() => {
         setMovieCount(count);
         setTotalPageCount(Math.ceil(count / MOVIE_LIMIT));
 
-        const movies = await searchMovies(searchQuery, 1, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated);
+        const movies = await searchMovies(searchQuery, 1, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated);
         setFoundMovies(movies);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -67,13 +68,13 @@ useEffect(() => {
       }
     };
     fetchData();
-  }, [searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated]);
+  }, [searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated]);
 
   useEffect(() => {
     if (!searchQuery || searchQuery.trim() === "") return;
     const switchPage = async () => {
       try {
-        const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated);
+        const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter,shortsFilter, hideUnrated);
         setFoundMovies(movies);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -81,7 +82,7 @@ useEffect(() => {
       }
     };
     switchPage();
-  }, [pageCount, searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated]);
+  }, [pageCount, searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated]);
 
   useEffect(() => {
     const fetchMissingPosters = async () => {
@@ -178,6 +179,8 @@ useEffect(() => {
               setMovieFilter={setMovieFilter}
               seriesFilter={seriesFilter}
               setSeriesFilter={setSeriesFilter}
+              shortsFilter={shortsFilter}
+              setShortsFilter={setShortsFilter}
               hideUnrated={hideUnrated}
               setHideUnrated={setHideUnrated}
             />
