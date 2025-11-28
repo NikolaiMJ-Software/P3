@@ -58,5 +58,7 @@
   "not found": "not found",
   "link not supported": "link not supported",
   "youSure": "You sure about that buddy?",
-  "createEvent": "Create Event:"
+  "createEvent": "Create Event:",
+  "hide": "Hide",
+  "watched": "Watched"
 }
