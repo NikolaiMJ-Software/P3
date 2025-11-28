@@ -105,7 +105,7 @@ public class MovieRepository {
             case "rating":      column = "m.rating"; break;
             default:            column = "m.rating"; break;
         }
-        // Validate ASC / DESC 
+        // Validate ASC / DESC sorting direction
         String dir = (direction != null && direction.equalsIgnoreCase("asc")) ? "ASC" : "DESC";
 
         // Build full ORDER BY clause
@@ -126,14 +126,35 @@ public class MovieRepository {
     List<Object> params = new ArrayList<>();
     params.add(likePattern);
     // Checkbox logic:
-    boolean movieChecked = Boolean.TRUE.equals(movie);   // m.is_series = 0
-    boolean seriesChecked = Boolean.TRUE.equals(series); // m.is_series = 1
+    boolean movieChecked  = Boolean.TRUE.equals(movie);    // is_series = 0 AND is_shorts = 0
+    boolean seriesChecked = Boolean.TRUE.equals(series);   // is_series = 1
+    boolean shortsChecked = Boolean.TRUE.equals(shorts);   // is_shorts = 1
 
-    // If *exactly one* is selected then filter
-    if (movieChecked ^ seriesChecked) {
-        sql.append(" AND m.is_series = ? ");
-        params.add(seriesChecked ? 1 : 0);
+    List<String> typeClauses = new ArrayList<>();
+    // If user checked "movies"
+    if (movieChecked) {
+        typeClauses.add("(m.is_series = ? AND m.is_shorts = ?)");
+        params.add(0); // is_series
+        params.add(0); // is_shorts
     }
+    // If user checked "series"
+    if (seriesChecked) {
+        typeClauses.add("(m.is_series = ?)");
+        params.add(1); // is_series = 1
+    }
+    // If user checked "Shorts"
+    if (shortsChecked) {
+        typeClauses.add("(m.is_shorts = ?)");
+        params.add(1); // is_shorts = 1
+    }
+
+    // If at least one category was selected, apply OR-grouped filter
+    if (!typeClauses.isEmpty()) {
+        sql.append(" AND (")
+        .append(String.join(" OR ", typeClauses))
+        .append(") ");
+    }
+    
     // Rating filter
     if (Boolean.TRUE.equals(rated)) {
         sql.append(" AND m.rating IS NOT NULL AND m.rating != '' ");

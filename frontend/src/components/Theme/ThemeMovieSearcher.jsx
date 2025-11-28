@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-export default function ThemeMovieSearcher({foundMovies, setSearchQuery, pageCount, setPageCount, totalPageCount, movieCount, handleAddMovies, sortBy, setSortBy, sortDirection, setSortDirection, movieFilter, setMovieFilter, seriesFilter, setSeriesFilter, hideUnrated, setHideUnrated}){
+export default function ThemeMovieSearcher({foundMovies, setSearchQuery, pageCount, setPageCount, totalPageCount, movieCount, handleAddMovies, sortBy, setSortBy, sortDirection, setSortDirection, movieFilter, setMovieFilter, seriesFilter, setSeriesFilter, shortsFilter, setShortsFilter, hideUnrated, setHideUnrated}){
     const searchInputRef = useRef();
 const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -87,6 +87,11 @@ function refresh() {
                         <label className="flex items-center gap-2 cursor-pointer mt-1">
                             <input type="checkbox" checked={seriesFilter} onChange={(e) => (setSeriesFilter(e.target.checked), refresh())}/>
                             Series
+                        </label>
+
+                        <label className="flex items-center gap-2 cursor-pointer mt-1">
+                            <input type="checkbox" checked={shortsFilter} onChange={(e) => (setShortsFilter(e.target.checked), refresh())}/>
+                            Shorts
                         </label>
 
                         <p className="text-sm font-bold mt-3 mb-1 text-text-primary">Other Filters</p>
