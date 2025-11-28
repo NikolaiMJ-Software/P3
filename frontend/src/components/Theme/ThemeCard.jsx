@@ -37,7 +37,7 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
             </div>
         )}
             <div>
-                <h1 className={"text-xl font-bold"}>{title}</h1>
+                <h1 className={"text-xl font-bold max-w-[150px]"}>{title}</h1>
                 <h2 className={"text-sm text-text-secondary"}>{name}</h2>
                 <h3 className={"mt-1 font-semibold text-sm"}>{t("drinking rules")}</h3>
                 <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16 scrollbar-hide"}>{drinkingRules.map((rule) => {return (<li key={rule} >{rule}</li>)})}</ul>
