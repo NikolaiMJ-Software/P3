@@ -38,6 +38,7 @@
   "include": "Inkluder",
   "non-watched": "ikke-set",
   "search for": "Søg efter",
+  "search": "Søg",
   "sort based on": "Sorter baseret på",
   "filters": "Filtre",
   "become admin": "Bliv Admin",
@@ -58,5 +59,8 @@
   "not found": "ikke fundet",
   "link not supported": "linket understøttes ikke",
   "youSure": "Er du helt sikker?",
-  "createEvent": "Skab Event:"
+  "createEvent": "Skab Event:",
+  "noSSMessage": "Fandt ingen Lydprøveforslag med navnet: ",
+  "noFile": "Kunne ikke indlæse filen: ",
+  "supportFile": "Filen understøttes ikke"
 }
