@@ -81,7 +81,7 @@ function FindLinkType({link}){
     }
 
     // If sound sample is not found -> return not found 
-    return <p className="text-sm text-text-error">{t("sound sample") + " " + t("not found") + `: ${link}`}</p>;
+    return <p className="text-sm text-text-error">{t("Link") + " " + t("not found") + `: ${link}`}</p>;
 }
 
 // --- Function to check if the URL is a YouTube link and get the video ID ---
@@ -296,11 +296,11 @@ function FindFileType({ fileName }) {
     }, [fileName]);
 
     if(error) {
-        return <p className="text-red-600 text-sm">{error}</p>;
+        return <p className="text-text-error text-sm">{error}</p>;
     }
 
     if (!filePath || !fileType){
-        return <p className="text-sm text-gray-500">{`${t("loading")} ${t("file")}...`}</p>;
+        return <p className="text-sm text-text-secondary">{`${t("loading")} ${t("file")}...`}</p>;
     }
     
     // --- Check if it's a video file by seeing if the URL ends in .mp4, .webm, .mov, etc ---
@@ -330,5 +330,5 @@ function FindFileType({ fileName }) {
     }
 
     // if it's not a file return not supported
-    return <p className="text-sm text-gray-700">{t("supportFile")}</p>;
+    return <p className="text-sm text-text-error">{t("supportFile")}</p>;
 }

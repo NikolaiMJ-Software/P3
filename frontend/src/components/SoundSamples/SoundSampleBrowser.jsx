@@ -96,11 +96,11 @@ export default function SoundSampleBrowser({onCreateSS}) {
                     {t(sortUsersSSText)}
                 </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                <div onClick={onCreateSS} className="card-primary flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white text-lg font-medium shadow-sm hover:bg-green-100 transition shrink-0">
+            <div className="grid grid-cols-4 gap-5 justify-center">
+                <div onClick={onCreateSS} className="card-primary flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white text-lg font-medium shadow-sm hover:bg-light-green transition shrink-0">
                     <p className={"mb-4 text-center"}>{t("submit")} {t("sound sample")}</p>
-                    <div className={"bg-green-200 flex justify-center items-center w-16 h-16 border-5 border-green-500 rounded-full"}>
-                        <span className="text-5xl font-bold text-green-500 mb-2.5">+</span>
+                    <div className={"bg-light-green flex justify-center items-center w-16 h-16 border-5 border-btn-green rounded-full"}>
+                        <span className="text-5xl font-bold text-btn-green mb-2.5">+</span>
                     </div>
                 </div>
                 <SoundSampleCard soundSamples={usersSS} witch="users" onDeleted={handleDeleted} showenCard={usersVisibleCount}/>
@@ -141,7 +141,7 @@ export default function SoundSampleBrowser({onCreateSS}) {
                     {t(sortAllSSText)}
                 </button>
             </div>
-            <div className="w-full max-w-ful">
+            <div className="w-full">
                 <SoundSampleCard soundSamples={soundSamples} witch="" showenCard={allVisibleCount}/>
             </div>
             <div className="flex justify-center p-2">
