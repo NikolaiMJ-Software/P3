@@ -108,6 +108,12 @@ public class MovieRepository {
         jdbcTemplate.update(sql, posterURL, movieId);
     }
     public List<Movie> searchMovies(String keyword, int page, int limit, String sortBy, String direction, Boolean movie, Boolean series, Boolean shorts, Boolean rated ) {
+        // If search is an IMDb tconst then return exact match
+        if (keyword != null && keyword.matches("tt\\d{7,8}")) {
+            Movie m = findByTconst(keyword);
+            return (m != null) ? List.of(m) : List.of();
+        }
+        
         int offset = (page - 1) * limit;
         String safe = sanitizeFTS(keyword);
         if (safe.isBlank()) {
@@ -190,6 +196,11 @@ public class MovieRepository {
     }
 
     public int countMovies(String keyword){
+        // Exact tconst lookup bypasses FTS
+        if (keyword != null && keyword.matches("tt\\d{7,8}")) {
+            Movie m = findByTconst(keyword);
+            return (m != null) ? 1 : 0;
+        }
         String safe = sanitizeFTS(keyword);
         String ftsPattern = safe + "*"; // same prefix search
         if (safe.isBlank()) {
