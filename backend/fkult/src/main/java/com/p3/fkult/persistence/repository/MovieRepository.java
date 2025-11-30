@@ -45,6 +45,21 @@ public class MovieRepository {
                     rs.getString("rating")
             );
 
+    private String sanitizeFTS(String input) {
+        if (input == null) return "";
+
+        // Replace illegal FTS tokens with spaces
+        String sanitized = input.replaceAll("[\"'()\\[\\]{}:;,.!?%*~^/\\\\]", " ");
+
+        // Collapse multiple spaces
+        sanitized = sanitized.replaceAll("\\s+", " ").trim();
+
+        // If user typed only symbols, return empty string
+        if (sanitized.isEmpty()) sanitized = "";
+
+        return sanitized;
+    }
+
     //database operations
     public List<Movie> findAll(){
         return jdbcTemplate.query("SELECT * FROM movie", rowMapper);
@@ -94,7 +109,12 @@ public class MovieRepository {
     }
     public List<Movie> searchMovies(String keyword, int page, int limit, String sortBy, String direction, Boolean movie, Boolean series, Boolean shorts, Boolean rated ) {
         int offset = (page - 1) * limit;
-        String likePattern = keyword + "*"; // FTS5 prefix search
+        String safe = sanitizeFTS(keyword);
+        if (safe.isBlank()) {
+            // User typed only garbage like "%%%..."; just return no results
+            return List.of();
+        }
+        String likePattern = safe + "*"; // FTS5 prefix search
 
         String column;
 
@@ -170,7 +190,11 @@ public class MovieRepository {
     }
 
     public int countMovies(String keyword){
-        String ftsPattern = keyword + "*"; // same prefix search
+        String safe = sanitizeFTS(keyword);
+        String ftsPattern = safe + "*"; // same prefix search
+        if (safe.isBlank()) {
+            return 0;
+        }
         String sql = """
         SELECT COUNT(*)
         FROM movie m
