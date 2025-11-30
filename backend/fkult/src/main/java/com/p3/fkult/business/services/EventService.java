@@ -30,10 +30,6 @@ public class EventService {
     private final MovieRepository movieRepository;
     private final ThemeMovieRepository themeMovieRepository;
 
-    private String formatDate(LocalDateTime date){
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(date);
-    }
-
     public EventService(EventRepository eventRepository, ThemeRepository themeRepository, UserRepository userRepository, DrinkingRuleRepository drinkingRuleRepository, MovieRepository movieRepository, ThemeMovieRepository themeMovieRepository) {
         this.eventRepository = eventRepository;
         this.themeRepository = themeRepository;
@@ -43,6 +39,10 @@ public class EventService {
         this.themeMovieRepository = themeMovieRepository;
     }
 
+    public String formatDate(LocalDateTime date){
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(date);
+    }
+
     // Handles event uploads
     public String UploadEvent(LocalDateTime eventDate, long themeId) {
         try {
@@ -50,8 +50,9 @@ public class EventService {
             ZoneId systemZone = ZoneId.systemDefault();
             ZonedDateTime utcTime = eventDate.atZone(ZoneOffset.UTC);
             LocalDateTime localDateTime = utcTime.withZoneSameInstant(systemZone).toLocalDateTime();
+            String formattedDate = formatDate(localDateTime);
 
-            eventRepository.save(localDateTime, themeId);
+            eventRepository.save(formattedDate, themeId);
             return "Event upload complete!";
         } catch (Exception e) {
             e.printStackTrace();

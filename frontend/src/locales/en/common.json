@@ -62,5 +62,7 @@
   "createEvent": "Create Event:",
   "noSSMessage": "No sound samples found with the name: ",
   "noFIle": "Unable to load the file: ",
-  "supportFile": "File not supported"
+  "supportFile": "File not supported",
+  "hide": "Hide",
+  "watched": "Watched"
 }

@@ -105,26 +105,8 @@ VALUES
 (5,3, 'Drink when someone says "pirate"'),
 (6,3, 'Take a sip whenever a ship appears on screen');
 
-INSERT INTO event (event_date, theme_id)
-SELECT '2026-02-05 16:45:00', 1
-WHERE NOT EXISTS (
-  SELECT 1 FROM event
-  WHERE event_date = '2026-02-05 16:45:00'
-    AND theme_id   = 1
-);
-
-INSERT INTO event (event_date, theme_id)
-SELECT '2026-02-12 16:45:00', 2
-WHERE NOT EXISTS (
-  SELECT 1 FROM event
-  WHERE event_date = '2026-02-12 16:45:00'
-    AND theme_id   = 2
-);
-
-INSERT INTO event (event_date, theme_id)
-SELECT '2026-02-19 16:45:00', 3
-WHERE NOT EXISTS (
-  SELECT 1 FROM event
-  WHERE event_date = '2026-02-19 16:45:00'
-    AND theme_id   = 3
-);
+INSERT OR IGNORE INTO event (id, event_date, theme_id)
+VALUES
+(3,'2026-02-05 16:45:00', 1),
+(4,'2026-02-12 16:45:00', 2),
+(5,'2026-02-19 16:45:00', 3);

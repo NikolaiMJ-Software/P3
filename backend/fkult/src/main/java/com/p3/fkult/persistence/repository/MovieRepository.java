@@ -40,6 +40,7 @@ public class MovieRepository {
                     rs.getInt("runtime_minutes"),
                     rs.getBoolean("is_active"),
                     rs.getBoolean("is_series"),
+                    rs.getBoolean("is_shorts"),
                     rs.getString("poster_url"),
                     rs.getString("rating")
             );
@@ -91,7 +92,7 @@ public class MovieRepository {
         String sql = "UPDATE movie SET poster_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, posterURL, movieId);
     }
-    public List<Movie> searchMovies(String keyword, int page, int limit, String sortBy, String direction) {
+    public List<Movie> searchMovies(String keyword, int page, int limit, String sortBy, String direction, Boolean movie, Boolean series, Boolean shorts, Boolean rated ) {
         int offset = (page - 1) * limit;
         String likePattern = keyword + "*"; // FTS5 prefix search
 
@@ -101,17 +102,17 @@ public class MovieRepository {
             case "year":        column = "m.year"; break;
             case "runtime":     column = "m.runtime_minutes"; break;
             case "alphabetical":column = "m.movie_name"; break;
-            case "rating":
+            case "rating":      column = "m.rating"; break;
             default:            column = "m.rating"; break;
         }
-        // Validate ASC / DESC 
+        // Validate ASC / DESC sorting direction
         String dir = (direction != null && direction.equalsIgnoreCase("asc")) ? "ASC" : "DESC";
 
         // Build full ORDER BY clause
         String sortColumn = column + " " + dir;
 
 
-        String sql = """
+        StringBuilder sql = new StringBuilder("""
         SELECT m.*
         FROM movie m
         JOIN movie_fts fts ON fts.rowid = m.id
@@ -119,12 +120,53 @@ public class MovieRepository {
           AND m.is_active = 1
           AND m.year > 0
           AND m.runtime_minutes > 0
-        ORDER BY %s
-        LIMIT ? OFFSET ?
-    """.formatted(sortColumn);
+    """);
+
+
+    List<Object> params = new ArrayList<>();
+    params.add(likePattern);
+    // Checkbox logic:
+    boolean movieChecked  = Boolean.TRUE.equals(movie);    // is_series = 0 AND is_shorts = 0
+    boolean seriesChecked = Boolean.TRUE.equals(series);   // is_series = 1
+    boolean shortsChecked = Boolean.TRUE.equals(shorts);   // is_shorts = 1
+
+    List<String> typeClauses = new ArrayList<>();
+    // If user checked "movies"
+    if (movieChecked) {
+        typeClauses.add("(m.is_series = ? AND m.is_shorts = ?)");
+        params.add(0); // is_series
+        params.add(0); // is_shorts
+    }
+    // If user checked "series"
+    if (seriesChecked) {
+        typeClauses.add("(m.is_series = ?)");
+        params.add(1); // is_series = 1
+    }
+    // If user checked "Shorts"
+    if (shortsChecked) {
+        typeClauses.add("(m.is_shorts = ?)");
+        params.add(1); // is_shorts = 1
+    }
+
+    // If at least one category was selected, apply OR-grouped filter
+    if (!typeClauses.isEmpty()) {
+        sql.append(" AND (")
+        .append(String.join(" OR ", typeClauses))
+        .append(") ");
+    }
+    
+    // Rating filter
+    if (Boolean.TRUE.equals(rated)) {
+        sql.append(" AND m.rating IS NOT NULL AND m.rating != '' ");
+    }
+    sql.append(" ORDER BY ").append(sortColumn)
+       .append(" LIMIT ? OFFSET ?");
+
+    params.add(limit);
+    params.add(offset);
 
         // Bind the same FTS keyword to both columns
-        return jdbcTemplate.query(sql, rowMapper, likePattern, limit, offset);
+        return jdbcTemplate.query(sql.toString(), rowMapper, params.toArray());
     }
 
     public int countMovies(String keyword){
@@ -147,15 +189,16 @@ public class MovieRepository {
     jdbcTemplate.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_movie_tconst ON movie(tconst)");
 
     final String upsertSql =
-        "INSERT INTO movie (tconst, movie_name, original_movie_name, year, runtime_minutes, is_active, is_series) " +
-        "VALUES (?, ?, ?, ?, ?, 1, ?) " +
+        "INSERT INTO movie (tconst, movie_name, original_movie_name, year, runtime_minutes, is_active, is_series, is_shorts) " +
+        "VALUES (?, ?, ?, ?, ?, 1, ?, ?) " +
         "ON CONFLICT(tconst) DO UPDATE SET " +
         "  movie_name=excluded.movie_name, " +
         "  original_movie_name=excluded.original_movie_name, " +
         "  year=excluded.year, " +
         "  runtime_minutes=excluded.runtime_minutes, " +
         "  is_active=1, " +
-        "  is_series=excluded.is_series";
+        "  is_series=excluded.is_series, "+
+        "  is_shorts=excluded.is_shorts";
 
     if (markInactiveMissing) {
         jdbcTemplate.execute("CREATE TEMP TABLE IF NOT EXISTS tmp_seen(tconst TEXT PRIMARY KEY) WITHOUT ROWID");
@@ -184,7 +227,9 @@ public class MovieRepository {
             if (onlyMovies && !( "movie".equals(titleType) || "tvSeries".equals(titleType) || "short".equals(titleType) )) {continue;}
 
             Integer seriesType;
+            Integer shortsType;
             if ("tvSeries".equals(titleType)){seriesType = 1;}else{seriesType = 0;}
+            if ("short".equals(titleType)){shortsType = 1;}else{shortsType = 0;}
 
             String primaryTitle  = normalize(c[2]);
             String originalTitle = normalize(c[3]);
@@ -197,7 +242,7 @@ public class MovieRepository {
             if (startYear != null && (startYear < 1888 || startYear > currentYear)) continue;
             if (runtime == null || runtime <= 0) continue;
 
-            upserts.add(new Object[]{ tconst, movieName, originalTitle, startYear, runtime, seriesType });
+            upserts.add(new Object[]{ tconst, movieName, originalTitle, startYear, runtime, seriesType, shortsType });
             if (markInactiveMissing) seen.add(new Object[]{ tconst });
             processed++;
 

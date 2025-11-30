@@ -5,7 +5,7 @@ import {t} from "i18next";
 import {getMovies} from "../services/movieService.jsx";
 import { API } from "../services/api.jsx"
 import {deleteSoundSample, getSoundSamples} from "../services/soundSampleService.jsx";
-import {deleteTheme} from "../services/themeService.jsx";
+import {deleteTheme, getNewThemes, getOldThemes} from "../services/themeService.jsx";
 
 export default function SubmissionManager() {
     const [tab, setTab] = useState("ThemeSubmissions")
@@ -42,8 +42,13 @@ function getComponent(currentComponent){
 function ThemeSubmissions(){
     const [themes, setThemes] = useState([]);
     const [expandedTheme, setExpandedTheme] = useState(null)
-    //const [filteredThemes, setFilteredThemes] = useState([])
+    const [oldThemes, setOldThemes] = useState([])
+    const [newThemes, setNewThemes] = useState([])
+
+    // Filtering
     const [searchName, setSearchName] = useState("")
+    const [hideOld, setHideOld] = useState(false)
+    const [hideEvents, setHideEvent] = useState(false)
 
     //Get the themes
     async function loadThemes() {
@@ -60,7 +65,8 @@ function ThemeSubmissions(){
 
     useEffect(() => {
         loadThemes();
-        //console.log(themes)
+        getOldThemes().then(setOldThemes)
+        getNewThemes().then(setNewThemes)
     }, []);
 
     async function themeDelete(id) {
@@ -71,9 +77,22 @@ function ThemeSubmissions(){
 
 
     //Filter time
-    const filteredThemes = themes.filter(theme =>
-        (theme.username.toLowerCase().includes(searchName.toLowerCase()) || theme.name.toLowerCase().includes(searchName.toLowerCase()))
+    const filteredThemes = themes.filter(theme => {
+        console.log(newThemes)
+        console.log(oldThemes)
+        // Check if theme is old
+        if (hideOld) if (oldThemes.some(t => t.themeId === theme.themeId)) return false
+
+
+        // Check if theme is an event
+        if (hideEvents){
+            if (newThemes.some(t => t.themeId === theme.themeId)) return false
+        }
+
+        return theme.username.toLowerCase().includes(searchName.toLowerCase()) || theme.name.toLowerCase().includes(searchName.toLowerCase());
+        }
     );
+
     const toggleTheme = (id) => {
         setExpandedTheme(expandedTheme === id ? null : id);
     };
@@ -99,10 +118,10 @@ function ThemeSubmissions(){
                 <div className={"flex flex-col"}>
                     <p>{t("filters")}:</p>
                     <label>
-                        {t("include")} {t("voted")} {t("themes")}: <input className={"border"} type={"checkbox"}/>
+                        {t("hide")} {t("old themes")}: <input className={"border"} type={"checkbox"} onChange={() => setHideOld(!hideOld)}/>
                     </label>
                     <label>
-                        {t("include")} {t("non-watched")} {t("themes")}: <input className={"border"} type={"checkbox"}/>
+                        {t("hide")} {t("new themes")}: <input className={"border"} type={"checkbox"} onChange={() => setHideEvent(!hideEvents)}/>
                     </label>
                 </div>
             </div>

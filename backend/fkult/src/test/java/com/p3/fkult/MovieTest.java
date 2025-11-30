@@ -22,6 +22,7 @@ public class MovieTest {
         Integer runtime = 120;
         Boolean isActive = true;
         Boolean isSeries = false;
+        Boolean isShorts = false;
         String poster = "poster.jpg";
         String rating = "8.5";
 
@@ -35,6 +36,7 @@ public class MovieTest {
                 runtime,
                 isActive,
                 isSeries,
+                isShorts,
                 poster,
                 rating
         );
@@ -64,6 +66,7 @@ public class MovieTest {
         int runtime = 90;
         boolean isActive = false;
         boolean isSeries = true;
+        boolean isShorts = false;
         String poster = "img.png";
         String rating = "7.1";
 
@@ -77,6 +80,7 @@ public class MovieTest {
                 runtime,
                 isActive,
                 isSeries,
+                isShorts,
                 poster,
                 rating
         );
@@ -106,6 +110,7 @@ public class MovieTest {
         Integer runtime = 110;
         Boolean isActive = true;
         Boolean isSeries = true;
+        Boolean isShorts = false;
         String poster = "poster.png";
         String rating = "9.0";
 
@@ -118,6 +123,7 @@ public class MovieTest {
                 runtime,
                 isActive,
                 isSeries,
+                isShorts,
                 poster,
                 rating
         );
@@ -141,6 +147,7 @@ public class MovieTest {
         // Arrange
         Movie movie = new Movie(
                 0L,
+                null,
                 null,
                 null,
                 null,

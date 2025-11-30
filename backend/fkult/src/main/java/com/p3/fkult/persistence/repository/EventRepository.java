@@ -43,7 +43,7 @@ public class EventRepository {
     }
 
     // Save an Event to the database
-    public void save(LocalDateTime eventDate, long themeId){
+    public void save(String eventDate, long themeId){
         String sql = "INSERT INTO event (event_date, theme_id) VALUES (?,?)";
         jdbcTemplate.update(sql, eventDate, themeId);
     }
@@ -70,14 +70,7 @@ public class EventRepository {
 
     // Find the id of the event happening today (within 24 hours of now)
     public Long findIdOfStartupDayToday() {
-        String sql = "SELECT id, event_date, theme_id " +
-        "FROM event " +
-        "WHERE event_date > DATETIME('now', '-24 hours') " +
-        "AND theme_id IS NULL " +
-        "ORDER BY " +
-        "ABS(strftime('%s', event_date) - strftime('%s','now')) ASC, " +
-        "id ASC " +
-        "LIMIT 1";
+        String sql = "SELECT * FROM event WHERE theme_id IS NULL ORDER BY event_date DESC LIMIT 1";
         List<Event> events = jdbcTemplate.query(sql, rowMapper);
         if (events.isEmpty()){
             return null;

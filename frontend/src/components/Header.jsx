@@ -4,16 +4,18 @@ import discordWEBP from '../assets/discord.webp'
 import userPNG from "../assets/User.png"
 import englishPNG from "../assets/english.png"
 import danishPNG from "../assets/danish.png"
-import React from "react";
+import React, {useEffect} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import {isAdmin} from "../services/adminService.jsx";
 
 export default function Header(){
     const navigate = useNavigate();
     const {username} = useParams();
     const [open, setOpen] = useState(false);
     const menuRef = useRef(null);
+    const [adminBool, setAdminBool] = useState(false)
 
     const {t, i18n} = useTranslation();
 
@@ -32,6 +34,10 @@ export default function Header(){
         //test log
         //console.log(lang);
     };
+
+    useEffect(() => {
+        isAdmin(username).then(setAdminBool)
+    }, [username]);
 
 
     const logout = () =>{
@@ -92,7 +98,7 @@ export default function Header(){
                      {open && (
                         <div className="absolute right-0 top-14 w-36 bg-white border rounded-xl shadow-lg z-50">
                             <button
-                                className="cursor-pointer block w-full text-left px-4 py-2 hover:bg-btn-hover-secondary rounded-t-xl"
+                                className={"cursor-pointer block w-full text-left px-4 py-2 hover:bg-btn-hover-secondary rounded-t-xl " + (adminBool ? "" : "hidden")}
                                 onClick={()=>{
                                     setOpen(false);
                                     navigate(`/admin/${username}`);

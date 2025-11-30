@@ -24,7 +24,7 @@
   "old themes": "Gamle temaer",
   "shuffle entries": "Bland Input",
   "one entry per line": "Et input per linje",
-  "upcoming events": "Opkommende begivenheder",
+  "upcoming events": "Opkommende Begivenheder",
   "drinking rules": "Drikke regler",
   "create theme": "Skab Tema",
   "insertLink": "Indtast URL...",
@@ -62,5 +62,7 @@
   "createEvent": "Skab Event:",
   "noSSMessage": "Fandt ingen Lydprøveforslag med navnet: ",
   "noFile": "Kunne ikke indlæse filen: ",
-  "supportFile": "Filen understøttes ikke"
+  "supportFile": "Filen understøttes ikke",
+  "hide": "Skjul",
+  "watched": "Sete"
 }

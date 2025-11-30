@@ -95,7 +95,7 @@ public class EventRepositoryTest {
     @Test
     void testSave() {
         // Arrange
-        LocalDateTime date = LocalDateTime.now();
+        String date = "2024-06-01 16:30:00";
         long themeId = 10L;
 
         // Act
