@@ -9,10 +9,13 @@ export default function SoundSampleBrowser({onCreateSS}) {
     const { username } = useParams();
     const [usersSS, setUsersSoundSample] = useState([]);
     const [soundSamples, setSoundSample] = useState([]);
+    const [originSoundSamples, setOriginSoundSamples] = useState([]);
     const [sortUsersSSText, setSortUsersText] = useState("latest");
     const [sortAllSSText, setSortAllText] = useState("oldest");
     const [allVisibleCount, setAllVisibleCount] = useState(4);
     const [usersVisibleCount, setUsersVisibleCount] = useState(3);
+    const [searchForUsername, setSearchForUsername] = useState("");
+    const [noSSMessage, setNoSSMessage] = useState("");
 
     useEffect(() => {
         load();
@@ -27,12 +30,13 @@ export default function SoundSampleBrowser({onCreateSS}) {
                 SS => SS.username.toLowerCase() === username.toLowerCase()
             );
             
+            // Set sound samples
             setSortAllText(sortAllSSText);
             setSoundSample(sortAllSSText === "latest" ? SS : [...SS].reverse());
+            setOriginSoundSamples([...SS].reverse());
             setSortUsersText(sortUsersSSText);
             setUsersSoundSample(sortUsersSSText === "latest" ? usersSoundSample : [...usersSoundSample].reverse());
-            console.log("All SS: ", SS);
-            console.log("Users SS: ", usersSoundSample);
+
         } catch (error) {
             console.error("Error getting sound samples:", error);
         }
@@ -43,7 +47,7 @@ export default function SoundSampleBrowser({onCreateSS}) {
         load();
     };
 
-    // Sort from oldest to newest and vice versa
+    // Sort filter: with name, oldest to newest and vice versa
     const sortSS = (selected) => {
         try {
             if (selected === "usersSS") {
@@ -57,9 +61,24 @@ export default function SoundSampleBrowser({onCreateSS}) {
                 setSortAllText(
                     sortAllSSText === "latest" ? "oldest" : "latest"
                 );
+
+            } else if (selected === "searchForUsers") {
+                if (!searchForUsername.trim()) {
+                    setSoundSample(sortAllSSText === "latest" ? originSoundSamples : [...originSoundSamples].reverse());
+                    setNoSSMessage("");
+                } else {
+                    const filterSS = originSoundSamples.filter(SS => SS.usersFullName.toLowerCase().includes(searchForUsername.trim().toLowerCase()));
+                    if (!filterSS.length) {
+                        setNoSSMessage(`"${searchForUsername}"`);
+                        setSoundSample([]);
+                    } else {
+                        setSoundSample(sortAllSSText === "latest" ? filterSS : [...filterSS].reverse());
+                        setNoSSMessage("");
+                    }
+                }
             }
         } catch (error) {
-            console.error("Error reversing sound samples:", error);
+            console.error("Error sorting sound samples:", error);
         }
     }
 
@@ -70,18 +89,18 @@ export default function SoundSampleBrowser({onCreateSS}) {
             {/* Users sound sample card container */}
             <div className="flex justify-between items-center m-4">
                 <div className={"m-4 font-bold"}>{t("usersSS")}</div>
-                <button className={"btn-primary" + (usersSS.length > 1 ? " visibel" : " invisible")}
+                <button className={"btn-primary" + (usersSS.length > 1 ? " visible" : " invisible")}
                     data-testid="revUsersSS"
                     type="button"
                     onClick={() => sortSS("usersSS")}>
                     {t(sortUsersSSText)}
                 </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                <div onClick={onCreateSS} className="card-primary flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white text-lg font-medium shadow-sm hover:bg-green-100 transition shrink-0">
+            <div className="grid grid-cols-4 gap-5 justify-center">
+                <div onClick={onCreateSS} className="card-primary flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white text-lg font-medium shadow-sm hover:bg-light-green transition shrink-0">
                     <p className={"mb-4 text-center"}>{t("submit")} {t("sound sample")}</p>
-                    <div className={"bg-green-200 flex justify-center items-center w-16 h-16 border-5 border-green-500 rounded-full"}>
-                        <span className="text-5xl font-bold text-green-500 mb-2.5">+</span>
+                    <div className={"bg-light-green flex justify-center items-center w-16 h-16 border-5 border-btn-green rounded-full"}>
+                        <span className="text-5xl font-bold text-btn-green mb-2.5">+</span>
                     </div>
                 </div>
                 <SoundSampleCard soundSamples={usersSS} witch="users" onDeleted={handleDeleted} showenCard={usersVisibleCount}/>
@@ -100,6 +119,21 @@ export default function SoundSampleBrowser({onCreateSS}) {
             {/* All sound samples card container */}
             <div className="flex justify-between items-center m-4">
                 <div className={"m-4 font-bold"}>{t("uplSS")}</div>
+                <div className="flex justify-center">
+                    <input
+                        className="border px-2 py-1 rounded w-64"
+                        type="text" 
+                        placeholder={t("search for") + " " + t("user") + "..."}
+                        onChange={(e) => setSearchForUsername(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" && (e.preventDefault(), sortSS("searchForUsers"))}
+                    />
+                    <button className={"btn-primary ml-2"}
+                        data-testid="search"
+                        type="button"
+                        onClick={() => sortSS("searchForUsers")}>
+                        {t("search")}
+                    </button>
+                </div>
                 <button className={"btn-primary" + (soundSamples.length > 1 ? " visibel" : " invisible")}
                     data-testid="revAllSS"
                     type="button"
@@ -107,7 +141,7 @@ export default function SoundSampleBrowser({onCreateSS}) {
                     {t(sortAllSSText)}
                 </button>
             </div>
-            <div className="w-full max-w-ful">
+            <div className="w-full">
                 <SoundSampleCard soundSamples={soundSamples} witch="" showenCard={allVisibleCount}/>
             </div>
             <div className="flex justify-center p-2">
@@ -118,7 +152,11 @@ export default function SoundSampleBrowser({onCreateSS}) {
                     {t("loadMore")}
                 </button>
             </div>
-
+            {noSSMessage && (
+                <div className="flex justify-center items-center text-text-secondary">
+                    {t("noSSMessage") + noSSMessage}
+                </div>
+            )}
         </div>
     </div>
     )

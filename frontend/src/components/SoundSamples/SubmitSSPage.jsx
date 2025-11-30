@@ -30,8 +30,7 @@ export default function SubmitSSPage() {
         // Get the user ID from the backend
         let userId;
         try {
-            userId = await getIdByUser(username);
-            console.log('userID: ',userId)
+            userId = await getIdByUser(username);   
         } catch (error) { 
             console.error("Failed to fetch user ID:", error);
             setMessage("Failed to fetch user ID: " + error.message);
