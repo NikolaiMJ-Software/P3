@@ -128,9 +128,9 @@ export default function AdminSSPage(){
                     </div>
                     
                     {/* Mediaplayer Placeholder */}
-                    { hasSamples &&
-                    < MediaPlayer soundSample={currentSample.soundSample} size={"h-154 w-274"}/>
-                    }
+                    <div className="h-69">
+                        { hasSamples && <MediaPlayer soundSample={currentSample.soundSample}/>}
+                    </div>
                     {/* Next and Back buttons */}
                     <div className="flex gap-85 mt-2">
                         <button

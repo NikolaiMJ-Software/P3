@@ -222,7 +222,7 @@ function TikTokEmbed({ url }) {
             cite={url}
             data-video-id={url.split('/').pop()}
         >
-            <a href={url}>{t(loading)} TikTok...</a>
+            <a href={url}>{t("loading")} TikTok...</a>
         </blockquote>
     );
 }
