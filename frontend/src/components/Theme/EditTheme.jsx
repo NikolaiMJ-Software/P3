@@ -24,6 +24,12 @@ export default function EditTheme({ theme, onClose }) {
   const [hideUnrated, setHideUnrated] = useState(false);
   const {t} = useTranslation();
 
+  const extractTconst = (input) => {
+      if (!input) return null;
+      const match = input.match(/tt\d{7,8}/i);
+      return match ? match[0] : null;
+  };
+
   // collect theme movie data based on tConst
 useEffect(() => {
   if (!theme?.tConsts || !theme.tConsts.length) return;
@@ -52,7 +58,23 @@ useEffect(() => {
         setMovieCount(0);
         return;
       }
-
+      // Detect full IMDb link or raw tt1234567
+      const tconst = extractTconst(searchQuery);
+      if (tconst) {
+          // its direct tconst search so its always at page 1 with limit 1 since its exact
+          try {
+              const movies = await searchMovies(tconst, 1, 1, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated);
+              setFoundMovies(movies);
+              setMovieCount(movies.length);
+              setTotalPageCount(1);
+          } catch (e) {
+              console.error("IMDb link search failed:", e);
+              setFoundMovies([]);
+              setMovieCount(0);
+              setTotalPageCount(1);
+          }
+          return;
+        }
       try {
         setPageCount(1);
 
@@ -72,6 +94,8 @@ useEffect(() => {
 
   useEffect(() => {
     if (!searchQuery || searchQuery.trim() === "") return;
+    const tconst = extractTconst(searchQuery);
+    if (tconst) return; 
     const switchPage = async () => {
       try {
         const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter,shortsFilter, hideUnrated);

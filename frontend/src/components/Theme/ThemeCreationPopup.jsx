@@ -76,6 +76,8 @@ export default function ThemeCreationPopup({setSelected}) {
 
     useEffect(() => {
         if (!searchQuery || searchQuery.trim() === "") return;
+            const tconst = extractTconst(searchQuery);
+            if (tconst) return; 
             const switchPage = async () => {
                 try {
                     const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated)
