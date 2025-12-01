@@ -15,7 +15,7 @@ function refresh() {
                     ref={searchInputRef}
                     onKeyDown={event => event.key === "Enter" && (event.preventDefault(), setSearchQuery(event.target.value))}
                     type="text"
-                    placeholder="Search Movie or Series..."
+                    placeholder="Search by name or IMDB link..."
                     className="flex-1 min-w-[120px] text-center text-text-primary border-1 p-2 rounded-2xl truncate"
                 />
                 <button
@@ -154,7 +154,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
 
                     <p>{year}</p>
                 </div>
-                <button onClick={onAdd} className="btn-primary">
+                <button onClick={onAdd} className="btn-primary px-3 py-1 ml-auto">
                     Add
                 </button>
             </div>
@@ -174,7 +174,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
 
                     <p>{year}</p>
                 </div>
-                <button onClick={onAdd} className="btn-primary">
+                <button onClick={onAdd} className="btn-primary px-3 py-1 ml-auto">
                     Add
                 </button>
             </div>
