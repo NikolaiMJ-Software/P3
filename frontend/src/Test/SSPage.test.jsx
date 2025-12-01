@@ -27,7 +27,7 @@ vi.mock("../components/SoundSamples/SoundSamplesCard.jsx", () => ({
     ),
 }));
 
-describe("submit sound sample page Test", () => {
+describe("sound sample page Test", () => {
     let i18n;
     
     beforeEach(async () => {
