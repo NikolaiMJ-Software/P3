@@ -1,6 +1,5 @@
 package com.p3.fkult.persistence.repository;
 
-import com.p3.fkult.persistence.entities.ExampleMessage;
 import com.p3.fkult.persistence.entities.Theme;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
