@@ -37,6 +37,24 @@ export default function ThemeCreationPopup({setSelected}) {
             return;
             }
 
+        // Detect full IMDb link or raw tt1234567
+        const tconst = extractTconst(searchQuery);
+        if (tconst) {
+            // its direct tconst search so its always at page 1 with limit 1 since its exact
+            try {
+                const movies = await searchMovies(tconst, 1, 1, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated);
+                setFoundMovies(movies);
+                setMovieCount(movies.length);
+                setTotalPageCount(1);
+            } catch (e) {
+                console.error("IMDb link search failed:", e);
+                setFoundMovies([]);
+                setMovieCount(0);
+                setTotalPageCount(1);
+            }
+            return;
+        }
+
         try {
             setPageCount(1); //page reset
 
@@ -134,6 +152,12 @@ export default function ThemeCreationPopup({setSelected}) {
         setRules("");
     }
 
+    const extractTconst = (input) => {
+        if (!input) return null;
+
+        const match = input.match(/tt\d{7,8}/i);
+        return match ? match[0] : null;
+    };
 
     return (
         <div className="p-10 relative flex justify-center items-center">

@@ -16,6 +16,7 @@ export default function ThemeBrowser({onCreateTheme}) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [editingTheme, setEditingTheme] = useState(null);
     const [allThemes, setAllThemes] = useState([]);
+    const [mode, setMode] = useState("browse"); 
     const {t} = useTranslation();
 
     // Load ALL themes once
@@ -105,9 +106,15 @@ const mergedEvents = useMemo(() => {
 console.log("Merged events:", mergedEvents);
 */
 
+if (mode === "edit") {
+    return (
+        <EditTheme theme={editingTheme} onClose={() => {setEditingTheme(null); setMode("browse");}}/>
+    );
+}
 
     return (
         <div className={"p-10"}>
+            
             <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8"}>
 
                 {/* Upcoming themes card container */}
@@ -121,8 +128,7 @@ console.log("Merged events:", mergedEvents);
                 {/* Your themes card container */}
                 <div className={"pt-4 flex row-end-5 flex gap-5"}>
                     {/* individual cards */}
-                    {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={onCreateTheme} showActions={true} onDelete={handleDeleteTheme} onEdit={(theme) => setEditingTheme(theme)} ></ThemeCollection>)}
-                    {editingTheme && (<EditTheme theme={editingTheme} onClose={() => setEditingTheme(null)}/>)}
+                    {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={onCreateTheme} showActions={true} onDelete={handleDeleteTheme} onEdit={(theme) => {setEditingTheme(theme); setMode("edit");}} ></ThemeCollection>)}
                     {selected === "old" && (<ThemeCollection isCreator={false} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
                     {selected === "new" && (<ThemeCollection isCreator={false} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
                 </div>

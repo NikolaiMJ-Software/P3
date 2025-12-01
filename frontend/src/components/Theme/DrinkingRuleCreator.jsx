@@ -4,11 +4,24 @@ import MovieCard, {ThemeMovieCard} from "./MovieCard.jsx";
 
 export default function DrinkingRuleCreator({rules, setRules}) {
     const [ruleInput, setRuleInput] = useState("");
-
+    const [editingIndex, setEditingIndex] = useState(null);
+    const [editText, setEditText] = useState("");
     const addRule = () => {
         if (ruleInput.trim() === "") return;
         setRules ([...rules, ruleInput.trim()]);
         setRuleInput("");
+    };
+
+    const startEdit = (index, rule) => {
+        setEditingIndex(index);
+        setEditText(rule);
+    };
+
+    const finishEdit = (index) => {
+        const updated = [...rules];
+        updated[index] = editText.trim();
+        setRules(updated);
+        setEditingIndex(null);
     };
 
     const removeRule = (indexToRemove) => {
@@ -29,7 +42,24 @@ export default function DrinkingRuleCreator({rules, setRules}) {
                         key={index}
                         className="flex flex-row items-center justify-between border-b border-text-secondary py-1 px-2 w-120"
                     >
-                        <p className="flex-grow text-center truncate">{rule}</p>
+                        {editingIndex === index ? (
+                            <input
+                                className="flex-grow text-center border"
+                                value={editText}
+                                onChange={(e) => setEditText(e.target.value)}
+                                onBlur={() => finishEdit(index)}
+                                onKeyDown={(e) => e.key === "Enter" && finishEdit(index)}
+                                autoFocus
+                            />
+                        ) : (
+                            <p
+                                className="flex-grow text-center truncate cursor-pointer"
+                                onClick={() => startEdit(index, rule)}
+                            >
+                                {rule}
+                            </p>
+                        )}
+
                         <button
                             onClick={() => removeRule(index)}
                             className="text-text-error font-bold px-2 hover:text-red-700 m-1"
