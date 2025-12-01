@@ -13,6 +13,7 @@ import Header from "./components/Header.jsx";
 import WheelOfFortunePage from "./pages/WheelOfFortunePage.jsx";
 import FAQPage from "./pages/FAQPage.jsx";
 import ProtectRoute from "./components/ProtectRoute.jsx";
+import EventShowcasePage from "./pages/EventShowcasePage.jsx";
 
 function Layout() {
     return(
@@ -48,7 +49,7 @@ export default function Router() {
 
                 {/* Routes that don't have the header */}
                 <Route path="/login" element={<LoginPage />} />
-
+                <Route path={"/showcase"} element={<EventShowcasePage/>}/>
             </Routes>
         </BrowserRouter>
     );
