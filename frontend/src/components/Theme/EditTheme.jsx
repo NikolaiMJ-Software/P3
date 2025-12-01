@@ -227,7 +227,7 @@ useEffect(() => {
         <div className="w-full flex justify-center mt-3">
           <button
             onClick={handleUpdate}
-            className="px-7 py-3 rounded-xl border-2 border-text-primary hover:bg-btn-hover-secondary"
+            className="btn-primary"
           >
             {t("update")}
           </button>

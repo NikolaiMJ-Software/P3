@@ -20,7 +20,7 @@ function refresh() {
                 />
                 <button
                     onClick={(event) => setSearchQuery(searchInputRef.current.value)}
-                    className="px-3 py-2 border-1 rounded-2xl hover:bg-btn-hover-secondary min-w-[80px] truncate"
+                    className="btn-primary"
                 >
                     Search
                 </button>
@@ -29,7 +29,7 @@ function refresh() {
                 <div className="relative z-50">
                 <button
                     onClick={() => setDropdownOpen(o => !o)}
-                    className="px-3 py-2 border-1 rounded-xl bg-bg-primary text-text-primary cursor-pointer hover:bg-btn-hover-secondary min-w-[140px]"
+                    className="btn-primary"
                 >
                     Filters ▾
                 </button>
@@ -125,9 +125,9 @@ function refresh() {
                 </MovieSuggestion>
             })}
             <div className="absolute bottom-2 flex flex-row gap-4">
-                <button onClick={() => setPageCount(prev => Math.max(1, prev - 1))} className="border-2 text-lg p-2 hover:cursor-pointer hover:bg-btn-hover-secondary">Prev</button>
+                <button onClick={() => setPageCount(prev => Math.max(1, prev - 1))} className="btn-primary">Prev</button>
                 <p className="mt-3">{`${pageCount}/${totalPageCount}`}</p>
-                <button onClick={() => setPageCount(prev => Math.min(totalPageCount, prev + 1))} className="border-2 text-lg p-2 hover:cursor-pointer hover:bg-btn-hover-secondary">Next</button>
+                <button onClick={() => setPageCount(prev => Math.min(totalPageCount, prev + 1))} className="btn-primary">Next</button>
                 <p className="mt-3">{movieCount}</p>
             </div>
         </div>
@@ -154,7 +154,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
 
                     <p>{year}</p>
                 </div>
-                <button onClick={onAdd} className="px-3 py-1 rounded-lg hover:bg-btn-hover-secondary cursor-pointer transition  ml-auto">
+                <button onClick={onAdd} className="btn-primary">
                     Add
                 </button>
             </div>
@@ -174,7 +174,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
 
                     <p>{year}</p>
                 </div>
-                <button onClick={onAdd} className="px-3 py-1 rounded-lg hover:bg-btn-hover-secondary cursor-pointer transition  ml-auto">
+                <button onClick={onAdd} className="btn-primary">
                     Add
                 </button>
             </div>
@@ -196,7 +196,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
                 <p></p>
 
             </div>
-            <button onClick={onAdd} className="px-3 py-1 rounded-lg hover:bg-btn-hover-secondary cursor-pointer transition  ml-auto">
+            <button onClick={onAdd} className="btn-primary px-3 py-1 ml-auto">
                 Add
             </button>
         </div>

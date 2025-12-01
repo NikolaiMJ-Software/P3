@@ -34,7 +34,7 @@ export default function DrinkingRuleCreator({rules, setRules}) {
             <p className={""}>Drinking rules:</p>
             <div className={"flex flex-row items-center gap-2 w-full max-w-[600px]"}>
                 <input type={"text"} value={ruleInput} onChange={(event) => setRuleInput(event.target.value)} onKeyDown={(event) => {if (event.key === "Enter"){event.preventDefault(); addRule();}}} className={"border-2 rounded-2xl flex-grow text-center"} placeholder={"Write drinking rule..."}/>
-                <button className={"border-2 rounded-2xl p-1 hover:cursor-pointer hover:bg-btn-hover-secondary flex-shrink-0"} onClick={addRule}>Add</button>
+                <button className={"btn-primary px-3 py-1"} onClick={addRule}>Add</button>
             </div>
             <div className="overflow-y-auto overflow-x-hidden max-h-[100px] max-w-[500px]">
                 {saferules.map((rule, index) => (
