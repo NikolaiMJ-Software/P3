@@ -66,9 +66,6 @@ public class MovieController {
         if (limit < 0) limit = 0;
         List<MovieRequest> results = movieService.searchMovies(q, page, limit, sortBy, direction, movie, series, shorts, rated);
 
-        if(results.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
         return ResponseEntity.ok(results);
     } // to test the search: GET http://localhost:8080/api/movies/search?q=MovieTitle&page=1
 

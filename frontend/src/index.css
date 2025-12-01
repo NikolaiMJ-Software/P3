@@ -91,6 +91,7 @@
   --color-text-primary: oklch(0 0 0); /* Black */
   --color-text-secondary: oklch(0.30 0 0); /* Gray */
   --color-link: oklch(0.627 0.194 149.214); /* Lime green */
+  --color-light-green: oklch(0.962 0.044 156.743); /* Light green*/
   --color-text-error: oklch(0.628 0.2577 29.23); /* Red */
   --color-btn-red: oklch(0.577 0.245 27.325); /* Darker Red */
   --color-btn-red-hover: oklch(0.505 0.213 27.518); /* Even Darker Red */

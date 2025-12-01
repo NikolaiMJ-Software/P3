@@ -35,6 +35,7 @@
   "include": "Include",
   "non-watched": "non-watched",
   "search for": "Search for",
+  "search": "Search",
   "sort based on": "Sort based on",
   "filters": "Filters",
   "become admin": "Become Admin",
@@ -59,6 +60,9 @@
   "link not supported": "link not supported",
   "youSure": "You sure about that buddy?",
   "createEvent": "Create Event:",
+  "noSSMessage": "No sound samples found with the name: ",
+  "noFIle": "Unable to load the file: ",
+  "supportFile": "File not supported",
   "hide": "Hide",
   "watched": "Watched"
 }

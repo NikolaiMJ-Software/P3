@@ -69,8 +69,10 @@ describe("submit sound sample page Test", () => {
         const filterBtnAll = await screen.findByTestId("revAllSS");
         const moreBtnAll = await screen.findByTestId("loadMoreAllSS");
 
+        const searchField = await screen.findByPlaceholderText(i18n.t("search for") + " " + i18n.t("user") + "...");
+        const searchBtn = await screen.findByTestId("search");
+
         await waitFor(() => {
-            
             expect(filterBtnUsers).toBeInTheDocument();
             expect(filterBtnUsers).toHaveTextContent(i18n.t("latest"));
             expect(moreBtnUsers).toBeInTheDocument();
@@ -80,6 +82,9 @@ describe("submit sound sample page Test", () => {
             expect(filterBtnAll).toHaveTextContent(i18n.t("oldest"));
             expect(moreBtnAll).toBeInTheDocument();
             expect(moreBtnAll).toHaveTextContent(i18n.t("loadMore"));
+
+            expect(searchField).toBeInTheDocument();
+            expect(searchBtn).toBeInTheDocument();
         });
     });
 
@@ -196,6 +201,14 @@ describe("submit sound sample page Test", () => {
         ];
         renderBrowserWithData(dummyData);
 
+        // Wait for DOM
+        await waitFor(() => {
+            expect(screen.queryAllByTestId(/usersSS-/i).length).toBeGreaterThan(0);
+            expect(screen.queryAllByTestId(/usersSS-/i).some(
+                c => c.textContent.trim().includes(`${i18n.t("loading")} ${i18n.t("file")}...`
+            ))).toBe(false);
+        });
+
         // Before
         const cardsBefore = screen.queryAllByTestId(/usersSS-/i).map(c => c.textContent.trim());
         
@@ -217,6 +230,14 @@ describe("submit sound sample page Test", () => {
             { username: "other1", soundSample: "D" }
         ];
         renderBrowserWithData(dummyData);
+
+        // Wait for DOM
+        await waitFor(() => {
+            expect(screen.queryAllByTestId(/allSS-/i).length).toBeGreaterThan(0);
+            expect(screen.queryAllByTestId(/allSS-/i).some(
+                c => c.textContent.trim().includes(`${i18n.t("loading")} ${i18n.t("file")}...`
+            ))).toBe(false);
+        });
         
         // Before
         const cardsBefore = screen.queryAllByTestId(/allSS-/i).map(c => c.textContent.trim());
@@ -298,5 +319,72 @@ describe("submit sound sample page Test", () => {
         expect(() => {
             fireEvent.click(reverseBtn);
         }).not.toThrow();
+    });
+
+    it("Filter Sound sample by searching on username", async () => {
+        const dummyData = [
+            { username: "Bob", usersFullName: "Bob Larsen", soundSample: "A" },
+            { username: "other2", usersFullName: "Pringles Nielsen", soundSample: "B" },
+            { username: "Bob", usersFullName: "Bob Larsen", soundSample: "C" },
+            { username: "other1", usersFullName: "mr. Jacobsen", soundSample: "D" }
+        ];
+        renderBrowserWithData(dummyData);
+        
+        // Wait for DOM
+        await waitFor(() => {
+            expect(screen.queryAllByTestId(/allSS-/i).length).toBeGreaterThan(0);
+            expect(screen.queryAllByTestId(/allSS-/i).some(
+                c => c.textContent.trim().includes(`${i18n.t("loading")} ${i18n.t("file")}...`
+            ))).toBe(false);
+        });
+
+        // Input username in textbox
+        const input = await screen.findByPlaceholderText(`${i18n.t("search for")} ${i18n.t("user")}...`);
+        fireEvent.change(input, { target: { value: "Bob" } });
+
+        // Click search btn
+        const searchBtn = await screen.findByTestId("search");
+        fireEvent.click(searchBtn);
+
+        await waitFor(() => {
+            const cardsAfter = screen.queryAllByTestId(/allSS-/i).map(c => c.textContent.trim());
+            const expected = dummyData.filter(d => d.usersFullName.includes("Bob")).map(d => `${d.usersFullName}${i18n.t("noFile")}${d.soundSample}`);
+            expect(cardsAfter).toEqual(expected);
+        });
+    });
+
+    it("Filter Sound sample by searching on nothing", async () => {
+        const dummyData = [
+            { username: "Bob", soundSample: "A" },
+            { username: "other2", soundSample: "B" },
+            { username: "Bob", soundSample: "C" },
+            { username: "other1", soundSample: "D" }
+        ];
+        renderBrowserWithData(dummyData);
+        
+        // Wait for DOM
+        await waitFor(() => {
+            expect(screen.queryAllByTestId(/allSS-/i).length).toBeGreaterThan(0)
+            expect(screen.queryAllByTestId(/allSS-/i).some(
+                c => c.textContent.trim().includes(`${i18n.t("loading")} ${i18n.t("file")}...`
+            ))).toBe(false);
+        });
+
+        // Before
+        const cardsBefore = screen.queryAllByTestId(/allSS-/i).map(c => c.textContent.trim());
+        
+        // Input username in textbox
+        const input = await screen.findByPlaceholderText(`${i18n.t("search for")} ${i18n.t("user")}...`);
+        fireEvent.change(input, { target: { value: "" } });
+
+        // Click search btn
+        const searchBtn = await screen.findByTestId("search");
+        fireEvent.click(searchBtn);
+
+        await waitFor(() => {
+            // Expect all sound sample to show 
+            const cardsAfter = screen.queryAllByTestId(/allSS-/i).map(c => c.textContent.trim());
+            expect(cardsAfter).toEqual(cardsBefore.reverse());
+        });
     });
 });

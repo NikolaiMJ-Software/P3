@@ -81,7 +81,7 @@ function FindLinkType({link}){
     }
 
     // If sound sample is not found -> return not found 
-    return <p className="text-sm text-text-error">{t("sound sample") + " " + t("not found")}</p>;
+    return <p className="text-sm text-text-error">{t("Link") + " " + t("not found") + `: ${link}`}</p>;
 }
 
 // --- Function to check if the URL is a YouTube link and get the video ID ---
@@ -210,6 +210,7 @@ function XEmbed({ url }) {
 
 // Setup TikTok embeds
 function TikTokEmbed({ url }) {
+    const {t} = useTranslation();
     const script = document.createElement('script');
     script.src = 'https://www.tiktok.com/embed.js';
     script.async = true;
@@ -221,7 +222,7 @@ function TikTokEmbed({ url }) {
             cite={url}
             data-video-id={url.split('/').pop()}
         >
-            <a href={url}>Loading TikTok...</a>
+            <a href={url}>{t("loading")} TikTok...</a>
         </blockquote>
     );
 }
@@ -253,6 +254,7 @@ function getFbEmbedUrl(u){
 
 
 function FindFileType({ fileName }) {
+    const {t} = useTranslation();
     const [filePath, setFilePath] = useState(null);
     const [fileType, setFileType] = useState(null); // "video" | "audio" | "link" | null
     const [error, setError] = useState(null);
@@ -281,7 +283,7 @@ function FindFileType({ fileName }) {
             } catch (err) {
                 if(!cancelled) {
                     console.error(err);
-                    setError("Kunne ikke indlæse filen.")
+                    setError(t("noFile") + fileName);
                 }
             }
         }
@@ -294,11 +296,11 @@ function FindFileType({ fileName }) {
     }, [fileName]);
 
     if(error) {
-        return <p className="text-red-600 text-sm">{error}</p>;
+        return <p className="text-text-error text-sm">{error}</p>;
     }
 
     if (!filePath || !fileType){
-        return <p className="text-sm text-gray-500">Indlæser fil…</p>;
+        return <p className="text-sm text-text-secondary">{`${t("loading")} ${t("file")}...`}</p>;
     }
     
     // --- Check if it's a video file by seeing if the URL ends in .mp4, .webm, .mov, etc ---
@@ -327,6 +329,6 @@ function FindFileType({ fileName }) {
         );
     }
 
-    // if its not a file return not supported
-    return <p className="text-sm text-gray-700">Denne filtype understøttes ikke.</p>;
+    // if it's not a file return not supported
+    return <p className="text-sm text-text-error">{t("supportFile")}</p>;
 }
