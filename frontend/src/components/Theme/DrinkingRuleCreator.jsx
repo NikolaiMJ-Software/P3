@@ -1,11 +1,13 @@
 import { useState } from "react";
 import logo from "../../assets/logo.png"
 import MovieCard, {ThemeMovieCard} from "./MovieCard.jsx";
+import { useTranslation } from "react-i18next";
 
 export default function DrinkingRuleCreator({rules, setRules}) {
     const [ruleInput, setRuleInput] = useState("");
     const [editingIndex, setEditingIndex] = useState(null);
     const [editText, setEditText] = useState("");
+    const {t} = useTranslation();
     const addRule = () => {
         if (ruleInput.trim() === "") return;
         setRules ([...rules, ruleInput.trim()]);
@@ -31,10 +33,10 @@ export default function DrinkingRuleCreator({rules, setRules}) {
     const saferules = Array.isArray(rules) ? rules : [];
     return(
         <>
-            <p className={""}>Drinking rules:</p>
+            <p className={""}>{t("drinking rules:")}</p>
             <div className={"flex flex-row items-center gap-2 w-full max-w-[600px]"}>
-                <input type={"text"} value={ruleInput} onChange={(event) => setRuleInput(event.target.value)} onKeyDown={(event) => {if (event.key === "Enter"){event.preventDefault(); addRule();}}} className={"border-2 rounded-2xl flex-grow text-center"} placeholder={"Write drinking rule..."}/>
-                <button className={"btn-primary px-3 py-1"} onClick={addRule}>Add</button>
+                <input type={"text"} value={ruleInput} onChange={(event) => setRuleInput(event.target.value)} onKeyDown={(event) => {if (event.key === "Enter"){event.preventDefault(); addRule();}}} className={"border-2 rounded-2xl flex-grow text-center"} placeholder={t("write drinking rule...")}/>
+                <button className={"btn-primary px-3 py-1"} onClick={addRule}>{t("add")}</button>
             </div>
             <div className="overflow-y-auto overflow-x-hidden max-h-[100px] max-w-[500px]">
                 {saferules.map((rule, index) => (
@@ -62,7 +64,7 @@ export default function DrinkingRuleCreator({rules, setRules}) {
 
                         <button
                             onClick={() => removeRule(index)}
-                            className="text-text-error font-bold px-2 hover:text-red-700 m-1"
+                            className="text-text-error font-bold px-2 hover:text-red-700 m-1 cursor-pointer"
                         >
                             X
                         </button>
