@@ -78,12 +78,9 @@ function ThemeSubmissions(){
 
     //Filter time
     const filteredThemes = themes.filter(theme => {
-        console.log(newThemes)
-        console.log(oldThemes)
         // Check if theme is old
         if (hideOld) if (oldThemes.some(t => t.themeId === theme.themeId)) return false
-
-
+        
         // Check if theme is an event
         if (hideEvents){
             if (newThemes.some(t => t.themeId === theme.themeId)) return false

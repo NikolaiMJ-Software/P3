@@ -40,8 +40,14 @@ public class EventController {
 
     // Upload event to the database
     @PutMapping("/upload/{LocalDate}/{themeId}")
-    public String UploadEvent(@PathVariable("LocalDate") LocalDateTime eventDate, @PathVariable("themeId") long themeId) {
+    public String UploadEvent(@PathVariable("LocalDate") LocalDateTime eventDate, @PathVariable(value = "themeId") long themeId) {
         return service.UploadEvent(eventDate, themeId);
+    }
+
+    // Upload startup day to the database
+    @PutMapping("/upload/{LocalDate}")
+    public String UploadEvent(@PathVariable("LocalDate") LocalDateTime eventDate) {
+        return service.UploadEvent(eventDate, null);
     }
 
     //gotta set this up
@@ -61,8 +67,5 @@ public class EventController {
             return ResponseEntity.status(400).body("No body received");
         }
         return service.updateEventDate(id, date);
-
     }
-
-    
 }
