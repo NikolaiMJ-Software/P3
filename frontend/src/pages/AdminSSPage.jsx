@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import {isAdmin} from "../services/adminService.jsx"
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 import Timer from "../components/Timer.jsx";
 import { addSoundSample, deleteSoundSample, getSoundSamples, getSoundsampleFile } from "../services/soundSampleService.jsx";
@@ -56,7 +56,7 @@ export default function AdminSSPage(){
         if (deleteIndex >= 0 && deleteIndex < soundSamples.length) {
             //defines sound sample to delete
             const sampleToDelete = soundSamples[deleteIndex];
-console.log("SS to delete:", sampleToDelete);
+
             //deletes sample
             await deleteSoundSample(sampleToDelete.soundSample, sampleToDelete.id);
 

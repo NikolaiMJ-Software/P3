@@ -2,15 +2,11 @@ package com.p3.fkult.business.services;
 
 import com.p3.fkult.persistence.entities.Theme;
 import com.p3.fkult.persistence.repository.*;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.p3.fkult.persistence.entities.Event;
-import com.p3.fkult.persistence.entities.Theme;
-import com.p3.fkult.persistence.repository.*;
 import com.p3.fkult.presentation.DTOs.EventRequest;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -44,7 +40,7 @@ public class EventService {
     }
 
     // Handles event uploads
-    public String UploadEvent(LocalDateTime eventDate, long themeId) {
+    public String UploadEvent(LocalDateTime eventDate, Long themeId) {
         try {
             
             ZoneId systemZone = ZoneId.systemDefault();
