@@ -43,7 +43,7 @@ public class EventRepository {
     }
 
     // Save an Event to the database
-    public void save(String eventDate, long themeId){
+    public void save(String eventDate, Long themeId){
         String sql = "INSERT INTO event (event_date, theme_id) VALUES (?,?)";
         jdbcTemplate.update(sql, eventDate, themeId);
     }

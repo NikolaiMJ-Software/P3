@@ -33,10 +33,11 @@ export async function getFutureEvents(){
 
 // Handles uploading of events
 export async function uploadEvent(LocalDate, themeId){
+    const url = themeId === null ? `${API_URL}/upload/${LocalDate}` : `${API_URL}/upload/${LocalDate}/${themeId}`
     try {
-        const response = await fetch(`${API_URL}/upload/${LocalDate}/${themeId}`, {method: "PUT",});
+        const response = await fetch(url, {method: "PUT",});
         if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
+            throw new Error(`Server error: ${await response.text()}`);
         }
         return await response.text();
     } catch (error) {
