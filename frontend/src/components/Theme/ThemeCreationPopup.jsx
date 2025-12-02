@@ -8,6 +8,7 @@ import ThemeMovieSearcher from "./ThemeMovieSearcher.jsx";
 import ThemeCreator from "./ThemeCreator.jsx";
 import {addTheme, getThemes} from "../../services/themeService.jsx";
 import ThemeBrowser from "./ThemeBrowser.jsx";
+import { useTranslation } from "react-i18next";
 const MOVIE_LIMIT = 6;
 
 export default function ThemeCreationPopup({setSelected}) {
@@ -25,6 +26,7 @@ export default function ThemeCreationPopup({setSelected}) {
     const [seriesFilter, setSeriesFilter] = useState(false);
     const [shortsFilter, setShortsFilter] = useState(false);
     const [hideUnrated, setHideUnrated] = useState(false);
+    const {t} = useTranslation();
 
 
     useEffect(() => {
@@ -36,6 +38,24 @@ export default function ThemeCreationPopup({setSelected}) {
             setMovieCount(0);
             return;
             }
+
+        // Detect full IMDb link or raw tt1234567
+        const tconst = extractTconst(searchQuery);
+        if (tconst) {
+            // its direct tconst search so its always at page 1 with limit 1 since its exact
+            try {
+                const movies = await searchMovies(tconst, 1, 1, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated);
+                setFoundMovies(movies);
+                setMovieCount(movies.length);
+                setTotalPageCount(1);
+            } catch (e) {
+                console.error("IMDb link search failed:", e);
+                setFoundMovies([]);
+                setMovieCount(0);
+                setTotalPageCount(1);
+            }
+            return;
+        }
 
         try {
             setPageCount(1); //page reset
@@ -58,6 +78,8 @@ export default function ThemeCreationPopup({setSelected}) {
 
     useEffect(() => {
         if (!searchQuery || searchQuery.trim() === "") return;
+            const tconst = extractTconst(searchQuery);
+            if (tconst) return; 
             const switchPage = async () => {
                 try {
                     const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated)
@@ -108,7 +130,7 @@ export default function ThemeCreationPopup({setSelected}) {
             console.log("Sending theme:", { title, username, movies, drinkingRules });
             await addTheme(title, username, movies.map(movie => movie.tConst), drinkingRules);
             setSelected("themes")
-            alert("Theme created sucessfully! ");
+            //alert("Theme created sucessfully! ");
 
         } catch (error) {
             console.error("Error creating theme:", error);
@@ -134,6 +156,12 @@ export default function ThemeCreationPopup({setSelected}) {
         setRules("");
     }
 
+    const extractTconst = (input) => {
+        if (!input) return null;
+
+        const match = input.match(/tt\d{7,8}/i);
+        return match ? match[0] : null;
+    };
 
     return (
         <div className="p-10 relative flex justify-center items-center">
@@ -178,12 +206,12 @@ export default function ThemeCreationPopup({setSelected}) {
                     </div>
 
                 </div>
-                <div className="w-full flex justify-center mt-3">
+                <div className="w-full flex justify-center">
                 <button
                     onClick={handleSubmit}
-                    className="px-7 py-3 rounded-xl border-2 border-text-primary hover:bg-btn-hover-secondary"
+                    className="btn-primary"
                 >
-                    Submit
+                    {t("submit")}
                 </button>
             </div>
             </div>

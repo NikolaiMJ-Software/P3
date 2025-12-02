@@ -18,10 +18,17 @@ export default function EditTheme({ theme, onClose }) {
   const [movieCount, setMovieCount] = useState(0);
   const [sortBy, setSortBy] = useState("rating");
   const [sortDirection, setSortDirection] = useState("desc"); // "asc" | "desc"
-  const [movieFilter, setMovieFilter] = useState(false);
+  const [movieFilter, setMovieFilter] = useState(true);
   const [seriesFilter, setSeriesFilter] = useState(false);
+  const [shortsFilter, setShortsFilter] = useState(false);
   const [hideUnrated, setHideUnrated] = useState(false);
   const {t} = useTranslation();
+
+  const extractTconst = (input) => {
+      if (!input) return null;
+      const match = input.match(/tt\d{7,8}/i);
+      return match ? match[0] : null;
+  };
 
   // collect theme movie data based on tConst
 useEffect(() => {
@@ -51,7 +58,23 @@ useEffect(() => {
         setMovieCount(0);
         return;
       }
-
+      // Detect full IMDb link or raw tt1234567
+      const tconst = extractTconst(searchQuery);
+      if (tconst) {
+          // its direct tconst search so its always at page 1 with limit 1 since its exact
+          try {
+              const movies = await searchMovies(tconst, 1, 1, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated);
+              setFoundMovies(movies);
+              setMovieCount(movies.length);
+              setTotalPageCount(1);
+          } catch (e) {
+              console.error("IMDb link search failed:", e);
+              setFoundMovies([]);
+              setMovieCount(0);
+              setTotalPageCount(1);
+          }
+          return;
+        }
       try {
         setPageCount(1);
 
@@ -59,7 +82,7 @@ useEffect(() => {
         setMovieCount(count);
         setTotalPageCount(Math.ceil(count / MOVIE_LIMIT));
 
-        const movies = await searchMovies(searchQuery, 1, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated);
+        const movies = await searchMovies(searchQuery, 1, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated);
         setFoundMovies(movies);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -67,13 +90,15 @@ useEffect(() => {
       }
     };
     fetchData();
-  }, [searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated]);
+  }, [searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated]);
 
   useEffect(() => {
     if (!searchQuery || searchQuery.trim() === "") return;
+    const tconst = extractTconst(searchQuery);
+    if (tconst) return; 
     const switchPage = async () => {
       try {
-        const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated);
+        const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter,shortsFilter, hideUnrated);
         setFoundMovies(movies);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -81,7 +106,7 @@ useEffect(() => {
       }
     };
     switchPage();
-  }, [pageCount, searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, hideUnrated]);
+  }, [pageCount, searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated]);
 
   useEffect(() => {
     const fetchMissingPosters = async () => {
@@ -147,8 +172,8 @@ useEffect(() => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 flex justify-center overflow-y-auto py-10">
-      <div className="w-[1300px] max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 bg-white flex flex-col gap-3">
+    <div className="p-10 relative flex justify-center items-center">
+      <div className="w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col gap-3">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">{t("editTheme")}</h2>
           <button
@@ -161,7 +186,7 @@ useEffect(() => {
 
         <div className="flex flex-row gap-6 w-full overflow-hidden">
           {/* Left: Movie search */}
-          <div className="w-[600px] h-[650px]">
+          <div className="flex-1 min-w-[400px] max-w-[600px] h-[700px]">
             <ThemeMovieSearcher
               foundMovies={foundMovies}
               handleAddMovies={handleAddMovies}
@@ -178,13 +203,15 @@ useEffect(() => {
               setMovieFilter={setMovieFilter}
               seriesFilter={seriesFilter}
               setSeriesFilter={setSeriesFilter}
+              shortsFilter={shortsFilter}
+              setShortsFilter={setShortsFilter}
               hideUnrated={hideUnrated}
               setHideUnrated={setHideUnrated}
             />
           </div>
 
           {/* Right: Theme editor */}
-          <div className="w-[600px] h-[650px]">
+          <div className="flex-1 min-w-[400px] max-w-[600px] h-[700px] overflow-y-auto">
             <ThemeCreator
               handleSubmit={handleUpdate}   
               movies={movies}
@@ -200,7 +227,7 @@ useEffect(() => {
         <div className="w-full flex justify-center mt-3">
           <button
             onClick={handleUpdate}
-            className="px-7 py-3 rounded-xl border-2 border-text-primary hover:bg-btn-hover-secondary"
+            className="btn-primary"
           >
             {t("update")}
           </button>

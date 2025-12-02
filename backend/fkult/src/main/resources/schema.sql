@@ -1,8 +1,3 @@
-CREATE TABLE IF NOT EXISTS messages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    content TEXT NOT NULL
-);
-
 PRAGMA foreign_keys = ON;
 
 -- Users

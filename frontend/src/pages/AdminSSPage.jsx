@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import {isAdmin} from "../services/adminService.jsx"
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 import Timer from "../components/Timer.jsx";
 import { addSoundSample, deleteSoundSample, getSoundSamples, getSoundsampleFile } from "../services/soundSampleService.jsx";
@@ -58,7 +58,7 @@ export default function AdminSSPage(){
             const sampleToDelete = soundSamples[deleteIndex];
 
             //deletes sample
-            await deleteSoundSample(sampleToDelete.soundSample);
+            await deleteSoundSample(sampleToDelete.soundSample, sampleToDelete.id);
 
             //sorts out deleted indexes from the updated list
             updated = soundSamples.filter((_, i) => i !== deleteIndex);
@@ -113,44 +113,42 @@ export default function AdminSSPage(){
 
     if(isAdminUser === 1){
         return (
-            <div className="p-6">
-                {/* Timer */}
-                <div className="flex justify-end mb-6">
-                    <Timer initialSeconds={1800} resetKey={resetKey} onStop={handleTimerStop}/>
-                </div>
-
-                {/* Media Player */}
-                <div className="flex flex-col items-center gap-4">
-
+            <div className="flex flex-col items-center gap-4">
+                <div className="relative flex items-center w-full">
                     {/* User full name */}
-                    <div className="text-lg font-semibold flex flex-col items-start">
+                    <div className="absolute left-1/2 -translate-x-1/2 text-lg font-semibold flex flex-col items-start">
                         {hasSamples ? currentSample.usersFullName : "No Sound Samples Available"}
                     </div>
-                    
-                    {/* Mediaplayer Placeholder */}
-                    { hasSamples &&
-                    < MediaPlayer soundSample={currentSample.soundSample} size={"h-154 w-274"}/>
-                    }
-                    {/* Next and Back buttons */}
-                    <div className="flex gap-85 mt-2">
-                        <button
-                            onClick={handlePrevious}
-                            disabled={!hasSamples || currentIndex === 0}
-                            className="btn-primary w-32 text-center disabled:opacity-40"
-                        >
-                            ← {t("prev")}
-                        </button>
-                        <button
-                            onClick={handleNext}
-                            disabled={!hasSamples || currentIndex === soundSamples.length - 1}
-                            className="btn-primary w-32 text-center disabled:opacity-40"
-                        >
-                            {t("next")} →
-                        </button>
+
+                    {/* Timer */}
+                    <div className="ml-auto flex justify-end">
+                        <Timer initialSeconds={1800} resetKey={resetKey} onStop={handleTimerStop}/>
                     </div>
                 </div>
-            </div>
+                
+                {/* Mediaplayer Placeholder */}
+                <div className="w-75 h-150 flex justify-center">
+                    { hasSamples && <MediaPlayer soundSample={currentSample.soundSample}/>}
+                </div>
 
+                {/* Next and Back buttons */}
+                <div className="flex gap-85 mt-2 transform -translate-y-5">
+                    <button
+                        onClick={handlePrevious}
+                        disabled={!hasSamples || currentIndex === 0}
+                        className="btn-primary w-32 text-center disabled:opacity-40"
+                    >
+                        ← {t("prev")}
+                    </button>
+                    <button
+                        onClick={handleNext}
+                        disabled={!hasSamples || currentIndex === soundSamples.length - 1}
+                        className="btn-primary w-32 text-center disabled:opacity-40"
+                    >
+                        {t("next")} →
+                    </button>
+                </div>
+            </div>
         )
     }else if (isAdminUser === 0) {
         navigate(`/${username}`);

@@ -53,7 +53,7 @@ public class MovieController {
 
     //Search by movie name
     @GetMapping("/search")
-    public ResponseEntity<List<MovieRequest>> searchMovies(@RequestParam String q,
+    public ResponseEntity<?> searchMovies(@RequestParam String q,
                                                            @RequestParam(defaultValue = "1") int page,
                                                            @RequestParam(defaultValue = "6") int limit,
                                                            @RequestParam(defaultValue = "rating") String sortBy, 
@@ -66,9 +66,12 @@ public class MovieController {
         if (limit < 0) limit = 0;
         List<MovieRequest> results = movieService.searchMovies(q, page, limit, sortBy, direction, movie, series, shorts, rated);
 
-        if(results.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (results.isEmpty()) {
+            Map<String, String> errorBody = new HashMap<>();
+            errorBody.put("error", "No movies found for query: " + q);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorBody);
         }
+
         return ResponseEntity.ok(results);
     } // to test the search: GET http://localhost:8080/api/movies/search?q=MovieTitle&page=1
 

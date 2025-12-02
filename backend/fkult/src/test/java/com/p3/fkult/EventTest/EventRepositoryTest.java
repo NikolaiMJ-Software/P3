@@ -215,4 +215,81 @@ public class EventRepositoryTest {
         verify(jdbcTemplate).query(sqlCaptor.capture(), any(RowMapper.class), any());
         assertEquals("SELECT * FROM event WHERE theme_id IS NULL AND event_date <= ? ORDER BY event_date DESC LIMIT 1", sqlCaptor.getValue());
     }
+
+
+// Tests findIdOfStartupDayToday() returns the newest event's ID
+@Test
+void testFindIdOfStartupDayTodayReturnsId() {
+    // Arrange
+    Event e = new Event(70L, LocalDateTime.now(), null);
+    when(jdbcTemplate.query(anyString(), any(RowMapper.class))).thenReturn(List.of(e));
+
+    // Act
+    Long result = eventRepository.findIdOfStartupDayToday();
+
+    // Assert
+    assertEquals(70L, result);
+}
+
+
+// Tests that findIdOfStartupDayToday() uses the correct SQL query
+@Test
+void testFindIdOfStartupDayTodayUsesCorrectSQL() {
+    // Arrange
+    when(jdbcTemplate.query(anyString(), any(RowMapper.class))).thenReturn(List.of());
+
+    // Act
+    eventRepository.findIdOfStartupDayToday();
+
+    // Assert
+    verify(jdbcTemplate).query(sqlCaptor.capture(), any(RowMapper.class));
+    assertEquals(
+        "SELECT * FROM event WHERE theme_id IS NULL ORDER BY event_date DESC LIMIT 1",
+        sqlCaptor.getValue()
+    );
+}
+
+
+    // Tests findIdOfStartupDayToday() returns null when there are no events
+@Test
+void testFindIdOfStartupDayTodayReturnsNull() {
+    // Arrange
+    when(jdbcTemplate.query(anyString(), any(RowMapper.class))).thenReturn(List.of());
+
+    // Act
+    Long result = eventRepository.findIdOfStartupDayToday();
+
+    // Assert
+    assertNull(result);
+}
+
+
+// Tests updateThemeId() executes the correct SQL and parameters
+@Test
+void testUpdateThemeId() {
+    // Act
+    eventRepository.updateThemeId(1L, 50L);
+
+    // Assert
+    verify(jdbcTemplate).update(
+        eq("UPDATE event SET theme_id = ? WHERE id = ?"),
+        eq(50L), eq(1L)
+    );
+}
+
+
+// Tests updateEventDate() executes the correct SQL and parameters
+@Test
+void testUpdateEventDate() {
+    // Act
+    eventRepository.updateEventDate(123L, "2025-01-01 12:00:00");
+
+    // Assert
+    verify(jdbcTemplate).update(
+        eq("UPDATE event SET event_date = ? WHERE id = ? "),
+        eq("2025-01-01 12:00:00"), eq(123L)
+    );
+}
+
+
 }
