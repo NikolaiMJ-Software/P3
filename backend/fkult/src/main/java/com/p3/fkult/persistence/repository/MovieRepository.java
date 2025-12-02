@@ -80,8 +80,8 @@ public class MovieRepository {
         return jdbcTemplate.queryForObject("SELECT poster_url FROM movie WHERE id = ?", String.class, id);
     }
 
-    public Long findRatingById(Long id){
-        return jdbcTemplate.queryForObject("SELECT rating FROM movie WHERE id = ?", Long.class, id);
+    public Double findRatingById(Long id){
+        return jdbcTemplate.queryForObject("SELECT rating FROM movie WHERE id = ?", Double.class, id);
     }
 
     public Long findRunTimeById(Long id){
