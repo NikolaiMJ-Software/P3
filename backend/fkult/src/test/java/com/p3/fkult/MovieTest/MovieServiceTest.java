@@ -8,7 +8,8 @@ import com.p3.fkult.presentation.DTOs.MovieRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -204,7 +205,7 @@ public class MovieServiceTest {
         assertEquals("cached.jpg", result);
     }
 
-    // test getPosterURL returns null if tconst missing
+    //  getPosterURL() should return null if the movie has no tconst.
     @Test
     void testGetPosterURL_NoTconstReturnsNull() {
         // Arrange
@@ -220,4 +221,87 @@ public class MovieServiceTest {
         // Assert
         assertNull(result);
     }
+
+    // getPosterURL() should fetch the poster from IMDb when not cached, parse the og:image tag, return the URL, and update the database.
+@Test
+    void testGetPosterURL_FetchesFromImdb() {
+        // Arrange
+        Movie m = new Movie(
+                1L, "tt777", "Test", "Test",
+                2000, 90, true, false, false,
+                null, "PG"
+        );
+
+        MovieService spyService = Mockito.spy(movieService);
+
+        String fakeHtml =
+                "<html><head>" +
+                "<meta property=\"og:image\" content=\"http://img.fake/poster.jpg\">" +
+                "</head></html>";
+
+        ResponseEntity<String> fakeResponse = ResponseEntity.ok(fakeHtml);
+
+        doReturn(fakeResponse).when(spyService)
+                .exchangeImdb(anyString(), any(HttpEntity.class));
+
+        // Act
+        String result = spyService.getPosterURL(m);
+
+        // Assert
+        assertEquals("http://img.fake/poster.jpg", result);
+        verify(movieRepository).updatePosterURL(1L, "http://img.fake/poster.jpg");
+    }
+
+    // getPosterURL() should fetch the poster from IMDb when not cached, parse the og:image tag, return the URL, and update the database.
+    @Test
+    void testGetPosterURL_NoOgImageReturnsNull() {
+        // Arrange
+        Movie m = new Movie(
+                5L, "tt555", "Test", "Test",
+                2000, 100, true, false, false,
+                null, "PG"
+        );
+
+        MovieService spyService = Mockito.spy(movieService);
+
+        String fakeHtml =
+                "<html><head></head><body>No image here</body></html>";
+
+        ResponseEntity<String> fakeResponse = ResponseEntity.ok(fakeHtml);
+
+        doReturn(fakeResponse).when(spyService)
+                .exchangeImdb(anyString(), any(HttpEntity.class));
+
+        // Act
+        String result = spyService.getPosterURL(m);
+
+        // Assert
+        assertNull(result);
+        verify(movieRepository, never()).updatePosterURL(anyLong(), anyString());
+    }
+    // getPosterURL() should return null when IMDb page has no og:image tag.
+    // test
+    @Test
+    void testGetPosterURL_ReturnsNullOnException() {
+        // Arrange
+        Movie m = new Movie(
+                6L, "tt666", "Test", "Test",
+                2000, 100, true, false, false,
+                null, "PG"
+        );
+
+        MovieService spyService = Mockito.spy(movieService);
+
+        doThrow(new RuntimeException("fail"))
+                .when(spyService)
+                .exchangeImdb(anyString(), any(HttpEntity.class));
+
+        // Act
+        String result = spyService.getPosterURL(m);
+
+        // Assert
+        assertNull(result);
+        verify(movieRepository, never()).updatePosterURL(anyLong(), anyString());
+    }
+
 }
