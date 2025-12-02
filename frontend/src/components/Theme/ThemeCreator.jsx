@@ -1,19 +1,20 @@
 import {ThemeMovieCard} from "./MovieCard.jsx";
 import DrinkingRuleCreator from "./DrinkingRuleCreator.jsx";
+import { useTranslation } from "react-i18next";
 
 export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie, title, setTitle, rules, setRules}){
-
+    const {t} = useTranslation();
     return(
         <div className={"items-center flex-col flex gap-1 border-1 m-2 p-2 min-h-[640px]"}>
-            <input type={"text"} value={title} onChange={event => setTitle(event.target.value)} placeholder={"Enter theme title"} className={"w-100 text-center text-text-primary border-1 m-2 p-2 rounded-2xl"}/>
-            <p className={"text-center"}>Movies</p>
+            <input type={"text"} value={title} onChange={event => setTitle(event.target.value)} placeholder={t("enter theme title")} className={"w-80 text-center text-text-primary border-1 m-2 p-2 rounded-2xl"}/>
+            <p className={"text-center"}>{t("movies")}</p>
             {movies.length > 0 && (() => {
                 const totalRuntime = movies.reduce((sum, m) => sum + (m.runtimeMinutes || 0), 0);
                 const totalHours = Math.floor(totalRuntime / 60);
                 const totalMinutes = totalRuntime % 60;
                 return (
                     <p className="text-center font-semibold mt-2">
-                        Total runtime: {totalHours}h {totalMinutes}m
+                        {t("total runtime:")} {totalHours}{t("timehour")} {totalMinutes}m
                     </p>
                 );
             })()}
