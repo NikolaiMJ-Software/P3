@@ -12,6 +12,11 @@ expect.extend(matchers);
 //mock fetch
 global.fetch = vi.fn();
 
+//define that test user is always admin
+vi.mock("../services/adminService.jsx", () => ({
+  isAdmin: vi.fn().mockResolvedValue(1), // always admin in tests
+}));
+
 //mock use navigate
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
@@ -19,6 +24,7 @@ vi.mock("react-router-dom", async () => {
   return {
     ...actual,
     useNavigate: () => mockNavigate, 
+    useParams: () => ({ username: "testuser" }),
   };
 });
 
@@ -97,7 +103,7 @@ describe("Testing Wheel of Fortune", () =>{
         render(
           <I18nextProvider i18n={i18n}>
             <MemoryRouter>
-                <WheelOfFortunePage />
+              <WheelOfFortunePage resultFunction={vi.fn()} />
             </MemoryRouter>
           </I18nextProvider>
         );
@@ -116,7 +122,7 @@ describe("Testing Wheel of Fortune", () =>{
         render(
           <I18nextProvider i18n={i18n}>
             <MemoryRouter>
-                <WheelOfFortunePage />
+                <WheelOfFortunePage resultFunction={vi.fn()} />
             </MemoryRouter>
           </I18nextProvider>
         );
@@ -145,7 +151,7 @@ describe("Testing Wheel of Fortune", () =>{
         render(
           <I18nextProvider i18n={i18n}>
             <MemoryRouter>
-                <WheelOfFortunePage />
+                <WheelOfFortunePage resultFunction={vi.fn()} />
             </MemoryRouter>
           </I18nextProvider>
         );

@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import endSound from "../assets/Timer_Sound.mp3";
 
 export default function Timer({
@@ -9,6 +10,7 @@ export default function Timer({
   onStop,
   className = "",
 }) {
+  const {t} = useTranslation();
   const [duration, setDuration] = useState(initialSeconds);
   const [remaining, setRemaining] = useState(initialSeconds);
   const [running, setRunning] = useState(false);
@@ -182,7 +184,7 @@ export default function Timer({
         onClick={handleRestart}
         className="btn-primary bg-btn-yellow hover:bg-btn-yellow-hover text-white"
       >
-        Restart
+        {t("restart")}
       </button>
 
       {/* Editable Timer */}

@@ -8,6 +8,7 @@ import ThemeMovieSearcher from "./ThemeMovieSearcher.jsx";
 import ThemeCreator from "./ThemeCreator.jsx";
 import {addTheme, getThemes} from "../../services/themeService.jsx";
 import ThemeBrowser from "./ThemeBrowser.jsx";
+import { useTranslation } from "react-i18next";
 const MOVIE_LIMIT = 6;
 
 export default function ThemeCreationPopup({setSelected}) {
@@ -25,6 +26,7 @@ export default function ThemeCreationPopup({setSelected}) {
     const [seriesFilter, setSeriesFilter] = useState(false);
     const [shortsFilter, setShortsFilter] = useState(false);
     const [hideUnrated, setHideUnrated] = useState(false);
+    const {t} = useTranslation();
 
 
     useEffect(() => {
@@ -128,7 +130,7 @@ export default function ThemeCreationPopup({setSelected}) {
             console.log("Sending theme:", { title, username, movies, drinkingRules });
             await addTheme(title, username, movies.map(movie => movie.tConst), drinkingRules);
             setSelected("themes")
-            alert("Theme created sucessfully! ");
+            //alert("Theme created sucessfully! ");
 
         } catch (error) {
             console.error("Error creating theme:", error);
@@ -209,7 +211,7 @@ export default function ThemeCreationPopup({setSelected}) {
                     onClick={handleSubmit}
                     className="btn-primary"
                 >
-                    Submit
+                    {t("submit")}
                 </button>
             </div>
             </div>

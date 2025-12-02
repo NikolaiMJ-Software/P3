@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 export default function MovieCard({moviePosterURL, title, year, runtimeMinutes}){
 
     return(
@@ -44,9 +46,10 @@ export function MovieCardUpcoming({moviePosterURL, title, runtimeMinutes, rating
 }
 
 export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove, isSeries, rating}){
+    const {t} = useTranslation();
     const runtimeHours = Math.floor(runtimeMinutes / 60)
     const runtimeMinutesLeft = runtimeMinutes % 60;
-    const safeRating = (rating) ? "Rating: " + rating : "No Ratings Available";
+    const safeRating = (rating) ? t("rating: ") + rating : t("no ratings available");
     if (isSeries){
         return (
             <div className={"w-full max-w-[180px] flex flex-col items-center border-2 rounded-2xl overflow-hidden"}>
@@ -61,7 +64,7 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove,
                 </div>
                 <p className={"font-bold"}>Series</p>
                 {onRemove && (
-                    <button onClick={onRemove} className="text-text-error font-bold px-3 py-1 rounded-xl hover:text-red-700">Remove</button>
+                    <button onClick={onRemove} className="text-text-error font-bold px-3 py-1 rounded-xl hover:text-red-700 cursor-pointer">{t("remove")}</button>
                 )}
             </div>
         )
@@ -78,9 +81,9 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove,
                     className={`w-full h-full object-cover`}
                 />
             </div>
-            <p>{runtimeHours + "h " + runtimeMinutesLeft + "m"}</p>
+            <p>{runtimeHours + t("timehour") + runtimeMinutesLeft + "m"}</p>
             {onRemove && (
-                <button onClick={onRemove} className="text-text-error font-bold px-3 py-1 rounded-xl hover:text-red-700">Remove</button>
+                <button onClick={onRemove} className="text-text-error font-bold px-3 py-1 rounded-xl hover:text-red-700 cursor-pointer">{t("remove")}</button>
             )}
         </div>)
 }
