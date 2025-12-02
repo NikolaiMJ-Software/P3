@@ -56,7 +56,6 @@ function FindLinkType({link}){
         
     } else if (link.includes("x.com") || link.includes("twitter.com")) {
         console.log("Rendering X embed for:", link);
-        //return <XEmbed url={link}/>;
         return <XEmbed url={link}/>;;
 
     } else if (link.includes("facebook.com")) {
