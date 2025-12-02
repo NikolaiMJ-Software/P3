@@ -97,7 +97,7 @@ export default function EventManager({ className }) {
                             </div>
                         </div>
                     )) ||
-                    (eventType && (<CreateEvent onClose={stopEventCreate} />)))
+                    (eventType && (<CreateEvent onClose={stopEventCreate} onCreate={createNewEvent} />)))
                 }
         </div>
     )
