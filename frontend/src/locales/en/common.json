@@ -64,5 +64,6 @@
   "noFIle": "Unable to load the file: ",
   "supportFile": "File not supported",
   "hide": "Hide",
-  "watched": "Watched"
+  "watched": "Watched",
+  "restart":"Restart"
 }

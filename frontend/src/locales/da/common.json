@@ -64,5 +64,6 @@
   "noFile": "Kunne ikke indlæse filen: ",
   "supportFile": "Filen understøttes ikke",
   "hide": "Skjul",
-  "watched": "Sete"
+  "watched": "Sete",
+  "restart":"Genstart"
 }
