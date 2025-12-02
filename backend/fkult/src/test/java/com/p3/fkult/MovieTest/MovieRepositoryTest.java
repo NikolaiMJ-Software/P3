@@ -211,15 +211,15 @@ public class MovieRepositoryTest {
         // Arrange
         when(jdbcTemplate.queryForObject(
                 anyString(),
-                eq(Long.class),
+                eq(Double.class),
                 eq(3L)
-        )).thenReturn(9L);
+        )).thenReturn(9.0);
 
         // Act
-        Long result = movieRepository.findRatingById(3L);
+        Double result = movieRepository.findRatingById(3L);
 
         // Assert
-        assertEquals(9L, result);
+        assertEquals(9.0, result);
     }
 
 

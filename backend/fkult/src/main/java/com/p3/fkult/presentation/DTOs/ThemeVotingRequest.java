@@ -12,12 +12,12 @@ public class ThemeVotingRequest {
     private List<String> moviePosters;
     private List<String> drinkingRules;
     private List<Long> movieIds;
-    private List<Long> ratings;
+    private List<Double> ratings;
     private List<Long> runTimes;
 
     public ThemeVotingRequest() {}
 
-    public ThemeVotingRequest(Long themeId, Long votes, String themeName, String submitterName, List<String> movieNames, List<String> moviePosters, List<String> drinkingRules, List<Long> movieIds, List<Long> ratings, List<Long> runTimes) {
+    public ThemeVotingRequest(Long themeId, Long votes, String themeName, String submitterName, List<String> movieNames, List<String> moviePosters, List<String> drinkingRules, List<Long> movieIds, List<Double> ratings, List<Long> runTimes) {
         this.themeId = themeId;
         this.votes = votes;
         this.themeName = themeName;
@@ -39,7 +39,7 @@ public class ThemeVotingRequest {
     public List<String> getMoviePosters(){return this.moviePosters;}
     public List<String> getDrinkingRules(){return this.drinkingRules;}
     public List<Long> getMovieIds(){return this.movieIds;}
-    public List<Long> getRatings(){return this.ratings;}
+    public List<Double> getRatings(){return this.ratings;}
     public List<Long> getRunTimes(){return this.runTimes;}
 
     // Setters
@@ -51,6 +51,6 @@ public class ThemeVotingRequest {
     public void setMoviePosters(List<String> moviePosters){this.moviePosters = moviePosters;}
     public void setDrinkingRules(List<String> drinkingRules){this.drinkingRules = drinkingRules;}
     public void setMovieIds(List<Long> movieIds){this.movieIds = movieIds;}
-    public void setRatings(List<Long> ratings){this.ratings = ratings;}
+    public void setRatings(List<Double> ratings){this.ratings = ratings;}
     public void setRunTimes(List<Long> runTimes){this.runTimes = runTimes;}
 }

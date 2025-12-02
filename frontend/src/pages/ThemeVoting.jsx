@@ -48,6 +48,19 @@ export default function ThemeVoting() {
     }
   }, [wheelNames]);
 
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "ArrowRight") {
+        handleNext();
+      } else if (e.key === "ArrowLeft") {
+        handlePrevious();
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [[unVotedThemes.length]]);
+
   // Function to updates votes for the current theme
   const submitVote = (votes) => {
     if (votes === "") {
@@ -287,7 +300,7 @@ export default function ThemeVoting() {
     <div className="flex flex-col h-screen">
 
       {/* Timer at the top right corner */ }
-      <div className="flex justify-end p-4 bg-text-secondary">
+      <div className="flex justify-end p-4">
         <Timer
           initialSeconds={timerStart}
           resetKey={timerResetKey}
@@ -300,7 +313,7 @@ export default function ThemeVoting() {
       </div>
 
       {/* Bottom controls */}
-      <div className="flex flex-col p-6 bg-text-secondary text-white gap-4">
+      <div className="flex flex-col p-6 gap-4">
         <div className="flex justify-between items-center mb-2">
           <button
             onClick={handlePrevious}
