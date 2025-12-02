@@ -65,6 +65,7 @@
   "supportFile": "File not supported",
   "hide": "Hide",
   "watched": "Watched",
+  "restart":"Restart",
   "CreateThemeSearch": "Search by name or IMDB link...",
   "themeFilters": "Filters ▾",
   "rating": "Rating",

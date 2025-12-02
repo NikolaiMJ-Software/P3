@@ -65,6 +65,7 @@
   "supportFile": "Filen understøttes ikke",
   "hide": "Skjul",
   "watched": "Sete",
+  "restart":"Genstart",
   "CreateThemeSearch": "Søg efter navn eller IMDB-link...",
   "themeFilters": "Filtre ▾",
   "rating": "Stjerner",
