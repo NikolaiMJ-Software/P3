@@ -49,7 +49,8 @@ public class MovieRepository {
         if (input == null) return "";
 
         // Replace illegal FTS tokens with spaces
-        String sanitized = input.replaceAll("[=<>\"'()\\[\\]{}:;,.!?%*~^/\\\\]", " ");
+        String sanitized = input.replaceAll("[=<>\"'()\\[\\]{}:;,.!?%*~^/\\\\+-]", " ");
+
 
         // Collapse multiple spaces
         sanitized = sanitized.replaceAll("\\s+", " ").trim();

@@ -5,7 +5,7 @@ export default function ThemeMovieSearcher({foundMovies, setSearchQuery, pageCou
     const searchInputRef = useRef();
     const {t} = useTranslation();
     const [dropdownOpen, setDropdownOpen] = useState(false);
-
+    const [hasSearched, setHasSearched] = useState(false);
 function refresh() {
     setPageCount(1);
     setSearchQuery(q => q);
@@ -16,13 +16,13 @@ function refresh() {
             <div className="flex flex-row items-center gap-2 px-2 w-full whitespace-nowrap h-[50px] items-center overflow-visible">
                 <input
                     ref={searchInputRef}
-                    onKeyDown={event => event.key === "Enter" && (event.preventDefault(), setSearchQuery(event.target.value))}
+                    onKeyDown={event => event.key === "Enter" && (event.preventDefault(), setHasSearched(true), setSearchQuery(event.target.value))}
                     type="text"
                     placeholder= {t("CreateThemeSearch")}
                     className="flex-1 min-w-[120px] text-center text-text-primary border-1 p-2 rounded-2xl truncate"
                 />
                 <button
-                    onClick={(event) => setSearchQuery(searchInputRef.current.value)}
+                    onClick={(event) => {setHasSearched(true), setSearchQuery(searchInputRef.current.value)}}
                     className="btn-primary"
                 >
                     {t("search")}
@@ -110,7 +110,6 @@ function refresh() {
                 )}
             </div>
 
-
             </div>
             {foundMovies.map((movie) => {
                 console.log("MOVIE:", movie);
@@ -127,6 +126,15 @@ function refresh() {
                 >
                 </MovieSuggestion>
             })}
+
+            {hasSearched && movieCount === 0 && (
+                <div className="text-text-primary text-center mt-4 max-w-[400px] mx-auto break-words">
+                <p>No results were found when searching for: <br/>"<span className="font-bold">{searchInputRef.current?.value}</span>"</p>
+                
+                <p><br/>Please make sure that the title is written correctly. If it is and it still doesn't appear, please try inputting an IMDb link instead.</p>
+            </div>
+            )}
+
             <div className="absolute bottom-2 flex flex-row gap-4">
                 <button onClick={() => setPageCount(prev => Math.max(1, prev - 1))} className="btn-primary">{t("previous")}</button>
                 <p className="mt-3">{`${pageCount}/${totalPageCount}`}</p>
