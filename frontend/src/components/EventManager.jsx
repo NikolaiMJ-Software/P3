@@ -35,7 +35,7 @@ export default function EventManager({ className }) {
             alert("Please enter a valid date in yyyy-mm-dd format.")
             return
         }
-        const date = !id ? new Date(`${timestamp}T16:00:00`) : new Date(`${timestamp}T16:45:00`)
+        const date = !id ? new Date(`${timestamp}T15:00:00`) : new Date(`${timestamp}T15:45:00`)
         if (!date.toJSON()){
             alert("Invalid date. Please enter a valid date")
             return
