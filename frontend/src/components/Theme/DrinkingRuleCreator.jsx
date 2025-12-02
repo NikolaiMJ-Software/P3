@@ -42,8 +42,7 @@ export default function DrinkingRuleCreator({rules, setRules}) {
                 {saferules.map((rule, index) => (
                     <div
                         key={index}
-                        className="flex flex-row items-center justify-between border-b border-text-secondary py-1 px-2 w-120"
-                    >
+                        className="flex flex-row items-center justify-between border-b border-text-secondary py-1 px-2 max-w-full">
                         {editingIndex === index ? (
                             <input
                                 className="flex-grow text-center border"
