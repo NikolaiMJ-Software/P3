@@ -129,9 +129,9 @@ function refresh() {
 
             {hasSearched && movieCount === 0 && (
                 <div className="text-text-primary text-center mt-4 max-w-[400px] mx-auto break-words">
-                <p>No results were found when searching for: <br/>"<span className="font-bold">{searchInputRef.current?.value}</span>"</p>
+                <p>{t("no results found")} <br/>"<span className="font-bold">{searchInputRef.current?.value}</span>"</p>
                 
-                <p><br/>Please make sure that the title is written correctly. If it is and it still doesn't appear, please try inputting an IMDb link instead.</p>
+                <p><br/>{t("please make sure")}</p>
             </div>
             )}
 

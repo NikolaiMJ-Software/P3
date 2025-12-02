@@ -1,4 +1,4 @@
-package com.p3.fkult;
+package com.p3.fkult.MovieTest;
 
 import com.p3.fkult.presentation.DTOs.MovieRequest;
 
