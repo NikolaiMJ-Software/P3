@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import {isAdmin} from "../services/adminService.jsx"
 import {useNavigate, useParams} from "react-router-dom";
 
-export default function WheelOfFortunePage({entries = [], resultFunction}) {
+export default function WheelOfFortunePage({entries = [], resultFunction }) {
   const initialText = entries.length
     ? entries.join("\n")
     : "Pirates\nThe Squad\nGruppe 6";
