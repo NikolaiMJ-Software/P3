@@ -124,7 +124,7 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp})
     const safeMovies = Array.isArray(movies) ? movies : [];
     const {t} = useTranslation();
     return(
-        <div className={"relative w-85 h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
+        <div className={"relative w-85 h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary " +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
             <div>
                 <h1 className={"text-xl font-bold"}>{title}</h1>
@@ -168,10 +168,10 @@ export function EventStartup({timestamp, onClick}){
     }
     const {t} = useTranslation();
     return(
-        <div className={"relative w-85 h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
-            "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
+        <div className={"relative w-85 h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-secondary " +
+            " text-lg font-medium shadow-md hover:shadow-md transition shrink-0"}>
             <div>
-                <h1 className={"text-xl font-bold"}>F-Kult Start</h1>
+                <h1 className={"text-xl font-bold"}>F-Kult Semester Start</h1>
                 <h2 className={"font-bold text-sm"}>{day() + "/" + month() + "/" + year()}</h2>
                 <h2 className={"font-bold text-sm"}>{t("at") + " "+ hour() + ":" + minute()}</h2>
                 <h3 className={"font-bold text-lg"}>{t("come and vote")}</h3>
