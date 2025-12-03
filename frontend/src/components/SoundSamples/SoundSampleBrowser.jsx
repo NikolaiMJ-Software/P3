@@ -83,12 +83,12 @@ export default function SoundSampleBrowser({onCreateSS}) {
     }
 
     return (
-    <div className={"p-10"}>
-        <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8"}>
+    <div className={"p-1 sm:p-10"}>
+        <div className={"bg-primary w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-2 sm:p-6"}>
 
             {/* Users sound sample card container */}
             <div className="flex justify-between items-center m-4">
-                <div className={"m-4 font-bold"}>{t("usersSS")}</div>
+                <div className={"m-4 text-sm sm:text-base font-bold"}>{t("usersSS")}</div>
                 <button className={"btn-primary" + (usersSS.length > 1 ? " visible" : " invisible")}
                     data-testid="revUsersSS"
                     type="button"
@@ -96,11 +96,12 @@ export default function SoundSampleBrowser({onCreateSS}) {
                     {t(sortUsersSSText)}
                 </button>
             </div>
-            <div className="grid grid-cols-4 gap-5 justify-center">
-                <div onClick={onCreateSS} className="card-primary flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white text-lg font-medium shadow-sm hover:bg-light-green transition shrink-0">
-                    <p className={"mb-4 text-center"}>{t("submit")} {t("sound sample")}</p>
-                    <div className={"bg-light-green flex justify-center items-center w-16 h-16 border-5 border-btn-green rounded-full"}>
-                        <span className="text-5xl font-bold text-btn-green mb-2.5">+</span>
+            
+            <div className="flex sm:flex-wrap gap-2 overflow-x-auto">
+                <div onClick={onCreateSS} className="card-primary flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary text-lg font-medium shadow-sm hover:bg-light-green transition shrink-0">
+                    <p className={"mb-2 text-sm sm:text-lg text-center"}>{t("submit")} {t("sound sample")}</p>
+                    <div className={"bg-light-green flex justify-center items-center w-10 sm:w-16 h-10 sm:h-16 border-3 sm:border-5 border-btn-green rounded-full"}>
+                        <span className="text-3xl sm:text-5xl font-bold text-btn-green mb-1.5 sm:mb-2.5">+</span>
                     </div>
                 </div>
                 <SoundSampleCard soundSamples={usersSS} witch="users" onDeleted={handleDeleted} showenCard={usersVisibleCount}/>
@@ -114,14 +115,14 @@ export default function SoundSampleBrowser({onCreateSS}) {
                 </button>
             </div>
 
-            <div className={"border-1 m-8"}></div>
+            <div className={"border-1 m-2 sm:m-8"}></div>
 
             {/* All sound samples card container */}
-            <div className="flex justify-between items-center m-4">
-                <div className={"m-4 font-bold"}>{t("uplSS")}</div>
-                <div className="flex justify-center">
+            <div className="flex justify-between items-center m-2 sm:m-4">
+                <div className={"m-4 text-sm sm:text-base font-bold"}>{t("uplSS")}</div>
+                <div className="hidden sm:flex justify-center">
                     <input
-                        className="border px-2 py-1 rounded w-64"
+                        className="bg-primary border px-2 py-1 rounded-2xl w-40 sm:w-64"
                         type="text" 
                         placeholder={t("search for") + " " + t("user") + "..."}
                         onChange={(e) => setSearchForUsername(e.target.value)}

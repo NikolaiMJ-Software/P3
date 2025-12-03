@@ -15,7 +15,7 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
     const safeMovies = Array.isArray(movies) ? movies : [];
     const {t} = useTranslation();
     return(
-        <div className={"relative w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
+        <div className={"relative bg-primary w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary" +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
 
         {showActions && (
@@ -79,11 +79,11 @@ export function ThemeCardSmall({title, name, tConsts}){
 export function ThemeCreationCard({onClick}){
     const {t} = useTranslation();
     return(
-        <div onClick={onClick} className={"relative w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
+        <div onClick={onClick} className={"relative bg-primary w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary" +
             "text-lg font-medium shadow-sm hover:bg-green-100 transition shrink-0"}>
-            <p className={"mb-4 text-center"}>{t("create theme")}</p>
-            <div className={"bg-green-200 flex justify-center items-center w-16 h-16 border-5 border-green-500 rounded-full"}>
-                <span className="text-5xl font-bold text-green-500 mb-2.5">+</span>
+            <p className={"mb-4 text-base sm:text-lg text-center"}>{t("create theme")}</p>
+            <div className={"bg-light-green flex justify-center items-center w-12 sm:w-16 h-12 sm:h-16 border-3 sm:border-5 border-btn-green rounded-full"}>
+                <span className="text-4xl sm:text-5xl font-bold text-btn-green mb-2 sm:mb-2.5">+</span>
             </div>
         </div>
     )
@@ -91,7 +91,7 @@ export function ThemeCreationCard({onClick}){
 
 export function StartupCard({date}){
     return(
-        <div onClick={onClick} className={"relative w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
+        <div onClick={onClick} className={"relative w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary" +
             "text-lg font-medium shadow-sm hover:bg-green-100 transition shrink-0"}>
             <p className={"mb-4 text-center"}>Startup Day</p>
             <p className={"mb-4 text-center"}>{date}</p>
@@ -124,14 +124,14 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp})
     const safeMovies = Array.isArray(movies) ? movies : [];
     const {t} = useTranslation();
     return(
-        <div className={"relative w-85 h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
+        <div className={"relative bg-primary w-70 sm:w-85 h-95 sm:h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary" +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
             <div>
-                <h1 className={"text-xl font-bold"}>{title}</h1>
-                <h2 className={"text-sm text-gray-600"}>{name}</h2>
-                <h2 className={"font-bold text-sm"}>{day() + "/" + month() + "/" + year()}</h2>
-                <h2 className={"font-bold text-sm"}>{t("at")} {hour()}:{minute()}</h2>
-                <h3 className={"mt-2 font-semibold text-sm"}>{t("drinking rules")}</h3>
+                <h1 className={"text-lg sm:text-xl font-bold"}>{title}</h1>
+                <h2 className={"text-xs sm:text-sm text-gray-600"}>{name}</h2>
+                <h2 className={"font-bold text-xs sm:text-sm"}>{day() + "/" + month() + "/" + year()}</h2>
+                <h2 className={"font-bold text-xs sm:text-sm"}>{t("at")} {hour()}:{minute()}</h2>
+                <h3 className={"mt-2 font-semibold text-xs sm:text-sm"}>{t("drinking rules")}</h3>
                 <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-8"}>{safeDrinkingRules.map((rule, i) => {return <li key={`${title}-rule-${i}`}>{rule}</li>})}</ul>
             </div>
 
@@ -168,7 +168,7 @@ export function EventStartup({timestamp, onClick}){
     }
     const {t} = useTranslation();
     return(
-        <div className={"relative w-85 h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-white" +
+        <div className={"relative bg-primary w-70 sm:w-85 h-95 sm:h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary" +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
             <div>
                 <h1 className={"text-xl font-bold"}>F-Kult Start</h1>

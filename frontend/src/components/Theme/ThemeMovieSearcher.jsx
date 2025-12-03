@@ -12,21 +12,23 @@ function refresh() {
 }
 
     return(
-<div className="items-center relative flex-col flex gap-1 border-text-primary border-1 m-2 p-2 w-full h-[640px] overflow-visible">
-            <div className="flex flex-row items-center gap-2 px-2 w-full whitespace-nowrap h-[50px] items-center overflow-visible">
+<div className="bg-primary items-center relative flex-col flex gap-1 border-text-primary border-1 sm:m-2 p-2 w-full h-[600px] sm:h-[640px] overflow-visible">
+            <div className="flex flex-row items-center gap-2 sm:px-2 w-full whitespace-nowrap sm:h-[50px] items-center overflow-visible">
                 <input
                     ref={searchInputRef}
                     onKeyDown={event => event.key === "Enter" && (event.preventDefault(), setHasSearched(true), setSearchQuery(event.target.value))}
                     type="text"
                     placeholder= {t("CreateThemeSearch")}
-                    className="flex-1 min-w-[120px] text-center text-text-primary border-1 p-2 rounded-2xl truncate"
+                    className="bg-primary flex-1 sm:min-w-[120px] text-center text-text-primary border-1 p-1 sm:p-2 rounded-2xl truncate"
                 />
-                <button
-                    onClick={(event) => {setHasSearched(true), setSearchQuery(searchInputRef.current.value)}}
-                    className="btn-primary"
-                >
-                    {t("search")}
-                </button>
+                <div className="hidden sm:flex">
+                    <button
+                        onClick={(event) => {setHasSearched(true), setSearchQuery(searchInputRef.current.value)}}
+                        className="btn-primary"
+                    >
+                        {t("search")}
+                    </button>
+                </div>
 
                 
                 <div className="relative z-50">
@@ -38,7 +40,7 @@ function refresh() {
                 </button>
 
                 {dropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white text-black border-1 rounded-xl p-2 shadow-xl z-[9999]">
+                    <div className="absolute right-0 mt-2 w-48 bg-primary text-black border-1 rounded-xl p-2 shadow-xl z-[9999]">
                         {/* Sort By */}
                         <p className="text-sm font-bold mb-1 text-text-primary">{t("sort by")}</p>
                         <div className={`cursor-pointer p-1 rounded 
@@ -128,14 +130,14 @@ function refresh() {
             })}
 
             {hasSearched && movieCount === 0 && (
-                <div className="text-text-primary text-center mt-4 max-w-[400px] mx-auto break-words">
+                <div className="text-text-primary text-sm sm:text-base text-center mt-4 max-w-[400px] mx-auto break-words">
                 <p>No results were found when searching for: <br/>"<span className="font-bold">{searchInputRef.current?.value}</span>"</p>
                 
                 <p><br/>Please make sure that the title is written correctly. If it is and it still doesn't appear, please try inputting an IMDb link instead.</p>
             </div>
             )}
 
-            <div className="absolute bottom-2 flex flex-row gap-4">
+            <div className="absolute bottom-2 flex flex-row gap-2 sm:gap-4">
                 <button onClick={() => setPageCount(prev => Math.max(1, prev - 1))} className="btn-primary">{t("previous")}</button>
                 <p className="mt-3">{`${pageCount}/${totalPageCount}`}</p>
                 <button onClick={() => setPageCount(prev => Math.min(totalPageCount, prev + 1))} className="btn-primary">{t("next")}</button>
@@ -154,16 +156,19 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
     //different layout for shows, series and such.
     if(isSeries){
         return (
-            <div onClick={onAdd} className="flex-row flex items-center gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]">
+            <div onClick={onAdd} className="bg-primary flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]">
                 <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
                     <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
                 </div>
                 <div className={"flex flex-col max-w-[430px] overflow-hidden"}>
                     <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
-                        <p className="font-bold truncate overflow-hidden text-ellipsis max-w-[423px] text-blue-400">{movieName} </p><p className={""}>{safeRating} - {t("series")}</p>
+                        <p className="font-bold truncate overflow-hidden text-sm sm:text-base text-ellipsis max-w-[423px] text-blue-400">{movieName} </p>
+                        <div className="text-xs sm:text-base">
+                            {`${safeRating} - ${t("series")}`}
+                        </div>
                     </a>
 
-                    <p>{year}</p>
+                    <p className="text-xs sm:text-base">{year}</p>
                 </div>
                 <button onClick={onAdd} className="btn-primary px-3 py-1 ml-auto">
                     {t("add")}
@@ -174,16 +179,19 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
 
     if(isShorts){
         return (
-            <div onClick={onAdd} className="flex-row flex items-center gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]">
+            <div onClick={onAdd} className="bg-primary flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]">
                 <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
                     <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
                 </div>
                 <div className={"flex flex-col max-w-[430px] overflow-hidden"}>
                     <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
-                        <p className="font-bold truncate overflow-hidden text-ellipsis max-w-[423px] text-blue-400">{movieName} </p><p className={""}>{safeRating} - {t("shorts")}</p>
+                        <p className="font-bold truncate overflow-hidden text-sm sm:text-base text-ellipsis max-w-[423px] text-blue-400">{movieName} </p>
+                        <div className="text-xs sm:text-base">
+                            {`${safeRating} - ${t("shorts")}`}
+                        </div>
                     </a>
 
-                    <p>{year}</p>
+                    <p className="text-xs sm:text-base">{year}</p>
                 </div>
                 <button onClick={onAdd} className="btn-primary px-3 py-1 ml-auto">
                     {t("add")}
@@ -193,17 +201,24 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
     }
 
     return(
-        <div onClick={onAdd} className={"flex-row flex items-center gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]"}>
+        <div onClick={onAdd} className={"bg-primary flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]"}>
             <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
                 <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
             </div>
 
             <div className={"flex flex-col max-w-[430px] overflow-hidden"}>
                 <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
-                    <p className="font-bold truncate overflow-hidden text-ellipsis max-w-[350px] text-blue-400">{movieName}</p>
+                    <p className="font-bold truncate overflow-hidden text-sm sm:text-base text-ellipsis max-w-[350px] text-blue-400">{movieName}</p>
                 </a>
-                <p className={""}>{safeRating} - {t("runtime") + " " +runtimeHours + t("timehour") + runtimeMinutesLeft + "m "}</p>
-                <p>{year}</p>
+                <div className="flex flex-col sm:flex-row">
+                    <div className="text-xs sm:text-base">
+                        {safeRating}
+                    </div>
+                    <div className="text-xs sm:text-base">
+                        {`- ${t("runtime")} ${runtimeHours}${t("timehour")} ${runtimeMinutesLeft}m`}
+                    </div>
+                </div>
+                <p className="text-xs sm:text-base">{year}</p>
                 <p></p>
 
             </div>

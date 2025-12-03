@@ -3,82 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-/*Login*/
-#root:has(.login-page) {
-  @apply p-0;
-}
-
-.login-container {
-  @apply 
-  min-h-screen flex 
-  items-center 
-  justify-center;
-  background-color: #ede6b9;
-}
-
-.login-logo {
-  @apply 
-  absolute 
-  top-6 
-  left-6 
-  w-30 
-  h-auto 
-}
-
-.login-form {
-  @apply 
-  bg-white 
-  border rounded-2xl px-12 py-10 w-full max-w-md 
-  flex flex-col gap-6;
-  border-color: #cfd3d7; 
-}
-
-.login-title {
-  @apply 
-  text-2xl 
-  font-serif 
-  font-bold 
-  text-center 
-  text-text-secondary;
-}
-
-.login-input {
-  @apply 
-  border rounded-md px-4 py-2.5 
-  text-text-secondary 
-  focus:outline-none 
-  focus:ring-2 
-  focus:ring-blue-300;
-  border-color: #cfd3d7;
-}
-
-.login-button {
-  @apply 
-  border rounded-full 
-  bg-blue-100 
-  text-text-secondary 
-  font-medium py-2.5 
-  hover:bg-blue-200 
-  transition-colors 
-  focus:outline-none 
-  focus:ring-2 
-  focus:ring-blue-300;
-  border-color: #cfd3d7;
-}
-
-.login-button:active {
-  @apply 
-  bg-blue-300;
-}
-
-.login-error {
-  @apply 
-  text-text-error 
-  text-sm 
-  text-center mt-1;
-}
-
 @theme {
   /* Colors */
   --color-topholt: oklch(0.9193 0.0591 100.1); /* Beige */
@@ -105,17 +29,24 @@
   .btn-primary, .btn-secondary, .btn-home-page {
     @apply
     cursor-pointer
-    px-5
-    py-2
-    rounded-2xl
-    text-btn-text 
+    px-2
+    sm:px-5
+    py-1
+    sm:py-2
+    rounded-xl
+    sm:rounded-2xl
+    text-btn-text
+    text-sm
+    sm:text-base 
     bg-btn-primary
     hover:bg-btn-hover-primary
   }
   .btn-home-page {
     @apply
-    px-6 
-    py-3 
+    sm:px-6
+    px-4
+    sm:py-3
+    py-2
   }
   .btn-secondary {
     @apply
@@ -127,6 +58,7 @@
 
   .card-primary, .card-secondary {
     @apply 
+    bg-primary
     border-2
     border-text-primary
     text-lg 

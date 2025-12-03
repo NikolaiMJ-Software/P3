@@ -48,8 +48,8 @@ export default function SoundSampleCard({ soundSamples, witch, onDeleted, showen
                 return <div key={soundSample.id} className={cardDesign + visibility} data-testid={`${SSid}-${soundSample.soundSample}`}>
                     <div className={"flex flex-col" + pointer} onClick={() => onToggel(soundSample.id)}>
                         <div className="flex justify-between items-center m-4">
-                            <h2 className={"text-sm text-text-secondary"}>{soundSample.usersFullName}</h2>
-                            <div className="w-5 h-5 cursor-pointer hover:bg-btn-hover-secondary" onClick={witch === "users" ? () => deleteSS(soundSample.soundSample, soundSample.id) : ""}>
+                            <h2 className={"text-xs sm:text-sm text-text-secondary"}>{soundSample.usersFullName}</h2>
+                            <div className="w-4 sm:w-5 h-4 sm:h-5 cursor-pointer hover:bg-btn-hover-secondary" onClick={witch === "users" ? () => deleteSS(soundSample.soundSample, soundSample.id) : ""}>
                                 {eventBtn}
                             </div>
                         </div>

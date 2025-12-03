@@ -39,7 +39,7 @@ export default function HomePage() {
 
     return <>
         {/* Top toggle buttons */}
-        <div className={"flex gap-4 ml-10"}>
+        <div className={"flex gap-4 p-2 sm:p-0 sm:ml-10"}>
             <button className={`btn-home-page
             ${selected === "themes" ? "" : "btn-secondary"}`}
                     onClick={() => setSelected("themes")}>{t("themes")}</button>
