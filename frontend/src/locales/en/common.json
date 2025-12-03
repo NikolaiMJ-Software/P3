@@ -91,5 +91,7 @@
   "timehour": "h",
   "rating: ": "Rating: ",
   "no ratings available": "No Ratings Available",
-  "remove": "Remove"
+  "remove": "Remove",
+  "no results found": "No results were found when searching for:",
+  "please make sure": "Please make sure that the title is written correctly. If it is and it still doesn't appear, please try inputting an IMDb link instead."
 }

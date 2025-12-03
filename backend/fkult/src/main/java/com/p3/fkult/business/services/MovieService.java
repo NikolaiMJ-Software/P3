@@ -125,12 +125,8 @@ public class MovieService {
                     "Chrome/119.0.0.0 Safari/537.36");
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
-            ResponseEntity<String> response = restTemplate.exchange(
-                    movieURL,
-                    HttpMethod.GET,
-                    entity,
-                    String.class
-            );
+            ResponseEntity<String> response = exchangeImdb(movieURL, entity);
+
 
             String html = response.getBody();
             if (html == null || html.isEmpty()) {
@@ -154,6 +150,10 @@ public class MovieService {
             e.printStackTrace();
             return null;
         }
+    }
+    // for testing purposes
+    public ResponseEntity<String> exchangeImdb(String url, HttpEntity<String> entity) {
+        return restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
     }
 
     public String getTconstById(long id){

@@ -3,7 +3,6 @@ package com.p3.fkult.business.services;
 import java.util.*;
 
 import com.p3.fkult.presentation.DTOs.ThemeRequest;
-import com.p3.fkult.presentation.controllers.UserController;
 import org.springframework.stereotype.Service;
 import com.p3.fkult.presentation.DTOs.ThemeVotingRequest;
 import com.p3.fkult.persistence.repository.ThemeRepository;
@@ -60,7 +59,7 @@ public class ThemeVotingService {
             // Set movie names, posters, ratings, and runtimes
             List<String> movieNames = new ArrayList<>();
             List<String> moviePosters = new ArrayList<>();
-            List<Long> ratings = new ArrayList<>();
+            List<Double> ratings = new ArrayList<>();
             List<Long> runTime = new ArrayList<>();
             List<Long> movieIds = new ArrayList<>();
 

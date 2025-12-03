@@ -137,9 +137,6 @@ function Theme({ item, onToggle, isExpanded, onDelete }){
     //const [loaded, setLoaded] = useState(false)
 
     const handleClick = async () => {
-        //if (loaded) onToggle();
-        //setLoaded(true)
-
         await getMovies(item.movieIds).then(setMovies)
         onToggle();
     }
