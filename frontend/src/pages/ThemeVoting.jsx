@@ -300,7 +300,7 @@ export default function ThemeVoting() {
       </div>
 
       {/* Bottom controls */}
-      <div className="flex flex-col p-6 bg-text-secondary text-white gap-4">
+      <div className="flex flex-col p-6 bg-text-secondary text-btn-text gap-4">
         <div className="flex justify-between items-center mb-2">
           <button
             onClick={handlePrevious}
@@ -345,7 +345,7 @@ export default function ThemeVoting() {
       </div>
       {showWheelPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 shadow-lg w-11/12 max-w-4xl relative">
+          <div className="bg-primary rounded-lg p-6 shadow-lg w-11/12 max-w-4xl relative">
 
             {/* Close button */}
             <button

@@ -31,7 +31,7 @@ export default function AdminPage(){
                     {/* Event Manager */}
                     <EventManager className={"flex flex-col p-5 w-1/2"}/>
                     {/* Upper Right */}
-                    <div className="flex flex-col justify-between w-1/2">
+                    <div className="bg-primary flex flex-col justify-between w-1/2">
                         {/* Intro Text */}
                         <div className="mt-20 text-center text-xl">
                             <h1>{t("welcome")} Admin!</h1>

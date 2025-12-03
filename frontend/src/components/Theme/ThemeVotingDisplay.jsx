@@ -2,7 +2,7 @@ export default function ThemeVotingDisplay({ theme }) {
   if (!theme) return null;
 
   return (
-    <div className="relative flex flex-col h-full bg-text-secondary text-white p-6">
+    <div className="relative flex flex-col h-full bg-text-secondary text-btn-text p-6">
       {/* Theme name */}
       <h1 className="text-2xl font-semibold text-center mb-6">
         {theme.themeName}

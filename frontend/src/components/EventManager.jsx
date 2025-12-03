@@ -54,17 +54,17 @@ export default function EventManager({ className }) {
 
     return (
         <div className={className}>
-            <div className={"text-center border p-2"}>
+            <div className={"bg-primary text-center border p-2"}>
                 <p>Event Manager</p>
             </div>
-            <div className={"border border-t-0 flex flex-col p-3"}>
+            <div className={"bg-primary border border-t-0 flex flex-col p-3"}>
                 <div className={"flex flex-row justify-evenly p-3 overflow-auto"}>
                     <EventButton label={t("start vote")} onClick={() => {navigate(`/admin/voting/${username}`)}}/>
                     <EventButton label={`${t("play")} ${t("sound sample")}`} onClick={()=> {navigate(`/admin/sound-sample/${username}`)}}/>
                     <EventButton label={`${t("wheel")}`} onClick={() => {navigate(`/admin/wheel/${username}`)}}/>
                 </div>
                 <div className={"flex flex-row justify-between"}>
-                    <div className={"flex-grow-1 border overflow-auto max-h-70"}>
+                    <div className={"bg-primary flex-grow-1 border overflow-auto max-h-70"}>
                         {currentEvents.map(ev => (
                             <Event id={ev.id} themeName={ev.name} date={ev.timestamp} loadEvents={loadEvents}/>
                         ))}
@@ -77,7 +77,7 @@ export default function EventManager({ className }) {
                 {createEvent && ((!eventType && (
                         <div className="fixed inset-0 z-50 bg-black/40 flex justify-center overflow-y-auto py-10">
                             {/* Main container */}
-                            <div className={"w-[400px] mt-[200px] max-w-full h-[300px] border-2 border-text-primary rounded-3xl p-8 bg-white flex flex-col gap-3"}>
+                            <div className={"w-[400px] mt-[200px] max-w-full h-[300px] border-2 border-text-primary rounded-3xl p-8 bg-primary flex flex-col gap-3"}>
                                 {/* Title + x */}
                                 <div className={"flex justify-between"}>
                                     <p> Choose Event Type </p>
@@ -132,7 +132,7 @@ function Event ({ id, themeName, date, loadEvents }){
     }
 
     return (
-        <div className={"m-1 p-1.5 flex flex-row justify-between border rounded"}>
+        <div className={"bg-primary m-1 p-1.5 flex flex-row justify-between border rounded"}>
             <div className={"m-1 grow-1 text-center border"}>
                 {themeName ?? "Startup Day"}
             </div>

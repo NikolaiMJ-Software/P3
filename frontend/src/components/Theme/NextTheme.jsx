@@ -50,7 +50,7 @@ export default function NextTheme() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border px-4 py-4 bg-white">
+      <div className="rounded-2xl border px-4 py-4 bg-primary">
         <p className="text-center text-sm text-text-secondary">
           {t("loading")}...
         </p>
@@ -60,7 +60,7 @@ export default function NextTheme() {
 
   if (!event) {
     return (
-      <div className="rounded-2xl border px-4 py-4 bg-white">
+      <div className="rounded-2xl border px-4 py-4 bg-primary">
         <p className="text-center text-sm text-text-secondary">
           {t("noUpcomingEvent")}
         </p>
@@ -70,7 +70,7 @@ export default function NextTheme() {
 
   if(event.name === null){
     return (
-      <div className="rounded-2xl border px-4 py-4 bg-white [container-type:inline-size]">
+      <div className="rounded-2xl border px-4 py-4 bg-primary [container-type:inline-size]">
         {/* header/date */}
         <div className="flex items-center justify-between">
           <span className="text-sm text-text-secondary">{t('nextTheme')}</span>
@@ -92,7 +92,7 @@ export default function NextTheme() {
                 {/* poster */}
                 <div
                   className="aspect-[2/3] max-h-[18rem] w-full overflow-hidden rounded-md 
-                            flex items-center justify-center bg-white"
+                            flex items-center justify-center bg-primary"
                 >
                   <img
                     src={logoPNG}
@@ -107,7 +107,7 @@ export default function NextTheme() {
   }
 
   return (
-    <div className="rounded-2xl border px-4 py-4 bg-white [container-type:inline-size]">
+    <div className="rounded-2xl border px-4 py-4 bg-primary [container-type:inline-size]">
       {/* header/date */}
       <div className="flex items-center justify-between">
         <span className="text-sm text-text-secondary">{t('nextTheme')}</span>
@@ -116,7 +116,7 @@ export default function NextTheme() {
 
       {/* title */}
       <div className="mt-4 w-full rounded-md border px-3 py-2">
-        <p className="text-lg font-bold text-center truncate" title={event.name}>
+        <p className="text-base sm:text-lg font-bold text-center truncate" title={event.name}>
           {event.name}
         </p>
       </div>

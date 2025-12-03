@@ -14,8 +14,8 @@ export default function SubmissionManager() {
         <div className={"m-5 mt-20 border flex flex-col"}>
             {/* Choose Manager */}
             <div className={"flex flex-row justify-between"}>
-                <p onClick={() => setTab("ThemeSubmissions")} className={`w-1/2 cursor-pointer text-center p-3 border-r ${(tab === "ThemeSubmissions") ? null : "border-b"}`}> {t("themes")}</p>
-                <p onClick={() => setTab("SoundSamples")} className={`w-1/2 cursor-pointer text-center p-3 ${(tab === "SoundSamples") ? null : "border-b"}`}> {t("sound samples")}</p>
+                <p onClick={() => setTab("ThemeSubmissions")} className={`bg-primary w-1/2 cursor-pointer text-center p-3 border-r ${(tab === "ThemeSubmissions") ? null : "border-b"}`}> {t("themes")}</p>
+                <p onClick={() => setTab("SoundSamples")} className={`bg-primary w-1/2 cursor-pointer text-center p-3 ${(tab === "SoundSamples") ? null : "border-b"}`}> {t("sound samples")}</p>
             </div>
             <div className={""}>
                 {getComponent(tab)}
@@ -96,7 +96,7 @@ function ThemeSubmissions(){
 
     return (
         <div>
-            <div className={"p-5 flex flex-row justify-evenly"}>
+            <div className={"bg-primary p-5 flex flex-row justify-evenly"}>
                 {/* Filters and stuff */}
                 <div className={"flex flex-col"}>
                     <p>{t("search for")} {t("user")}:</p>
@@ -122,7 +122,7 @@ function ThemeSubmissions(){
                     </label>
                 </div>
             </div>
-            <div className={"border-t h-135 overflow-auto"}>
+            <div className={"bg-primary border-t h-135 overflow-auto"}>
                 {filteredThemes.map(theme => (
                     <Theme item={theme} isExpanded={expandedTheme === theme.themeId} onToggle={() => toggleTheme(theme.themeId)} onDelete={() => themeDelete(theme.themeId)}/>
                 ))}
@@ -148,8 +148,8 @@ function Theme({ item, onToggle, isExpanded, onDelete }){
 
     return (
         <div className={"m-10 mt-3 mb-3 border rounded flex flex-col"}>
-            <div className={"flex flex-row justify-between cursor-pointer"} onClick={handleClick}>
-                <div className={"border m-4 p-2 grow-1 w-1/6 text-center"}>
+            <div className={"bg-primary flex flex-row justify-between cursor-pointer"} onClick={handleClick}>
+                <div className={"bg-primary border m-4 p-2 grow-1 w-1/6 text-center"}>
                     {item.name}
                 </div>
                 <SubmissionPart label={t("Uploaded by")} content={item.username}/>
@@ -178,7 +178,7 @@ function SubmissionPart({ label, content}){
     return (
         <div className={"grow m-2 w-1/6  mr-10 ml-10"}>
             <p>{label}</p>
-            <p className={"border text-center"}>{content}</p>
+            <p className={"bg-primary border text-center"}>{content}</p>
         </div>
     )
 }
@@ -236,7 +236,7 @@ function SoundSampleSubmissions() {
 
     return (
         <div>
-            <div className={"p-5 flex flex-row justify-evenly"}>
+            <div className={"bg-primary p-5 flex flex-row justify-evenly"}>
                 {/* Filters and stuff */}
                 <div className={"flex flex-col"}>
                     <p>{t("search for")} {t("user")}:</p>
@@ -256,7 +256,7 @@ function SoundSampleSubmissions() {
                     <img className={"cursor-pointer size-12 hover:bg-gray-300 rounded p-1"} onClick={batchDelete} src={trashCan} alt={"Delete Selected"}/>
                 </div>
             </div>
-            <div className={"border-t h-135 overflow-auto"}>
+            <div className={"bg-primary border-t h-135 overflow-auto"}>
                 {filteredSamples.map(sample => (
                     <SoundSample item={sample} onCheck={addToDelete}/>
                 ))}
