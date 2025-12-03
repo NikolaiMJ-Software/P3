@@ -36,7 +36,7 @@ describe("testing of LoginPage", () => {
 
     // ASSERT
     expect(screen.getByText("Insert F-Klub Username:")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Username")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Username...")).toBeInTheDocument();
     expect(screen.getByText("Confirm")).toBeInTheDocument();
   });
 
@@ -53,7 +53,7 @@ describe("testing of LoginPage", () => {
       </MemoryRouter>
     );
 
-    const input = screen.getByPlaceholderText("Username");
+    const input = screen.getByPlaceholderText("Username...");
     const button = screen.getByText("Confirm");
 
     // ACT
@@ -80,7 +80,7 @@ describe("testing of LoginPage", () => {
       </MemoryRouter>
     );
 
-    const input = screen.getByPlaceholderText("Username");
+    const input = screen.getByPlaceholderText("Username...");
     const button = screen.getByText("Confirm");
 
     // ACT
