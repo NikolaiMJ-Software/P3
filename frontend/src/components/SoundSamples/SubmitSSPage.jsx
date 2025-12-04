@@ -82,7 +82,7 @@ export default function SubmitSSPage() {
                 <div className="flex justify-center">
                     <label className="px-4 py-1 transition-colors cursor-pointer bg-primary hover:bg-btn-hover-secondary border">
                         {t("browse")}
-                        <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }}
+                        <input type="file" onChange={(e) => {e.preventDefault(), setFile(e.target.files[0])}} style={{ display: "none" }}
                         />
                     </label>
                 </div>
