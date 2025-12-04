@@ -9,7 +9,7 @@ export default function FAQPage() {
 
   return (
     <main className="px-1 sm:px-6 flex justify-center items-center">
-      <div className="max-w-3xl border rounded-2xl p-4 sm:p-10 w-full">
+      <div className="drop-shadow-xl max-w-3xl border rounded-2xl p-4 sm:p-10 w-full">
         <h1 className="text-xl sm:text-3xl font-semibold">{t("title", { ns })}</h1>
         <hr className="my-4" />
 

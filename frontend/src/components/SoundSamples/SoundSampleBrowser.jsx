@@ -84,7 +84,7 @@ export default function SoundSampleBrowser({onCreateSS}) {
 
     return (
     <div className={"p-1 sm:p-10"}>
-        <div className={"bg-primary w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-2 sm:p-6"}>
+        <div className={"bg-primary drop-shadow-xl w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-2 sm:p-6"}>
 
             {/* Users sound sample card container */}
             <div className="flex justify-between items-center m-4">

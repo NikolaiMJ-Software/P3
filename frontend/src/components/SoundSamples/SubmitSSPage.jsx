@@ -61,7 +61,7 @@ export default function SubmitSSPage() {
     // HTML of the page
     return (
         <div className={"p-4 sm:p-10 relative"}>
-            <div className={"bg-primary w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col items-center gap-3"}>
+            <div className={"bg-primary drop-shadow-xl w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col items-center gap-3"}>
                 {/* URL input */}
                 <div className="drop-shadow-lg flex justify-center">
                     <input
@@ -82,8 +82,7 @@ export default function SubmitSSPage() {
                 <div className="flex justify-center">
                     <label className="drop-shadow-lg px-4 py-1 transition-colors cursor-pointer bg-primary hover:bg-btn-hover-secondary border">
                         {t("browse")}
-                        <input type="file" onChange={(e) => {e.preventDefault(), setFile(e.target.files[0])}} style={{ display: "none" }}
-                        />
+                        <input type="file" onChange={(e) => (e.preventDefault(), setFile(e.target.files[0]))} style={{ display: "none" }}/>
                     </label>
                 </div>
                 <div className="flex justify-center items-center min-h-5">
