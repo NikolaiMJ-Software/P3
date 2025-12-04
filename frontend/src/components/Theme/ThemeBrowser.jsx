@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {addTheme, getThemes, getNewThemes, getOldThemes, deleteTheme} from "../../services/themeService.jsx";
 import {getEvents, getFutureEvents} from "../../services/eventService.jsx";
 import ThemeCard, {ThemeCreationCard} from "./ThemeCard.jsx";
