@@ -45,21 +45,20 @@ public class MovieRepository {
                     rs.getString("rating")
             );
 
-    private String sanitizeFTS(String input) {
-        if (input == null) return "";
+private String sanitizeFTS(String input) {
+    if (input == null) return "";
 
-        // Replace illegal FTS tokens with spaces
-        String sanitized = input.replaceAll("[=<>\"'()\\[\\]{}:;,.!?%*~^/\\\\+-]", " ");
+    // remove all symbols that break FTS or regex
+    String sanitized = input.replaceAll("[^a-zA-Z0-9]", " ");
 
+    // Collapse spaces
+    sanitized = sanitized.replaceAll("\\s+", " ").trim();
 
-        // Collapse multiple spaces
-        sanitized = sanitized.replaceAll("\\s+", " ").trim();
+    // if nothing alphanumeric is left return empty
+    if (sanitized.isEmpty()) return "";
 
-        // If user typed only symbols, return empty string
-        if (sanitized.isEmpty()) sanitized = "";
-
-        return sanitized;
-    }
+    return sanitized;
+}
 
     //database operations
     public List<Movie> findAll(){
