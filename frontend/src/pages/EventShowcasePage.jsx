@@ -118,6 +118,7 @@ export default function EventShowcasePage(){
                         </span>
                         <br/>
                         {movies[0].title} ({movies[0].year})
+                        {movies[1] && " " + movies[1].title} {movies[1] && `(${movies[1].year})`}
                     </p>
                 </div>
 
