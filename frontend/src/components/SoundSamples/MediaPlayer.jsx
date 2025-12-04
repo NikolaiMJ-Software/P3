@@ -118,6 +118,8 @@ function getInstaEmbedUrl(u) {
 
         //removes and replaces any values from the url so make it a proper embed link
         let pathname = url.pathname.split("?")[0].split("#")[0].replace(/\/$/, "");
+        //fixes the bug with some links saying cannot open.
+        pathname = pathname.replace("/reels/","/reel/");
 
         //if pathname already has /embed in the end then return it
         if (pathname.endsWith("/embed")){

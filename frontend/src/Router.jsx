@@ -36,13 +36,11 @@ export default function Router() {
                         <Route path="/themes/:username" element={<ThemeBrowser />} />
                         <Route path="/submit/:username" element={<SubmitSSPage />}/>
                         <Route path="/sound-samples/:username" element={<SoundSampleBrowser/>}/>
-                        <Route path="/voting/:username" element={<ThemeVoting />}/>
                         {/* User logged in paths */}
                         <Route path="/:username" element={<HomePage />} />
                         <Route path="/admin/:username" element={<AdminPage/>} />
                         <Route path="/admin/wheel/:username" element={<WheelOfFortunePage/>} />
                         <Route path="/admin/sound-sample/:username" element={<AdminSound/>}/>
-                        <Route path="/admin/voting/:username" element={<ThemeVoting />}/>
                         <Route path="/faq/:username" element={<FAQPage/>}/>
                     </Route>
                 </Route>
@@ -50,6 +48,7 @@ export default function Router() {
                 {/* Routes that don't have the header */}
                 <Route path="/login" element={<LoginPage />} />
                 <Route path={"/showcase"} element={<EventShowcasePage/>}/>
+                <Route path="/admin/voting/:username" element={<ThemeVoting />}/>
             </Routes>
         </BrowserRouter>
     );
