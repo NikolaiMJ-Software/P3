@@ -173,11 +173,11 @@ useEffect(() => {
 
   return (
     <div className="p-1 sm:p-10 relative flex justify-center items-center">
-      <div className="bg-primary w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-3 sm:p-8 flex flex-col sm:gap-3">
+      <div className="bg-primary drop-shadow-xl w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-3 sm:p-8 flex flex-col sm:gap-3">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">{t("editTheme")}</h2>
           <button
-            className="px-3 py-1 rounded-lg hover:bg-btn-hover-secondary cursor-pointer"
+            className="px-3 py-1 rounded-lg hover:bg-btn-hover-secondary cursor-pointer text-text-error"
             onClick={onClose}
           >
             X

@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie, title, setTitle, rules, setRules}){
     const {t} = useTranslation();
     return(
-        <div className={"bg-primary items-center flex-col flex gap-1 border-1 sm:m-2 p-2 sm:min-h-[640px]"}>
-            <input type={"text"} value={title} onChange={event => setTitle(event.target.value)} placeholder={t("enter theme title")} className={"bg-primary w-55 sm:w-80 text-center text-text-primary border-1 m-2 p-2 rounded-2xl"}/>
+        <div className={"bg-primary drop-shadow-lg items-center flex-col flex gap-1 border-1 sm:m-2 p-2 sm:min-h-[640px]"}>
+            <input type={"text"} value={title} onChange={event => setTitle(event.target.value)} placeholder={t("enter theme title")} className={"bg-primary drop-shadow-lg w-55 sm:w-80 text-center text-text-primary border-1 m-2 p-2 rounded-2xl"}/>
             <p className={"text-center text-sm sm:text-base"}>{t("movies")}</p>
             {movies.length > 0 && (() => {
                 const totalRuntime = movies.reduce((sum, m) => sum + (m.runtimeMinutes || 0), 0);

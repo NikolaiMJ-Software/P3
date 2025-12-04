@@ -52,7 +52,7 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove,
     const safeRating = (rating) ? t("rating: ") + rating : t("no ratings available");
     if (isSeries){
         return (
-            <div className={"bg-primary w-full max-w-[180px] flex flex-col items-center border-2 rounded-2xl overflow-hidden"}>
+            <div className={"bg-primary drop-shadow-lg w-full max-w-[180px] flex flex-col items-center border-2 rounded-2xl overflow-hidden"}>
                 <p className={"text-[10px] text-center mt-1 w-full h-[24px] overflow-hidden leading-tight break-words"}>{title}</p>
                 <p className={"text-[10px] text-center truncate w-full text-xs"}>{safeRating} ⭐</p>
                 <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-primary">
@@ -71,7 +71,7 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove,
     }
 
     return(
-        <div className={"bg-primary w-full max-w-[180px] flex flex-col items-center border-2 rounded-2xl overflow-hidden"}>
+        <div className={"bg-primary drop-shadow-lg w-full max-w-[180px] flex flex-col items-center border-2 rounded-2xl overflow-hidden"}>
             <p className={"text-[15px] text-center mt-1 truncate pl-1 w-full text-base sm:text-lg break-words"}>{title}</p>
             <p className={"text-[10px] text-center mt-1 truncate w-full text-xs"}>{safeRating} ⭐</p>
             <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-primary">

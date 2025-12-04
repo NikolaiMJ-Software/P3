@@ -70,7 +70,7 @@ export default function NextTheme() {
 
   if(event.name === null){
     return (
-      <div className="rounded-2xl border px-4 py-4 bg-primary [container-type:inline-size]">
+      <div className="drop-shadow-lg rounded-2xl border px-4 py-4 bg-primary [container-type:inline-size]">
         {/* header/date */}
         <div className="flex items-center justify-between">
           <span className="text-sm text-text-secondary">{t('nextTheme')}</span>
@@ -107,7 +107,7 @@ export default function NextTheme() {
   }
 
   return (
-    <div className="rounded-2xl border px-4 py-4 bg-primary [container-type:inline-size]">
+    <div className="drop-shadow-xl rounded-2xl border px-4 py-4 bg-primary [container-type:inline-size]">
       {/* header/date */}
       <div className="flex items-center justify-between">
         <span className="text-sm text-text-secondary">{t('nextTheme')}</span>
