@@ -66,6 +66,15 @@ export default function ThemeVoting() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [[unVotedThemes.length]]);
 
+  //check if {username} is admin
+  useEffect(() => {
+    async function checkAdmin() {
+        const result = await isAdmin(username);
+            setIsAdminUser(result);
+      }
+      checkAdmin();
+  }, [username]);
+
   // Function to updates votes for the current theme
   const submitVote = (votes) => {
     if (votes === "") {
@@ -295,37 +304,26 @@ export default function ThemeVoting() {
     // Increment a dummy state to trigger useEffect in ThemeVotingDisplay
     setTimerResetKey((prev) => prev + 1);
   };
-
-  //check if {username} is admin
-  useEffect(() => {
-    async function checkAdmin() {
-        const result = await isAdmin(username);
-            setIsAdminUser(result);
-      }
-      checkAdmin();
-    }, [username]);
   
-  console.log(isAdminUser)
   if (unVotedThemes.length === 0) return <p>Loading themes...</p>;
-
   const currentTheme = unVotedThemes[currentIndex];
 
   if(isAdminUser === 1){
     return (
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col w-full">
 
     {/* Display the current theme and timer*/}
     <div className="relative">
       <ThemeVotingDisplay theme={currentTheme}/>
-      <div className="absolute top-6 right-8 p-4 z-50">
-        <div className="bg-black/70 text-white px-3 py-2 rounded-lg shadow-lg">
+      <div className="absolute top-4 right-0">
+        <div className="scale-70 bg-black/70 text-primary px-3 py-2 rounded-lg shadow-lg">
           <Timer initialSeconds={timerStart} resetKey={timerResetKey} />
         </div>
       </div>
     </div>
 
       {/* Bottom controls */}
-      <div className="flex flex-col p-6">
+      <div className="flex flex-col px-6">
         <div className="flex justify-between items-center mb-2">
           <button
             onClick={handlePrevious}
