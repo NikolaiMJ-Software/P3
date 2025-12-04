@@ -41,6 +41,7 @@ export default function Header(){
 
 
     const logout = () =>{
+        localStorage.removeItem("rememberUser");
         sessionStorage.removeItem("username");
         navigate("/login");
     };
