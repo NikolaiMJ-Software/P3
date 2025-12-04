@@ -15,14 +15,14 @@ export default function ThemeVotingDisplay({ theme }) {
   }
 
   return (
-    <div className="w-full min-h-screen p-6 flex flex-col items-center gap-6">
+    <div className="w-full min-h-screen p-6 flex flex-col items-center gap-2">
       {/* Film tape top */}
       <div className="w-full h-24" style={{backgroundImage: `url(${film_tape})`, backgroundRepeat: "repeat-x", backgroundSize: "contain"}}></div>
      
       {/* Theme title + submitter */}
       <div className="w-3/4 p-4 rounded-xl text-center shadow-inner border">
-        <h1 className="text-2xl font-bold">{theme.themeName}</h1>
-        <p className="text-sm mt-1">Submitted by: {theme.submitterName}</p>
+        <h1 className="text-4xl font-bold">{theme.themeName}</h1>
+        <p className="text-m mt-1">Submitted by: {theme.submitterName}</p>
       </div>
 
       {/* Movie posters row */}
@@ -52,14 +52,20 @@ export default function ThemeVotingDisplay({ theme }) {
 
 
       {/* Film strip bottom */}
-      <div className="w-full h-12 rounded-xl shadow-inner mt-4">
-        <div className="flex justify-center items-center h-full">
-          <p className="text-lg font-bold">
+      <div
+        className="relative w-full h-24 mt-4 flex items-center justify-center"
+        style={{
+          backgroundImage: `url(${film_tape})`,
+          backgroundRepeat: "repeat-x",
+          backgroundSize: "contain"
+        }}
+      >
+        <div className="bg-black/60 text-white px-4 py-1 rounded-lg shadow">
+          <p className="text-2xl font-bold">
             Total Runtime: {formatRunTime(theme.runTimes.reduce((a, b) => a + b, 0))}
           </p>
         </div>
       </div>
-      <div className="w-full h-24" style={{backgroundImage: `url(${film_tape})`, backgroundRepeat: "repeat-x", backgroundSize: "contain"}}></div>
 
 
       {/* Show current votes */}
