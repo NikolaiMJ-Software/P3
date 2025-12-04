@@ -4,8 +4,9 @@ import { fetchShuffledThemes, updateThemeVotes, deleteTheme, addWheelWinner } fr
 import { uploadEvent } from "../services/eventService";
 import ThemeVotingDisplay from "../components/Theme/ThemeVotingDisplay";
 import Timer from "../components/Timer";
-import WheelOfFortunePage from "./WheelOfFortunePage.jsx";
+import WheelOfFortune from "../components/WheelOfFortune.jsx";
 import {isAdmin} from "../services/adminService.jsx"
+import logo from "../assets/logo.png";
 
 export default function ThemeVoting() {
   const [themes, setThemes] = useState([]);
@@ -225,15 +226,17 @@ export default function ThemeVoting() {
     const runnerUpTheme = unVotedThemes.find(
       t => t.movieIds.includes(runnerUpWinnerMovieId)
     );
-    deleteAllThemesExcept([...winners, runnerUpTheme]);
-    updateWinningThemes([...winners, runnerUpTheme]);
+    console.log("Runner-up theme identified:", runnerUpTheme);
+    await deleteAllThemesExcept([...winners, runnerUpTheme]);
+    await updateWinningThemes([...winners, runnerUpTheme]);
     alert("Voting concluded and events scheduled!");
     window.open("/admin/events", "_self");
   };
 
   const updateWinningThemes = async (winners) => {
     try {
-      for (const theme of winners) {
+      for (let i=0; i < winners.length; i++) {
+        const theme = winners[i];
         await updateThemeVotes(theme.themeId, theme.votes, true);
       }
     } catch (err) {
@@ -312,13 +315,19 @@ export default function ThemeVoting() {
     return (
       <div className="flex flex-col w-full">
 
-    {/* Display the current theme and timer*/}
+    {/* Display the current theme, timer, and back button*/}
     <div className="relative">
       <ThemeVotingDisplay theme={currentTheme}/>
       <div className="absolute top-4 right-0">
         <div className="scale-70 bg-black/70 text-primary px-3 py-2 rounded-lg shadow-lg">
           <Timer initialSeconds={timerStart} resetKey={timerResetKey} />
         </div>
+      </div>
+      <div className="absolute top-6 left-7">
+        <button
+          onClick={() => navigate(`/admin/${username}`)} class="btn-secondary">
+          <img src={logo} alt="Back to Admin" className="size-7"/>
+        </button>
       </div>
     </div>
 
@@ -368,7 +377,8 @@ export default function ThemeVoting() {
         </div>
         {showWheelPopup && (
           <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-primary rounded-lg p-6 shadow-lg w-11/12 max-w-4xl relative">
+            <p className="absolute top-8 text-white text-xl">Spin the Wheel to determine which movie to watch today!</p>
+            <div className="bg-primary rounded-lg p-6 shadow-lg w-1/2 max-w-4xl relative">
 
               {/* Close button */}
               <button
@@ -378,7 +388,7 @@ export default function ThemeVoting() {
                 ×
               </button>
 
-              <WheelOfFortunePage entries={wheelNames} resultFunction={handleWheelResult}/>
+              <WheelOfFortune inputs={wheelNames} onResult={handleWheelResult}/>
             </div>
           </div>
         )}

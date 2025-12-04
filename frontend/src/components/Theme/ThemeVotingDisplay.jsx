@@ -65,7 +65,7 @@ export default function ThemeVotingDisplay({ theme }) {
           backgroundSize: "contain"
         }}
       >
-        <div className="bg-black/60 text-primary px-4 py-0 rounded-lg shadow">
+        <div className="bg-black text-primary px-4 py-0 rounded-lg">
           <p className="text-xl font-bold">
             Total Runtime: {formatRunTime(theme.runTimes.reduce((a, b) => a + b, 0))}
           </p>
@@ -74,9 +74,9 @@ export default function ThemeVotingDisplay({ theme }) {
 
 
       {/* Show current votes */}
-      <div className="w-3/4 p-4 rounded-xl text-center py-0">
-        <h2 className="text-xl font-bold mb-2">Current Votes: {theme.votes}</h2>
-      </div>
+      <h2 className="text-xl font-bold mb-2">
+        Current Votes: {theme.votes === null ? "Unvoted" : theme.votes}
+      </h2>
 
     </div>
   );
