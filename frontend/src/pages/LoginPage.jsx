@@ -64,7 +64,7 @@ export default function LoginPage() {
                 />
             </div>
 
-            <form className="bg-primary drop-shadow-xl rounded-2xl px-5 sm:px-10 py-4 sm:py-8 w-full max-w-md flex flex-col gap-3" onSubmit={handleSubmit}>
+            <form className="bg-primary drop-shadow-xl rounded-2xl px-5 sm:px-10 py-4 sm:py-8 w-full max-w-md flex flex-col gap-4.5" onSubmit={handleSubmit}>
                 <h1 className="text-lg sm:text-2xl font-serif font-bold text-center text-text-secondary">Indtast F-Klub Brugernavn:</h1>
                 <input
                     type="text"
@@ -74,9 +74,11 @@ export default function LoginPage() {
                     className="border bg-primary rounded-2xl px-4 py-2.5 text-text-secondary"
                 />
 
-                <button type="submit" className="btn-primary">
-                    Log ind
-                </button>
+                <div className="flex items-center justify-center w-full">
+                    <button type="submit" className="btn-primary w-3/4">
+                        Log ind
+                    </button>
+                </div>
 
                 <div className="flex flex-row items-center justify-center gap-2">
                     <input 
