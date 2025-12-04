@@ -29,5 +29,6 @@ backend/database/*.tsv.gz
 # Sound samples Files
 backend/fkult/soundSampleUploads/*
 
-backend/fkult/database/.gitkeep
-backend/fkult/soundSampleUploads/.gitkeep
+# Allow only the placeholder files to be tracked
+!backend/fkult/database/.gitkeep
+!backend/fkult/soundSampleUploads/.gitkeep
