@@ -327,7 +327,7 @@ export default function ThemeVoting() {
         <div className="flex justify-between items-center mb-2">
           <button
             onClick={handlePrevious}
-            className="px-4 py-2 rounded-md bg-text-secondary hover:bg-btn-hover-secondary"
+            class="btn-secondary"
           >
             ← Previous
           </button>
@@ -338,7 +338,7 @@ export default function ThemeVoting() {
 
             <button
               onClick={handleNext}
-              className="px-4 py-2 rounded-md bg-text-secondary hover:bg-btn-hover-secondary"
+              class="btn-secondary"
             >
               Next →
             </button>
