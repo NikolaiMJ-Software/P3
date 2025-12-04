@@ -42,7 +42,7 @@ export default function EventShowcasePage(){
     //startup day
     if (event.tConsts === null){
         return (
-            <div className={"-m-5 overflow-hidden relative w-full grid grid-rows-[80px_1fr_80px] h-screen"}>
+            <div className={"-m-5 overflow-hidden relative grid grid-rows-[80px_1fr_80px] h-screen"}>
                 <div className="w-full h-20"
                      style={{
                          backgroundImage: `url(${film_tape})`,
@@ -84,7 +84,7 @@ export default function EventShowcasePage(){
     }
 
     return (
-        <div className={"-m-5 overflow-hidden relative w-full grid grid-rows-[80px_1fr_80px] h-screen"}>
+        <div className={"-m-5 overflow-hidden relative grid grid-rows-[80px_1fr_80px] h-screen"}>
             <div className="w-full h-20"
                 style={{
                     backgroundImage: `url(${film_tape})`,
