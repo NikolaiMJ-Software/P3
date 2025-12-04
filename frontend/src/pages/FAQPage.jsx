@@ -1,3 +1,4 @@
+import React from "react";
 import Placeholder from "../assets/placeholder.png";
 import { Trans, useTranslation } from "react-i18next";
 
