@@ -12,14 +12,14 @@ function refresh() {
 }
 
     return(
-<div className="bg-primary items-center relative flex-col flex gap-1 border-text-primary border-1 sm:m-2 p-2 w-full h-[600px] sm:h-[640px] overflow-visible">
+<div className="bg-primary drop-shadow-xl items-center relative flex-col flex gap-1 border-text-primary border-1 sm:m-2 p-2 w-full h-[600px] sm:h-[640px] overflow-visible">
             <div className="flex flex-row items-center gap-2 sm:px-2 w-full whitespace-nowrap sm:h-[50px] items-center overflow-visible">
                 <input
                     ref={searchInputRef}
                     onKeyDown={event => event.key === "Enter" && (event.preventDefault(), setHasSearched(true), setSearchQuery(event.target.value))}
                     type="text"
                     placeholder= {t("CreateThemeSearch")}
-                    className="bg-primary flex-1 sm:min-w-[120px] text-center text-text-primary border-1 p-1 sm:p-2 rounded-2xl truncate"
+                    className="bg-primary drop-shadow-lg flex-1 sm:min-w-[120px] text-center text-text-primary border-1 p-1 sm:p-2 rounded-2xl truncate"
                 />
                 <div className="hidden sm:flex">
                     <button
@@ -156,7 +156,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
     //different layout for shows, series and such.
     if(isSeries){
         return (
-            <div onClick={onAdd} className="bg-primary flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]">
+            <div onClick={onAdd} className="bg-primary drop-shadow-lg flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]">
                 <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
                     <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
                 </div>
@@ -179,7 +179,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
 
     if(isShorts){
         return (
-            <div onClick={onAdd} className="bg-primary flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]">
+            <div onClick={onAdd} className="bg-primary drop-shadow-lg flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]">
                 <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
                     <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
                 </div>
@@ -201,7 +201,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
     }
 
     return(
-        <div onClick={onAdd} className={"bg-primary flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]"}>
+        <div onClick={onAdd} className={"bg-primary drop-shadow-lg flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]"}>
             <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
                 <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
             </div>
