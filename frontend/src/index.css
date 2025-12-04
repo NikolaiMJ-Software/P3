@@ -40,6 +40,7 @@
     sm:text-base 
     bg-btn-primary
     hover:bg-btn-hover-primary
+    drop-shadow-lg
   }
   .btn-home-page {
     @apply
@@ -68,6 +69,7 @@
     transition 
     shrink-0
     p-1
+    drop-shadow-lg
   }
 
   .card-primary {

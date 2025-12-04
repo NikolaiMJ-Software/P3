@@ -20,6 +20,7 @@ global.fetch = vi.fn();
 
 describe("testing of LoginPage", () => {
   beforeEach(() => {
+    localStorage.clear();
     sessionStorage.clear();
     fetch.mockReset();
     mockNavigate.mockReset();
@@ -35,12 +36,14 @@ describe("testing of LoginPage", () => {
     );
 
     // ASSERT
-    expect(screen.getByText("Insert F-Klub Username:")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Username...")).toBeInTheDocument();
-    expect(screen.getByText("Confirm")).toBeInTheDocument();
+    expect(screen.getByText("Indtast F-Klub Brugernavn:")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Brugernavn...")).toBeInTheDocument();
+    expect(screen.getByText("Log ind")).toBeInTheDocument();
+    expect(screen.getByTestId("checkbox")).toBeInTheDocument();
+    expect(screen.getByText("Husk mit login")).toBeInTheDocument();
   });
 
-  it("stores username and navigates on success", async () => {
+  it("session storage,stores username and navigates on success", async () => {
     // ARRANGE
     fetch.mockResolvedValueOnce({
       ok: true,
@@ -53,8 +56,8 @@ describe("testing of LoginPage", () => {
       </MemoryRouter>
     );
 
-    const input = screen.getByPlaceholderText("Username...");
-    const button = screen.getByText("Confirm");
+    const input = screen.getByPlaceholderText("Brugernavn...");
+    const button = screen.getByText("Log ind");
 
     // ACT
     fireEvent.change(input, { target: { value: "tester" } });
@@ -63,6 +66,37 @@ describe("testing of LoginPage", () => {
     // ASSERT
     await waitFor(() => {
       expect(sessionStorage.getItem("username")).toBe("tester");
+      expect(localStorage.getItem("rememberUser")).not.toBe("tester");
+      expect(mockNavigate).toHaveBeenCalledWith("/tester");
+    });
+  });
+
+  it("local storage, stores username and navigates on success", async () => {
+    // ARRANGE
+    fetch.mockResolvedValueOnce({
+      ok: true,
+      text: async () => "",
+    });
+
+    render(
+      <MemoryRouter>
+        <LoginPage />
+      </MemoryRouter>
+    );
+
+    const input = screen.getByPlaceholderText("Brugernavn...");
+    const button = screen.getByText("Log ind");
+    const rememberLogin = screen.getByTestId("checkbox");
+
+    // ACT
+    fireEvent.change(input, { target: { value: "tester" } });
+    fireEvent.click(rememberLogin);
+    fireEvent.click(button);
+
+    // ASSERT
+    await waitFor(() => {
+      expect(sessionStorage.getItem("username")).toBe("tester");
+      expect(localStorage.getItem("rememberUser")).toBe("tester");
       expect(mockNavigate).toHaveBeenCalledWith("/tester");
     });
   });
@@ -80,8 +114,8 @@ describe("testing of LoginPage", () => {
       </MemoryRouter>
     );
 
-    const input = screen.getByPlaceholderText("Username...");
-    const button = screen.getByText("Confirm");
+    const input = screen.getByPlaceholderText("Brugernavn...");
+    const button = screen.getByText("Log ind");
 
     // ACT
     fireEvent.change(input, { target: { value: "wrong" } });

@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.GZIPInputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -683,5 +684,338 @@ public class MovieRepositoryTest {
             );
         }
     }
+
+// sanitizeFTS: null input returns empty string
+@Test
+void sanitizeFTS_null_returnsEmpty() throws Exception {
+    // Arrange
+    var method = MovieRepository.class.getDeclaredMethod("sanitizeFTS", String.class);
+    method.setAccessible(true);
+
+    // Act
+    String result = (String) method.invoke(movieRepository, (Object) null);
+
+    // Assert
+    assertEquals("", result);
+}
+
+// sanitizeFTS: removes only characters included in the regex
+@Test
+void sanitizeFTS_removesIllegalSymbols() throws Exception {
+    var method = MovieRepository.class.getDeclaredMethod("sanitizeFTS", String.class);
+    method.setAccessible(true);
+
+    String result = (String) method.invoke(movieRepository, "he!!o@@@");
+
+    assertEquals("he o", result);
+}
+
+
+// sanitizeFTS: collapses multiple spaces into a single one
+@Test
+void sanitizeFTS_collapsesSpaces() throws Exception {
+    // Arrange
+    var method = MovieRepository.class.getDeclaredMethod("sanitizeFTS", String.class);
+    method.setAccessible(true);
+
+    // Act
+    String result = (String) method.invoke(movieRepository, "hello   world");
+
+    // Assert
+    assertEquals("hello world", result);
+}
+
+@Test
+void sanitizeFTS_onlySymbols_returnsEmpty() throws Exception {
+    var method = MovieRepository.class.getDeclaredMethod("sanitizeFTS", String.class);
+    method.setAccessible(true);
+
+    String result = (String) method.invoke(movieRepository, "!!!%%%$$$");
+
+    assertEquals("", result); // all removed
+}
+
+// countMovies: sanitized empty keyword returns 0 and avoids DB access
+@Test
+void countMovies_sanitizedEmpty_returnsZero() {
+    // Arrange / Act
+    int result = movieRepository.countMovies("!!!%%%");
+
+    // Assert
+    assertEquals(0, result);
+    verifyNoInteractions(jdbcTemplate);
+}
+
+// countMovies: IMDb tconst pattern returns 1 when movie found
+@Test
+void countMovies_exactTconst_returnsOne() {
+    // Arrange
+    MovieRepository spyRepo = spy(new MovieRepository(jdbcTemplate));
+    Movie m = new Movie(1L, "tt1234567", "Test", "Test", 2020, 120, true, false, false, null, null);
+    doReturn(m).when(spyRepo).findByTconst("tt1234567");
+
+    // Act
+    int result = spyRepo.countMovies("tt1234567");
+
+    // Assert
+    assertEquals(1, result);
+    verifyNoInteractions(jdbcTemplate);
+}
+
+// countMovies: IMDb tconst pattern returns 0 when movie not found
+@Test
+void countMovies_exactTconst_returnsZeroWhenNotFound() {
+    // Arrange
+    MovieRepository spyRepo = spy(new MovieRepository(jdbcTemplate));
+    doReturn(null).when(spyRepo).findByTconst("tt7654321");
+
+    // Act
+    int result = spyRepo.countMovies("tt7654321");
+
+    // Assert
+    assertEquals(0, result);
+    verifyNoInteractions(jdbcTemplate);
+}
+
+// searchMovies: IMDb tconst returns direct match and bypasses FTS query
+@Test
+void searchMovies_exactTconst_returnsDirectMovie() {
+    // Arrange
+    MovieRepository spyRepo = spy(new MovieRepository(jdbcTemplate));
+    Movie m = new Movie(1L, "tt1234567", "Test", "Test", 2020, 120, true, false, false, null, null);
+    doReturn(m).when(spyRepo).findByTconst("tt1234567");
+
+    // Act
+    var result = spyRepo.searchMovies("tt1234567", 1, 10, null, null,
+                                      null, null, null, null);
+
+    // Assert
+    assertEquals(1, result.size());
+    assertEquals("tt1234567", result.get(0).getTconst());
+    verifyNoInteractions(jdbcTemplate);
+}
+
+// searchMovies: sanitized keyword empty and returns empty list without hitting DB
+@Test
+void searchMovies_keywordSanitizesToEmpty_returnsEmptyList() {
+    // Act
+    var result = movieRepository.searchMovies("!!!###", 1, 10,
+            null, null, null, null, null, null);
+
+    // Assert
+    assertTrue(result.isEmpty());
+
+    // JdbcTemplate must not be hit
+    verifyNoInteractions(jdbcTemplate);
+}
+
+
+
+
+// searchMovies: sort by year ASC and filter movies + rated=true
+@Test
+void searchMovies_sortYearAsc_withMovieAndRatedFilter_buildsCorrectSql() {
+    // Arrange
+    when(jdbcTemplate.query(anyString(), any(RowMapper.class), any(Object[].class)))
+            .thenReturn(List.of());
+
+    // Act
+    movieRepository.searchMovies("star!", 2, 5,
+            "year", "asc",
+            true, false, false, true);
+
+    // Assert
+    ArgumentCaptor<String> sqlCap = ArgumentCaptor.forClass(String.class);
+
+    verify(jdbcTemplate).query(sqlCap.capture(),
+            any(RowMapper.class),
+            any(Object[].class));
+
+    String sql = sqlCap.getValue();
+    assertTrue(sql.contains("AND ("));                   // type filter group present
+    assertTrue(sql.contains("m.rating IS NOT NULL"));    // rated = true works
+    assertTrue(sql.contains("ORDER BY m.year ASC"));     // sorting correct
+}
+
+// findByTconst: returns null when no row is found
+@Test
+void findByTconst_noResult_returnsNull() {
+    // Arrange
+    when(jdbcTemplate.queryForObject(
+            anyString(),
+            any(RowMapper.class),
+            eq("tt404")
+    )).thenThrow(new EmptyResultDataAccessException(1));
+
+    // Act
+    Movie result = movieRepository.findByTconst("tt404");
+
+    // Assert
+    assertNull(result);
+}
+
+// findIdByName: returns corresponding ID
+@Test
+void findIdByName_returnsId() {
+    // Arrange
+    when(jdbcTemplate.queryForObject(
+            anyString(),
+            eq(Long.class),
+            eq("Avatar")
+    )).thenReturn(42L);
+
+    // Act
+    Long id = movieRepository.findIdByName("Avatar");
+
+    // Assert
+    assertEquals(42L, id);
+}
+
+// upsertFromImdbFile: skips rows where runtime is null/invalid
+@Test
+void upsert_skipsWhenRuntimeInvalid() throws Exception {
+    // Arrange
+    File mockFile = mock(File.class);
+    BufferedReader mockReader = mock(BufferedReader.class);
+
+    when(mockReader.readLine())
+            .thenReturn("header")
+            .thenReturn("tt1\tmovie\tTitle\tOrig\t\\N\t2020\t\\N\t\\N\t\\N")
+            .thenReturn(null);
+
+    try (MockedConstruction<FileInputStream> fis = mockConstruction(FileInputStream.class);
+         MockedConstruction<GZIPInputStream> gzip = mockConstruction(GZIPInputStream.class);
+         MockedConstruction<InputStreamReader> isr =
+                 mockConstruction(InputStreamReader.class, (o,c) -> when(o.read()).thenReturn(-1));
+         MockedConstruction<BufferedReader> br =
+                 mockConstruction(BufferedReader.class, (o,c) -> when(o.readLine()).thenAnswer(x -> mockReader.readLine()))
+    ) {
+        doNothing().when(jdbcTemplate).execute(anyString());
+
+        // Act
+        int result = movieRepository.upsertFromImdbFile(mockFile, true, false);
+
+        // Assert
+        assertEquals(0, result);
+        verify(jdbcTemplate, never()).batchUpdate(anyString(), any(List.class));
+    }
+}
+
+// upsertFromImdbFile: when both titles are null, movie_name falls back to tconst
+@Test
+void upsert_titleNull_fallsBackToTconst() throws Exception {
+    // Arrange
+    File mockFile = mock(File.class);
+    BufferedReader mockReader = mock(BufferedReader.class);
+
+    when(mockReader.readLine())
+            .thenReturn("header")
+            .thenReturn("tt1\tmovie\t\\N\t\\N\t\\N\t2020\t\\N\t120\t\\N")
+            .thenReturn(null);
+
+    ArgumentCaptor<List> batchCaptor = ArgumentCaptor.forClass(List.class);
+
+    try (MockedConstruction<FileInputStream> fis = mockConstruction(FileInputStream.class);
+         MockedConstruction<GZIPInputStream> gzip = mockConstruction(GZIPInputStream.class);
+         MockedConstruction<InputStreamReader> isr =
+                 mockConstruction(InputStreamReader.class, (o,c) -> when(o.read()).thenReturn(-1));
+         MockedConstruction<BufferedReader> br =
+                 mockConstruction(BufferedReader.class, (o,c) -> when(o.readLine()).thenAnswer(x -> mockReader.readLine()))
+    ) {
+        doNothing().when(jdbcTemplate).execute(anyString());
+        when(jdbcTemplate.batchUpdate(anyString(), any(List.class))).thenReturn(new int[]{1});
+
+        // Act
+        movieRepository.upsertFromImdbFile(mockFile, true, false);
+
+        // Assert
+        verify(jdbcTemplate).batchUpdate(contains("INSERT INTO movie"), batchCaptor.capture());
+        Object[] params = (Object[]) batchCaptor.getValue().get(0);
+        // upsert params array: [ tconst, movie_name, original_title, startYear, runtime, is_series, is_shorts ]
+        assertEquals("tt1", params[1]);
+    }
+}
+
+// upsertFromImdbFile: when 1000 valid rows, triggers batch flush inside loop
+@Test
+void upsert_reachesBatchThreshold_flushesAt1000() throws Exception {
+    // Arrange
+    File mockFile = mock(File.class);
+    BufferedReader mockReader = mock(BufferedReader.class);
+    AtomicInteger counter = new AtomicInteger(0);
+
+    when(mockReader.readLine()).thenAnswer(inv -> {
+        int c = counter.getAndIncrement();
+        if (c == 0) {
+            return "header";
+        }
+        if (c <= 1000) {
+            return "tt" + c + "\tmovie\tTitle\tOrig\t\\N\t2020\t\\N\t120\t\\N";
+        }
+        return null;
+    });
+
+    try (MockedConstruction<FileInputStream> fis = mockConstruction(FileInputStream.class);
+         MockedConstruction<GZIPInputStream> gzip = mockConstruction(GZIPInputStream.class);
+         MockedConstruction<InputStreamReader> isr =
+                 mockConstruction(InputStreamReader.class, (o,c) -> when(o.read()).thenReturn(-1));
+         MockedConstruction<BufferedReader> br =
+                 mockConstruction(BufferedReader.class, (o,c) -> when(o.readLine()).thenAnswer(x -> mockReader.readLine()))
+    ) {
+        doNothing().when(jdbcTemplate).execute(anyString());
+        when(jdbcTemplate.batchUpdate(anyString(), any(List.class)))
+                .thenReturn(new int[]{1000});
+
+        // Act
+        int processed = movieRepository.upsertFromImdbFile(mockFile, true, false);
+
+        // Assert
+        assertEquals(1000, processed);
+        verify(jdbcTemplate, atLeastOnce()).batchUpdate(contains("INSERT INTO movie"), any(List.class));
+    }
+}
+
+// mergeRatingsFromImdbFile: reaches batch threshold at 10_000 rows and flushes inside loop
+@Test
+void mergeRatings_reachesBatchThreshold_flushesAt10000() throws Exception {
+    // Arrange
+    File mockFile = mock(File.class);
+    BufferedReader mockReader = mock(BufferedReader.class);
+    AtomicInteger counter = new AtomicInteger(0);
+
+    when(mockReader.readLine()).thenAnswer(inv -> {
+        int c = counter.getAndIncrement();
+        if (c == 0) {
+            return "tconst\taverageRating\tnumVotes";
+        }
+        if (c <= 10_000) {
+            return "tt" + c + "\t8.4\t100";
+        }
+        return null;
+    });
+
+    try (MockedConstruction<FileInputStream> fis = mockConstruction(FileInputStream.class);
+         MockedConstruction<GZIPInputStream> gzip = mockConstruction(GZIPInputStream.class);
+         MockedConstruction<InputStreamReader> isr =
+                 mockConstruction(InputStreamReader.class, (o,c) -> when(o.read()).thenReturn(-1));
+         MockedConstruction<BufferedReader> br =
+                 mockConstruction(BufferedReader.class, (o,c) -> when(o.readLine()).thenAnswer(x -> mockReader.readLine()))
+    ) {
+        doNothing().when(jdbcTemplate).execute(anyString());
+        when(jdbcTemplate.batchUpdate(anyString(), any(List.class)))
+                .thenReturn(new int[]{10_000});
+
+        // Act
+        movieRepository.mergeRatingsFromImdbFile(mockFile);
+
+        // Assert
+        verify(jdbcTemplate, atLeastOnce()).batchUpdate(
+                eq("INSERT OR REPLACE INTO tmp_ratings(tconst, rating, votes) VALUES (?,?,?)"),
+                any(List.class)
+        );
+        verify(jdbcTemplate).update(contains("UPDATE movie"));
+        verify(jdbcTemplate).execute("DROP TABLE IF EXISTS tmp_ratings");
+    }
+}
 
 }

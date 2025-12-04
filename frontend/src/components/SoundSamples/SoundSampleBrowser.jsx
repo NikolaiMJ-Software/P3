@@ -84,7 +84,7 @@ export default function SoundSampleBrowser({onCreateSS}) {
 
     return (
     <div className={"p-1 sm:p-10"}>
-        <div className={"bg-primary w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-2 sm:p-6"}>
+        <div className={"bg-primary drop-shadow-xl w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-2 sm:p-6"}>
 
             {/* Users sound sample card container */}
             <div className="flex justify-between items-center m-4">
@@ -122,7 +122,7 @@ export default function SoundSampleBrowser({onCreateSS}) {
                 <div className={"m-4 text-sm sm:text-base font-bold"}>{t("uplSS")}</div>
                 <div className="hidden sm:flex justify-center">
                     <input
-                        className="bg-primary border px-2 py-1 rounded-2xl w-40 sm:w-64"
+                        className="bg-primary drop-shadow-lg border px-2 py-1 rounded-2xl w-40 sm:w-64"
                         type="text" 
                         placeholder={t("search for") + " " + t("user") + "..."}
                         onChange={(e) => setSearchForUsername(e.target.value)}
