@@ -117,12 +117,12 @@ export default function EventShowcasePage(){
                             {event.name}
                         </span>
                         <br/>
-                        {movies[0].title} ({movies[0].year}) &amp; {movies[1].title} ({movies[1].year})
+                        {movies[0].title} ({movies[0].year})
                     </p>
                 </div>
 
                 {/* RIGHT MOVIE */}
-                <MovieShowcase movie={movies[1]} />
+                {movies[1] && <MovieShowcase movie={movies[1]} />}
             </div>
             <div className="w-full h-20"
                  style={{
