@@ -115,7 +115,7 @@ if (mode === "edit") {
     return (
         <div className={"p-1 sm:p-10"}>
             
-            <div className={"bg-primary w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-1.5 sm:p-8"}>
+            <div className={"bg-primary drop-shadow-xl w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-1.5 sm:p-8"}>
 
                 {/* Upcoming themes card container */}
                 <p className={"m-4 text-sm sm:text-base font-bold"}>{t("upcoming events")}</p>

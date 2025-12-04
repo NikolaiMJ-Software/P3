@@ -44,11 +44,12 @@ function ThemeSubmissions(){
     const [expandedTheme, setExpandedTheme] = useState(null)
     const [oldThemes, setOldThemes] = useState([])
     const [newThemes, setNewThemes] = useState([])
+    const [currentSort, setCurrentSort] = useState("oldest")
 
     // Filtering
     const [searchName, setSearchName] = useState("")
-    const [hideOld, setHideOld] = useState(false)
-    const [hideEvents, setHideEvent] = useState(false)
+    const [hideOld, setHideOld] = useState(true)
+    const [hideNew, setHideNew] = useState(false)
 
     //Get the themes
     async function loadThemes() {
@@ -81,14 +82,37 @@ function ThemeSubmissions(){
         // Check if theme is old
         if (hideOld) if (oldThemes.some(t => t.themeId === theme.themeId)) return false
         
-        // Check if theme is an event
-        if (hideEvents){
+        // Check if theme is new
+        if (hideNew){
             if (newThemes.some(t => t.themeId === theme.themeId)) return false
         }
 
         return theme.username.toLowerCase().includes(searchName.toLowerCase()) || theme.name.toLowerCase().includes(searchName.toLowerCase());
         }
     );
+
+    const sortedThemes = filteredThemes.toSorted((a,b) => {
+        switch (currentSort){
+            case "latest": {
+                const aTime = a.timestamp.split("T")[0].split("-");
+                const bTime = b.timestamp.split("T")[0].split("-");
+                return (bTime[0]-aTime[0] === 0) ? (bTime[1]-aTime[1] === 0) ? bTime[2]-aTime[2] : bTime[1]-aTime[1] : bTime[0]-aTime[0]
+            }
+            case "oldest": {
+                const aTime = a.timestamp.split("T")[0].split("-");
+                const bTime = b.timestamp.split("T")[0].split("-");
+                return (aTime[0]-bTime[0] === 0) ? (aTime[1]-bTime[1] === 0) ? aTime[2]-bTime[2] : aTime[1]-bTime[1] : aTime[0]-bTime[0]
+            }
+            case "alpha asc": {
+                return a.name > b.name
+            }
+            case "alpha des": {
+                return a.name < b.name
+            }
+        }
+    })
+    
+
 
     const toggleTheme = (id) => {
         setExpandedTheme(expandedTheme === id ? null : id);
@@ -104,26 +128,25 @@ function ThemeSubmissions(){
                 </div>
                 <div className={"flex flex-col"}>
                     <p>{t("sort based on")}:</p>
-                    <select className={"border hover:bg-btn-hover-secondary"}>
-                        <option>{t("latest")}</option>
-                        <option>{t("oldest")}</option>
-                        <option>{t("alphabetical")}</option>
-                        <option>{t("length")} asc</option>
-                        <option>{t("length")} des</option>
+                    <select className={"border hover:bg-btn-hover-secondary"} defaultValue={currentSort} onChange={e => setCurrentSort(e.target.value)}>
+                        <option value={"latest"}>{t("latest")}</option>
+                        <option value={"oldest"}>{t("oldest")}</option>
+                        <option value={"alpha asc"}>{t("alphabetical")} asc</option>
+                        <option value={"alpha des"}>{t("alphabetical")} des</option>
                     </select>
                 </div>
                 <div className={"flex flex-col"}>
                     <p>{t("filters")}:</p>
                     <label>
-                        {t("hide")} {t("old themes")}: <input className={"border"} type={"checkbox"} onChange={() => setHideOld(!hideOld)}/>
+                        {t("hide")} {t("old themes")}: <input className={"border"} type={"checkbox"} onChange={() => setHideOld(!hideOld)} checked={hideOld}/>
                     </label>
                     <label>
-                        {t("hide")} {t("new themes")}: <input className={"border"} type={"checkbox"} onChange={() => setHideEvent(!hideEvents)}/>
+                        {t("hide")} {t("new themes")}: <input className={"border"} type={"checkbox"} onChange={() => setHideNew(!hideNew)} checked={hideNew}/>
                     </label>
                 </div>
             </div>
             <div className={"bg-primary border-t h-135 overflow-auto"}>
-                {filteredThemes.map(theme => (
+                {sortedThemes.map(theme => (
                     <Theme item={theme} isExpanded={expandedTheme === theme.themeId} onToggle={() => toggleTheme(theme.themeId)} onDelete={() => themeDelete(theme.themeId)}/>
                 ))}
             </div>
@@ -185,6 +208,7 @@ function SoundSampleSubmissions() {
     const [samples, setSamples] = useState([]);
     const [searchName, setSearchName] = useState("")
     const [toBeDeleted, setDeletion] = useState([])
+    const [currentSort, setCurrentSort] = useState("latest")
 
     //Get the soundSamples
     async function loadSamples() {
@@ -202,6 +226,23 @@ function SoundSampleSubmissions() {
     const filteredSamples = samples.filter(sample =>
         sample.usersFullName.toLowerCase().includes(searchName.toLowerCase())
     );
+
+    const sortedSamples = filteredSamples.toSorted((a,b) => {
+        switch (currentSort){
+            case "latest": {
+                return a.id - b.id
+            }
+            case "oldest": {
+                return b.id - a.id
+            }
+            case "alpha asc": {
+                return a.soundSample > b.soundSample
+            }
+            case "alpha des": {
+                return a.soundSample < b.soundSample
+            }
+        }
+    })
 
     const addToDelete = (object) => {
         console.log(object)
@@ -241,12 +282,11 @@ function SoundSampleSubmissions() {
                 </div>
                 <div className={"flex flex-col"}>
                     <p>{t("sort based on")}:</p>
-                    <select className={"border hover:bg-btn-hover-secondary"}>
-                        <option>{t("latest")}</option>
-                        <option>{t("oldest")}</option>
-                        <option>{t("alphabetical")}</option>
-                        <option>{t("length")} asc</option>
-                        <option>{t("length")} des</option>
+                    <select className={"border hover:bg-btn-hover-secondary"} onChange={e => setCurrentSort(e.target.value)}>
+                        <option value={"latest"}>{t("latest")}</option>
+                        <option value={"oldest"}>{t("oldest")}</option>
+                        <option value={"alpha asc"}>{t("alphabetical")} asc</option>
+                        <option value={"alpha des"}>{t("alphabetical")} des</option>
                     </select>
                 </div>
                 <div className={"text-right ml-5 mr-5 flex flex-col justify-center text-4xl font-thin"}>
@@ -254,7 +294,7 @@ function SoundSampleSubmissions() {
                 </div>
             </div>
             <div className={"bg-primary border-t h-135 overflow-auto"}>
-                {filteredSamples.map(sample => (
+                {sortedSamples.map(sample => (
                     <SoundSample item={sample} onCheck={addToDelete}/>
                 ))}
             </div>

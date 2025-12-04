@@ -89,7 +89,7 @@ export default function Header(){
 
                 <div className="relative flex-col sm:ml-1" ref={menuRef}>
                      <button
-                        className="flex bg-primary transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-7 sm:size-12 items-center justify-center"
+                        className="flex bg-primary drop-shadow-lg transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-7 sm:size-12 items-center justify-center"
                         onClick={()=> setOpen(prev => !prev)}
                         title={username}
                         >
@@ -134,7 +134,7 @@ function NavButton({ icon, label, onClick }) {
 
     return (
         <div className="flex flex-col items-center mx-1">
-            <button className="flex bg-primary transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-7 sm:size-12 items-center justify-center" onClick={onClick} title={label}>
+            <button className="flex bg-primary drop-shadow-lg transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-7 sm:size-12 items-center justify-center" onClick={onClick} title={label}>
                 <img className="w-5 sm:w-9 h-5 sm:h-9" src={icon} alt={label}/>
             </button>
             <p className="text-center align-top text-xs sm:text-sm">{label}</p>

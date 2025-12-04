@@ -56,7 +56,7 @@ export default function LoginPage() {
                 />
             </div>
 
-            <form className="bg-primary rounded-2xl px-5 sm:px-10 py-4 sm:py-8 w-full max-w-md flex flex-col gap-6" onSubmit={handleSubmit}>
+            <form className="bg-primary drop-shadow-xl rounded-2xl px-5 sm:px-10 py-4 sm:py-8 w-full max-w-md flex flex-col gap-6" onSubmit={handleSubmit}>
                 <h1 className="text-lg sm:text-2xl font-serif font-bold text-center text-text-secondary">Insert F-Klub Username:</h1>
                 <input
                     type="text"

@@ -15,7 +15,7 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
     const safeMovies = Array.isArray(movies) ? movies : [];
     const {t} = useTranslation();
     return(
-        <div className={"relative bg-primary w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary" +
+        <div className={"relative bg-primary drop-shadow-lg w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary" +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
 
         {showActions && (
@@ -79,7 +79,7 @@ export function ThemeCardSmall({title, name, tConsts}){
 export function ThemeCreationCard({onClick}){
     const {t} = useTranslation();
     return(
-        <div onClick={onClick} className={"relative bg-primary w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary" +
+        <div onClick={onClick} className={"relative bg-primary drop-shadow-xl w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary" +
             "text-lg font-medium shadow-sm hover:bg-green-100 transition shrink-0"}>
             <p className={"mb-4 text-base sm:text-lg text-center"}>{t("create theme")}</p>
             <div className={"bg-light-green flex justify-center items-center w-12 sm:w-16 h-12 sm:h-16 border-3 sm:border-5 border-btn-green rounded-full"}>
@@ -124,7 +124,7 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp})
     const safeMovies = Array.isArray(movies) ? movies : [];
     const {t} = useTranslation();
     return(
-        <div className={"bg-primary relative w-70 sm:w-85 h-95 sm:h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0" +
+        <div className={"bg-primary drop-shadow-lg relative w-70 sm:w-85 h-95 sm:h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0" +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
             <div>
                 <h1 className={"text-lg sm:text-xl font-bold"}>{title}</h1>
@@ -168,7 +168,7 @@ export function EventStartup({timestamp, onClick}){
     }
     const {t} = useTranslation();
     return(
-        <div className={"relative bg-primary w-70 sm:w-85 h-95 sm:h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-secondary " +
+        <div className={"relative drop-shadow-lg bg-primary w-70 sm:w-85 h-95 sm:h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-secondary " +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
             <div>
                 <h1 className={"text-xl font-bold"}>F-Kult Semester Start</h1>

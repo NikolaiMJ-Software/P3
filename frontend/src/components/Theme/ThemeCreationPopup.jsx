@@ -165,7 +165,7 @@ export default function ThemeCreationPopup({setSelected}) {
 
     return (
         <div className="p-1 sm:p-10 relative flex justify-center items-center">
-            <div className="bg-primary w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-3 sm:p-8 flex flex-col sm:gap-3">
+            <div className="bg-primary drop-shadow-xl w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-3 sm:p-8 flex flex-col sm:gap-3">
 
                 {/* Top content */}
                 <div className={"flex flex-col sm:flex-row gap-2 sm:gap-10 w-full justify-center"}>
