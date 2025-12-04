@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import {useNavigate, useParams} from "react-router-dom";
 import { fetchShuffledThemes, updateThemeVotes, deleteTheme, addWheelWinner } from "../services/themeService";
 import { uploadEvent } from "../services/eventService";
 import ThemeVotingDisplay from "../components/Theme/ThemeVotingDisplay";
 import Timer from "../components/Timer";
 import WheelOfFortunePage from "./WheelOfFortunePage.jsx";
+import {isAdmin} from "../services/adminService.jsx"
 
 export default function ThemeVoting() {
   const [themes, setThemes] = useState([]);
@@ -21,6 +23,9 @@ export default function ThemeVoting() {
   const [runnerUpMeta, setRunnerUpMeta] = useState([]);
   const [runnerUpWinnerMovieId, setRunnerUpWinnerMovieId] = useState(null);
   const [runnerUpWinnerThemeId, setRunnerUpWinnerThemeId] = useState(null);
+  const [isAdminUser, setIsAdminUser] = useState(undefined);
+  const navigate = useNavigate();
+  const {username} = useParams();
 
   // Fetch all themes on page load
   useEffect(() => {
@@ -291,87 +296,100 @@ export default function ThemeVoting() {
     setTimerResetKey((prev) => prev + 1);
   };
 
-
+  //check if {username} is admin
+  useEffect(() => {
+    async function checkAdmin() {
+        const result = await isAdmin(username);
+            setIsAdminUser(result);
+      }
+      checkAdmin();
+    }, [username]);
+  
+  console.log(isAdminUser)
   if (unVotedThemes.length === 0) return <p>Loading themes...</p>;
 
   const currentTheme = unVotedThemes[currentIndex];
 
-  return (
-    <div className="flex flex-col h-screen">
+  if(isAdminUser === 1){
+    return (
+      <div className="flex flex-col h-screen">
 
-      {/* Timer at the top right corner */ }
-      <div className="flex justify-end p-4">
-        <Timer
-          initialSeconds={timerStart}
-          resetKey={timerResetKey}
-        />
-      </div>
-
-      {/* Display the current theme */}
-      <div className="flex-1">
-        <ThemeVotingDisplay theme={currentTheme}/>
-      </div>
-
-      {/* Bottom controls */}
-      <div className="flex flex-col p-6 gap-4">
-        <div className="flex justify-between items-center mb-2">
-          <button
-            onClick={handlePrevious}
-            className="px-4 py-2 rounded-md bg-text-secondary hover:bg-btn-hover-secondary"
-          >
-            ← Previous
-          </button>
-
-          <h2 className="text-lg font-semibold">
-            {currentIndex + 1} / {unVotedThemes.length}
-          </h2>
-
-          <button
-            onClick={handleNext}
-            className="px-4 py-2 rounded-md bg-text-secondary hover:bg-btn-hover-secondary"
-          >
-            Next →
-          </button>
-        </div>
-
-        <div className="flex justify-center">
-          <input
-            type="number"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)} // Just update state
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                submitVote(inputValue); // Only call function on Enter
-                setInputValue("");
-              }
-            }}
-            placeholder="Enter a number"
-            className="px-4 py-2 rounded-md text-text-primary w-32 text-center"
+        {/* Timer at the top right corner */ }
+        <div className="flex justify-end p-4">
+          <Timer
+            initialSeconds={timerStart}
+            resetKey={timerResetKey}
           />
-          <button
-            onClick={endVoting}
-            className="px-4 py-2 rounded-md bg-btn-hover-secondary hover:bg-text-secondary"
-          >
-            End voting
-          </button>
         </div>
-      </div>
-      {showWheelPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-primary rounded-lg p-6 shadow-lg w-11/12 max-w-4xl relative">
 
-            {/* Close button */}
+        {/* Display the current theme */}
+        <div className="flex-1">
+          <ThemeVotingDisplay theme={currentTheme}/>
+        </div>
+
+        {/* Bottom controls */}
+        <div className="flex flex-col p-6 gap-4">
+          <div className="flex justify-between items-center mb-2">
             <button
-              onClick={() => setShowWheelPopup(false)}
-              className="absolute top-4 right-4 text-black text-xl font-bold"
+              onClick={handlePrevious}
+              className="px-4 py-2 rounded-md bg-text-secondary hover:bg-btn-hover-secondary"
             >
-              ×
+              ← Previous
             </button>
 
-            <WheelOfFortunePage entries={wheelNames} resultFunction={handleWheelResult}/>
+            <h2 className="text-lg font-semibold">
+              {currentIndex + 1} / {unVotedThemes.length}
+            </h2>
+
+            <button
+              onClick={handleNext}
+              className="px-4 py-2 rounded-md bg-text-secondary hover:bg-btn-hover-secondary"
+            >
+              Next →
+            </button>
+          </div>
+
+          <div className="flex justify-center">
+            <input
+              type="number"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)} // Just update state
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  submitVote(inputValue); // Only call function on Enter
+                  setInputValue("");
+                }
+              }}
+              placeholder="Enter a number"
+              className="px-4 py-2 rounded-md text-text-primary w-32 text-center"
+            />
+            <button
+              onClick={endVoting}
+              className="px-4 py-2 rounded-md bg-btn-hover-secondary hover:bg-text-secondary"
+            >
+              End voting
+            </button>
           </div>
         </div>
-      )}
-    </div>
-  );
+        {showWheelPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+            <div className="bg-primary rounded-lg p-6 shadow-lg w-11/12 max-w-4xl relative">
+
+              {/* Close button */}
+              <button
+                onClick={() => setShowWheelPopup(false)}
+                className="absolute top-4 right-4 text-black text-xl font-bold"
+              >
+                ×
+              </button>
+
+              <WheelOfFortunePage entries={wheelNames} resultFunction={handleWheelResult}/>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  } else if (isAdminUser === 0){
+    return(navigate(`/${username}`))
+  }
 }
