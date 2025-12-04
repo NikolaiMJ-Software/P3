@@ -60,13 +60,13 @@ export default function SubmitSSPage() {
 
     // HTML of the page
     return (
-        <div className={"p-10 relative"}>
-            <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col items-center gap-3"}>
+        <div className={"p-4 sm:p-10 relative"}>
+            <div className={"bg-primary w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col items-center gap-3"}>
                 {/* URL input */}
                 <div className="flex justify-center">
                     <input
                         id="textField"
-                        className="border px-2 py-1 rounded w-64"
+                        className="bg-primary border px-2 py-1 rounded-2xl w-50 sm:w-64"
                         type="text" 
                         placeholder={t("insertLink")}
                         onChange={(e) => setUrl(e.target.value)}
@@ -80,7 +80,7 @@ export default function SubmitSSPage() {
 
                 {/* File picker */}
                 <div className="flex justify-center">
-                    <label className="px-4 py-1 transition-colors cursor-pointer bg-white hover:bg-btn-hover-secondary border">
+                    <label className="px-4 py-1 transition-colors cursor-pointer bg-primary hover:bg-btn-hover-secondary border">
                         {t("browse")}
                         <input type="file" onChange={(e) => setFile(e.target.files[0])} style={{ display: "none" }}
                         />

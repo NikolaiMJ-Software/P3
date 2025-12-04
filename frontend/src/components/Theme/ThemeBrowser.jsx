@@ -113,20 +113,20 @@ if (mode === "edit") {
 }
 
     return (
-        <div className={"p-10"}>
+        <div className={"p-1 sm:p-10"}>
             
-            <div className={"w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8"}>
+            <div className={"bg-primary w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-1.5 sm:p-8"}>
 
                 {/* Upcoming themes card container */}
-                <p className={"m-4 font-bold"}>{t("upcoming events")}</p>
+                <p className={"m-4 text-sm sm:text-base font-bold"}>{t("upcoming events")}</p>
                 <UpcomingThemeCollection events={events}/>
 
-                <div className={"border-1 m-8"} ></div>
+                <div className={"border-1 m-4 sm:m-8"} ></div>
 
                 {/* Top toggle buttons */}
                 <ThemeToggleButtons selected={selected} onSelect={setSelected}/>
                 {/* Your themes card container */}
-                <div className={"pt-4 flex row-end-5 flex gap-5"}>
+                <div className={"pt-2 sm:pt-4 flex row-end-5 flex gap-5"}>
                     {/* individual cards */}
                     {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={onCreateTheme} showActions={true} onDelete={handleDeleteTheme} onEdit={(theme) => {setEditingTheme(theme); setMode("edit");}} ></ThemeCollection>)}
                     {selected === "old" && (<ThemeCollection isCreator={false} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}

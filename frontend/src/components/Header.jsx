@@ -58,13 +58,13 @@ export default function Header(){
     }, []);
 
     return (
-        <header className="relative pb-10 flex justify-between top-0 inset-x-0">
+        <header className="relative sm:pb-5 flex justify-between top-0 inset-x-0">
             <NavButton
                 icon={logoPNG}
                 onClick={() => {navigate(`/${username}`)}}
             />
 
-            <h1 className="absolute left-1/2 -translate-x-1/2 top-2 text-center text-3xl hover:cursor-pointer" onClick={() => navigate(`/${username}`)}>F-Kult</h1>
+            <h1 className="absolute left-1/2 -translate-x-1/2 -translate-y-2.5 sm:-translate-y-0 top-2 text-center text-2xl sm:text-3xl font-serif hover:cursor-pointer" onClick={() => navigate(`/${username}`)}>F-Kult</h1>
 
             <div className="flex">
                 <NavButton
@@ -73,30 +73,32 @@ export default function Header(){
                 onClick={toggleLang}
                 />
 
-                <NavButton
-                    label={t("Pizza")}
-                    icon={pizzaWEBP}
-                    onClick={() => {window.open("https://f-kult-pizza-bestiller.vercel.app/", "_blank")}}
-                />
+                <div className="hidden sm:flex">
+                    <NavButton
+                        label={t("Pizza")}
+                        icon={pizzaWEBP}
+                        onClick={() => {window.open("https://f-kult-pizza-bestiller.vercel.app/", "_blank")}}
+                    />
 
-                <NavButton
-                    label={t("Discord")}
-                    icon={discordWEBP}
-                    onClick={() => {window.open("https://discord.gg/zV3GEZyY6z", "_blank")}}
-                />
+                    <NavButton
+                        label={t("Discord")}
+                        icon={discordWEBP}
+                        onClick={() => {window.open("https://discord.gg/zV3GEZyY6z", "_blank")}}
+                    />
+                </div>
 
-                <div className="relative flex-col pr-1" ref={menuRef}>
+                <div className="relative flex-col sm:ml-1" ref={menuRef}>
                      <button
-                        className="flex transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-12 items-center justify-center"
+                        className="flex bg-primary transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-7 sm:size-12 items-center justify-center"
                         onClick={()=> setOpen(prev => !prev)}
                         title={username}
                         >
-                        <img className="w-9 h-9" src={userPNG} alt="User menu"/>
+                        <img className="w-5 sm:w-9 h-5 sm:h-9" src={userPNG} alt="User menu"/>
                      </button>
-                     <p className="text-center align-top text-sm">{username}</p>
+                     <p className="text-center align-top text-xs sm:text-sm">{username}</p>
 
                      {open && (
-                        <div className="absolute right-0 top-14 w-36 bg-white border rounded-xl shadow-lg z-50">
+                        <div className="absolute right-0 sm:top-14 w-21 sm:w-36 bg-primary border rounded-xl shadow-lg z-50">
                             <button
                                 className={"cursor-pointer block w-full text-left px-4 py-2 hover:bg-btn-hover-secondary rounded-t-xl " + (adminBool ? "" : "hidden")}
                                 onClick={()=>{
@@ -123,7 +125,7 @@ export default function Header(){
 function NavButton({ icon, label, onClick }) {
     if (icon === logoPNG){
         return (
-            <button className="flex transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl size-20 items-center justify-center" onClick={onClick} title={label}>
+            <button className="flex -translate-y-3 sm:-translate-y-4 transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl size-12 sm:size-20 items-center justify-center" onClick={onClick} title={label}>
                 <img src={icon} alt={label}/>
             </button>
 
@@ -131,11 +133,11 @@ function NavButton({ icon, label, onClick }) {
     }
 
     return (
-        <div className="flex-col pr-1">
-            <button className="flex transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-12 items-center justify-center" onClick={onClick} title={label}>
-                <img className="w-9 h-9" src={icon} alt={label}/>
+        <div className="flex flex-col items-center mx-1">
+            <button className="flex bg-primary transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-7 sm:size-12 items-center justify-center" onClick={onClick} title={label}>
+                <img className="w-5 sm:w-9 h-5 sm:h-9" src={icon} alt={label}/>
             </button>
-            <p className="text-center align-top text-sm ">{label}</p>
+            <p className="text-center align-top text-xs sm:text-sm">{label}</p>
         </div>
 
     );

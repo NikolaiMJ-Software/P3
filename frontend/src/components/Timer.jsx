@@ -166,7 +166,7 @@ export default function Timer({
       {/* Start */}
       <button
         onClick={handleStart}
-        className="btn-primary bg-btn-green hover:bg-btn-green-hover text-white"
+        className="btn-primary bg-btn-green hover:bg-btn-green-hover text-btn-text"
       >
         Start
       </button>
@@ -174,7 +174,7 @@ export default function Timer({
       {/* Stop */}
       <button
         onClick={handleStop}
-        className="btn-primary bg-btn-red hover:bg-btn-red-hover text-white"
+        className="btn-primary bg-btn-red hover:bg-btn-red-hover text-btn-text"
       >
         Stop
       </button>
@@ -182,7 +182,7 @@ export default function Timer({
       {/* Restart */}
       <button
         onClick={handleRestart}
-        className="btn-primary bg-btn-yellow hover:bg-btn-yellow-hover text-white"
+        className="btn-primary bg-btn-yellow hover:bg-btn-yellow-hover text-btn-text"
       >
         {t("restart")}
       </button>

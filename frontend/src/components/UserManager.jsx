@@ -10,8 +10,8 @@ export default function UserManager({ className }){
     return (
         <div className={className}>
             <div className={"border border-b-0 text-center flex flex-row justify-between"}>
-                <p onClick={() => setTab("ban")} className={`grow-1 cursor-pointer text-center p-3 border-r ${(tab === "ban") ? null : "border-b"}`}> Ban Manager </p>
-                <p onClick={() => setTab("admin")} className={`grow-1 cursor-pointer text-center p-3 ${(tab === "admin") ? null : "border-b"}`}> Admin Manager</p>
+                <p onClick={() => setTab("ban")} className={`bg-primary grow-1 cursor-pointer text-center p-3 border-r ${(tab === "ban") ? null : "border-b"}`}> Ban Manager </p>
+                <p onClick={() => setTab("admin")} className={`bg-primary grow-1 cursor-pointer text-center p-3 ${(tab === "admin") ? null : "border-b"}`}> Admin Manager</p>
             </div>
             {getComponent(tab)}
         </div>
@@ -25,7 +25,7 @@ function BanManager() {
     const {t} = useTranslation();
 
     return (
-        <div className={"p-5 border border-t-0 flex flex-row justify-between content-center flex-1 overflow-auto"}>
+        <div className={"bg-primary p-5 border border-t-0 flex flex-row justify-between content-center flex-1 overflow-auto"}>
             <div className={"flex flex-col justify-center"}>
                 <p>{t("username")}:</p>
                 <input onChange={e => setUser(e.target.value)} className={"border"}/>
@@ -44,7 +44,7 @@ function AdminManager() {
     const [message, setMessage] = useState("")
     const {username} = useParams();
     return (
-        <div className={"p-5 border border-t-0 flex flex-row justify-between content-center flex-1 overflow-auto"}>
+        <div className={"bg-primary p-5 border border-t-0 flex flex-row justify-between content-center flex-1 overflow-auto"}>
             <div className={"flex flex-col justify-center"}>
                 <p>Username:</p>
                 <input onChange={e => setUser(e.target.value)} className={"border"}/>

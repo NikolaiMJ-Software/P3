@@ -68,7 +68,7 @@ export default function WheelOfFortunePage({entries = [], resultFunction }) {
           <div className="w-72">
             <div className="mb-2 text-sm text-text-secondary">{t("one entry per line")}</div>
             <textarea
-              className="w-full h-72 p-3 rounded-lg border"
+              className="bg-primary w-full h-72 p-3 rounded-lg border"
               value={entriesText}
               onChange={(e) => setEntriesText(e.target.value)}
             />

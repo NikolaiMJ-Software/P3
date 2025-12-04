@@ -45,7 +45,7 @@ function FindLinkType({link}){
 
         return(
             <iframe
-                className={`h-190 w-full max-w-[560px]`}
+                className={`sm:h-190 w-full max-w-[560px]`}
                 src={instaURL}
                 title="Instagram sample"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share autoplay; encrypted-media; picture-in-picture"
@@ -67,7 +67,7 @@ function FindLinkType({link}){
             <iframe
                 src={fbEmbed}
                 title="Facebook sample"
-                className="w-full h-175"
+                className="w-full sm:h-175"
                 allow="encrypted-media; picture-in-picture"
                 allowFullScreen
                 loading="lazy"

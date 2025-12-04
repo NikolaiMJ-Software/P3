@@ -172,21 +172,21 @@ useEffect(() => {
   };
 
   return (
-    <div className="p-10 relative flex justify-center items-center">
-      <div className="w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 flex flex-col gap-3">
+    <div className="p-1 sm:p-10 relative flex justify-center items-center">
+      <div className="bg-primary w-full max-w-full h-fit border-2 border-text-primary rounded-3xl p-3 sm:p-8 flex flex-col sm:gap-3">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">{t("editTheme")}</h2>
           <button
-            className="px-3 py-1 rounded-lg hover:bg-btn-hover-secondary"
+            className="px-3 py-1 rounded-lg hover:bg-btn-hover-secondary cursor-pointer"
             onClick={onClose}
           >
             X
           </button>
         </div>
 
-        <div className="flex flex-row gap-6 w-full overflow-hidden">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 w-full sm:overflow-hidden">
           {/* Left: Movie search */}
-          <div className="flex-1 min-w-[400px] max-w-[600px] h-[700px]">
+          <div className="flex-1 sm:min-w-[400px] sm:max-w-[600px] sm:h-[700px]">
             <ThemeMovieSearcher
               foundMovies={foundMovies}
               handleAddMovies={handleAddMovies}
@@ -211,7 +211,7 @@ useEffect(() => {
           </div>
 
           {/* Right: Theme editor */}
-          <div className="flex-1 min-w-[400px] max-w-[600px] h-[700px] overflow-y-auto">
+          <div className="flex-1 sm:min-w-[400px] sm:max-w-[600px] sm:h-[700px] overflow-y-auto">
             <ThemeCreator
               handleSubmit={handleUpdate}   
               movies={movies}

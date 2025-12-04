@@ -15,10 +15,10 @@ export function MovieCardSmall({moviePosterURL, title, runtimeMinutes, rating}){
     const safeRating = rating ? `${rating}/10⭐` : "No Ratings Available";
 
     return(
-    <div className={"w-[95px] flex flex-col items-center"}>
+    <div className={"w-[100px] flex flex-col items-center"}>
         <p className={"text-[10px] text-center mt-1 truncate w-full"}>{title}</p>
         <p className="text-[10px] text-center font-semibold">{safeRating} </p>
-        <div className="w-[100px] h-[150px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-white">
+        <div className="w-[100px] h-[150px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-primary">
             <img
                 src={moviePosterURL}
                 alt={`Poster for ${title}`}
@@ -31,11 +31,11 @@ export function MovieCardSmall({moviePosterURL, title, runtimeMinutes, rating}){
 export function MovieCardUpcoming({moviePosterURL, title, runtimeMinutes, rating}){
     const safeRating = rating ? `${rating}/10⭐` : "No Ratings Available";
     return(
-        <div className={"w-[150px] flex flex-col items-center"}>
+        <div className={"w-[130px] sm:w-[150px] flex flex-col items-center"}>
             <p className={"text-[10px] text-center mt-1 w-full h-[24px] overflow-hidden leading-tight"}>{title}</p>
             <p className="text-[10px] text-center font-semibold">{safeRating} </p>
 
-            <div className="w-[150px] h-[225px] overflow-hidden rounded-md shadow-sm border border-gray-300 bg-white">
+            <div className="w-[120px] sm:w-[150px] h-[225px] overflow-hidden rounded-md shadow-sm border border-gray-300 bg-primary">
                 <img
                     src={moviePosterURL}
                     alt={`Poster for ${title}`}
@@ -52,10 +52,10 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove,
     const safeRating = (rating) ? t("rating: ") + rating : t("no ratings available");
     if (isSeries){
         return (
-            <div className={"w-full max-w-[180px] flex flex-col items-center border-2 rounded-2xl overflow-hidden"}>
+            <div className={"bg-primary w-full max-w-[180px] flex flex-col items-center border-2 rounded-2xl overflow-hidden"}>
                 <p className={"text-[10px] text-center mt-1 w-full h-[24px] overflow-hidden leading-tight break-words"}>{title}</p>
                 <p className={"text-[10px] text-center truncate w-full text-xs"}>{safeRating} ⭐</p>
-                <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-white">
+                <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-primary">
                     <img
                         src={moviePosterURL}
                         alt={`Poster for ${title}`}
@@ -71,19 +71,19 @@ export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove,
     }
 
     return(
-        <div className={"w-full max-w-[180px] flex flex-col items-center border-2 rounded-2xl overflow-hidden"}>
-            <p className={"text-[15px] text-center mt-1 truncate w-full text-lg break-words"}>{title}</p>
+        <div className={"bg-primary w-full max-w-[180px] flex flex-col items-center border-2 rounded-2xl overflow-hidden"}>
+            <p className={"text-[15px] text-center mt-1 truncate pl-1 w-full text-base sm:text-lg break-words"}>{title}</p>
             <p className={"text-[10px] text-center mt-1 truncate w-full text-xs"}>{safeRating} ⭐</p>
-            <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-white">
+            <div className="w-[150px] h-[220px] overflow-hidden rounded-md shadow-sm border border-text-secondary bg-primary">
                 <img
                     src={moviePosterURL}
                     alt={`Poster for ${title}`}
                     className={`w-full h-full object-cover`}
                 />
             </div>
-            <p>{runtimeHours + t("timehour") + runtimeMinutesLeft + "m"}</p>
+            <p className="text-sm sm:text-base">{runtimeHours + t("timehour") + runtimeMinutesLeft + "m"}</p>
             {onRemove && (
-                <button onClick={onRemove} className="text-text-error font-bold px-3 py-1 rounded-xl hover:text-red-700 cursor-pointer">{t("remove")}</button>
+                <button onClick={onRemove} className="text-text-error text-sm sm:text-base font-bold px-3 py-1 rounded-xl hover:text-red-700 cursor-pointer">{t("remove")}</button>
             )}
         </div>)
 }
