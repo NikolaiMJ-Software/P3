@@ -299,21 +299,18 @@ export default function ThemeVoting() {
   return (
     <div className="flex flex-col h-screen">
 
-      {/* Timer at the top right corner */ }
-      <div className="flex justify-end p-4">
-        <Timer
-          initialSeconds={timerStart}
-          resetKey={timerResetKey}
-        />
+    {/* Display the current theme and timer*/}
+    <div className="relative">
+      <ThemeVotingDisplay theme={currentTheme}/>
+      <div className="absolute top-6 right-8 p-4 z-50">
+        <div className="bg-black/70 text-white px-3 py-2 rounded-lg shadow-lg">
+          <Timer initialSeconds={timerStart} resetKey={timerResetKey} />
+        </div>
       </div>
-
-      {/* Display the current theme */}
-      <div className="flex-1">
-        <ThemeVotingDisplay theme={currentTheme}/>
-      </div>
+    </div>
 
       {/* Bottom controls */}
-      <div className="flex flex-col p-6 gap-4">
+      <div className="flex flex-col p-6">
         <div className="flex justify-between items-center mb-2">
           <button
             onClick={handlePrevious}
