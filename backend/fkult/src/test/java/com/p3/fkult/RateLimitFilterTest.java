@@ -22,105 +22,113 @@ public class RateLimitFilterTest {
         filter = new RateLimitingFilter();
     }
 
-    // Default endpoint (limit 3)
-    @Test
-    void defaultWithinLimit() throws IOException, ServletException {
+    private void runRequests(String route, int limit) throws IOException, ServletException {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain chain = (req, res) -> {}; // Dummy chain
-
-        request.setRemoteAddr("127.0.0.1");
-        request.setRequestURI("/default");
-
-        for (int i = 0; i < 10000; i++) {
-            response = new MockHttpServletResponse();
+        FilterChain chain = (req, res) -> {};
+        request.setRequestURI(route);
+        request.setRemoteAddr("192.0.69.420");
+        
+        // Kør antal requests lig med limit (skal alle være 200)
+        for (int i = 0; i < limit; i++) {
+            MockHttpServletResponse response = new MockHttpServletResponse();
             filter.doFilter(request, response, chain);
             assertEquals(200, response.getStatus());
         }
-    }
-
-    @Test
-    void defaultOverLimit() throws IOException, ServletException {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        
+        // Kør én request over limit (skal være 429)
         MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain chain = (req, res) -> {}; // Dummy chain
-
-        request.setRemoteAddr("127.0.0.1");
-        request.setRequestURI("/default");
-
-        for (int i = 0; i < 10001; i++) {
-            response = new MockHttpServletResponse();
-            filter.doFilter(request, response, chain);
-        }
-
+        filter.doFilter(request, response, chain);
         assertEquals(429, response.getStatus());
     }
 
-    // /api/themes (limit 101)
+    // Default endpoint (limit 1000)
     @Test
-    void themesWithinLimit() throws IOException, ServletException {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain chain = (req, res) -> {}; // Dummy chain
-
-        request.setRemoteAddr("127.0.0.1");
-        request.setRequestURI("/api/themes");
-
-        for (int i = 0; i < 100; i++) {
-            response = new MockHttpServletResponse();
-            filter.doFilter(request, response, chain);
-            assertEquals(200, response.getStatus());
-        }
+    void defaultTestLimit() throws IOException, ServletException {
+        runRequests("/not-a-endpoint", 1000);
     }
 
+    // "/api/themes"
     @Test
-    void themesOverLimit() throws IOException, ServletException {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain chain = (req, res) -> {}; // Dummy chain
+    void themesTestLimit() throws IOException, ServletException {
+        // "/api/themes" (limit 100)
+        runRequests("/api/themes", 100);
 
-        request.setRemoteAddr("127.0.0.1");
-        request.setRequestURI("/api/themes");
+        // "/api/themes/New" (limit 100)
+        runRequests("/api/themes/New", 100);
 
-        for (int i = 0; i < 1011; i++) {
-            response = new MockHttpServletResponse();
-            filter.doFilter(request, response, chain);
-        }
+        // "/api/themes/Old" (limit 100)
+        runRequests("/api/themes/Old", 100);
 
-        assertEquals(429, response.getStatus());
+        // "/api/themes/User" (limit 100)
+        runRequests("/api/themes/User", 100);
     }
 
-    // /api/sound-sample (limit 90)
+    // "/api/sound-sample"
     @Test
-    void soundSampleWithinLimit() throws IOException, ServletException {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain chain = (req, res) -> {}; // Dummy chain
+    void soundSampleTestLimit() throws IOException, ServletException {
+        // "/api/sound-sample" (limit 50)
+        runRequests("/api/sound-sample", 50);
 
-        request.setRemoteAddr("192.0.0.1");
-        request.setRequestURI("/api/sound-sample");
+        // "/api/sound-sample/upload" (limit 50)
+        runRequests("/api/sound-sample/upload", 50);
 
-        for (int i = 0; i < 90; i++) {
-            response = new MockHttpServletResponse();
-            filter.doFilter(request, response, chain);
-            assertEquals(200, response.getStatus());
-        }
+        // "/api/sound-sample/delete" (limit 50)
+        runRequests("/api/sound-sample/delete", 50);
+
+        // "/api/sound-sample/get-all" (limit 50)
+        runRequests("/api/sound-sample/get-all", 50);
+
+        // "/api/sound-sample/download" (limit 50)
+        runRequests("/api/sound-sample/download", 50);
     }
 
+    // "/api/auth/username" (limit 10)
     @Test
-    void soundSampleOverLimit() throws IOException, ServletException {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain chain = (req, res) -> {}; // Dummy chain
+    void authTestLimit() throws IOException, ServletException {
+        runRequests("/api/auth/username", 10);
+    }
+    
+    // "/api/movies"
+    @Test
+    void moviesTestLimit() throws IOException, ServletException {
+        // "/api/movies/batchById" (limit 100)
+        runRequests("/api/movies/batchById", 100);
 
-        request.setRemoteAddr("192.0.0.1");
-        request.setRequestURI("/api/sound-sample");
+        // "/api/movies/batchByTconst" (limit 100)
+        runRequests("/api/movies/batchByTconst", 100);
 
-        for (int i = 0; i < 91; i++) {
-            response = new MockHttpServletResponse();
-            filter.doFilter(request, response, chain);
-        }
+        // "/api/movies/search" (limit 1000)
+        runRequests("/api/movies/search", 1000);
 
-        assertEquals(429, response.getStatus());
+        // "/api/movies/count" (limit 1000)
+        runRequests("/api/movies/count", 1000);
+
+        // "/api/movies/poster" (limit 1000)
+        runRequests("/api/movies/poster", 1000);
+
+        // "/api/movies/preview" (limit 1000)
+        runRequests("/api/movies/preview", 1000);
+
+        // "/api/movies/poster/id" (limit 1000)
+        runRequests("/api/movies/poster/id", 1000);
+    }
+
+    // "/api/user"
+    @Test
+    void userTestLimit() throws IOException, ServletException {
+        // "/api/user/admin" (limit 100)
+        runRequests("/api/user/admin", 100);
+
+        // "/api/user/admin/ban_user" (limit 100)
+        runRequests("/api/user/admin/ban_user", 100);
+
+        // "/api/user/admin/unban_user" (limit 100)
+        runRequests("/api/user/admin/unban_user", 100);
+
+        // "/api/user/id" (limit 100)
+        runRequests("/api/user/id", 100);
+
+        // "/api/user/full_name" (limit 100)
+        runRequests("/api/user/full_name", 100);
     }
 }

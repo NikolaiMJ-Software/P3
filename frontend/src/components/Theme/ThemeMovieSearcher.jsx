@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function ThemeMovieSearcher({foundMovies, setSearchQuery, pageCount, setPageCount, totalPageCount, movieCount, handleAddMovies, sortBy, setSortBy, sortDirection, setSortDirection, movieFilter, setMovieFilter, seriesFilter, setSeriesFilter, shortsFilter, setShortsFilter, hideUnrated, setHideUnrated}){
@@ -10,6 +10,31 @@ function refresh() {
     setPageCount(1);
     setSearchQuery(q => q);
 }
+const dropdownRef = useRef(null);
+
+// Close filter when clicking outside
+useEffect(() => {
+    function handleInteraction(event) {
+        // Close on outside click
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setDropdownOpen(false);
+        }
+
+        // Close on Escape key
+        if (event.key === "Escape") {
+            setDropdownOpen(false);
+        }
+    }
+
+    document.addEventListener("mousedown", handleInteraction);
+    document.addEventListener("keydown", handleInteraction);
+
+    return () => {
+        document.removeEventListener("mousedown", handleInteraction);
+        document.removeEventListener("keydown", handleInteraction);
+    };
+}, []);
+
 
     return(
 <div className="bg-primary drop-shadow-xl items-center relative flex-col flex gap-1 border-text-primary border-1 sm:m-2 p-2 w-full h-[600px] sm:h-[640px] overflow-visible">
@@ -31,7 +56,7 @@ function refresh() {
                 </div>
 
                 
-                <div className="relative z-50">
+                <div className="relative z-50" ref={dropdownRef}>
                 <button
                     onClick={() => setDropdownOpen(o => !o)}
                     className="btn-primary"

@@ -15,6 +15,7 @@ export default function SubmitSSPage() {
     const [message, setMessage] = useState("");
     const { username } = useParams();
     const [validSS, setValidSS] = useState(null);
+    const [userId, setUserId] = useState(null);
 
     // Handles sound sample submission
     const handleSubmit = async () => {
@@ -28,13 +29,14 @@ export default function SubmitSSPage() {
         }
 
         // Get the user ID from the backend
-        let userId;
-        try {
-            userId = await getIdByUser(username);   
-        } catch (error) { 
-            console.error("Failed to fetch user ID:", error);
-            setMessage("Failed to fetch user ID: " + error.message);
-            return;
+        if (userId === null) {
+            try {
+                setUserId(await getIdByUser(username));   
+            } catch (error) { 
+                console.error("Failed to fetch user ID:", error);
+                setMessage("Failed to fetch user ID: " + error.message);
+                return;
+            }
         }
 
         // Submit sound sample and reset input

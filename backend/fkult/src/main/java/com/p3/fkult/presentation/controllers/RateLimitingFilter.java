@@ -27,9 +27,29 @@ public class RateLimitingFilter implements Filter {
 
         // Maximum requests allowed per minute
         int limit = switch (httpReq.getRequestURI()) {
-            case "/api/themes" -> 1010;      // 101 requests/min
-            case "/api/sound-sample" -> 90; // 90 req/min
-            default -> 10000;                 // All other endpoints
+            case "/api/auth/username" -> 10; // 10 req/min
+            case "/api/movies/batchById" -> 100;
+            case "/api/movies/batchByTconst" -> 100;
+            case "/api/movies/search" -> 1000;
+            case "/api/movies/count" -> 1000;
+            case "/api/movies/poster" -> 1000;
+            case "/api/movies/preview" -> 1000;
+            case "/api/movies/poster/id" -> 1000;
+            case "/api/themes" -> 100;
+            case "/api/themes/New" -> 100;
+            case "/api/themes/Old" -> 100;
+            case "/api/themes/User" -> 100;
+            case "/api/sound-sample" -> 50;
+            case "/api/sound-sample/upload" -> 50;
+            case "/api/sound-sample/delete" -> 50;
+            case "/api/sound-sample/get-all" -> 50;
+            case "/api/sound-sample/download" -> 50;
+            case "/api/user/admin" -> 100;
+            case "/api/user/admin/ban_user" -> 100;
+            case "/api/user/admin/unban_user" -> 100;
+            case "/api/user/id" -> 100;
+            case "/api/user/full_name" -> 100;
+            default -> 1000; // All other endpoints
         };
 
         // Initialize request count for the client IP address, and then increment it
@@ -38,8 +58,13 @@ public class RateLimitingFilter implements Filter {
 
         // Check if the request limit has been exceeded
         if (count > limit) {
+            httpRes.resetBuffer();
             httpRes.setStatus(429);
-            httpRes.getWriter().write("Too many requests for " + httpReq.getRequestURI());
+            httpRes.setHeader("Access-Control-Allow-Origin", "*");
+            httpRes.getWriter().write("Too many requests for: " + httpReq.getRequestURI());
+
+            // Flush writer so the client get the respons
+            httpRes.getWriter().flush();
             return;
         }
 

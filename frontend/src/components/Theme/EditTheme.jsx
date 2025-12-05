@@ -163,7 +163,6 @@ useEffect(() => {
             rules                        // drinkingRules
         );
 
-        alert("Theme updated successfully!");
         onClose && onClose();
     } catch (error) {
         console.error("Error updating theme:", error);
