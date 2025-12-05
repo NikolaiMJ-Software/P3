@@ -130,6 +130,7 @@ public class ThemeVotingService {
         }
     }
 
+    // Add the wheel of fortune winner to the current startup event
     public String AddWheelWinner(Long winningThemeId, Long movieId) {
         try{
             Long eventId = eventRepository.findIdOfStartupDayToday();

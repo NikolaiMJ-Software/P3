@@ -3,6 +3,7 @@ import film_tape from '../../assets/film_tape.jpg';
 export default function ThemeVotingDisplay({ theme }) {
   if (!theme) return null;
 
+  // Format time from purely minutes to xxh xxm format
   function formatRunTime(minutes) {
     const hrs = Math.floor(minutes / 60);
     const mins = minutes % 60;
@@ -14,8 +15,10 @@ export default function ThemeVotingDisplay({ theme }) {
     }
   }
 
+  // HTML of component
   return (
     <div className="w-full p-6 flex flex-col items-center gap-1">
+
       {/* Film tape top */}
       <div className="w-full h-12"
         style={{backgroundImage: `url(${film_tape})`,
@@ -23,7 +26,7 @@ export default function ThemeVotingDisplay({ theme }) {
         backgroundSize: "contain"}}> 
       </div>
      
-      {/* Theme title + submitter */}
+      {/* Theme title + submitter name */}
       <div className="w-3/4 p-4 rounded-xl text-center shadow-inner border py-0">
         <h1 className="text-l font-bold">{theme.themeName}</h1>
         <p className="text-xs mt-1">Submitted by: {theme.submitterName}</p>
@@ -63,9 +66,10 @@ export default function ThemeVotingDisplay({ theme }) {
           backgroundImage: `url(${film_tape})`,
           backgroundRepeat: "repeat-x",
           backgroundSize: "contain"
-        }}
-      >
-        <div className="bg-black/60 text-primary px-4 py-0 rounded-lg shadow">
+        }}>
+
+          {/* Total runtime counter */}
+        <div className="bg-black text-primary px-4 py-0 rounded-lg">
           <p className="text-xl font-bold">
             Total Runtime: {formatRunTime(theme.runTimes.reduce((a, b) => a + b, 0))}
           </p>
@@ -74,10 +78,9 @@ export default function ThemeVotingDisplay({ theme }) {
 
 
       {/* Show current votes */}
-      <div className="w-3/4 p-4 rounded-xl text-center py-0">
-        <h2 className="text-xl font-bold mb-2">Current Votes: {theme.votes}</h2>
-      </div>
-
+      <h2 className="text-xl font-bold mb-2">
+        Current Votes: {theme.votes === null ? "Unvoted" : theme.votes}
+      </h2>
     </div>
   );
 }
