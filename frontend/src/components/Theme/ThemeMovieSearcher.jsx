@@ -185,7 +185,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
                 <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
                     <img src={posterURL} loading={"lazy"} alt={"Poster"} className={"h-full object-cover rounded-2xl flex-shrink-0"}/>
                 </div>
-                <div className={"flex flex-col max-w-[430px] overflow-hidden"}>
+                <div className="flex flex-col max-w-[430px] overflow-hidden justify-between h-full py-0.5">
                     <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
                         <p className="font-bold truncate overflow-hidden text-sm sm:text-base text-ellipsis max-w-[423px] text-blue-400">{movieName} </p>
                         <div className="text-xs sm:text-base">
@@ -235,14 +235,10 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
                 <a href={`https://www.imdb.com/title/${tConst}/`} target={"_blank"}>
                     <p className="font-bold truncate overflow-hidden text-sm sm:text-base text-ellipsis max-w-[350px] text-blue-400">{movieName}</p>
                 </a>
-                <div className="flex flex-col sm:flex-row">
-                    <div className="text-xs sm:text-base">
-                        {safeRating}
-                    </div>
-                    <div className="text-xs sm:text-base">
-                        {`- ${t("runtime")} ${runtimeHours}${t("timehour")} ${runtimeMinutesLeft}m`}
-                    </div>
+                <div className="text-xs sm:text-base leading-[1.1]">
+                    {safeRating} – {t("runtime")} {runtimeHours}{t("timehour")} {runtimeMinutesLeft}m
                 </div>
+
                 <p className="text-xs sm:text-base">{year}</p>
                 <p></p>
 
