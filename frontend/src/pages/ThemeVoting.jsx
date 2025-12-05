@@ -42,18 +42,21 @@ export default function ThemeVoting() {
     loadThemes();
   }, []);
 
+  // starts automatic start of finishing voting when conditions are met
   useEffect(() => {
     if ((isVotingOngoing === true && numberOfWinners > 0) || (runnerUpWinnerMovieId !== null)) {
       finishVoting();
     }
   }, [isVotingOngoing, runnerUpWinnerMovieId]);
 
+  // Show wheel popup when there are names to spin for
   useEffect(() => {
     if (wheelNames.length > 0) {
         setShowWheelPopup(true);
     }
   }, [wheelNames]);
 
+  // add keyboard navigation for themes when themes are loaded (page is fully loaded)
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === "ArrowRight") {
@@ -62,7 +65,6 @@ export default function ThemeVoting() {
         handlePrevious();
       }
     };
-
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [[unVotedThemes.length]]);
@@ -70,10 +72,10 @@ export default function ThemeVoting() {
   //check if {username} is admin
   useEffect(() => {
     async function checkAdmin() {
-        const result = await isAdmin(username);
-            setIsAdminUser(result);
-      }
-      checkAdmin();
+      const result = await isAdmin(username);
+      setIsAdminUser(result);
+    }
+    checkAdmin();
   }, [username]);
 
   // Function to updates votes for the current theme
@@ -83,6 +85,7 @@ export default function ThemeVoting() {
       return;
     }
     try {
+
       // Update votes in unVotedThemes
       const updatedUnvoted = [...unVotedThemes];
       updatedUnvoted[currentIndex] = {
@@ -107,9 +110,10 @@ export default function ThemeVoting() {
     }
   };
 
-  // Function to end voting and schedule events
+  // Function that handles gathering data to end voting
   const endVoting = async () => {
-    
+
+    // If data has already been gathered to end voting, go to next function
     if (isVotingOngoing) {
       finishVoting();
       return;
@@ -124,7 +128,7 @@ export default function ThemeVoting() {
       return;
     }
 
-    // If first time ending voting, prompt for number of winners
+    // Prompt for number of winners
     if (numberOfWinners === 0) {
       const numberOfWinners = parseInt(
         prompt("How many themes are allowed to win?"),
@@ -136,34 +140,38 @@ export default function ThemeVoting() {
       }
       setNumberOfWinners(numberOfWinners);
       setIsVotingOngoing(true);
-      return; // Exit to allow re-clicking "End voting"
+      return;
     }
   };
 
+  // Function that finalizes voting, selects winners, and schedules events
   const finishVoting = async () => {
-    // Sort and select n winners
+
+    // Creates 2 arrays: sorted (all unvoted themes sorted by votes) and winners (currently selected winning themes)
     let sorted = [...unVotedThemes].sort((a, b) => (b.votes || 0) - (a.votes || 0));
     let winners = [... winningThemes];
 
+    // Continues to add themes to winningThemes until numberOfWinners is reached or a tie is detected
     while (winners.length < numberOfWinners) {
       console.log("Voting has found " + winners.length + " out of " + numberOfWinners + " winners so far.");
+
+      // Get all themes with the current highest vote count
       const currentVotes = sorted[0].votes;
       const tiedThemes = sorted.filter(t => t.votes === currentVotes);
-
       const remainingSlots = numberOfWinners - winners.length;
 
+      // Add them all if possible
       if (tiedThemes.length <= remainingSlots) {
-        // They all fit — add them
         winners = [...winners, ...tiedThemes];
-
-        // Remove them from sorted
         sorted = sorted.filter(t => t.votes !== currentVotes);
 
+        // Sets up the wheel spin for runner-up if all winners have been chosen
         if (winners.length === numberOfWinners && runnerUpDetermined === false) {
           const runnerUpThemes = sorted.filter(t => t.votes === sorted[0]?.votes);
           console.log("Runner-up themes:", runnerUpThemes);
           const runnerUpMovies = runnerUpThemes.flatMap(t => t.movieNames);
 
+          // Create metadata for runner-up themes
           setRunnerUpMeta(runnerUpThemes.flatMap(theme =>
             theme.movieNames.map((title, index) => ({
               themeId: theme.themeId,
@@ -177,8 +185,8 @@ export default function ThemeVoting() {
           return;
         }
 
+      // Trigger a tie-break if they cant all fit
       } else {
-        // Too many tied to fill the remaining slots → trigger tie-break
         console.log("Tie detected among themes:", tiedThemes);
         setUnVotedThemes(tiedThemes);
         setCurrentIndex(0);
@@ -188,7 +196,7 @@ export default function ThemeVoting() {
       }
     }
 
-    // After the loop finishes:
+    // Finalize winners
     setWinningThemes(winners);
 
     // Prompt date for the first event
@@ -201,11 +209,11 @@ export default function ThemeVoting() {
 
     // Schedule events for each winner (2 weeks apart)
     for (let i = 0; i < winners.length; i++) {
-
       const eventDate = new Date(startDate);
       eventDate.setDate(startDate.getDate() + i * 14);
       const pad = (num) => String(num).padStart(2, "0");
 
+      // Ensure the correct format is used for the backend
       const formattedDate =
         `${eventDate.getFullYear()}-` +
         `${pad(eventDate.getMonth() + 1)}-` +
@@ -214,15 +222,24 @@ export default function ThemeVoting() {
         `${pad(eventDate.getMinutes())}:` +
         `00`;
 
+      // Create events for winning themes
       try {
         const result = await uploadEvent(formattedDate, winners[i].themeId);
         console.log(`Event uploaded for ${formattedDate}:`, result);
-        const response = await addWheelWinner(runnerUpWinnerMovieId, runnerUpWinnerThemeId);
-        console.log(response);
       } catch (err) {
         console.error("Failed to upload event:", formattedDate, err);
       }
     }
+
+    // Add the runner up winner to the current startup day
+    try {
+      const response = await addWheelWinner(runnerUpWinnerMovieId, runnerUpWinnerThemeId);
+      console.log("Runner up registered: " + response);
+    } catch (err) {
+      console.log("Failed to add wheel winner" + err);
+    }
+
+    // Delete non-winning themes, and update database
     const runnerUpTheme = unVotedThemes.find(
       t => t.movieIds.includes(runnerUpWinnerMovieId)
     );
@@ -233,6 +250,7 @@ export default function ThemeVoting() {
     window.open("/admin/events", "_self");
   };
 
+  // Update the votes on the database to fit local votes
   const updateWinningThemes = async (winners) => {
     try {
       for (let i=0; i < winners.length; i++) {
@@ -244,27 +262,27 @@ export default function ThemeVoting() {
     }
   }
 
+  // Delete all themes from Database except matching input
   const deleteAllThemesExcept = async (keptThemes) => {
     try {
-      // Normalize kept IDs to numbers for reliable comparisons
+
+      // Sort winning themes from themes to be deleted
       const winningIds = keptThemes.map(t => Number(t.themeId));
-
-      // Identify which themes we will delete (client-side)
       const toDelete = themes.filter(t => !winningIds.includes(Number(t.themeId)));
-
       if (toDelete.length === 0) {
         console.log("No themes to delete.");
         return { deleted: [], failed: [] };
       }
 
+      // Set up arrays to store completion data
       const deleted = [];
       const failed = [];
 
-      // Delete sequentially — this helps server-side clarity and logging
+      // Delete every theme in toDelete from backend
       for (const t of toDelete) {
         const id = Number(t.themeId);
         try {
-          await deleteTheme(id); // make sure deleteTheme expects a numeric id
+          await deleteTheme(id); 
           deleted.push(id);
           console.log(`Deleted theme with ID: ${id}`);
         } catch (err) {
@@ -273,7 +291,7 @@ export default function ThemeVoting() {
         }
       }
 
-      // Update client state to remove deleted themes
+      // Update client side to fit new backend
       setThemes(prev => prev.filter(t => !deleted.includes(Number(t.themeId))));
       setUnVotedThemes(prev => prev.filter(t => !deleted.includes(Number(t.themeId))));
 
@@ -284,6 +302,7 @@ export default function ThemeVoting() {
     }
   };
 
+  // Set runner up winner based on wheel result
   const handleWheelResult = (value, index) => {
     setTimeout( async () => {
       setShowWheelPopup(false);
@@ -302,65 +321,65 @@ export default function ThemeVoting() {
     resetTimer();
   };
 
-  // Reset the timer to the current timerStart value
+  // Reset the timer
   const resetTimer = () => {
-    // Increment a dummy state to trigger useEffect in ThemeVotingDisplay
+    // Increment a dummy value to update timer which resets value
     setTimerResetKey((prev) => prev + 1);
   };
   
+  // HTML of theme voting page
   if (unVotedThemes.length === 0) return <p>Loading themes...</p>;
   const currentTheme = unVotedThemes[currentIndex];
-
   if(isAdminUser === 1){
     return (
       <div className="flex flex-col w-full">
 
-    {/* Display the current theme, timer, and back button*/}
-    <div className="relative">
-      <ThemeVotingDisplay theme={currentTheme}/>
-      <div className="absolute top-4 right-0">
-        <div className="scale-70 bg-black/70 text-primary px-3 py-2 rounded-lg shadow-lg">
-          <Timer initialSeconds={timerStart} resetKey={timerResetKey} />
+        {/* Display the current theme, timer, and back button*/}
+        <div className="relative">
+          <ThemeVotingDisplay theme={currentTheme}/>
+          <div className="absolute top-4 right-0">
+            <div className="scale-70 bg-black/70 text-primary px-3 py-2 rounded-lg shadow-lg">
+              <Timer initialSeconds={timerStart} resetKey={timerResetKey} />
+            </div>
+          </div>
+          <div className="absolute top-6 left-7">
+            <button
+              onClick={() => navigate(`/admin/${username}`)} class="btn-secondary">
+              <img src={logo} alt="Back to Admin" className="size-7"/>
+            </button>
+          </div>
         </div>
-      </div>
-      <div className="absolute top-6 left-7">
-        <button
-          onClick={() => navigate(`/admin/${username}`)} class="btn-secondary">
-          <img src={logo} alt="Back to Admin" className="size-7"/>
-        </button>
-      </div>
-    </div>
 
-      {/* Bottom controls */}
-      <div className="flex flex-col px-6">
-        <div className="flex justify-between items-center mb-2">
-          <button
-            onClick={handlePrevious}
-            class="btn-secondary"
-          >
-            ← Previous
-          </button>
+        {/* Bottom controls */}
+        <div className="flex flex-col px-6">
+          <div className="flex justify-between items-center mb-2">
+            <button
+              onClick={handlePrevious}
+              class="btn-secondary">
+              ← Previous
+            </button>
 
+            {/* Theme counter */}
             <h2 className="text-lg font-semibold">
               {currentIndex + 1} / {unVotedThemes.length}
             </h2>
 
             <button
               onClick={handleNext}
-              class="btn-secondary"
-            >
+              class="btn-secondary">
               Next →
             </button>
           </div>
 
+          {/* Input field for votes */}
           <div className="flex justify-center">
             <input
               type="number"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)} // Just update state
+              onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  submitVote(inputValue); // Only call function on Enter
+                  submitVote(inputValue);
                   setInputValue("");
                 }
               }}
@@ -369,12 +388,13 @@ export default function ThemeVoting() {
             />
             <button
               onClick={endVoting}
-              className="px-4 py-2 rounded-md bg-btn-hover-secondary hover:bg-text-secondary"
-            >
+              className="px-4 py-2 rounded-md bg-btn-hover-secondary hover:bg-text-secondary">
               End voting
             </button>
           </div>
         </div>
+
+        {/* Wheel of fortune popup to decide winning runner up */}
         {showWheelPopup && (
           <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
             <p className="absolute top-8 text-white text-xl">Spin the Wheel to determine which movie to watch today!</p>
@@ -383,17 +403,19 @@ export default function ThemeVoting() {
               {/* Close button */}
               <button
                 onClick={() => setShowWheelPopup(false)}
-                className="absolute top-4 right-4 text-black text-xl font-bold"
-              >
+                className="absolute top-4 right-4 text-black text-xl font-bold">
                 ×
               </button>
 
+              {/* Imported wheel of fortune component */}
               <WheelOfFortune inputs={wheelNames} onResult={handleWheelResult}/>
             </div>
           </div>
         )}
       </div>
     );
+
+  // If user is not admin, navigate away from page
   } else if (isAdminUser === 0){
     return(navigate(`/${username}`))
   }
