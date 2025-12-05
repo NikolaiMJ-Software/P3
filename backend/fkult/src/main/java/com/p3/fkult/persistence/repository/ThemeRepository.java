@@ -72,7 +72,7 @@ public class ThemeRepository {
     }
 
     public List<Theme> findFromUser(Long userId){
-        String sql = "SELECT * FROM theme WHERE user_id = ?";
+        String sql = "SELECT * FROM theme WHERE user_id = ? AND vote_count IS NULL";
         return jdbcTemplate.query(sql, rowMapper, userId);
     }
 

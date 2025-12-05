@@ -13,6 +13,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.matchers.Null;
 
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
@@ -202,17 +203,17 @@ public class ThemeRepositoryTest {
     void findFromUser_returnsThemesForGivenUser() {
         // Arrange
         Long userId = 99L;
-        Theme t1 = new Theme(1L, "UserTheme1", userId, LocalDateTime.now(), 0);
-        Theme t2 = new Theme(2L, "UserTheme2", userId, LocalDateTime.now(), 3);
+        Theme t1 = new Theme(1L, "UserTheme1", userId, LocalDateTime.now(), null);
+        Theme t2 = new Theme(2L, "UserTheme2", userId, LocalDateTime.now(), null);
 
-        when(jdbcTemplate.query(eq("SELECT * FROM theme WHERE user_id = ?"), any(RowMapper.class), eq(userId))).thenReturn(List.of(t1, t2));
+        when(jdbcTemplate.query(eq("SELECT * FROM theme WHERE user_id = ? AND vote_count IS NULL"), any(RowMapper.class), eq(userId))).thenReturn(List.of(t1, t2));
 
         // Act
         List<Theme> result = themeRepository.findFromUser(userId);
 
         // Assert
         assertThat(result).containsExactly(t1, t2);
-        verify(jdbcTemplate).query( eq("SELECT * FROM theme WHERE user_id = ?"), any(RowMapper.class), eq(userId));
+        verify(jdbcTemplate).query( eq("SELECT * FROM theme WHERE user_id = ? AND vote_count IS NULL"), any(RowMapper.class), eq(userId));
     }
 
 
