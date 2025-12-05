@@ -218,11 +218,12 @@ private String sanitizeFTS(String input) {
         return jdbcTemplate.queryForObject(sql, Integer.class, ftsPattern);
     }
 
-    //upsert function
+    //upsert function (inserts new data into the data base, so it does not replace rows but updates them)
     public int upsertFromImdbFile(File tsvGz, boolean onlyMovies, boolean markInactiveMissing) throws IOException {
     jdbcTemplate.execute("PRAGMA foreign_keys = ON");
     jdbcTemplate.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_movie_tconst ON movie(tconst)");
 
+    //define sql upsertion string, with the inputs from imdb basic movie dataset
     final String upsertSql =
         "INSERT INTO movie (tconst, movie_name, original_movie_name, year, runtime_minutes, is_active, is_series, is_shorts) " +
         "VALUES (?, ?, ?, ?, ?, 1, ?, ?) " +
@@ -235,37 +236,51 @@ private String sanitizeFTS(String input) {
         "  is_series=excluded.is_series, "+
         "  is_shorts=excluded.is_shorts";
 
+    //if any movies has been removed from imdb's basic data, then remove it from the database
     if (markInactiveMissing) {
         jdbcTemplate.execute("CREATE TEMP TABLE IF NOT EXISTS tmp_seen(tconst TEXT PRIMARY KEY) WITHOUT ROWID");
         jdbcTemplate.update("DELETE FROM tmp_seen");
     }
 
     int processed = 0;
+    //get current year
     int currentYear = Year.now(ZoneId.systemDefault()).getValue();
 
+    //insertion function of basic movie data within the movie sql table
     try (GZIPInputStream gzis = new GZIPInputStream(new FileInputStream(tsvGz));
+
+        //define a buffer for the insertions
          BufferedReader br = new BufferedReader(new InputStreamReader(gzis, StandardCharsets.UTF_8))) {
 
+        //check if movie data is null, if null return
         String header = br.readLine();
         if (header == null) return 0;
 
+        //set upsertion buffer to a 1000 upsertions
         ArrayList<Object[]> upserts = new ArrayList<>(1000);
         ArrayList<Object[]> seen    = new ArrayList<>(1000);
         String line;
 
+        //as long as there a data run this while function
         while ((line = br.readLine()) != null) {
+            //define a list which contains the movie data, split up in less then 9 data sets
             String[] c = line.split("\t", -1);
             if (c.length < 9) continue;
 
+            //define each dataset tconst, titletype...
             String tconst = c[0];
             String titleType = c[1];
+
+            //if movie type is movie, tvseries or short continue
             if (onlyMovies && !( "movie".equals(titleType) || "tvSeries".equals(titleType) || "short".equals(titleType) )) {continue;}
 
+            //if title is series or short set seriesType or ShortsType to 1
             Integer seriesType;
             Integer shortsType;
             if ("tvSeries".equals(titleType)){seriesType = 1;}else{seriesType = 0;}
             if ("short".equals(titleType)){shortsType = 1;}else{shortsType = 0;}
 
+            //define the rest of the movie data
             String primaryTitle  = normalize(c[2]);
             String originalTitle = normalize(c[3]);
             String movieName = (primaryTitle != null) ? primaryTitle
@@ -274,13 +289,19 @@ private String sanitizeFTS(String input) {
 
             Integer startYear = parseIntOrNull(c[5]);
             Integer runtime   = parseIntOrNull(c[7]);
+
+            //if startyear is less then 1888 (first movie got made there) and more then current year stop
             if (startYear != null && (startYear < 1888 || startYear > currentYear)) continue;
+
+            //if runtime is less then 0 then stop
             if (runtime == null || runtime <= 0) continue;
 
+            //add this tilte to the upsertion
             upserts.add(new Object[]{ tconst, movieName, originalTitle, startYear, runtime, seriesType, shortsType });
             if (markInactiveMissing) seen.add(new Object[]{ tconst });
             processed++;
 
+            //when there is a 1000 or more upsertions, upsert it into the db
             if (upserts.size() >= 1000) {
                 jdbcTemplate.batchUpdate(upsertSql, upserts);
                 upserts.clear();
@@ -291,6 +312,7 @@ private String sanitizeFTS(String input) {
             }
         }
 
+        //if upsertions are not empty insert the rest of the upsertions
         if (!upserts.isEmpty()) {
             jdbcTemplate.batchUpdate(upsertSql, upserts);
             if (markInactiveMissing) {
@@ -299,6 +321,7 @@ private String sanitizeFTS(String input) {
         }
     }
 
+    //delete all titles which has been dropped by imdb
     if (markInactiveMissing) {
         jdbcTemplate.update("UPDATE movie SET is_active = 0 WHERE tconst NOT IN (SELECT tconst FROM tmp_seen)");
         jdbcTemplate.execute("DROP TABLE IF EXISTS tmp_seen");
@@ -306,18 +329,21 @@ private String sanitizeFTS(String input) {
     return processed;
     }
 
+    //function to normalize text strings
     private static String normalize(String s) {
         return (s == null || s.isEmpty() || "\\N".equals(s)) ? null : s;
     }
+    //function to define if there is an integer if not return null
     private static Integer parseIntOrNull(String s) {
         if (s == null || s.isEmpty() || "\\N".equals(s)) return null;
         try { return Integer.valueOf(s); } catch (NumberFormatException e) { return null; }
     }
 
+    //Function to merge temporary ratings table with movie table
     public void mergeRatingsFromImdbFile(File ratingsTsvGz) throws IOException {
         jdbcTemplate.execute("PRAGMA foreign_keys = ON");
 
-        // temp table to stage ratings
+        // create temporary ratings table, with rating datadump information
         jdbcTemplate.execute("""
             CREATE TEMP TABLE IF NOT EXISTS tmp_ratings(
                 tconst TEXT PRIMARY KEY,
@@ -327,32 +353,45 @@ private String sanitizeFTS(String input) {
         """);
         jdbcTemplate.update("DELETE FROM tmp_ratings");
 
+        //Try to read through the data dump file and insert it into the temp table
         try (GZIPInputStream gzis = new GZIPInputStream(new FileInputStream(ratingsTsvGz));
             BufferedReader br = new BufferedReader(new InputStreamReader(gzis, StandardCharsets.UTF_8))) {
 
+            //define variable that is equal to the 3 datasets in the dump, if null return
             String header = br.readLine(); // tconst\taverageRating\tnumVotes
             if (header == null) return;
 
+            //Buffer to only inser 10.000 insertions at a time
             List<Object[]> batch = new ArrayList<>(10_000);
+
+            //insertion function for the datasets per 10.000 dataset
             String line;
             while ((line = br.readLine()) != null) {
+                //split values up so each dataset have 3 values
                 String[] c = line.split("\t", -1);
                 if (c.length < 3) continue;
+
+                //define the 3 values from the table
                 String tconst = c[0];
                 String rating = c[1];     // keep as TEXT per your schema
                 Integer votes  = parseIntOrNull(c[2]);
+
+                //add the 3 values to the batch of 10.000 insertions
                 batch.add(new Object[]{ tconst, rating, votes });
+
+                //insert batch when hitting or over 10.000
                 if (batch.size() >= 10_000) {
                     jdbcTemplate.batchUpdate("INSERT OR REPLACE INTO tmp_ratings(tconst, rating, votes) VALUES (?,?,?)", batch);
                     batch.clear();
                 }
             }
+            //if batch is not empty after insertions, insert missing values
             if (!batch.isEmpty()) {
                 jdbcTemplate.batchUpdate("INSERT OR REPLACE INTO tmp_ratings(tconst, rating, votes) VALUES (?,?,?)", batch);
             }
         }
 
-        // single set-based update: update only rows that exist in tmp
+        // update movie table with ratings from tmp_rating table using tconst
         jdbcTemplate.update("""
             UPDATE movie
             SET rating = (SELECT rating FROM tmp_ratings r WHERE r.tconst = movie.tconst)
