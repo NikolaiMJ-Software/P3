@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ThemeCreator from "./ThemeCreator.jsx";
 import ThemeMovieSearcher from "./ThemeMovieSearcher.jsx";
 import { getMoviesByTconsts, getMovieCount, searchMovies, getMoviePoster } from "../../services/movieService.jsx";
