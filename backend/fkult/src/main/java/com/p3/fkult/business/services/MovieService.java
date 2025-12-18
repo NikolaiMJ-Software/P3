@@ -104,7 +104,6 @@ public class MovieService {
         return getPosterURL(movie);
     }
 
-    //ChatGPT said this is maybe illegal... but... it works though
     public String getPosterURL(Movie movie) {
         if (movie.getTconst() == null) {
             System.out.println("Movie " + movie.getId() + " has no tconst");
