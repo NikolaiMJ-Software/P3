@@ -1,5 +1,5 @@
 import React from "react";
-import Placeholder from "../assets/placeholder.png";
+import Picture from "../assets/The_Picture.jpg";
 import { Trans, useTranslation } from "react-i18next";
 
 export default function FAQPage() {
@@ -162,7 +162,7 @@ export default function FAQPage() {
 
         <div className="mt-6">
           <img
-            src={Placeholder}
+            src={Picture}
             alt={t("sections.story.title", { ns })}
             className="mx-auto rounded-xl shadow-md w-3/4"
           />
