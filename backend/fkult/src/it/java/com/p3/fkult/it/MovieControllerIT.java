@@ -104,13 +104,11 @@ public class MovieControllerIT {
     @Test
     void searchMoviesSuccess() throws Exception {
         mvc.perform(get("/api/movies/search")
-                        .param("q", "Matrix")
-                        .param("page", "1")
-                        .param("limit", "10"))
+            .param("q", "Matrix").param("page", "1").param("limit", "10"))
             .andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$[0].tConst", 
-                    containsString("tt0133093")));
+            containsString("tt0133093")));
     }
 
     //search for movies and fail
