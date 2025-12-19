@@ -34,6 +34,7 @@ public class ThemeService {
     public List<ThemeRequest> getAllThemes() {
         List<Theme> themes =  themeRepository.findAll();
         System.out.println("Found themes: " + themes.size());
+        //converts model object to DTO object, function defined below.
         return convertThemesToThemeRequests(themes);
     }
 
@@ -72,20 +73,22 @@ public class ThemeService {
         themeRequest.getDrinkingRules().forEach(ruleText ->
                 drinkingRuleRepository.save(new DrinkingRule(themeId, ruleText)));
     }
-
+    //Transactional ensures if insertions fail halfway through it is undone
     @Transactional
     public void createThemeWithTConsts(ThemeRequest themeRequest){
         Long userId = userRepository.findUser(themeRequest.getUsername()).getId();
+        //double effect. Save a new theme, and store the themeId from the newly saved theme
         long themeId = themeRepository.save(new Theme(themeRequest.getName(), userId)).getId();
-
+        //map list of tconsts to list of movieIds given in the themeRequest
         List<Long> movieIds = themeRequest.gettConsts().stream().map(
                 tConst -> movieRepository.findByTconst(tConst).getId()
         ).toList();
-
+        //Create ThemeMovies that link the newly created Theme to given movies
         List<ThemeMovie> themeMovies = movieIds
                 .stream()
                 .map(movieId -> new ThemeMovie(themeId,movieId))
                 .toList();
+        //save each thememovie to the repository
         themeMovies.forEach(themeMovie -> themeMovieRepository.save(themeMovie));
         if (!(themeRequest.getDrinkingRules() == null)){
             themeRequest.getDrinkingRules().forEach(ruleText ->
@@ -95,28 +98,35 @@ public class ThemeService {
     
     private List<ThemeRequest> convertThemesToThemeRequests(List<Theme> themes) {
         List<ThemeRequest> themeRequests =  new ArrayList<>();
+        //for-each loops over all themes inputted
         for(Theme theme : themes) {
             //constructing a themeRequest one by one
             String name = theme.getName();
             Long userId = theme.getUserid();
             String username = userRepository.findUserNameById(userId);
+            //repository returns a list of thememovies, for each of those we save their movieid to a list.
             List<Long> movieIds = themeMovieRepository.findByThemeId(theme.getId())
                     .stream()
                     .map(ThemeMovie::getMovieid)
                     .toList();
+            //We map each movie id to a tConst
             List<String> tconsts = movieIds.stream()
                     .map(id -> {
                         Movie movie = movieRepository.findById(id);
+                        //Ternary operator: if movie exists, return its tconst, else return null.
                         return movie != null ? movie.getTconst() : null;
                     })
-                    .filter(tconst -> tconst != null)
+                    .filter(tconst -> tconst != null) //remove null values where no movie was found
                     .toList();
+            //find all drinking rules attached to themeId and convert them to list of strings
             List<String> drinkingRules = drinkingRuleRepository.findByThemeId(theme.getId())
                     .stream()
                     .map(DrinkingRule::getRuleText)
                     .toList();
+            //construct DTO from all the values we've just collected
             ThemeRequest themeRequest = new ThemeRequest(theme.getId(),  name, username, userId, movieIds, drinkingRules, theme.getTimestamp());
             themeRequest.settConsts(tconsts);
+            //add to list defined at the top.
             themeRequests.add(themeRequest);
         };
         return themeRequests;

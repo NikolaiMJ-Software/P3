@@ -69,19 +69,19 @@ public class EventService {
             return "Event deletion failed: " + e.getMessage();
         }
     }
-
+    //constructing an EventRequest requires collecting a lot of information from different repositories
     public List<EventRequest> getFutureEventsFromNow(){
         LocalDateTime now = LocalDateTime.now();
         List<Event> futureEvents = eventRepository.getFutureEventsFromTimeStamp(now);
         List<Theme> eventThemes = futureEvents.stream().map(event -> themeRepository.findById(event.getThemeId())).toList();
         List<EventRequest> eventRequests = new ArrayList<>();
-        for(int i = 0; i < futureEvents.size(); i++){
-            if (eventThemes.get(i)== null){
+        for(int i = 0; i < futureEvents.size(); i++){//for loop, loops over all future events
+            if (eventThemes.get(i)== null){ //if the theme for an event is null, its a startup day so create a startup day object
                 eventRequests.add(new EventRequest(
                         futureEvents.get(i).getId(),
                         futureEvents.get(i).getEventDate()
                 ));
-            }else{
+            }else{//if the theme for an event isn't null, its a movie night so create a movie night event object
                 eventRequests.add(new EventRequest(
                         futureEvents.get(i).getId(),
                         //theme name for event

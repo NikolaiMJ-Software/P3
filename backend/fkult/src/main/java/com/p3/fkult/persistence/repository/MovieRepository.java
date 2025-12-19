@@ -25,7 +25,7 @@ public class MovieRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    //Constructor :D
+    //Spring Boot auto-injects the jdbcTemplate
     public MovieRepository(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }

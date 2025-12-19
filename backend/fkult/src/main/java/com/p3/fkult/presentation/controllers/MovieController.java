@@ -24,7 +24,7 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @PostMapping("/batchById")
+    @PostMapping("/batchById")//user sends a bunch of movie ids, we send them a bunch of movies
     public ResponseEntity<?> getMovieIds(@RequestBody List<Long> movieIds) {
         try {
             List<MovieRequest> movies = movieService.getMoviesByIds(movieIds);
@@ -37,7 +37,7 @@ public class MovieController {
         }
     }
 
-    @PostMapping("/batchByTconst")
+    @PostMapping("/batchByTconst")//user sends a bunch of tConsts, we send them a bunch of movies
         public ResponseEntity<?> getMoviesByTconst(@RequestBody List<String> tconsts) {
             try {
                 List<MovieRequest> movies = movieService.getMoviesByTconsts(tconsts);
@@ -62,8 +62,9 @@ public class MovieController {
                                                            @RequestParam(required = false) Boolean series,
                                                            @RequestParam(required = false) Boolean shorts,
                                                            @RequestParam(required = false) Boolean rated ){
-        if (limit > 40) limit = 40;
-        if (limit < 0) limit = 0;
+        //if parameters aren't defined by the user, we define some defaults.
+        if (limit > 40) limit = 40;//we don't allow asking for more than 40 movies
+        if (limit < 0) limit = 0;// we don't allow asking for less than 0 movies
         List<MovieRequest> results = movieService.searchMovies(q, page, limit, sortBy, direction, movie, series, shorts, rated);
 
         if (results.isEmpty()) {
@@ -75,14 +76,14 @@ public class MovieController {
         return ResponseEntity.ok(results);
     } // to test the search: GET http://localhost:8080/api/movies/search?q=MovieTitle&page=1
 
-    @GetMapping("/search/count")
+    @GetMapping("/search/count")//counts how many movies a search query will result
     public ResponseEntity<Integer> countMovies(@RequestParam String q){
         Integer count = movieService.getMovieSearchCount(q);
         return ResponseEntity.ok(count);
     }
 
 
-    @GetMapping("/poster/{tconst}")
+    @GetMapping("/poster/{tconst}")//gives you a posterURL given a tconst
     public ResponseEntity<String> getPoster(@PathVariable String tconst){
         String posterURL = movieService.getPosterByTconst(tconst);
         return ResponseEntity.ok(posterURL);

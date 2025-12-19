@@ -17,7 +17,7 @@ public class ThemeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    //Constructor :D
+    //Spring Boot auto-injects the jdbcTemplate
     public ThemeRepository(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -54,12 +54,15 @@ public class ThemeRepository {
 
     public List<Theme> findAfter(LocalDateTime localDate){
         //timestamp >= localDate finds themes created on or after localDate
+        //newer timestamps have larger values
         List<Theme> themes = jdbcTemplate.query("SELECT * FROM theme WHERE timestamp >= ?", rowMapper, localDate);
         if (themes == null || themes.isEmpty()){
             System.out.println("failed to get themes from db");
         }else{
             System.out.println("Found requested themes: " +
+                    //A stream is a way to process a collection. chained with .map it converts themes to strings
                     themes.stream()
+                            //Theme::toString is a method reference instead of, (theme -> theme.toString)
                             .map(Theme::toString)
                             .collect(Collectors.joining(", "))
             );

@@ -40,11 +40,12 @@ public class ThemeController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createTheme(@RequestBody ThemeRequest themeRequest){
+    public ResponseEntity<String> createTheme(@RequestBody ThemeRequest themeRequest){//RequestBody means we parse JSON user sent to a DTO object
         String name = themeRequest.getName();
         String username = themeRequest.getUsername();
         List<String> tConsts = themeRequest.gettConsts();
         List<String> drinkingRules = themeRequest.getDrinkingRules();
+        //save some variables and input validate if they are correct
         if (name == null || name.trim().isBlank() || tConsts.isEmpty() ||username == null || username.trim().isEmpty())
         {
             return ResponseEntity.badRequest().body("Theme data not accepted please ensure there is a title, username and at least one movie");
@@ -52,12 +53,6 @@ public class ThemeController {
         if (userService.getIfUserBanned(username)){
             return ResponseEntity.badRequest().body("Theme data not accepted as user is banned");
         }
-        /*
-        //check if user even exists and fail them if they do not exist
-        if (){
-            ResponseEntity.badRequest().body("Theme data not accepted as user doesn't exist");
-        }
-        */
         themeService.createThemeWithTConsts(themeRequest);
         return ResponseEntity.ok("Theme created successfully");
     }
