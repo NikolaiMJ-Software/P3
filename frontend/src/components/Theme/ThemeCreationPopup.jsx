@@ -11,6 +11,14 @@ import ThemeBrowser from "./ThemeBrowser.jsx";
 import { useTranslation } from "react-i18next";
 const MOVIE_LIMIT = 6;
 
+
+/**
+ * ThemeCreationPopup
+ * Main container for theme creation:
+ * - Lets user search movies (left panel)
+ * - Lets user build a theme (right panel)
+ * - Submits theme to backend
+*/
 export default function ThemeCreationPopup({setSelected}) {
     const [title, setTitle] = useState("");
     const [movies, setMovies] = useState([]);
@@ -20,6 +28,8 @@ export default function ThemeCreationPopup({setSelected}) {
     const [searchQuery, setSearchQuery] = useState("");
     const [foundMovies, setFoundMovies] = useState([]);
     const [movieCount, setMovieCount] = useState(0);
+
+    // Sorting / filtering controls (passed into ThemeMovieSearcher)
     const [sortBy, setSortBy] = useState("rating");
     const [sortDirection, setSortDirection] = useState("desc"); // "asc" | "desc"
     const [movieFilter, setMovieFilter] = useState(true);
@@ -28,7 +38,7 @@ export default function ThemeCreationPopup({setSelected}) {
     const [hideUnrated, setHideUnrated] = useState(false);
     const {t} = useTranslation();
 
-
+    // Fetch results when query or filters change
     useEffect(() => {
         const fetchData = async () => {
             if (!searchQuery || searchQuery.trim() === ""){
@@ -39,7 +49,7 @@ export default function ThemeCreationPopup({setSelected}) {
             return;
             }
 
-        // Detect full IMDb link or raw tt1234567
+        // Detect full IMDb link or raw tConst searches
         const tconst = extractTconst(searchQuery);
         if (tconst) {
             // its direct tconst search so its always at page 1 with limit 1 since its exact
@@ -60,7 +70,7 @@ export default function ThemeCreationPopup({setSelected}) {
         try {
             setPageCount(1); //page reset
 
-            //calculate how many pages of movies there are.
+            // Get total result count for pagination
             const count = await getMovieCount(searchQuery)
             setMovieCount(count);
             setTotalPageCount(Math.ceil(count / MOVIE_LIMIT));
@@ -76,10 +86,12 @@ export default function ThemeCreationPopup({setSelected}) {
         fetchData();
     }, [searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated]);
 
+    // Fetch next/prev page
     useEffect(() => {
         if (!searchQuery || searchQuery.trim() === "") return;
             const tconst = extractTconst(searchQuery);
             if (tconst) return; 
+
             const switchPage = async () => {
                 try {
                     const movies = await searchMovies(searchQuery, pageCount, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated)
@@ -92,6 +104,7 @@ export default function ThemeCreationPopup({setSelected}) {
         switchPage();
     }, [pageCount, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated]);
 
+    // Fetch missing poster URLs for search results
     useEffect(() => {
         const fetchMissingPosters = async () => {
             const moviesWithoutPoster = foundMovies.filter(m => !m.moviePosterURL);
@@ -111,10 +124,7 @@ export default function ThemeCreationPopup({setSelected}) {
         fetchMissingPosters();
     }, [foundMovies]);
 
-    const convertLinkToTconst = (link) =>{
-        const parts = link.split("/");
-        return parts.find(p => p.startsWith("tt")) || null;
-    }
+    // Validate input and submit theme
     const handleSubmit = async () => {
         if(!title){
             alert("Please enter theme title");
@@ -130,7 +140,6 @@ export default function ThemeCreationPopup({setSelected}) {
             console.log("Sending theme:", { title, username, movies, drinkingRules });
             await addTheme(title, username, movies.map(movie => movie.tConst), drinkingRules);
             setSelected("themes")
-            //alert("Theme created sucessfully! ");
 
         } catch (error) {
             console.error("Error creating theme:", error);
@@ -138,24 +147,27 @@ export default function ThemeCreationPopup({setSelected}) {
         }
     }
 
+    // Add movie to theme (avoid duplicates)
     const handleAddMovies = (movie) => {
         setMovies(prev =>{
             if (prev.some(m => m.tConst === movie.tConst)) return prev;
             return [...prev, movie];
         })
-
     }
 
+    // Remove movie from theme
     const handleRemoveMovie = (tConst) => {
     setMovies(prev => prev.filter(m => m.tConst !== tConst));
     };
 
+    // Reset theme creation state
     const resetForm = () => {
         setTitle("");
         setMovies([]);
         setRules("");
     }
-
+    
+    // Extract IMDb tConst from input (link or raw)
     const extractTconst = (input) => {
         if (!input) return null;
 

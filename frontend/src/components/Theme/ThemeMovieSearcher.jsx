@@ -1,14 +1,20 @@
 import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+/**
+ * ThemeMovieSearcher
+ * Handles searching movies, applying filters/sorting, and paginating results
+ * for theme creation.
+ */
 export default function ThemeMovieSearcher({foundMovies, setSearchQuery, pageCount, setPageCount, totalPageCount, movieCount, handleAddMovies, sortBy, setSortBy, sortDirection, setSortDirection, movieFilter, setMovieFilter, seriesFilter, setSeriesFilter, shortsFilter, setShortsFilter, hideUnrated, setHideUnrated}){
     const searchInputRef = useRef();
     const {t} = useTranslation();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [hasSearched, setHasSearched] = useState(false);
+// Resets pagination and re-triggers the current search
 function refresh() {
     setPageCount(1);
-    setSearchQuery(q => q);
+    setSearchQuery(q => q); // Forces re-fetch without changing query
 }
 const dropdownRef = useRef(null);
 
@@ -38,6 +44,7 @@ useEffect(() => {
 
     return(
 <div className="bg-primary drop-shadow-xl items-center relative flex-col flex gap-1 border-text-primary border-1 sm:m-2 p-2 w-full h-[600px] sm:h-[640px] overflow-visible">
+            {/* Search bar and buttons */}
             <div className="flex flex-row items-center gap-2 sm:px-2 w-full whitespace-nowrap sm:h-[50px] items-center overflow-visible">
                 <input
                     ref={searchInputRef}
@@ -46,6 +53,7 @@ useEffect(() => {
                     placeholder= {t("CreateThemeSearch")}
                     className="bg-primary drop-shadow-lg flex-1 sm:min-w-[120px] text-center text-text-primary border-1 p-1 sm:p-2 rounded-2xl truncate"
                 />
+                {/* Search button (hidden on mobile) */}
                 <div className="hidden sm:flex">
                     <button
                         onClick={(event) => {setHasSearched(true), setSearchQuery(searchInputRef.current.value)}}
@@ -55,7 +63,7 @@ useEffect(() => {
                     </button>
                 </div>
 
-                
+                {/* Filter dropdown */}                
                 <div className="relative z-50" ref={dropdownRef}>
                 <button
                     onClick={() => setDropdownOpen(o => !o)}
@@ -66,8 +74,10 @@ useEffect(() => {
 
                 {dropdownOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-primary text-black border-1 rounded-xl p-2 shadow-xl z-[9999]">
-                        {/* Sort By */}
+
+                        {/* Sorting options */}
                         <p className="text-sm font-bold mb-1 text-text-primary">{t("sort by")}</p>
+                        
                         <div className={`cursor-pointer p-1 rounded 
                             ${sortBy === "rating" ? "bg-btn-hover-secondary font-bold" : "hover:bg-btn-hover-secondary"}`}
                             onClick={() => (setSortBy("rating"), refresh())}>
@@ -106,7 +116,7 @@ useEffect(() => {
                             {t("descending")}
                         </div>
 
-                        {/* Filters */}
+                        {/* Type filters */}
                         <p className="text-sm font-bold mt-3 mb-1 text-text-primary">{t("types")}</p>
 
                         <label className="flex items-center gap-2 cursor-pointer">
@@ -138,6 +148,7 @@ useEffect(() => {
             </div>
 
             </div>
+            {/* Movie results */}
             {foundMovies.map((movie) => {
                 console.log("MOVIE:", movie);
                 return <MovieSuggestion
@@ -153,7 +164,7 @@ useEffect(() => {
                 >
                 </MovieSuggestion>
             })}
-
+            {/* No results message */}
             {hasSearched && movieCount === 0 && (
                 <div className="text-text-primary text-sm sm:text-base text-center mt-4 max-w-[400px] mx-auto break-words">
                 <p>{t("no results found")} <br/>"<span className="font-bold">{searchInputRef.current?.value}</span>"</p>
@@ -162,6 +173,7 @@ useEffect(() => {
             </div>
             )}
 
+            {/* Pagination */}
             <div className="absolute bottom-2 flex flex-row gap-2 sm:gap-4">
                 <button onClick={() => setPageCount(prev => Math.max(1, prev - 1))} className="btn-primary">{t("previous")}</button>
                 <p className="mt-3">{`${pageCount}/${totalPageCount}`}</p>
@@ -171,14 +183,16 @@ useEffect(() => {
         </div>
     )
 }
-
+// Displays movie, series, or short suggestion
 export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, onAdd, isSeries, isShorts, rating}) {
     const {t} = useTranslation();
+    // Convert runtime to hours and minutes
     const runtimeHours = Math.floor(runtime / 60)
     const runtimeMinutesLeft = runtime % 60;
+    // Fallback text if no rating exists
     const safeRating = (rating) ? t("rating: ") + rating+"⭐" : t("no ratings available");
 
-    //different layout for shows, series and such.
+    // Series layout
     if(isSeries){
         return (
             <div onClick={onAdd} className="bg-primary drop-shadow-lg flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]">
@@ -201,7 +215,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
             </div>
         )
     }
-
+    // Shorts layout
     if(isShorts){
         return (
             <div onClick={onAdd} className="bg-primary drop-shadow-lg flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]">
@@ -224,7 +238,7 @@ export function MovieSuggestion({movieName, year, runtime, posterURL, tConst, on
             </div>
         )
     }
-
+    // Default movie layout
     return(
         <div onClick={onAdd} className={"bg-primary drop-shadow-lg flex-row flex items-center gap-2 sm:gap-4 p-1 border-text-primary border-2 rounded-2xl w-full max-w-full h-20 cursor-pointer transform transition-all duration-200 hover:scale-[1.03]"}>
             <div className="w-[45px] h-[68px] overflow-hidden rounded-2xl flex-shrink-0">
