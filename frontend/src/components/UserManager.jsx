@@ -4,21 +4,24 @@ import {useState} from "react";
 import {useTranslation} from "react-i18next";
 
 export default function UserManager({ className }){
-    const [tab, setTab] = useState("ban")
+    const [tab, setTab] = useState("ban") // Choose between ban and admin tabs
 
 
     return (
         <div className={className}>
             <div className={"border border-b-0 text-center flex flex-row justify-between"}>
+                {/* Tabs */}
                 <p onClick={() => setTab("ban")} className={`bg-primary grow-1 cursor-pointer text-center p-3 border-r ${(tab === "ban") ? null : "border-b"}`}> Ban Manager </p>
                 <p onClick={() => setTab("admin")} className={`bg-primary grow-1 cursor-pointer text-center p-3 ${(tab === "admin") ? null : "border-b"}`}> Admin Manager</p>
             </div>
+            {/* Render the chosen tab */}
             {getComponent(tab)}
         </div>
     )
 }
 
 function BanManager() {
+    // Consts
     const [user, setUser] = useState("")
     const [message, setMessage] = useState("")
     const {username} = useParams();
@@ -32,17 +35,19 @@ function BanManager() {
                 <p className={"text-text-secondary"}>{message}</p>
             </div>
             <div className={"flex flex-col "}>
-                <ManagerButton onClick={() => setMessage(unbanUser([username, user]))} label={"Unban"}/>
-                <ManagerButton onClick={() => setMessage(banUser([username, user]))} label={"Ban"}/>
+                <ManagerButton onClick={() => setMessage(unbanUser([username, user]))} label={"Unban"}/> {/* unban a user */}
+                <ManagerButton onClick={() => setMessage(banUser([username, user]))} label={"Ban"}/> {/* ban a user */}
             </div>
         </div>
     )
 }
 
 function AdminManager() {
+    // Consts
     const [user, setUser] = useState("")
     const [message, setMessage] = useState("")
     const {username} = useParams();
+
     return (
         <div className={"bg-primary p-5 border border-t-0 flex flex-row justify-between content-center flex-1 overflow-auto"}>
             <div className={"flex flex-col justify-center"}>
@@ -51,8 +56,8 @@ function AdminManager() {
                 <p className={"text-text-secondary"}>{message}</p>
             </div>
             <div className={"flex flex-col "}>
-                <ManagerButton onClick={() => setMessage(unadminUser(username, user.toLowerCase()))} label={"Unadmin"}/>
-                <ManagerButton onClick={() => setMessage(adminUser(username, user.toLowerCase()))} label={"Admin"}/>
+                <ManagerButton onClick={() => setMessage(unadminUser(username, user.toLowerCase()))} label={"Unadmin"}/> {/* unadmin a user */}
+                <ManagerButton onClick={() => setMessage(adminUser(username, user.toLowerCase()))} label={"Admin"}/> {/* admin a user */}
             </div>
         </div>
     )

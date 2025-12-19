@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import {isAdmin} from "../services/adminService.jsx";
 
 export default function Header(){
+    // Consts
     const navigate = useNavigate();
     const {username} = useParams();
     const [open, setOpen] = useState(false);
@@ -19,8 +20,9 @@ export default function Header(){
 
     const {t, i18n} = useTranslation();
 
-    const [lang, setLang] = useState(() => localStorage.getItem("lang") || "da");
+    const [lang, setLang] = useState(() => localStorage.getItem("lang") || "da"); // Get the last used language, default to danish
 
+    // When rendered, load the language last used
     useEffect(() => {
         i18n.changeLanguage(lang);
         localStorage.setItem("lang", lang);
@@ -29,17 +31,19 @@ export default function Header(){
 
     }, [lang, i18n]);
 
+    // Swap language
     const toggleLang = () => {
         setLang(prev => (prev === "da" ? "en" : "da"));
         //test log
         //console.log(lang);
     };
 
+    // Check if the user is admin when loaded, used for dropdown menu
     useEffect(() => {
         isAdmin(username).then(setAdminBool)
     }, [username]);
 
-
+    // Function to log out, remove all evidence.
     const logout = () =>{
         localStorage.removeItem("rememberUser");
         sessionStorage.removeItem("username");
@@ -60,14 +64,15 @@ export default function Header(){
 
     return (
         <header className="relative sm:pb-5 flex justify-between top-0 inset-x-0">
+            {/* Home button */}
             <NavButton
                 icon={logoPNG}
                 onClick={() => {navigate(`/${username}`)}}
             />
-
+            {/* Title */}
             <h1 className="absolute left-1/2 -translate-x-1/2 -translate-y-2.5 sm:-translate-y-0 top-2 text-center text-2xl sm:text-3xl font-serif hover:cursor-pointer" onClick={() => navigate(`/${username}`)}>F-Kult</h1>
-
             <div className="flex">
+                {/* Language button */}
                 <NavButton
                 label={lang === "da" ? "Dansk" : "English"}
                 icon={lang === "da" ? danishPNG : englishPNG}
@@ -75,19 +80,21 @@ export default function Header(){
                 />
 
                 <div className="hidden sm:flex">
+                    {/* Pizza button */}
                     <NavButton
                         label={t("Pizza")}
                         icon={pizzaWEBP}
                         onClick={() => {window.open("https://f-kult-pizza-bestiller.vercel.app/", "_blank")}}
                     />
 
+                    {/* Discord button */}
                     <NavButton
                         label={t("Discord")}
                         icon={discordWEBP}
                         onClick={() => {window.open("https://discord.gg/zV3GEZyY6z", "_blank")}}
                     />
                 </div>
-
+                {/* User button */}
                 <div className="relative flex-col sm:ml-1" ref={menuRef}>
                      <button
                         className="flex bg-primary drop-shadow-lg transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-7 sm:size-12 items-center justify-center"
@@ -97,7 +104,7 @@ export default function Header(){
                         <img className="w-5 sm:w-9 h-5 sm:h-9" src={userPNG} alt="User menu"/>
                      </button>
                      <p className="text-center align-top text-xs sm:text-sm">{username}</p>
-
+                    {/* Dropdown menu */}
                      {open && (
                         <div className="absolute right-0 sm:top-14 w-21 sm:w-36 bg-primary border rounded-xl shadow-lg z-50">
                             <button
@@ -123,7 +130,9 @@ export default function Header(){
     )
 }
 
+// Standardized navigation buttons
 function NavButton({ icon, label, onClick }) {
+    // Home button
     if (icon === logoPNG){
         return (
             <button className="flex -translate-y-3 sm:-translate-y-4 transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl size-12 sm:size-20 items-center justify-center" onClick={onClick} title={label}>
@@ -133,6 +142,7 @@ function NavButton({ icon, label, onClick }) {
         );
     }
 
+    // Other buttons
     return (
         <div className="flex flex-col items-center mx-1">
             <button className="flex bg-primary drop-shadow-lg transition-colors hover:bg-btn-hover-secondary cursor-pointer rounded-4xl border size-7 sm:size-12 items-center justify-center" onClick={onClick} title={label}>

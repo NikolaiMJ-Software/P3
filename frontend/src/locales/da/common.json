@@ -93,5 +93,6 @@
   "no ratings available": "Ingen vurderinger tilgængelige",
   "remove": "Fjern",
   "no results found": "Der blev ikke fundet resultater ved søgning efter:",
-  "please make sure": "Sørg for, at titlen er skrevet korrekt. Hvis den er det, og den stadig ikke vises, kan du prøve at indtaste et IMDb-link i stedet."
+  "please make sure": "Sørg for, at titlen er skrevet korrekt. Hvis den er det, og den stadig ikke vises, kan du prøve at indtaste et IMDb-link i stedet.",
+  "adminError": "En fejl er sket, venligst prøv igen."
 }
