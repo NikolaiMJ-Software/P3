@@ -44,7 +44,7 @@ export default function CreateEvent({ onClose, onCreate }) {
         loadThemes()
     }, []);
 
-    // Render page
+
     return (
       <div className={"fixed inset-0 z-50 bg-black/40 flex justify-center overflow-y-auto py-10"}>
           <div className="w-[1300px] max-w-full h-fit border-2 border-text-primary rounded-3xl p-8 bg-primary flex flex-col gap-3">
