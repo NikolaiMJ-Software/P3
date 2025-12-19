@@ -48,9 +48,8 @@ export default function EventManager({ className }) {
             alert("Invalid date. Please enter a valid date")
             return
         }
-        // I stole ts from the themeVoting page so imma hope it gets commented
+        // Formatting the date so the backend can read it
         const pad = (num) => String(num).padStart(2, "0");
-
         const formattedDate =
             `${date.getFullYear()}-` +
             `${pad(date.getMonth() + 1)}-` +
