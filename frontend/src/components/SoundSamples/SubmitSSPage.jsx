@@ -51,6 +51,7 @@ export default function SubmitSSPage() {
         document.getElementById("textField").value = "";
     }
 
+    // Return message to user
     const sendMessage = () => {
         if(!message) {
             return null;

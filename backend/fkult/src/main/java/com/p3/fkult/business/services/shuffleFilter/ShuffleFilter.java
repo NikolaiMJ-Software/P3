@@ -4,7 +4,7 @@ import java.util.*;
 
 public class ShuffleFilter {
 
-    // Weighted shuffle filter
+    // Weighted shuffle filter, for both themes and sound samples
     public <T extends HasUserId> List<T> weightedShuffle(List<T> list) {
         System.out.println("Starting weighted shuffle filter...");
 
