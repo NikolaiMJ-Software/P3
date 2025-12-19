@@ -38,11 +38,15 @@ public class AuthRepository {
 
     //Check if username exists in stregsystem API using /api/member/get_id?username=<u> which retunrs { "member_id": 321 } or 400
     public Integer fetchMemberId(String username) {
+
+        //api call for id
         String url = stregBaseUrl + "/api/member/get_id?username={u}";
+
+        //call api to get id
         try {
             ResponseEntity<MemberIdResponse> res =
                 http.getForEntity(url, MemberIdResponse.class, username);
-            if (res.getStatusCode().is2xxSuccessful() && res.getBody() != null) {
+            if (res.getStatusCode().is2xxSuccessful() && res.getBody() != null) { //check if api call is succesful
                 Integer id = res.getBody().member_id;
                 System.out.println("Remote member_id: " + id);
                 return id;
@@ -62,11 +66,13 @@ public class AuthRepository {
 
     //If ID is found, collect user info from API using /api/member?member_id=<id>, which gives { balance, username, active, name }
     public MemberInfo fetchMemberInfo(Integer memberId) {
+
+        //api call for member info
         String url = stregBaseUrl + "/api/member?member_id={id}";
         try {
             ResponseEntity<MemberInfo> res =
                 http.getForEntity(url, MemberInfo.class, memberId);
-            if (res.getStatusCode().is2xxSuccessful() && res.getBody() != null) {
+            if (res.getStatusCode().is2xxSuccessful() && res.getBody() != null) { //check if api call is succesful
                 MemberInfo memberInfo = res.getBody();
                 System.out.println("Remote member info: username=" + memberInfo.username + ", name=" + memberInfo.name);
                 return memberInfo;

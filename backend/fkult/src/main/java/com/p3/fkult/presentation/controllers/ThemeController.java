@@ -62,11 +62,13 @@ public class ThemeController {
         return ResponseEntity.ok("Theme created successfully");
     }
 
+    //function to edit themes
     @PutMapping("/{id}")
     public ResponseEntity<String> updateTheme(@PathVariable long id, @RequestBody ThemeRequest themeRequest) {
         themeRequest.setThemeId(id); // make sure themeId matches URL
         System.out.println("UpdateTheme request: " + themeRequest);
 
+        //make sure edit values are not empty: name and movies (tconsts)
         if (themeRequest.getName() == null || themeRequest.getName().trim().isEmpty()) {
             return ResponseEntity.badRequest().body("Name cannot be empty.");
         }
@@ -74,6 +76,7 @@ public class ThemeController {
             return ResponseEntity.badRequest().body("Theme must have at least 1 movie.");
         }
 
+        //use function to update theme with tconst
         themeService.updateThemeWithTConsts(themeRequest);
         return ResponseEntity.ok("Theme updated successfully.");
     }

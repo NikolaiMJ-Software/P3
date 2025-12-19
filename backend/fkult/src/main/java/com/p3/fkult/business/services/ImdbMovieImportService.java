@@ -44,6 +44,7 @@ public class ImdbMovieImportService {
         //merge the two data dumps
         movieRepository.mergeRatingsFromImdbFile(RATINGS_LOCAL.toFile());
 
+        //returns the number of inserts/updates that are inserted
         return upserted;
     }
     //Download remote file into a temporary local file

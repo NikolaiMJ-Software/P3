@@ -113,8 +113,14 @@ public class SoundSampleService {
         // If deletion is based on file name, find and delete file
         String filePath = null;
         if (fileName != null) {
+
+            //define file path
             filePath = "soundSampleUploads" + File.separator + fileName;
+
+            //get file through absolute path
             File file = new File(UPLOAD_DIR + File.separator + fileName).getAbsoluteFile();
+
+            //if file exists delete, if not return error or abortion
             if (file.exists()) {
                 if (file.delete()) {
                     System.out.println("Deleted file: " + file.getPath());
@@ -181,10 +187,16 @@ public class SoundSampleService {
         return soundSamplesRequests;
     }
 
+    // Returns a Spring Resource of sound sample file using a string "filename"
     public Resource getSoundSampleFile(String fileName) throws MalformedURLException {
+
+        // Resolve and normalize the file path to prevent invalid/unsafe paths
         Path path = java.nio.file.Paths.get(UPLOAD_DIR).resolve(fileName).normalize();
+
+        // Wrap the file path in a Spring Resource abstraction
         Resource resource = new UrlResource(path.toUri());
 
+        // Ensure the file actually exists before returning it
         if (!resource.exists()) {
             throw new RuntimeException("File not found: " + fileName);
         }
