@@ -8,12 +8,16 @@ import ThemeToggleButtons from "./Themebrowser/ThemeToggleButtons.jsx";
 import ThemeCollection, {UpcomingThemeCollection} from "./Themebrowser/ThemeCollection.jsx";
 import EditTheme from "./EditTheme.jsx";
 
-
+/**
+ * ThemeBrowser
+ * Main page for browsing themes and upcoming events.
+ * Lets the user switch between "your", "new", and "old" theme collections,
+ * and provides edit/delete actions for the user's own themes.
+ */
 export default function ThemeBrowser({onCreateTheme}) {
     const [themes, setThemes] = useState([]);
     const [events, setEvents] = useState([]);
     const [selected, setSelected] = useState("your")
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [editingTheme, setEditingTheme] = useState(null);
     const [allThemes, setAllThemes] = useState([]);
     const [mode, setMode] = useState("browse"); 
@@ -29,7 +33,8 @@ export default function ThemeBrowser({onCreateTheme}) {
             .catch(err => console.error("Error loading ALL themes:", err));
     }, []);
 
-    // Load filtered themes + events whenever selection or popup changes
+    // Load themes based on selected filter ("your" / "new" / "old")
+    // Re-run after selection changes or after editing to refresh the list
     useEffect(() => {
         getThemes(selected)
             .then(data => {
@@ -40,8 +45,9 @@ export default function ThemeBrowser({onCreateTheme}) {
                 console.error("Error loading themes:", err);
                 setThemes([]);
             });
-    }, [selected, isPopupOpen, editingTheme]);
+    }, [selected, editingTheme]);
 
+    // Load upcoming events once
     useEffect(() =>{
         getFutureEvents().then(data => {
             setEvents(data || []);
@@ -51,66 +57,25 @@ export default function ThemeBrowser({onCreateTheme}) {
         });
     },[]);
 
-
+    // Delete theme and remove it from local state
     const handleDeleteTheme = async (id) => {
         const youSureQuestionmark = window.confirm(t("youSure"));
         if (!youSureQuestionmark) return;
         try {
         await deleteTheme(id);
-        // update UI locally (optional but nice)
+        // update UI locally
         setThemes((prev) => prev.filter((t) => t.themeId !== id));
         } catch (e) {
         console.error("Failed to delete theme", e);
         }
     };
 
-    const getTodaysDate = () =>{
-        const today = new Date()
-        const year = today.getFullYear()
-        const month = today.getMonth() + 1 //getMonth apparently gets 0-11, so we add 1
-        const date = today.getDate()
-        return (`${year}-${month}-${date}`);
+    // Edit mode: show the edit screen instead of the browser UI
+    if (mode === "edit") {
+        return (
+            <EditTheme theme={editingTheme} onClose={() => {setEditingTheme(null); setMode("browse");}}/>
+        );
     }
-/*
-console.log("Themes:", themes);
-console.log("Events:", events);
-themes.forEach(t => console.log("THEME:", t));
-events.forEach(e => console.log("EVENT:", e));
-
-const mergedEvents = useMemo(() => {
-    if (!events.length) return [];
-
-    return events.map(ev => {
-        const theme = allThemes.find(t => t.themeId === ev.themeId);
-
-        if (!theme) {
-            console.warn("No theme for event:", ev);
-            return {
-                ...ev,
-                timestamp: ev.eventDate,
-                drinkingRules: [],
-                tConsts: [],
-                name: "(Unknown Theme)",
-                username: "Unknown",
-                isSeries: false
-            };
-        }
-
-        return {
-            ...ev,
-            ...theme,
-            timestamp: ev.eventDate
-        };
-    });
-}, [allThemes, events]);
-console.log("Merged events:", mergedEvents);
-*/
-
-if (mode === "edit") {
-    return (
-        <EditTheme theme={editingTheme} onClose={() => {setEditingTheme(null); setMode("browse");}}/>
-    );
-}
 
     return (
         <div className={"p-1 sm:p-10"}>
@@ -129,8 +94,8 @@ if (mode === "edit") {
                 <div className={"pt-2 sm:pt-4 flex row-end-5 flex gap-5"}>
                     {/* individual cards */}
                     {selected === "your" && (<ThemeCollection isCreator={true} themes={themes} onClick={onCreateTheme} showActions={true} onDelete={handleDeleteTheme} onEdit={(theme) => {setEditingTheme(theme); setMode("edit");}} ></ThemeCollection>)}
-                    {selected === "old" && (<ThemeCollection isCreator={false} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
-                    {selected === "new" && (<ThemeCollection isCreator={false} themes={themes} onClick={() => setIsPopupOpen(true)}></ThemeCollection>)}
+                    {selected === "old" && (<ThemeCollection isCreator={false} themes={themes}></ThemeCollection>)}
+                    {selected === "new" && (<ThemeCollection isCreator={false} themes={themes}></ThemeCollection>)}
                 </div>
             </div>
         </div>

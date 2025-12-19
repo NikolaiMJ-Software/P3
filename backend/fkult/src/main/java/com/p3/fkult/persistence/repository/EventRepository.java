@@ -32,11 +32,12 @@ public class EventRepository {
         String sql = "SELECT * FROM event";
         return jdbcTemplate.query(sql, rowMapper);
     }
-
+    //event_date with bigger values than ? are newer and therefor selected
     public List<Event> getFutureEventsFromTimeStamp(LocalDateTime localDateTime){
         String sql = "SELECT * FROM event WHERE event_date > ? ORDER BY event_date ASC";
         return jdbcTemplate.query(sql,rowMapper, localDateTime);
     }
+    //event_date with smaller values than ? are older and therefor selected
     public List<Event> getPastEventsFromTimeStamp(LocalDateTime localDateTime){
         String sql = "SELECT * FROM event WHERE event_date < ? ORDER BY event_date ASC";
         return jdbcTemplate.query(sql,rowMapper, localDateTime);

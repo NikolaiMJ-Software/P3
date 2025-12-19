@@ -28,11 +28,13 @@ public class ThemeVotingController {
         return themeVotingService.UpdateVote(id, votes);
     }
 
+    // Delete a theme by its ID
     @DeleteMapping("/delete-theme/{id}")
     public String deleteTheme(@PathVariable("id") long id) {
         return themeVotingService.DeleteTheme(id);
     }
 
+    // Modify theme such that it only has the mentioned movie, and add it to current event
     @RequestMapping("/add-wheel-winner/{winningThemeId}/{movieId}")
     public String addWheelWinner(@PathVariable long winningThemeId, @PathVariable Long movieId) {
         return themeVotingService.AddWheelWinner(winningThemeId, movieId);

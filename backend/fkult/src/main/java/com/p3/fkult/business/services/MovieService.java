@@ -49,7 +49,7 @@ public class MovieService {
         int count = movieRepository.countMovies(query);
         return count;
     }
-
+    //You give it a list of movieIds it gives you a list of DTO MovieRequests with all the movie data
     public List<MovieRequest> getMoviesByIds(List<Long> movieIds) {
         List<MovieRequest> movieRequests = new ArrayList<>();
 
@@ -71,7 +71,7 @@ public class MovieService {
         }
         return movieRequests;
     }
-
+    //You give it a list of Tconsts it gives you a list of DTO MovieRequests with all the movie data
     public List<MovieRequest> getMoviesByTconsts(List<String> tConsts){
         List<MovieRequest> movieRequests = new ArrayList<>();
 
@@ -105,12 +105,12 @@ public class MovieService {
     }
 
     public String getPosterURL(Movie movie) {
-        if (movie.getTconst() == null) {
+        if (movie.getTconst() == null) {//if no tConst is given we can't find the movie so return null
             System.out.println("Movie " + movie.getId() + " has no tconst");
             return null;
         }
         if(movie.getPosterURL() != null && !movie.getPosterURL().isBlank()){
-            return movie.getPosterURL();
+            return movie.getPosterURL(); //if posterURL already cached, just return cached version
         }
 
         String tConst = movie.getTconst() + "/";
@@ -123,7 +123,7 @@ public class MovieService {
                     "AppleWebKit/537.36 (KHTML, like Gecko) " +
                     "Chrome/119.0.0.0 Safari/537.36");
             HttpEntity<String> entity = new HttpEntity<>(headers);
-
+            //Fires the actual network call to IMDb
             ResponseEntity<String> response = exchangeImdb(movieURL, entity);
 
 
@@ -132,12 +132,12 @@ public class MovieService {
                 System.out.println("Failed to fetch HTML for movie " + movie.getId());
                 return null;
             }
-
+            //Jsoup library helps parse the html document
             Document doc = Jsoup.parse(html);
-            Element ogImage = doc.selectFirst("meta[property=og:image]");
+            Element ogImage = doc.selectFirst("meta[property=og:image]"); //this is the poster HTML element
             if (ogImage != null) {
-                String poster = ogImage.attr("content");
-                movieRepository.updatePosterURL(movie.getId(), poster);
+                String poster = ogImage.attr("content");//Element.attr saves HTML element's attribute to a string
+                movieRepository.updatePosterURL(movie.getId(), poster);//Cache poster in DB so we don't have to ask IMDb next time
                 movie.setPosterURL(poster);
                 System.out.println("Found poster URL: " + poster +" caching URL...");
                 return poster;
