@@ -1,6 +1,6 @@
 import { API } from './api.jsx'
 const API_URL = `${API}/themes`; //backend address
-
+//Calls the backend to get themes depending on which selection was made
 export async function getThemes(selected) {
     try{
         if (selected === "your"){
@@ -41,7 +41,7 @@ export async function getOldThemes(){
 export async function addTheme(name, username, tConsts, drinkingRules, rating) {
     console.log(`creating theme with username: ${username}`);
     const body =
-    {
+    {//creates a ThemeRequest DTO object
         name: name,
         username: username,
         tConsts: tConsts,

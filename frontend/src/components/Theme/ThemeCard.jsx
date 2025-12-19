@@ -4,7 +4,7 @@ import {getMovies, getMoviesByTconsts} from "../../services/movieService.jsx";
 import { getEvents } from "../../services/eventService.jsx";
 import {useTranslation} from "react-i18next";
 import logo from "../../assets/logo.png"
-
+//contains many different kinds of themecards, event cards, startup cards.
 /**
  * ThemeCard
  * Displays a theme with title/creator, drinking rules, and a horizontal list of movies.

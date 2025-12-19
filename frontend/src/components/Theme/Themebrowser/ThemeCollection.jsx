@@ -1,5 +1,11 @@
 import ThemeCard, {EventStartup, EventThemeCard, ThemeCreationCard} from "../ThemeCard.jsx";
 
+/**
+ * ThemeCollection
+ * Renders a horizontal scrollable list of theme cards.
+ * - Optionally shows a "create theme" card for creators.
+ * - Can pass edit/delete actions down to ThemeCard.
+ */
 export default function ThemeCollection({isCreator, onClick, themes, showActions, onDelete, onEdit}){
     const safeThemes = Array.isArray(themes) ? themes : [];
 
@@ -30,6 +36,12 @@ export default function ThemeCollection({isCreator, onClick, themes, showActions
     )
 }
 
+/**
+ * UpcomingThemeCollection
+ * Renders upcoming events as cards:
+ * - If event.name is null: show EventStartup card
+ * - Otherwise: show EventThemeCard with theme + rules + movies
+ */
 export function UpcomingThemeCollection({events}){
     const safeEvents = Array.isArray(events) ? events : [];
     return(
@@ -50,10 +62,6 @@ export function UpcomingThemeCollection({events}){
                         timestamp={event.timestamp}>
                     </EventThemeCard>
                 }})}
-                {/*
-                    <EventThemeCard key="hardcodedpirate-1" drinkingRules={["Take a sip when they say Arrr", "Take a sip when they say matey"]} title={"Pirates Night"} name={"Kabuum"} tConsts={["tt0325980", "tt0383574"]} timestamp={"2025-09-11T16:00:00"}></EventThemeCard>
-                    <EventStartup key="hardcoded-startup" name={"Kabuum"} timestamp={"2026-01-11T16:00:00"}></EventStartup>
-                */}
             </div>
         </>
     )
