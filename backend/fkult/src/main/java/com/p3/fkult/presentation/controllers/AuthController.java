@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 record UsernameDTO(String username) {}
 
+//controller for authenticator using route "/api/auth"
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -18,10 +19,13 @@ public class AuthController {
         this.user = user;
     }
 
+    //route that logs user in by username unless banned or not exsists
     @PostMapping("/username")
     public ResponseEntity<String> sendUsername(@RequestBody UsernameDTO body) {
+
+        //check if username exists using authenticator functions
         boolean exists = auth.receiveUsername(body.username());
-        if (exists) {
+        if (exists) {//if user exists, check if user is banned, if yes return banned if not login
             boolean banned = user.getIfUserBanned(body.username());
             if(!banned){
                 return ResponseEntity.ok("Login successful");
