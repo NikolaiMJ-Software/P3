@@ -53,21 +53,25 @@ public class SoundSampleRepository {
         );
     }
 
-    // Delete a SoundSample from the database
+    // Delete a SoundSample from the database using id and link or filepath
     public String delete(String link, String filePath, String id){
+        //check if link exists, if not set to null
         if (link != null && link.isEmpty()) link = null;
+
+        //check if filepath exists, if not set to null
         if (filePath != null && filePath.isEmpty()) filePath = null;
 
-        if (link == null && filePath == null){
+        if (link == null && filePath == null){//if both is null, return no file/link to delete
             return "No link or file path provided for deletion.";
-        } else if (link != null && filePath != null){
+        } else if (link != null && filePath != null){//if both file and link is not null, demand only one of the two
             return "Please provide either link or file path for deletion, not both.";
-        } else if (link != null){
+        } else if (link != null){//if link is not null, delete from the db and update
             String sql = "DELETE FROM sound_samples WHERE link = ? AND id = ?";
             jdbcTemplate.update(sql, link, id);
             return "SoundSample with link " + link + " deleted.";
         }
 
+        //else delete file by filepath
         String sql = "DELETE FROM sound_samples WHERE file_path = ? AND id = ?";
         jdbcTemplate.update(sql, filePath, id);
         return "SoundSample with file path " + filePath + " deleted.";

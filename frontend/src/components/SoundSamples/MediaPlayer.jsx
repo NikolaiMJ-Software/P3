@@ -22,7 +22,7 @@ function FindLinkType({link}){
     const {t} = useTranslation();
     if (link.includes("youtu")) {
         const ytLink = getYtId(link);
-        if (!ytLink) {
+        if (!ytLink) {//check if youtube
             return <p className="text-sm text-text-error">{"YouTube " + t("link not supported")}</p>;
         }
         return (
@@ -37,7 +37,7 @@ function FindLinkType({link}){
             />
         );
         
-    } else if (link.includes("instagram.com")) { //Somewhat functional instagram viewer
+    } else if (link.includes("instagram.com")) { //Check if instagram
         const instaURL = getInstaEmbedUrl(link);
         if(!instaURL){
             return <p className="text-sm text-text-error">{"Instagram " + t("link not supported")}</p>;
@@ -54,11 +54,11 @@ function FindLinkType({link}){
             />
         )
         
-    } else if (link.includes("x.com") || link.includes("twitter.com")) {
+    } else if (link.includes("x.com") || link.includes("twitter.com")) {//check if twitter/X
         console.log("Rendering X embed for:", link);
         return <XEmbed url={link}/>;;
 
-    } else if (link.includes("facebook.com")) {
+    } else if (link.includes("facebook.com")) {//check if facebook
         const fbEmbed = getFbEmbedUrl(link);
         if(!fbEmbed){
             return <p className="text-sm text-text-error">{"Facebook " + t("link not supported")}</p>;
@@ -74,7 +74,7 @@ function FindLinkType({link}){
             />
         )
 
-    } else if (link.includes("tiktok.com")) {
+    } else if (link.includes("tiktok.com")) {//check if tik tok
         const url = link.slice(0, link.indexOf("?"));
         return <TikTokEmbed url={url}/>;
     }
@@ -253,25 +253,29 @@ function getFbEmbedUrl(u){
     }
 }
 
-
+//find filepath function from filename
 function FindFileType({ fileName }) {
     const {t} = useTranslation();
     const [filePath, setFilePath] = useState(null);
     const [fileType, setFileType] = useState(null); // "video" | "audio" | "link" | null
     const [error, setError] = useState(null);
 
+    //useEffect checking after filename, that checks video type
     useEffect(() => {
         let cancelled = false;
 
+        //function to load file type
         async function load() {
             try{
                 setError(null);
                 setFilePath(null);
                 setFileType(null);
 
+                //get file path
                 const path = await getSoundsampleFile(fileName);
                 if (cancelled) return;
 
+                //get file type if video or audio
                 let type = "other";
                 if (/\.(mp4|webm|mov|m4v)(\?.*)?$/.test(path)) {
                     type = "video";

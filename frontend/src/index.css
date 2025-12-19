@@ -26,6 +26,7 @@
 }
 
 @layer components {
+  /* Predefined UI components */
   .btn-primary, .btn-secondary, .btn-home-page {
     @apply
     cursor-pointer
