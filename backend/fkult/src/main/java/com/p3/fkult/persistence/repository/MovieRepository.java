@@ -113,8 +113,9 @@ private String sanitizeFTS(String input) {
             Movie m = findByTconst(keyword);
             return (m != null) ? List.of(m) : List.of();
         }
-        
+        // Pagination
         int offset = (page - 1) * limit;
+        // Prepare safe FTS query (prefix search)
         String safe = sanitizeFTS(keyword);
         if (safe.isBlank()) {
             // User typed only garbage like "%%%..."; just return no results
@@ -137,7 +138,7 @@ private String sanitizeFTS(String input) {
         // Build full ORDER BY clause
         String sortColumn = column + " " + dir;
 
-
+        // Base movie search query (FTS match + core validity filters)
         StringBuilder sql = new StringBuilder("""
         SELECT m.*
         FROM movie m
@@ -148,10 +149,10 @@ private String sanitizeFTS(String input) {
           AND m.runtime_minutes > 0
     """);
 
-
+    // Parameters bound to the prepared SQL query
     List<Object> params = new ArrayList<>();
     params.add(likePattern);
-    // Checkbox logic:
+    // Content-type filters (movies / series / shorts)
     boolean movieChecked  = Boolean.TRUE.equals(movie);    // is_series = 0 AND is_shorts = 0
     boolean seriesChecked = Boolean.TRUE.equals(series);   // is_series = 1
     boolean shortsChecked = Boolean.TRUE.equals(shorts);   // is_shorts = 1
@@ -195,12 +196,14 @@ private String sanitizeFTS(String input) {
         return jdbcTemplate.query(sql.toString(), rowMapper, params.toArray());
     }
 
+    // Returns total result count for pagination
     public int countMovies(String keyword){
         // Exact tconst lookup bypasses FTS
         if (keyword != null && keyword.matches("tt\\d{7,8}")) {
             Movie m = findByTconst(keyword);
             return (m != null) ? 1 : 0;
         }
+        // Prepare safe FTS query (prefix search)
         String safe = sanitizeFTS(keyword);
         String ftsPattern = safe + "*"; // same prefix search
         if (safe.isBlank()) {
