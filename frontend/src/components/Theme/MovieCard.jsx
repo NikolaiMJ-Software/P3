@@ -1,5 +1,9 @@
 import { useTranslation } from "react-i18next";
 
+/**
+ * MovieCard
+ * Simple/full-size movie card variant (title + year + runtime + poster).
+ */
 export default function MovieCard({moviePosterURL, title, year, runtimeMinutes}){
 
     return(
@@ -11,7 +15,13 @@ export default function MovieCard({moviePosterURL, title, year, runtimeMinutes})
         </div>
     )
 }
+
+/**
+ * MovieCardSmall
+ * Compact movie card used for horizontal previews (shows title + rating + poster).
+ */
 export function MovieCardSmall({moviePosterURL, title, runtimeMinutes, rating}){
+    // Format rating safely when missing
     const safeRating = rating ? `${rating}/10⭐` : "No Ratings Available";
 
     return(
@@ -28,7 +38,12 @@ export function MovieCardSmall({moviePosterURL, title, runtimeMinutes, rating}){
     </div>)
 }
 
+/**
+ * MovieCardUpcoming
+ * Upcoming event variant
+ */
 export function MovieCardUpcoming({moviePosterURL, title, runtimeMinutes, rating}){
+    // Format rating safely when missing
     const safeRating = rating ? `${rating}/10⭐` : "No Ratings Available";
     return(
         <div className={"w-[130px] sm:w-[150px] flex flex-col items-center"}>
@@ -45,8 +60,13 @@ export function MovieCardUpcoming({moviePosterURL, title, runtimeMinutes, rating
         </div>)
 }
 
+/**
+ * ThemeMovieCard
+ * Shows poster + title + rating + runtime and an optional remove button.
+ */
 export function ThemeMovieCard({moviePosterURL, title, runtimeMinutes, onRemove, isSeries, rating}){
     const {t} = useTranslation();
+    // Convert runtime into hours + minutes
     const runtimeHours = Math.floor(runtimeMinutes / 60)
     const runtimeMinutesLeft = runtimeMinutes % 60;
     const safeRating = (rating) ? t("rating: ") + rating : t("no ratings available");
