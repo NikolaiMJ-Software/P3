@@ -26,12 +26,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.jsoup.nodes.Document;
 
-
+//set up test enviornment
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class MovieControllerIT {
 
+    //autowire to simplify functions
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper om;
     @Autowired MovieRepository movieRepo;

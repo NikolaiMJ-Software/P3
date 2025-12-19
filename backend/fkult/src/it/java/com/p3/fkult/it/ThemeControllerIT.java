@@ -46,6 +46,7 @@ class ThemeControllerIT {
     @Order(3)
     void createTheme() throws Exception {
 
+        //setup costume theme
         String newTheme = """
                 {
                 "name": "test night",
@@ -63,6 +64,7 @@ class ThemeControllerIT {
     @Test
     @Order(4)
     void createThemeWithMissingValues() throws Exception {
+        //set up mock theme
         String newTheme = """
             {
             "name": "",
@@ -80,6 +82,7 @@ class ThemeControllerIT {
     @Test
     @Order(5)
     void createThemeAsBannedUser() throws Exception {
+        //setup mock theme
         String newTheme = """
             {
             "name": "test night",
@@ -97,6 +100,7 @@ class ThemeControllerIT {
     @Test
     @Order(6)
     void updateTheme() throws Exception {
+        //setup update for theme
         String updatedTheme = """
             {
             "name": "Cyber Night Updated",
