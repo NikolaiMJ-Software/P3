@@ -16,6 +16,8 @@ export default function EditTheme({ theme, onClose }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [foundMovies, setFoundMovies] = useState([]);
   const [movieCount, setMovieCount] = useState(0);
+
+  // Sorting / filtering controls (passed into ThemeMovieSearcher)
   const [sortBy, setSortBy] = useState("rating");
   const [sortDirection, setSortDirection] = useState("desc"); // "asc" | "desc"
   const [movieFilter, setMovieFilter] = useState(true);
@@ -24,6 +26,8 @@ export default function EditTheme({ theme, onClose }) {
   const [hideUnrated, setHideUnrated] = useState(false);
   const {t} = useTranslation();
 
+
+  // Finds imdb movie from input value
   const extractTconst = (input) => {
       if (!input) return null;
       const match = input.match(/tt\d{7,8}/i);
@@ -31,24 +35,24 @@ export default function EditTheme({ theme, onClose }) {
   };
 
   // collect theme movie data based on tConst
-useEffect(() => {
-  if (!theme?.tConsts || !theme.tConsts.length) return;
-  (async () => {
-    try {
-      const initialMovies = await getMoviesByTconsts(theme.tConsts);
-      const moviesWithTconst = initialMovies.map((m, i) => ({
-        ...m,
-        tConst: theme.tConsts[i], 
-      }));
+  useEffect(() => {
+    if (!theme?.tConsts || !theme.tConsts.length) return;
+    (async () => {
+      try {
+        const initialMovies = await getMoviesByTconsts(theme.tConsts);
+        const moviesWithTconst = initialMovies.map((m, i) => ({
+          ...m,
+          tConst: theme.tConsts[i], 
+        }));
 
-      setMovies(moviesWithTconst);
-    } catch (e) {
-      console.error("Error fetching movies for edit popup:", e);
-    }
-  })();
-}, [theme]);
+        setMovies(moviesWithTconst);
+      } catch (e) {
+        console.error("Error fetching movies for edit popup:", e);
+      }
+    })();
+  }, [theme]);
 
-  // Yeeted ThemeCreationPopup search logic
+  // Fetch results when query or filters change
   useEffect(() => {
     const fetchData = async () => {
       if (!searchQuery || searchQuery.trim() === "") {
@@ -76,12 +80,14 @@ useEffect(() => {
           return;
         }
       try {
-        setPageCount(1);
+        setPageCount(1); //page reset
 
+        // Get total result count for pagination
         const count = await getMovieCount(searchQuery);
         setMovieCount(count);
         setTotalPageCount(Math.ceil(count / MOVIE_LIMIT));
 
+        //fetch first page
         const movies = await searchMovies(searchQuery, 1, MOVIE_LIMIT, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated);
         setFoundMovies(movies);
       } catch (error) {
@@ -89,6 +95,8 @@ useEffect(() => {
         setFoundMovies([]);
       }
     };
+
+    // Fetch next/prev page
     fetchData();
   }, [searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated]);
 
@@ -108,6 +116,8 @@ useEffect(() => {
     switchPage();
   }, [pageCount, searchQuery, sortBy, sortDirection, movieFilter, seriesFilter, shortsFilter, hideUnrated]);
 
+
+  // Fetch missing poster URLs for search results
   useEffect(() => {
     const fetchMissingPosters = async () => {
       const moviesWithoutPoster = foundMovies.filter((m) => !m.moviePosterURL);
@@ -145,16 +155,20 @@ useEffect(() => {
 
   // update function for themes
   const handleUpdate = async () => {
+
+    //if edited theme does not have title
     if (!title.trim()) {
         alert("Please enter a theme title");
         return;
     }
 
+    //if theme does not have a movie
     if (!movies.length) {
         alert("Please add at least one movie");
         return;
     }
 
+    //update theme
     try {
         await updateTheme(
             theme.themeId,               // id for /api/themes/{id}

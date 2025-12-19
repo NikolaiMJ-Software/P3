@@ -8,39 +8,45 @@ import { API } from '../services/api.jsx'
 const API_URL = `${API}/auth`; //backend address
 
 export default function LoginPage() {
-    const [showTopholt, setShowTopholt] = useState(false);
+    const [showTopholt, setShowTopholt] = useState(false); //easter egg feature
+    //login handling
     const [username, setUsername] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
     const [rememberLogin, setRememberLogin] = useState(false);
 
+    //easter egg to show picture of Topholt when logo is clicked
     useEffect(() => {
         const onEsc = (e) => e.key === "Escape" && setShowTopholt(false);
         window.addEventListener("keydown", onEsc);
         return () => window.removeEventListener("keydown", onEsc);
     }, []);
 
+    //navigate user to front page if session or local storage of user is saved
     useEffect(() => {
         const savedLocal = localStorage.getItem("rememberUser");
         const savedUser = sessionStorage.getItem("username");
         if (savedLocal) {
-            sessionStorage.setItem("username", savedLocal);
+            sessionStorage.setItem("username", savedLocal); //if local storage, also save session storage
             navigate(`/${savedLocal}`);
         } else if (savedUser) {
             navigate(`/${savedUser}`);
         }
     }, [navigate]);
 
+    //submit username handler
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
+        //sents username to backend api
         const res = await fetch(`${API_URL}/username`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username }),
         });
 
+        //if good response navigate to homepage
         //Save username to sessionStorage
         if (res.ok) {
             console.log("Login successful");

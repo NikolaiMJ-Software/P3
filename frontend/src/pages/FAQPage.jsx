@@ -2,6 +2,7 @@ import React from "react";
 import Picture from "../assets/The_Picture.jpg";
 import { Trans, useTranslation } from "react-i18next";
 
+//litterally just a page of text, which is interchangeable using the lang toggle feature
 export default function FAQPage() {
   const { t } = useTranslation(["faq", "common"]);
   const ns = "faq";

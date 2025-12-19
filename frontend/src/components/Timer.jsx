@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import endSound from "../assets/Timer_Sound.mp3";
 
+//timer component seen in ss and theme vote page
 export default function Timer({
   //variables to determine time, resetkey, onexpire value and class for the buttons  
   initialSeconds = 60,
@@ -11,39 +12,54 @@ export default function Timer({
   className = "",
 }) {
   const {t} = useTranslation();
+
+  // Timer state
   const [duration, setDuration] = useState(initialSeconds);
   const [remaining, setRemaining] = useState(initialSeconds);
   const [running, setRunning] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
 
-
+  // Editable display state
   const [displayValue, setDisplayValue] = useState(formatTime(initialSeconds));
   const [isEditing, setIsEditing] = useState(false);
 
+  // Timer expiration state
+  // True only when time has reached zero and the end logic has executed
   const isExpired = remaining <= 0 && hasEnded;
+
+  // Reference to the audio element used for the end sound
   const audioRef = useRef(null);
 
+  // Initialize the audio object once when the component mounts
   useEffect(() => {
     audioRef.current = new Audio(endSound);
   }, []);
 
 
+  // Converts seconds into a MM:SS formatted string
   function formatTime(s) {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${m.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
+    const m = Math.floor(s / 60); //calculate seconds into minutes
+    const sec = s % 60; //calculates remaning seconds
+    return `${m.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`; //return timer
   }
 
 
+  // Parses user input into seconds
+  // Supports formats like "90", "01:30", or "00:45"
   function parseTimeString(str) {
+
     const trimmed = str.trim();
     if (!trimmed) return null;
 
+    // Handle MM:SS format
     if (trimmed.includes(":")) {
+      //calculate minutes and seconds
       const [mm, ss] = trimmed.split(":");
       const minutes = parseInt(mm, 10);
       const seconds = parseInt(ss, 10);
-      if (
+
+      // Validate parsed values
+      if (//if specific values are missing or wrong, return null
         isNaN(minutes) ||
         isNaN(seconds) ||
         minutes < 0 ||
@@ -55,32 +71,39 @@ export default function Timer({
       return minutes * 60 + seconds;
     }
 
+     // Handle plain seconds input
     const seconds = parseInt(trimmed, 10);
     if (isNaN(seconds) || seconds <= 0) return null;
     return seconds;
   }
 
+  // Reset the timer when resetKey or duration changes
   useEffect(() => {
-    setRemaining(duration);
-    setRunning(false);
-    setDisplayValue(formatTime(duration));
+    setRemaining(duration); //resets reamning time
+    setRunning(false); //stops it from running
+    setDisplayValue(formatTime(duration)); //display original time
   }, [resetKey, duration]);
 
+  // Update display when the remaining time changes
+  // (only if the user is not actively editing)
   useEffect(() => {
     if (!isEditing) {
       setDisplayValue(formatTime(remaining));
     }
   }, [remaining, isEditing]);
 
+  // Countdown effect while the timer is running
   useEffect(() => {
     if (!running) return;
 
+    // Stop timer when time reaches zero
     if (remaining <= 0) {
       setRunning(false);
       if (onExpire) onExpire();
       return;
     }
 
+    // Decrease remaining time every second
     const interval = setInterval(() => {
       setRemaining((prev) => prev - 1);
     }, 1000);
@@ -88,15 +111,17 @@ export default function Timer({
     return () => clearInterval(interval);
   }, [running, remaining, onExpire]);
 
+   // Start the timer
   const handleStart = () => {
     if (remaining <= 0) {
-      setRemaining(duration);
+      setRemaining(duration); // Restart if time already expired
     }
     setRunning(true);
     setHasEnded(false);
     stopSound();
   };
 
+   // Stop the timer manually
   const handleStop = () => {
     setRunning(false);
     setHasEnded(false);
@@ -104,6 +129,7 @@ export default function Timer({
     if (onStop) onStop();
   };
 
+  // Restart the timer from the original duration
   const handleRestart = () => {
     setRemaining(duration);
     setRunning(true);
@@ -112,6 +138,7 @@ export default function Timer({
   };
 
 
+  // Commit edited time input
   const commitDisplayValue = () => {
     const secs = parseTimeString(displayValue);
     if (secs === null) {
@@ -127,6 +154,7 @@ export default function Timer({
     setIsEditing(false);
   };
 
+  // Handle keyboard input while editing the time
   const handleInputKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -138,6 +166,7 @@ export default function Timer({
     }
   };
 
+  // Play sound when timer reaches zero (once)
   useEffect(() => {
     if (!running) return;
 
@@ -151,6 +180,7 @@ export default function Timer({
     }
   }, [remaining, hasEnded,  running]);
 
+  // Stop and reset the end sound
   const stopSound = () => {
     const audio = audioRef.current;
     if (audio) {

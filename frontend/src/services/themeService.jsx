@@ -92,6 +92,7 @@ export async function updateThemeVotes(id, votes) {
   }
 }
 
+//edit theme function, that sents name, tConst and drinking rules to backend using themeId
 export async function updateTheme(themeId, name, tConsts, drinkingRules) {
   const body = {
     name,

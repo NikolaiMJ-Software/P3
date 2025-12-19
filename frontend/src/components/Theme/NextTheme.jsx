@@ -11,9 +11,11 @@ export default function NextTheme() {
   const [event, setEvent] = useState(null);
   const [movies, setMovies] = useState([]);
 
+
+  //use effect to load next event
   useEffect(() => {
     const loadEvent = async () => {
-      try{
+      try{//tries to get next event, if not return empty event table
         const next = await getNextEvent();
 
         if(!next){
@@ -22,8 +24,10 @@ export default function NextTheme() {
           return;
         }
 
+        //set event table to next event
         setEvent(next);
 
+        //collects movie data for next event
         const moviesData = await getMoviesByTconsts(next.tConsts || []);
         setMovies(moviesData || []);
 
@@ -39,6 +43,7 @@ export default function NextTheme() {
     }, []
   );
 
+  //formats date data for next event
   const formatDate = (dateString) => {
     const d = new Date(dateString);
     if (isNaN(d)) return "";
@@ -48,6 +53,7 @@ export default function NextTheme() {
   };
 
 
+  //loading setup for table
   if (loading) {
     return (
       <div className="rounded-2xl border px-4 py-4 bg-primary">
@@ -58,6 +64,7 @@ export default function NextTheme() {
     );
   }
 
+  //if no event
   if (!event) {
     return (
       <div className="rounded-2xl border px-4 py-4 bg-primary">
@@ -68,6 +75,7 @@ export default function NextTheme() {
     );
   }
 
+  //if there is an event, but theme name is missing (startup day)
   if(event.name === null){
     return (
       <div className="drop-shadow-lg rounded-2xl border px-4 py-4 bg-primary [container-type:inline-size]">
@@ -106,6 +114,8 @@ export default function NextTheme() {
     );
   }
 
+
+  //return event setup
   return (
     <div className="drop-shadow-xl rounded-2xl border px-4 py-4 bg-primary [container-type:inline-size]">
       {/* header/date */}
