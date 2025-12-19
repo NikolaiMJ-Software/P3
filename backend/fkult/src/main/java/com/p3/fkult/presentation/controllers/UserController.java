@@ -33,14 +33,18 @@ public class UserController {
         return user.getAdmin();
     }
 
+    // POST new admin value for a user
     @PostMapping("/admin/{username}")
-    public ResponseEntity<?> changeAdminValueOfUser(@PathVariable String username, @RequestParam String newAdmin, @RequestParam int status) {
+    public ResponseEntity<?> changeAdminValueOfUser(@PathVariable String username, @RequestParam String newAdmin, @RequestParam int status) { // Username=caller, newAdmin=new user, status=admin or unadmin
+        //Make sure the one sending the call is admin
         if (checkForAdminUser(username) == 0) return ResponseEntity.status(403).body("User not admin");
-        if ((Objects.equals(newAdmin, "topholt") || Objects.equals(newAdmin, "root") || Objects.equals(newAdmin, username)) && status == 0) return ResponseEntity.status(403).body("User can not be unadmin");
+        //Make sure topholt and root aren't trying to be unadminned
+        if (status == 0 && (Objects.equals(newAdmin, "topholt") || Objects.equals(newAdmin, "root") || Objects.equals(newAdmin, username))) return ResponseEntity.status(403).body("User can not be unadmin");
 
         return userService.postAdminUser(newAdmin, status);
     }
 
+    // POST ban a user
     @PostMapping("/admin/ban_user")
     public ResponseEntity<?> banUser(@RequestBody List<String> body){
         if (body == null || body.get(0) == null || body.get(1) == null) return ResponseEntity.badRequest().build();
@@ -49,6 +53,7 @@ public class UserController {
         return userService.postUserBan(body.get(1), 1);
     }
 
+    // POST unban a user
     @PostMapping("/admin/unban_user")
     public ResponseEntity<?> unbanUser(@RequestBody List<String> body){
         if (body == null || body.get(0) == null || body.get(1) == null) return ResponseEntity.badRequest().build();
@@ -57,11 +62,13 @@ public class UserController {
         return userService.postUserBan(body.get(1), 0);
     }
 
+    //GET userid by their username
     @GetMapping("/id/{username}")
     public long getUserIdByUsername(@PathVariable String username){
         return userService.getUserIdByUsername(username);
     }
 
+    //GET full name by id
     @GetMapping("/full_name/{id}")
     public String getUserNameById(@PathVariable long id){
         return userService.getUserNameById(id);
