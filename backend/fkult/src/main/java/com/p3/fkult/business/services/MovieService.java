@@ -26,6 +26,7 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
+    // Search movies via repository and map results to MovieRequest
     public List<MovieRequest> searchMovies(String query, int page, int limit, String sortBy, String direction, Boolean movie, Boolean series, Boolean shorts, Boolean rated) {
         //partial matches (case-insensitive)
         List<MovieRequest> movieRequests = new ArrayList<MovieRequest>();
@@ -45,6 +46,7 @@ public class MovieService {
         return movieRequests;
     }
 
+    // Count results for pagination 
     public int getMovieSearchCount(String query){
         int count = movieRepository.countMovies(query);
         return count;
