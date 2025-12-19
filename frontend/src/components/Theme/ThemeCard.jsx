@@ -5,19 +5,26 @@ import { getEvents } from "../../services/eventService.jsx";
 import {useTranslation} from "react-i18next";
 import logo from "../../assets/logo.png"
 
+/**
+ * ThemeCard
+ * Displays a theme with title/creator, drinking rules, and a horizontal list of movies.
+ */
+
 export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries, rating, timestamp, showActions = false, onDelete, onEdit}){
     const [movies, setMovies] = useState([]);
 
+    // Fetch movie objects for the theme by their tConsts
     useEffect(() => {
         getMoviesByTconsts(tConsts).then(setMovies)
     }, [tConsts]);
 
+    // Guard against unexpected backend returns
     const safeMovies = Array.isArray(movies) ? movies : [];
     const {t} = useTranslation();
     return(
         <div className={"relative bg-primary drop-shadow-lg w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary" +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
-
+        {/* Optional edit/delete controls for the theme */}
         {showActions && (
             <div className="absolute top-2 right-2 flex gap-1">
                 <button
@@ -37,12 +44,15 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
             </div>
         )}
             <div>
+                {/* Theme information */}
                 <h1 className={"text-xl font-bold max-w-[150px]"}>{title}</h1>
                 <h2 className={"text-sm text-text-secondary"}>{name}</h2>
+                {/* Drinking rules */}
                 <h3 className={"mt-1 font-semibold text-sm"}>{t("drinking rules")}</h3>
                 <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-16 scrollbar-hide"}>{drinkingRules.map((rule) => {return (<li key={rule} >{rule}</li>)})}</ul>
             </div>
 
+            {/* Movies preview (horizontal scroll) */}
             <div className={"flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth whitespace-nowrap h-fit"}>
                 {safeMovies.map((movie, i) => (
                     <MovieCardSmall key={movie.id || i} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes} rating={movie.rating}/>
@@ -51,9 +61,15 @@ export default function ThemeCard({title, name, tConsts, drinkingRules, isSeries
         </div>
     )
 }
+
+/**
+ * ThemeCardSmall
+ * Compact theme card variant with a simple list of movies.
+ */
 export function ThemeCardSmall({title, name, tConsts}){
     const [movies, setMovies] = useState([]);
 
+    // Fetch movies
     useEffect(() => {
         getMoviesByTconsts(tConsts).then(setMovies);
     }, []);
@@ -61,8 +77,10 @@ export function ThemeCardSmall({title, name, tConsts}){
     return(
         <div className={"w-65 h-85 border-2 border-text-primary" +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
+            {/* Theme information */}
             <h1>{title}</h1>
             <h2>{name}</h2>
+            {/* Movies list */}
             {movies.map((movie, i) =>{
                 return <MovieCardSmall
                     key={movie.i}
@@ -76,6 +94,10 @@ export function ThemeCardSmall({title, name, tConsts}){
         </div>
     )
 }
+/**
+ * ThemeCreationCard
+ * Clickable card used to start creating a new theme.
+ */
 export function ThemeCreationCard({onClick}){
     const {t} = useTranslation();
     return(
@@ -89,6 +111,10 @@ export function ThemeCreationCard({onClick}){
     )
 }
 
+/**
+ * StartupCard
+ * Simple card for displaying a startup day/date.
+ */
 export function StartupCard({date}){
     return(
         <div onClick={onClick} className={"relative w-65 h-85 border-2 border-text-primary rounded-xl p-3 flex flex-col justify-center items-center cursor-pointer text-lg font-medium shadow-sm hover:shadow-md transition shrink-0 bg-primary" +
@@ -98,13 +124,21 @@ export function StartupCard({date}){
         </div>
     )
 }
+
+/**
+ * EventThemeCard
+ * Card for an upcoming event that is linked to a theme.
+ * Displays date/time, drinking rules, and upcoming movies.
+ */
 export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp}){
     const [movies, setMovies] = useState([]);
 
+    // Fetch movies associated with the event's theme
     useEffect(() => {
         getMoviesByTconsts(tConsts).then(setMovies)
     }, [tConsts]);
 
+    // Timestamp helpers
     const year = () => {
         return timestamp.split("-")[0];
     }
@@ -127,19 +161,23 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp})
         <div className={"bg-primary drop-shadow-lg relative w-70 sm:w-85 h-95 sm:h-114 border-2 border-black rounded-xl p-3 flex flex-col justify-between text-lg font-medium shadow-sm hover:shadow-md transition shrink-0" +
             "text-lg font-medium shadow-sm hover:shadow-md transition shrink-0"}>
             <div>
+                {/* Event header */}
                 <h1 className={"text-lg sm:text-xl font-bold"}>{title}</h1>
                 <h2 className={"text-xs sm:text-sm text-gray-600"}>{name}</h2>
                 <h2 className={"font-bold text-xs sm:text-sm"}>{day() + "/" + month() + "/" + year()}</h2>
                 <h2 className={"font-bold text-xs sm:text-sm"}>{t("at")} {hour()}:{minute()}</h2>
+                {/* Drinking rules */}
                 <h3 className={"mt-2 font-semibold text-xs sm:text-sm"}>{t("drinking rules")}</h3>
                 <ul className={"text-xs list-disc list-inside overflow-y-auto max-h-8"}>{safeDrinkingRules.map((rule, i) => {return <li key={`${title}-rule-${i}`}>{rule}</li>})}</ul>
             </div>
 
+            {/* Upcoming movies */}
             <div className={"flex justify-between gap-2 mt-2 overflow-x-auto scrollbar-hide scroll-smooth"}>
                 {safeMovies.map((movie, i) => (
                     <MovieCardUpcoming key={movie.id ?? `${title}-movie-${i}`} title={movie.title} moviePosterURL={movie.moviePosterURL} runtimeMinutes={movie.runtimeMinutes} rating={movie.rating}/>
                 ))}
             </div>
+            {/* Scroll hint if many movies */}
             {movies.length > 2 && (
                 <div className="pointer-events-none absolute right-0 top-1/2 h-[30%] w-10 flex items-center justify-end pr-1">
                     <span className="text-xl text-text-secondary">›</span>
@@ -149,6 +187,10 @@ export function EventThemeCard({title, name, tConsts, drinkingRules, timestamp})
     )
 }
 
+/**
+ * EventStartup
+ * Card for special startup events that are not tied to a theme.
+ */
 export function EventStartup({timestamp, onClick}){
 
     const year = () => {

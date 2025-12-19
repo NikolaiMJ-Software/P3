@@ -28,7 +28,7 @@ export default function ThemeCreator({handleSubmit, movies,handleRemoveMovie, ti
                 );
             })()}
 
-            {/* selected movie list */}
+            {/* Selected movie list */}
             <div className="w-full max-w-[500px] overflow-x-auto overflow-y-hidden gap-">
                 <div className={"flex flex-row gap-4 items-center flex-nowrap"}>
                     <div className={"flex flex-row gap-4 items-center"}>
