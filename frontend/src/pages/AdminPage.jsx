@@ -7,6 +7,7 @@ import SubmissionManager from "../components/SubmissionManager.jsx";
 import { useTranslation } from "react-i18next";
 
 export default function AdminPage(){
+    // Consts
     const {username} = useParams();
     const [isAdminUser, setIsAdminUser] = useState(undefined);
     const {t} = useTranslation();
@@ -23,6 +24,7 @@ export default function AdminPage(){
 
     console.log(isAdminUser)
 
+    // Render the admin page if admin
     if(isAdminUser === 1){
         return (
             <div className="flex flex-col">
@@ -47,30 +49,16 @@ export default function AdminPage(){
             </div>
         )
     }
+    // Navigate the user to homepage if not admin
     else if (isAdminUser === 0){
         return (
             navigate(`/${username}`)
         )
     }
-
+    // Error message if the user is both admin and not admin (?)
     return <div>
-        <p>What the helly. This ain't supposed to happen</p>
+        <p>{t("adminError")}</p>
         <br/>
         <p>isAdminUser: {JSON.stringify(isAdminUser)}</p>
     </div>
 }
-
-function AdminButton({ func, username, label }){
-    return (
-        <button onClick={() => {async function buttonclick(){
-            const response = await func(username);
-            if (response){
-                window.location.reload();
-            }
-        }
-        buttonclick();
-        }}
-        className="border hover:bg-btn-hover-secondary transition-colors rounded p-0.5">{label}</button>
-    )
-}
-
