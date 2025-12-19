@@ -106,12 +106,14 @@ public class EventService {
         // NOT SURE HERE
     }
 
+    //function to get the next event
     public EventRequest getNextEvent() {
-        List<EventRequest> futureEvents = getFutureEventsFromNow();
-        if (futureEvents == null || futureEvents.isEmpty()) {
+        List<EventRequest> futureEvents = getFutureEventsFromNow(); //get list of future events
+        if (futureEvents == null || futureEvents.isEmpty()) { //if future event are null, then no next event
             return null;  // no upcoming events
         }
 
+        //get index 0 of future event which is next event
         return futureEvents.get(0);
     }
 
