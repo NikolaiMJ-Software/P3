@@ -1,6 +1,6 @@
 import { API } from './api.jsx'
 const API_URL = `${API}/movies`; //backend address
-
+//send a bunch of movieIds, get a bunch of movies
 export async function getMovies(movieIds){
     const response = await fetch(`${API_URL}/batchById`,{
         method: "POST",
@@ -9,7 +9,7 @@ export async function getMovies(movieIds){
     });
     return response.json();
 }
-
+//send a bunch of tconsts get a bunch of movies
 export async function getMoviesByTconsts(movieTconsts) {
     if (!Array.isArray(movieTconsts)){
         console.error("movieTconsts not an array");
@@ -38,7 +38,7 @@ export async function getMoviesByTconsts(movieTconsts) {
         return[];
     }
 }
-
+//search for movies with all search parameters
 export async function searchMovies(query, page, limit, sortBy = "rating", direction = "desc", movie, series, shorts, hideUnrated){
     const ratedParam = hideUnrated !== undefined ? `&rated=${hideUnrated}` : "";
     const response = await fetch(`${API_URL}/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}&sortBy=${sortBy}&direction=${direction}&movie=${movie}&series=${series}&shorts=${shorts}${ratedParam}`, {

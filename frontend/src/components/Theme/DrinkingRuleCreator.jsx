@@ -8,10 +8,11 @@ export default function DrinkingRuleCreator({rules, setRules}) {
     const [editingIndex, setEditingIndex] = useState(null);
     const [editText, setEditText] = useState("");
     const {t} = useTranslation();
-    const addRule = () => {
+    const addRule = () => {//adds a rule to the list of rules.
         if (ruleInput.trim() === "") return;
-        setRules ([...rules, ruleInput.trim()]);
-        setRuleInput("");
+        setRules ([...rules, ruleInput.trim()]);//setRules is from a useState given in the props of the function parameters
+        //... is a spread operator saying, copy all previous array elements in rules, and afterward put our rule
+        setRuleInput("");//reset the textfield
     };
 
     const startEdit = (index, rule) => {
@@ -29,7 +30,7 @@ export default function DrinkingRuleCreator({rules, setRules}) {
     const removeRule = (indexToRemove) => {
         setRules(rules.filter((_, index) => index !== indexToRemove));
     };
-
+    //security ternary operator making sure we do have an array of rules else we would crash when we try to .map them
     const saferules = Array.isArray(rules) ? rules : [];
     return(
         <>

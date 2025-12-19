@@ -1,6 +1,6 @@
 import logo from "../../assets/logo.png";
 
-
+//simple component to abstract the top part of the theme Creator away
 export default function ThemeCreatorTopcontent({handleClose}){
     return(
         <>
