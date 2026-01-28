@@ -104,7 +104,10 @@ export default function SoundSampleBrowser({onCreateSS}) {
                         <span className="text-3xl sm:text-5xl font-bold text-btn-green mb-1.5 sm:mb-2.5">+</span>
                     </div>
                 </div>
-                <SoundSampleCard soundSamples={usersSS} witch="users" onDeleted={handleDeleted} showenCard={usersVisibleCount}/>
+                <SoundSampleCard soundSamples={usersSS} 
+                witch="users" 
+                onDeleted={handleDeleted} 
+                showenCard={usersVisibleCount}/>
             </div>
             <div className="flex justify-center p-2">
                 <button className={"btn-primary" + (usersVisibleCount < usersSS.length ? " block" : " hidden")}
@@ -143,7 +146,10 @@ export default function SoundSampleBrowser({onCreateSS}) {
                 </button>
             </div>
             <div className="w-full">
-                <SoundSampleCard soundSamples={soundSamples} witch="" showenCard={allVisibleCount}/>
+                <SoundSampleCard 
+                soundSamples={soundSamples} 
+                witch="" 
+                showenCard={allVisibleCount}/>
             </div>
             <div className="flex justify-center p-2">
                 <button className={"btn-primary" + (allVisibleCount < soundSamples.length ? " block" : " hidden")}

@@ -28,19 +28,22 @@ export default function SubmitSSPage() {
             return;
         }
 
+        let id = userId;
+
         // Get the user ID from the backend
-        if (userId === null) {
+        if (id == null) {
             try {
-                setUserId(await getIdByUser(username));   
-            } catch (error) { 
-                console.error("Failed to fetch user ID:", error);
-                setMessage("Failed to fetch user ID: " + error.message);
-                return;
+            id = await getIdByUser(username);
+            setUserId(id);
+            } catch (error) {
+            console.error("Failed to fetch user ID:", error);
+            setMessage("Failed to fetch user ID: " + error.message);
+            return;
             }
         }
 
         // Submit sound sample and reset input
-        const resText = await addSoundSample(trimmedLink, file, userId);
+        const resText = await addSoundSample(trimmedLink, file, id);
         setMessage(resText);
         if (resText === "Upload complete!") {
             let soundSample = file !== null ? file.name : trimmedLink
